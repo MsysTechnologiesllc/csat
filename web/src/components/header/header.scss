@@ -1,0 +1,13 @@
+@use "../../assets/style/" as *;
+
+.header-container {
+  padding: 1.6rem 2.5rem;
+  .csat {
+    color: #212121;
+    font-weight: 600;
+    @include align-items-center;
+    span {
+      font-weight: 400;
+    }
+  }
+}

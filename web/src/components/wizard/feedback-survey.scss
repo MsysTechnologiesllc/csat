@@ -1,0 +1,57 @@
+@use "../../assets/style/" as *;
+.wizard-container {
+  text-align: "center";
+  background-color: #ffffff;
+  border: 0.1rem solid black;
+  border-radius: 1rem;
+  padding: 2rem 4rem;
+  width: 65%;
+  margin: auto;
+  height: 60vh;
+  @include flex-column;
+  @include justify-content-around;
+  .steps-action {
+    .btn-container {
+      @include justify-content-between;
+    }
+  }
+  .steps-content {
+    height: 70%;
+  }
+}
+.radio-group-images {
+  @include justify-content-center;
+  .radio-img-container {
+    @include flex-column;
+    @include align-items-center;
+    margin: 1rem;
+
+    img {
+      margin-bottom: 1rem;
+    }
+    .scale {
+      margin-bottom: 0;
+      object-fit: cover;
+    }
+  }
+}
+.progress-bar-container {
+  span.current-step {
+    margin-top: 0.5rem;
+  }
+  .progress-bar {
+    width: 15%;
+    margin-left: 0.5rem;
+  }
+}
+.question {
+  font-family: Roboto;
+  font-size: 3.3rem;
+  font-weight: 500;
+  line-height: 4rem;
+  text-align: center;
+  padding: 2rem 5rem;
+}
+.rate{
+  font-size: 7rem;
+}

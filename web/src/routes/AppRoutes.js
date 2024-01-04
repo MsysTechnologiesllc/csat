@@ -1,11 +1,19 @@
-import React from 'react'
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import GreetingsPage from "../components/greetings/greeting";
+import { FeedBackSurvey } from "../components/wizard/feedback-survey";
+import { TeamMembersFeedBack } from "../components/team-members-feedback/team-members-feedback";
 
 const AppRoutes = () => {
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <Router>
+      <Routes>
+        <Route path="/" element={<GreetingsPage />} exact />
+        <Route path="/survey" element={<FeedBackSurvey />} exact />
+        <Route path="/teamFeedBack" element={<TeamMembersFeedBack />} exact />
+      </Routes>
+    </Router>
+  );
+};
 
-export default AppRoutes
+export default AppRoutes;

@@ -1,0 +1,122 @@
+import React, { useState } from "react";
+import Wizard from "./wizard";
+import { WizardProgressBar } from "./wizard-progress-bar";
+import { Radio, Rate } from "antd";
+import "./feedback-survey.scss";
+import { step1Options, step4Options, step5Options } from "../../stub-data/data";
+import TextArea from "antd/es/input/TextArea";
+import { useNavigate } from "react-router";
+
+export const FeedBackSurvey = () => {
+  const [currentStep, setCurrentStep] = useState(0);
+  const navigate = useNavigate();
+  const steps = [
+    {
+      title: "Step 1",
+      content: (
+        <>
+          <p className="question">Is the sprint on track? </p>
+          <Radio.Group name="radiogroup" className="radio-group-images">
+            {step1Options.map((option) => (
+              <div key={option.value} className="radio-img-container">
+                <img src={option.imgSrc} alt={option.label} />
+                <Radio value={option.value} />
+              </div>
+            ))}
+          </Radio.Group>
+        </>
+      ),
+    },
+    {
+      title: "Step 2",
+      content: (
+        <>
+          <p className="question">
+            How well does our team meet the overall project goals?{" "}
+          </p>
+        </>
+      ),
+    },
+    {
+      title: "Step 3",
+      content: (
+        <>
+          <p className="question">
+            What would be your overall rating for the team ?
+          </p>
+          <Rate allowHalf className="rate" />
+        </>
+      ),
+    },
+    {
+      title: "Step 4",
+      content: (
+        <>
+          <p className="question">
+            How well does our team meet your expectations?{" "}
+          </p>
+          <Radio.Group name="radiogroup" className="radio-group-images">
+            {step4Options.map((option) => (
+              <div key={option.value} className="radio-img-container">
+                <img src={option.imgSrc} alt={option.label} />
+                <Radio value={option.value} />
+              </div>
+            ))}
+          </Radio.Group>
+        </>
+      ),
+    },
+    {
+      title: "Step 5",
+      content: (
+        <>
+          <p className="question">How is the team’s overall productivity? </p>
+          <Radio.Group name="radiogroup" className="radio-group-images">
+            {step5Options.map((option) => (
+              <div key={option.value} className="radio-img-container">
+                <img src={option.imgSrc} alt={option.label} className="scale" />
+                <Radio value={option.value} />
+              </div>
+            ))}
+          </Radio.Group>
+        </>
+      ),
+    },
+    {
+      title: "Step 6",
+      content: (
+        <>
+          <p className="question">
+            What other information would you like to share with us ?
+          </p>
+          <TextArea rows={5} placeholder="Your message" />
+        </>
+      ),
+    },
+    {
+      title: "Step 7",
+      content: (
+        <>
+          <img src="./images/mdi_ticket.svg" alt="" />
+          <p className="question">
+            Would you like to share your feedback for the team members?
+          </p>
+        </>
+      ),
+    },
+  ];
+  const handleTeamMemberFeedback = () => {
+    navigate("/teamFeedback");
+  };
+  return (
+    <>
+      <Wizard
+        currentStep={currentStep}
+        setCurrentStep={setCurrentStep}
+        steps={steps}
+        handleTeamMemberFeedback={handleTeamMemberFeedback}
+      />
+      <WizardProgressBar currentStep={currentStep} steps={steps} />
+    </>
+  );
+};
