@@ -1,0 +1,15 @@
+@use "../../assets/style/" as *;
+.member-card {
+  height: 7.2rem;
+  padding: 2.4rem;
+  border-radius: 0.8rem;
+  //   gap: 1.8rem;
+  background-color: #bdbdbd;
+  cursor: pointer;
+  .ant-card-body {
+    padding: 0;
+  }
+}
+.bg {
+  background-color: #c6cbe6;
+}
