@@ -1,9 +1,5 @@
-import './App.css';
+import "./App.css";
 function App() {
-  return (
-    <div className="App">
-           React
-    </div>
-  );
+  return <div className="App">New React App</div>;
 }
 export default App;
