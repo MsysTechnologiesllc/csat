@@ -1,0 +1,6 @@
+/build
+/node_modules
+/src/service-worker.js
+/src/serviceWorkerRegistration.js
+/src/reportWebVitals.js
+package-lock.json
