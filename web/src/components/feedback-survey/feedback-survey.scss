@@ -18,6 +18,12 @@
   .steps-content {
     height: 70%;
   }
+  .active-button {
+    @include active-btn;
+  }
+  .cancel-button {
+    @include cancel-btn;
+  }
 }
 .radio-group-images {
   @include justify-content-center;
@@ -52,6 +58,6 @@
   text-align: center;
   padding: 2rem 5rem;
 }
-.rate{
+.rate {
   font-size: 7rem;
 }

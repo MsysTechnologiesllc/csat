@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import GreetingsPage from "../components/greetings/greeting";
-import { FeedBackSurvey } from "../components/wizard/feedback-survey";
+import { FeedBackSurvey } from "../components/feedback-survey/feedback-survey";
 import { TeamMembersFeedBack } from "../components/team-members-feedback/team-members-feedback";
 
 const AppRoutes = () => {

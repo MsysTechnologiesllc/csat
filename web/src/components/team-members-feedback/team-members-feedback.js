@@ -7,7 +7,7 @@ import "./team-members-feedback.scss";
 export const TeamMembersFeedBack = () => {
   const [selectedMember, setSelectedMember] = useState({});
   return (
-    <Row>
+    <Row className="feedback-container">
       <Col span={8} className="card-search-container">
         {teamMembersList.map((member) => (
           <Card
@@ -21,13 +21,13 @@ export const TeamMembersFeedBack = () => {
           </Card>
         ))}
       </Col>
-      <Col span={16}>
+      <Col span={15}>
         <div className="feeback-names">
           <p>Feedback for</p>
           <p>{selectedMember.name}</p>
         </div>
         <Row className="text-area-container">
-          <Col span={10}>
+          <Col span={11}>
             <p>Positives</p>
             <TextArea
               placeholder="Your Message"
@@ -35,7 +35,7 @@ export const TeamMembersFeedBack = () => {
               style={{ width: 400 }}
             />
           </Col>
-          <Col span={10}>
+          <Col span={11}>
             <p>Areas of Improvement</p>
             <TextArea
               style={{ width: 400 }}
@@ -46,20 +46,20 @@ export const TeamMembersFeedBack = () => {
             />
           </Col>
         </Row>
-        <Row className="rating-btn-container">
-          <Col>
+        <Row>
+          <Col span={24} className="rating-btn-container">
             <p>Overall rating</p>
             <Rate size="large" />
-            <div>
-              <Button>Reset</Button>
-              <Button>Save</Button>
+            <div className="rating-btn">
+              <Button className="cancel-button">RESET</Button>
+              <Button className="active-button">SAVE</Button>
             </div>
           </Col>
         </Row>
       </Col>
       <Col span={24}>
-        <Button>Back</Button>
-        <Button>SUBMIT</Button>
+        <Button className="cancel-button">Back</Button>
+        <Button className="active-button">SUBMIT</Button>
       </Col>
     </Row>
   );

@@ -24,23 +24,33 @@ const Wizard = ({
       <Row className="btn-container">
         <Col span={6}>
           {currentStep > 0 ? (
-            <Button onClick={prevStep}>Previous</Button>
+            <Button onClick={prevStep} className="cancel-button">
+              Previous
+            </Button>
           ) : (
-            <Button>Cancel</Button>
+            <Button className="cancel-button">Cancel</Button>
           )}
         </Col>
         <Col span={18}>
           {isLastStep ? (
             <>
-              <Button type="primary" onClick={handleTeamMemberFeedback}>
+              <Button
+                type="primary"
+                onClick={handleTeamMemberFeedback}
+                className="cancel-button"
+              >
                 YES, PROCEED
               </Button>
-              <Button type="primary" onClick={() => setCurrentStep(0)}>
+              <Button
+                type="primary"
+                onClick={() => setCurrentStep(0)}
+                className="active-button"
+              >
                 NO, SUBMIT
               </Button>
             </>
           ) : (
-            <Button type="primary" onClick={nextStep}>
+            <Button type="primary" onClick={nextStep} className="active-button">
               Next
             </Button>
           )}

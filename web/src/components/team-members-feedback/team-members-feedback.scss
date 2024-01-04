@@ -1,15 +1,40 @@
 @use "../../assets/style/" as *;
-.member-card {
-  height: 7.2rem;
-  padding: 2.4rem;
-  border-radius: 0.8rem;
-  //   gap: 1.8rem;
-  background-color: #bdbdbd;
-  cursor: pointer;
-  .ant-card-body {
-    padding: 0;
+.feedback-container {
+  gap: 2rem;
+  padding: 2rem;
+  .text-area-container {
+    gap: 2rem;
+    text-align: left;
+    margin: 2rem 0;
+    p {
+      margin-bottom: 1rem;
+    }
   }
-}
-.bg {
-  background-color: #c6cbe6;
+  .member-card {
+    height: 7.2rem;
+    padding: 2.4rem;
+    border-radius: 0.8rem;
+    //   gap: 1.8rem;
+    background-color: #bdbdbd;
+    cursor: pointer;
+    .ant-card-body {
+      padding: 0;
+    }
+  }
+  .bg {
+    background-color: #c6cbe6;
+  }
+  .rating-btn-container {
+    text-align: left;
+    .rating-btn {
+      text-align: right;
+      margin-top: 2rem;
+    }
+  }
+  .active-button {
+    @include active-btn;
+  }
+  .cancel-button {
+    @include cancel-btn;
+  }
 }
