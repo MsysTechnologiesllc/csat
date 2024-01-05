@@ -39,7 +39,7 @@ function GreetingsPage() {
         </Col>
         <Col span={4}>
           <Button className="btn" onClick={getStarted}>
-            Get Started
+            GET STARTED
           </Button>
         </Col>
       </Row>

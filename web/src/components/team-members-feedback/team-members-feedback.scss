@@ -2,6 +2,23 @@
 .feedback-container {
   gap: 2rem;
   padding: 2rem;
+  .card-search-container {
+    .search-input {
+      margin-bottom: 2rem;
+    }
+  }
+  .feeback-names {
+    text-align: left;
+    .feedback-title {
+      font-size: 1.6rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .name {
+      color: #3f51b5;
+      font-size: 1.4rem;
+    }
+  }
   .text-area-container {
     gap: 2rem;
     text-align: left;
@@ -11,18 +28,19 @@
     }
   }
   .member-card {
-    height: 7.2rem;
-    padding: 2.4rem;
+    height: 5.2rem;
+    padding: 1.4rem;
     border-radius: 0.8rem;
-    //   gap: 1.8rem;
-    background-color: #bdbdbd;
+    margin-bottom: 1rem;
+    background-color: rgba(189, 189, 189, 0.15);
+    text-align: center;
     cursor: pointer;
     .ant-card-body {
       padding: 0;
     }
   }
   .bg {
-    background-color: #c6cbe6;
+    background-color: rgba(198, 203, 230, 0.7);
   }
   .rating-btn-container {
     text-align: left;
@@ -30,11 +48,15 @@
       text-align: right;
       margin-top: 2rem;
     }
+    .rating {
+      font-size: 3.5rem;
+      margin-top: 1.5rem;
+    }
   }
   .active-button {
     @include active-btn;
   }
-  .cancel-button {
-    @include cancel-btn;
+  .draft-button {
+    @include draft-btn;
   }
 }

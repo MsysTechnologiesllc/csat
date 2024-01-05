@@ -27,16 +27,16 @@ export const FeedBackSurvey = () => {
         </>
       ),
     },
-    {
-      title: "Step 2",
-      content: (
-        <>
-          <p className="question">
-            How well does our team meet the overall project goals?{" "}
-          </p>
-        </>
-      ),
-    },
+    // {
+    //   title: "Step 2",
+    //   content: (
+    //     <>
+    //       <p className="question">
+    //         How well does our team meet the overall project goals?{" "}
+    //       </p>
+    //     </>
+    //   ),
+    // },
     {
       title: "Step 3",
       content: (

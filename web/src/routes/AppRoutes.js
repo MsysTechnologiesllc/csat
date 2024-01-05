@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import GreetingsPage from "../components/greetings/greeting";
 import { FeedBackSurvey } from "../components/feedback-survey/feedback-survey";
 import { TeamMembersFeedBack } from "../components/team-members-feedback/team-members-feedback";
+import { Successfull } from "../components/successfull/successfull";
 
 const AppRoutes = () => {
   return (
@@ -11,6 +12,7 @@ const AppRoutes = () => {
         <Route path="/" element={<GreetingsPage />} exact />
         <Route path="/survey" element={<FeedBackSurvey />} exact />
         <Route path="/teamFeedBack" element={<TeamMembersFeedBack />} exact />
+        <Route path="/teamFeedback/submitted" element={<Successfull />} exact />
       </Routes>
     </Router>
   );

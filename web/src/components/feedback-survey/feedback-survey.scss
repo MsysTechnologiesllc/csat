@@ -2,7 +2,7 @@
 .wizard-container {
   text-align: "center";
   background-color: #ffffff;
-  border: 0.1rem solid black;
+  // border: 0.1rem solid black;
   border-radius: 1rem;
   padding: 2rem 4rem;
   width: 65%;
@@ -10,6 +10,7 @@
   height: 60vh;
   @include flex-column;
   @include justify-content-around;
+  box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.16);
   .steps-action {
     .btn-container {
       @include justify-content-between;
@@ -20,9 +21,13 @@
   }
   .active-button {
     @include active-btn;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin-right: 7rem;
   }
-  .cancel-button {
-    @include cancel-btn;
+  .draft-button {
+    @include draft-btn;
   }
 }
 .radio-group-images {
@@ -48,6 +53,9 @@
   .progress-bar {
     width: 15%;
     margin-left: 0.5rem;
+    .ant-progress-bg {
+      background-color: #ff4081;
+    }
   }
 }
 .question {
