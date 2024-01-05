@@ -11,6 +11,7 @@
     "i18next": "^23.7.11",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
+    "pl-lib": "git+https://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:x-oauth-basic@github.com/MsysTechnologiesllc/pl-lib.git#dev-release-04.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.1",
