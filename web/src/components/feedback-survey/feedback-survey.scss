@@ -14,24 +14,40 @@
   .steps-action {
     .btn-container {
       @include justify-content-between;
+      .draft-submit-btns {
+        @include justify-content-around;
+        .active-button {
+          @include active-btn;
+        }
+        .draft-button {
+          @include draft-btn;
+        }
+      }
     }
   }
   .steps-content {
     height: 70%;
   }
-  .active-button {
-    @include active-btn;
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    margin-right: 7rem;
-  }
-  .draft-button {
-    @include draft-btn;
-  }
 }
 .radio-group-images {
   @include justify-content-center;
+  .ant-radio {
+    border: 0.15rem solid rgba(0, 0, 0, 0.6);
+    &:hover {
+      .ant-radio-inner {
+        border: 0.1rem solid rgba(0, 0, 0, 0.6);
+      }
+    }
+    &.ant-radio-checked {
+      .ant-radio-inner {
+        border: 0.2rem solid rgba(0, 0, 0, 0.6);
+        background-color: #fff;
+        &:after {
+          background-color: #3f51b5;
+        }
+      }
+    }
+  }
   .radio-img-container {
     @include flex-column;
     @include align-items-center;

@@ -32,9 +32,9 @@ const Wizard = ({
             <Button>CANCEL</Button>
           )}
         </Col>
-        <Col span={18}>
+        <Col span={8}>
           {isLastStep ? (
-            <>
+            <div className="draft-submit-btns">
               <Button
                 type="primary"
                 onClick={handleTeamMemberFeedback}
@@ -49,10 +49,10 @@ const Wizard = ({
               >
                 NO, SUBMIT
               </Button>
-            </>
+            </div>
           ) : (
-            <>
-              <Button type="primary">SAVE AS DRAFT</Button>
+            <div className="draft-submit-btns">
+              <Button className="draft-button">SAVE AS DRAFT</Button>
               <Button
                 type="primary"
                 onClick={nextStep}
@@ -60,7 +60,7 @@ const Wizard = ({
               >
                 NEXT
               </Button>
-            </>
+            </div>
           )}
         </Col>
       </Row>
