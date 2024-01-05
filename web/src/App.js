@@ -1,5 +1,5 @@
 import "./App.css";
 function App() {
-  return <div className="App">Learn react app</div>;
+  return <div className="App">React</div>;
 }
 export default App;
