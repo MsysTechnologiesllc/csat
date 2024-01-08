@@ -6,16 +6,17 @@ import "./feedback-survey.scss";
 import { step1Options, step4Options, step5Options } from "../../stub-data/data";
 import TextArea from "antd/es/input/TextArea";
 import { useNavigate } from "react-router";
+import { LineOutlined } from "@ant-design/icons";
 
 export const FeedBackSurvey = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
   const customIcons = {
-    1: <div className="rating-container"></div>,
-    2: <div className="rating-container"></div>,
-    3: <div className="rating-container"></div>,
-    4: <div className="rating-container"></div>,
-    5: <div className="rating-container"></div>,
+    1: <LineOutlined className="rating-icon" />,
+    2: <LineOutlined className="rating-icon" />,
+    3: <LineOutlined className="rating-icon" />,
+    4: <LineOutlined className="rating-icon" />,
+    5: <LineOutlined className="rating-icon" />,
   };
   const steps = [
     {
