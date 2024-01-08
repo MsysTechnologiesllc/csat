@@ -1,12 +1,16 @@
 import React, { useContext } from "react";
 import "./App.css";
-import { ComponentProviderContext } from "./context-provider/component-provider";
+import {  plLibComponents } from "./context-provider/component-provider";
 function App() {
-  const { NoData } = useContext(ComponentProviderContext);
+  const { NoData,OptionButton
+ } = plLibComponents.components;
+  console.log(NoData)
   return (
     <div className="App">
       React app
       <NoData />
+      <OptionButton
+/>
     </div>
   );
 }
