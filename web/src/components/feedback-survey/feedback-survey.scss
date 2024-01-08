@@ -4,7 +4,7 @@
   background-color: #ffffff;
   border-radius: 1rem;
   padding: 2rem 4rem;
-  width: 65%;
+  width: 55%;
   margin: auto;
   height: 65vh;
   @include flex-column;
@@ -89,13 +89,41 @@
     @include flex-column;
     @include align-items-center;
     margin: 1rem;
-
+    position: relative;
     img {
       margin-bottom: 1rem;
     }
     .scale {
       margin-bottom: 0;
       object-fit: cover;
+    }
+    .very-low-scale {
+      position: absolute;
+      rotate: -90deg;
+      left: 4rem;
+      top: 3.5rem;
+    }
+    .low-scale {
+      position: absolute;
+      rotate: -45deg;
+      top: 2.5rem;
+      left: 4.3rem;
+    }
+    .avg-scale {
+      position: absolute;
+      top: 2.5rem;
+    }
+    .high-scale {
+      position: absolute;
+      rotate: 45deg;
+      top: 2.5rem;
+      right: 4.5rem;
+    }
+    .very-high-scale {
+      position: absolute;
+      rotate: 90deg;
+      top: 3.5rem;
+      right: 4rem;
     }
   }
 }

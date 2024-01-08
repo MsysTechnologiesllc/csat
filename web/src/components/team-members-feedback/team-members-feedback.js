@@ -74,9 +74,6 @@ export const TeamMembersFeedBack = () => {
             </Form.Item>
             <div className="rating-btn">
               <Button
-                // className={
-                //   isAnyFieldFilled ? "draft-button" : "disabled-button"
-                // }
                 classNames="draft-button"
                 disabled={!isAnyFieldFilled}
                 onClick={handleReset}
@@ -84,10 +81,11 @@ export const TeamMembersFeedBack = () => {
                 RESET
               </Button>
               <Button
-                // className={
-                //   isAnyFieldFilled ? "active-button" : "disabled-button"
-                // }
-                className="active-button"
+                className={
+                  isAnyFieldFilled
+                    ? "active-button"
+                    : "active-button disabled-button"
+                }
                 htmlType="submit"
                 disabled={!isAnyFieldFilled}
               >

@@ -79,9 +79,14 @@ export const FeedBackSurvey = () => {
             <span className="required-star"> *</span>
           </p>
           <Radio.Group name="radiogroup" className="radio-group-images">
-            {step5Options.map((option) => (
-              <div key={option.value} className="radio-img-container">
-                <img src={option.imgSrc} alt={option.label} className="scale" />
+            {step5Options.map((option, index) => (
+              <div key={index} className="radio-img-container">
+                <img src="./images/gauge.svg" alt="gauge" />
+                <img
+                  src="./images/needle.svg"
+                  alt="needle"
+                  className={option.className}
+                />
                 <Radio value={option.value} />
               </div>
             ))}

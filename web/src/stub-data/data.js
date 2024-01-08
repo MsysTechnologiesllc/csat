@@ -39,27 +39,27 @@ export const step5Options = [
   {
     label: "very-low-scale",
     value: "very-low-scale",
-    imgSrc: "./images/very-low-scale.svg",
+    className: "very-low-scale",
   },
   {
     label: "low-scale",
     value: "low-scale",
-    imgSrc: "./images/low-scale.svg",
+    className: "low-scale",
   },
   {
     label: "avg-scale",
     value: "avg-scale",
-    imgSrc: "./images/avg-scale.svg",
+    className: "avg-scale",
   },
   {
     label: "high-scale",
     value: "high-scale",
-    imgSrc: "./images/high-scale.svg",
+    className: "high-scale",
   },
   {
     label: "very-high-scale",
     value: "very-high-scale",
-    imgSrc: "./images/very-high-scale.svg",
+    className: "very-high-scale",
   },
 ];
 export const teamMembersList = [

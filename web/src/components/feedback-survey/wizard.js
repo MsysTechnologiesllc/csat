@@ -46,7 +46,7 @@ const Wizard = ({
           )}
         </Col>
         {isLastStep ? (
-          <Col span={13}>
+          <Col span={15}>
             <div className="draft-submit-btns">
               <Button className="draft-button">SAVE AS DRAFT</Button>
               <Button
