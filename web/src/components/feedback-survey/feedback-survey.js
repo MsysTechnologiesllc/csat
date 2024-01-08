@@ -10,6 +10,13 @@ import { useNavigate } from "react-router";
 export const FeedBackSurvey = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
+  const customIcons = {
+    1: <div className="rating-container"></div>,
+    2: <div className="rating-container"></div>,
+    3: <div className="rating-container"></div>,
+    4: <div className="rating-container"></div>,
+    5: <div className="rating-container"></div>,
+  };
   const steps = [
     {
       title: "Step 1",
@@ -21,7 +28,10 @@ export const FeedBackSurvey = () => {
           <Radio.Group name="radiogroup" className="radio-group-images">
             {step1Options.map((option) => (
               <div key={option.value} className="radio-img-container">
-                <img src={option.imgSrc} alt={option.label} />
+                <div className={`emoji-container ${option.value}`}>
+                  <img src={option.imgSrc} alt={option.label} />
+                  <p className="label">{option.label}</p>
+                </div>
                 <Radio value={option.value} />
               </div>
             ))}
@@ -37,6 +47,13 @@ export const FeedBackSurvey = () => {
             How well does our team meet the overall project goals?
             <span className="required-star"> *</span>
           </p>
+          <div>
+            <Rate character={({ index = 0 }) => customIcons[index + 1]} />
+            <div className="rating-desc-container">
+              <span>Extremely Unsatisfied</span>
+              <span>Extremely satisfied</span>
+            </div>
+          </div>
         </>
       ),
     },
@@ -61,8 +78,11 @@ export const FeedBackSurvey = () => {
           </p>
           <Radio.Group name="radiogroup" className="radio-group-images">
             {step4Options.map((option) => (
-              <div key={option.value} className="radio-img-container">
-                <img src={option.imgSrc} alt={option.label} />
+              <div key={option.value} className="radio-img-container ">
+                <div className={`emoji-container ${option.value}`}>
+                  <img src={option.imgSrc} alt={option.label} />
+                  <p className="label">{option.label}</p>
+                </div>
                 <Radio value={option.value} />
               </div>
             ))}
@@ -87,6 +107,7 @@ export const FeedBackSurvey = () => {
                   alt="needle"
                   className={option.className}
                 />
+                <label className="label">{option.label}</label>
                 <Radio value={option.value} />
               </div>
             ))}

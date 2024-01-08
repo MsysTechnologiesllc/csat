@@ -17,47 +17,51 @@ export const projectDetails = [
   },
 ];
 export const step1Options = [
-  { label: "yes-image", value: "yes", imgSrc: "./images/yes-image.svg" },
-  { label: "no-image", value: "no", imgSrc: "./images/no-image.svg" },
+  {
+    label: "Yes",
+    value: "yes",
+    imgSrc: "./images/yes-image.svg",
+  },
+  { label: "No", value: "no", imgSrc: "./images/no-image.svg" },
 ];
 export const step4Options = [
   {
-    label: "very-low",
+    label: "Very Low",
     value: "very-low",
-    imgSrc: "./images/very-low-image.svg",
+    imgSrc: "./images/very-low.svg",
   },
-  { label: "low", value: "low", imgSrc: "./images/low-image.svg" },
-  { label: "avg", value: "avg", imgSrc: "./images/avg-image.svg" },
-  { label: "high", value: "high", imgSrc: "./images/high-image.svg" },
+  { label: "Low", value: "low", imgSrc: "./images/low.svg" },
+  { label: "Average", value: "avg", imgSrc: "./images/avg.svg" },
+  { label: "High", value: "high", imgSrc: "./images/high.svg" },
   {
-    label: "very-high",
+    label: "Very High",
     value: "very-high",
-    imgSrc: "./images/very-high-image.svg",
+    imgSrc: "./images/very-high.svg",
   },
 ];
 export const step5Options = [
   {
-    label: "very-low-scale",
+    label: "Very Low",
     value: "very-low-scale",
     className: "very-low-scale",
   },
   {
-    label: "low-scale",
+    label: "Low",
     value: "low-scale",
     className: "low-scale",
   },
   {
-    label: "avg-scale",
+    label: "Average",
     value: "avg-scale",
     className: "avg-scale",
   },
   {
-    label: "high-scale",
+    label: "High",
     value: "high-scale",
     className: "high-scale",
   },
   {
-    label: "very-high-scale",
+    label: "Very High",
     value: "very-high-scale",
     className: "very-high-scale",
   },
