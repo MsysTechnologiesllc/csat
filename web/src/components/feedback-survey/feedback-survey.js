@@ -15,7 +15,9 @@ export const FeedBackSurvey = () => {
       title: "Step 1",
       content: (
         <>
-          <p className="question">Is the sprint on track? </p>
+          <p className="question">
+            Is the sprint on track ? <span className="required-star">*</span>
+          </p>
           <Radio.Group name="radiogroup" className="radio-group-images">
             {step1Options.map((option) => (
               <div key={option.value} className="radio-img-container">
@@ -27,16 +29,17 @@ export const FeedBackSurvey = () => {
         </>
       ),
     },
-    // {
-    //   title: "Step 2",
-    //   content: (
-    //     <>
-    //       <p className="question">
-    //         How well does our team meet the overall project goals?{" "}
-    //       </p>
-    //     </>
-    //   ),
-    // },
+    {
+      title: "Step 2",
+      content: (
+        <>
+          <p className="question">
+            How well does our team meet the overall project goals?
+            <span className="required-star"> *</span>
+          </p>
+        </>
+      ),
+    },
     {
       title: "Step 3",
       content: (
@@ -53,7 +56,8 @@ export const FeedBackSurvey = () => {
       content: (
         <>
           <p className="question">
-            How well does our team meet your expectations?{" "}
+            How well does our team meet your expectations?
+            <span className="required-star"> *</span>
           </p>
           <Radio.Group name="radiogroup" className="radio-group-images">
             {step4Options.map((option) => (
@@ -70,7 +74,10 @@ export const FeedBackSurvey = () => {
       title: "Step 5",
       content: (
         <>
-          <p className="question">How is the team’s overall productivity? </p>
+          <p className="question">
+            How is the team’s overall productivity?
+            <span className="required-star"> *</span>
+          </p>
           <Radio.Group name="radiogroup" className="radio-group-images">
             {step5Options.map((option) => (
               <div key={option.value} className="radio-img-container">
@@ -96,12 +103,12 @@ export const FeedBackSurvey = () => {
     {
       title: "Step 7",
       content: (
-        <>
+        <div className="share-feedback">
           <img src="./images/mdi_ticket.svg" alt="" />
           <p className="question">
             Would you like to share your feedback for the team members?
           </p>
-        </>
+        </div>
       ),
     },
   ];

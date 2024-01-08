@@ -38,7 +38,7 @@ function GreetingsPage() {
           ))}
         </Col>
         <Col span={4}>
-          <Button className="btn" onClick={getStarted}>
+          <Button className="active-button" onClick={getStarted}>
             GET STARTED
           </Button>
         </Col>

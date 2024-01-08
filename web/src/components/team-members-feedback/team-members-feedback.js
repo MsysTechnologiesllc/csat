@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Input, Rate, Row } from "antd";
+import { Button, Card, Col, Form, Input, Rate, Row } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { teamMembersList } from "../../stub-data/data";
 import { useNavigate } from "react-router";
@@ -7,9 +7,25 @@ import "./team-members-feedback.scss";
 
 export const TeamMembersFeedBack = () => {
   const [selectedMember, setSelectedMember] = useState(teamMembersList[0]);
+  const [isAnyFieldFilled, setIsAnyFieldFilled] = useState(false);
   const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const onValuesChange = () => {
+    const formValues = form.getFieldsValue();
+    const anyFieldHasValue = Object.values(formValues).some((value) => !!value);
+    setIsAnyFieldFilled(anyFieldHasValue);
+  };
   const handleSubmit = () => {
     navigate("/teamFeedback/submitted");
+  };
+  const handleBack = () => {
+    navigate("/survey");
+  };
+  const onFinish = (values) => {
+    console.log(values, "form output");
+  };
+  const handleReset = () => {
+    form.resetFields();
   };
   return (
     <Row className="feedback-container">
@@ -36,42 +52,67 @@ export const TeamMembersFeedBack = () => {
           <p className="feedback-title">Feedback for</p>
           <p className="name">{selectedMember.name}</p>
         </div>
-        <Row className="text-area-container">
-          <Col span={11}>
-            <p>Positives</p>
-            <TextArea
-              placeholder="Your Message"
-              rows={4}
-              style={{ width: 400 }}
-            />
-          </Col>
-          <Col span={11}>
-            <p>Areas of Improvement</p>
-            <TextArea
-              style={{ width: 400 }}
-              rows={4}
-              fullWidth
-              placeholder="Your Message"
-              multiline
-            />
-          </Col>
-        </Row>
-        <Row>
+        <Form form={form} onFinish={onFinish} onValuesChange={onValuesChange}>
+          <Row className="text-area-container">
+            <Col span={12}>
+              <p>Positives</p>
+              <Form.Item name="positives">
+                <TextArea placeholder="Your Message" rows={4} />
+              </Form.Item>
+            </Col>
+            <Col span={11}>
+              <p>Areas of Improvement</p>
+              <Form.Item name="improvements">
+                <TextArea rows={4} placeholder="Your Message" />
+              </Form.Item>
+            </Col>
+          </Row>
           <Col span={24} className="rating-btn-container">
             <p>Overall rating</p>
-            <Rate size="large" className="rating" />
+            <Form.Item name="rating">
+              <Rate className="rating" />
+            </Form.Item>
             <div className="rating-btn">
-              <Button className="draft-button">RESET</Button>
-              <Button className="active-button">SAVE</Button>
+              <Button
+                // className={
+                //   isAnyFieldFilled ? "draft-button" : "disabled-button"
+                // }
+                classNames="draft-button"
+                disabled={!isAnyFieldFilled}
+                onClick={handleReset}
+              >
+                RESET
+              </Button>
+              <Button
+                // className={
+                //   isAnyFieldFilled ? "active-button" : "disabled-button"
+                // }
+                className="active-button"
+                htmlType="submit"
+                disabled={!isAnyFieldFilled}
+              >
+                SAVE
+              </Button>
             </div>
           </Col>
-        </Row>
+        </Form>
       </Col>
-      <Col span={24}>
-        <Button className="draft-button">Back</Button>
-        <Button className="active-button" onClick={handleSubmit}>
-          SUBMIT
-        </Button>
+      <Col span={24} className="btn-container">
+        <Col span={3}>
+          <Button type="text" className="cancel-button" onClick={handleBack}>
+            BACK
+          </Button>
+        </Col>
+        <Col span={6} className="draft-submit-btns">
+          <Button className="draft-button">SAVE AS DRAFT</Button>
+          <Button
+            type="primary"
+            onClick={handleSubmit}
+            className="active-button"
+          >
+            SUBMIT
+          </Button>
+        </Col>
       </Col>
     </Row>
   );

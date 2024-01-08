@@ -6,13 +6,25 @@ import { TeamMembersFeedBack } from "../components/team-members-feedback/team-me
 import { Successfull } from "../components/successfull/successfull";
 
 const AppRoutes = () => {
+  const routes = [
+    { path: "/survey/submitted" },
+    { path: "/teamFeedback/submitted" },
+    // Add more route paths as needed
+  ];
   return (
     <Router>
       <Routes>
         <Route path="/" element={<GreetingsPage />} exact />
         <Route path="/survey" element={<FeedBackSurvey />} exact />
         <Route path="/teamFeedBack" element={<TeamMembersFeedBack />} exact />
-        <Route path="/teamFeedback/submitted" element={<Successfull />} exact />
+        {routes.map((route, index) => (
+          <Route
+            key={index}
+            path={route.path}
+            element={<Successfull />}
+            exact
+          />
+        ))}
       </Routes>
     </Router>
   );

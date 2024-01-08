@@ -136,7 +136,42 @@
   border-radius: 0.5rem;
   color: #fff;
   gap: 0.8rem;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%;
+  text-transform: uppercase;
 }
 @mixin draft-btn {
   color: #3f51b5;
+  opacity: 0.5;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 550;
+  line-height: 2.4rem;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  border-radius: 0.4rem;
+  border: 0.1rem solid var(--csat-light-primary, #c5cae9);
+  &:hover {
+    opacity: 1;
+    border: 0.1rem solid var(--csat-light-primary, #3f51b5);
+  }
+}
+@mixin previous-btn {
+  @include align-items-center;
+  @include justify-content-between;
+  @include draft-btn;
+  font-size: 1.4rem;
+  font-weight: 550;
+  border: none;
+  color: #828282;
+  &:hover {
+    border: 0;
+    background-color: none;
+  }
+}
+
+@mixin disable-btn {
+  background-color: #828282;
 }

@@ -1,10 +1,28 @@
 @use "../../assets/style/" as *;
 .feedback-container {
+  margin-top: 0.2rem;
+  background-color: #fff;
   gap: 2rem;
   padding: 2rem;
+  min-height: 89vh;
   .card-search-container {
     .search-input {
       margin-bottom: 2rem;
+    }
+    .member-card {
+      height: 5.2rem;
+      padding: 1.4rem;
+      border-radius: 0.8rem;
+      margin-bottom: 1rem;
+      background-color: rgba(189, 189, 189, 0.15);
+      text-align: center;
+      cursor: pointer;
+      .ant-card-body {
+        padding: 0;
+      }
+    }
+    .bg {
+      background-color: rgba(198, 203, 230, 0.7);
     }
   }
   .feeback-names {
@@ -20,6 +38,7 @@
     }
   }
   .text-area-container {
+    padding: 0 2rem;
     gap: 2rem;
     text-align: left;
     margin: 2rem 0;
@@ -27,36 +46,50 @@
       margin-bottom: 1rem;
     }
   }
-  .member-card {
-    height: 5.2rem;
-    padding: 1.4rem;
-    border-radius: 0.8rem;
-    margin-bottom: 1rem;
-    background-color: rgba(189, 189, 189, 0.15);
-    text-align: center;
-    cursor: pointer;
-    .ant-card-body {
-      padding: 0;
-    }
-  }
-  .bg {
-    background-color: rgba(198, 203, 230, 0.7);
-  }
+
   .rating-btn-container {
     text-align: left;
+    padding: 0 2rem;
     .rating-btn {
       text-align: right;
-      margin-top: 2rem;
+      button {
+        margin-left: 2rem;
+      }
+      .active-button {
+        @include active-btn;
+      }
+      .draft-button {
+        @include draft-btn;
+      }
+      .disable-button {
+        @include disable-btn;
+      }
     }
     .rating {
       font-size: 3.5rem;
       margin-top: 1.5rem;
     }
   }
-  .active-button {
-    @include active-btn;
-  }
-  .draft-button {
-    @include draft-btn;
+
+  .btn-container {
+    @include justify-content-between;
+    .cancel-button {
+      color: var(--Gray-3, #828282);
+      font-family: Roboto;
+      font-size: 1.4rem;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 120%;
+      text-transform: uppercase;
+    }
+    .draft-submit-btns {
+      @include justify-content-around;
+      .active-button {
+        @include active-btn;
+      }
+      .draft-button {
+        @include draft-btn;
+      }
+    }
   }
 }

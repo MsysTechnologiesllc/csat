@@ -2,31 +2,68 @@
 .wizard-container {
   text-align: "center";
   background-color: #ffffff;
-  // border: 0.1rem solid black;
   border-radius: 1rem;
   padding: 2rem 4rem;
   width: 65%;
   margin: auto;
-  height: 60vh;
+  height: 65vh;
   @include flex-column;
   @include justify-content-around;
   box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.16);
+  margin-top: 3rem;
   .steps-action {
     .btn-container {
       @include justify-content-between;
+      .cancel-button {
+        color: var(--Gray-3, #828282);
+        font-family: "Roboto";
+        font-size: 1.4rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 120%;
+        text-transform: uppercase;
+      }
+      .previous-button {
+        @include previous-btn;
+        .arrow-icon {
+          font-size: 1.8rem;
+        }
+        span {
+          margin-left: 0.3rem;
+        }
+      }
       .draft-submit-btns {
         @include justify-content-around;
         .active-button {
           @include active-btn;
+          font-family: "Roboto";
         }
         .draft-button {
           @include draft-btn;
+          font-family: "Roboto";
         }
       }
     }
   }
   .steps-content {
     height: 70%;
+    .question {
+      font-size: 3.3rem;
+      font-weight: 500;
+      line-height: 4rem;
+      text-align: center;
+      padding: 2rem 5rem;
+      font-family: "Roboto";
+    }
+    .rate {
+      font-size: 7rem;
+    }
+    .required-star {
+      color: #ff4081;
+    }
+    .share-feedback {
+      padding-top: 7rem;
+    }
   }
 }
 .radio-group-images {
@@ -73,15 +110,4 @@
       background-color: #ff4081;
     }
   }
-}
-.question {
-  font-family: Roboto;
-  font-size: 3.3rem;
-  font-weight: 500;
-  line-height: 4rem;
-  text-align: center;
-  padding: 2rem 5rem;
-}
-.rate {
-  font-size: 7rem;
 }
