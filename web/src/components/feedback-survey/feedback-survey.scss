@@ -44,6 +44,9 @@
           @include active-btn;
           font-family: "Roboto";
         }
+        .disabled-button {
+          opacity: 0.7;
+        }
         .draft-button {
           @include draft-btn;
           font-family: "Roboto";
@@ -77,7 +80,7 @@
       }
     }
     .rate {
-      font-size: 7rem;
+      font-size: 5rem;
     }
     .required-star {
       color: #ff4081;
@@ -257,5 +260,5 @@
   }
 }
 .rating-icon {
-  font-size: 11rem;
+  font-size: 10rem;
 }

@@ -1,23 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Row, Col } from "antd";
 import PropTypes from "prop-types";
 import { GoArrowLeft } from "react-icons/go";
 import { useNavigate } from "react-router";
 import "./feedback-survey.scss";
+import NotifyStatus from "../notify-status/notify-status";
 
 const Wizard = ({
   currentStep,
   setCurrentStep,
   steps,
   handleTeamMemberFeedback,
+  isAnswerSelected,
+  setIsAnswerSelected,
 }) => {
   const navigate = useNavigate();
+  const [notify, setNotify] = useState("");
+  const handleDraft = () => {
+    setNotify("draft");
+  };
   const nextStep = () => {
     setCurrentStep(currentStep + 1);
+    setIsAnswerSelected(false);
+    setNotify("");
   };
 
   const prevStep = () => {
     setCurrentStep(currentStep - 1);
+    setIsAnswerSelected(false);
   };
   const handleCancel = () => {
     navigate("/");
@@ -68,16 +78,30 @@ const Wizard = ({
         ) : (
           <Col span={10}>
             <div className="draft-submit-btns">
-              <Button className="draft-button">SAVE AS DRAFT</Button>
+              <Button
+                className="draft-button"
+                disabled={!isAnswerSelected}
+                onClick={() => handleDraft()}
+              >
+                SAVE AS DRAFT
+              </Button>
               <Button
                 type="primary"
                 onClick={nextStep}
-                className="active-button"
+                className={
+                  isAnswerSelected
+                    ? "active-button"
+                    : "active-button disabled-button"
+                }
+                disabled={!isAnswerSelected}
               >
                 NEXT
               </Button>
             </div>
           </Col>
+        )}
+        {notify && (
+          <NotifyStatus status={notify} msg="Draft saved successfully" />
         )}
       </Row>
     );
@@ -94,5 +118,7 @@ Wizard.propTypes = {
   steps: PropTypes.array.isRequired,
   handleTeamMemberFeedback: PropTypes.func.isRequired,
   setCurrentStep: PropTypes.bool.isRequired,
+  isAnswerSelected: PropTypes.bool.isRequired,
+  setIsAnswerSelected: PropTypes.bool.isRequired,
 };
 export default Wizard;

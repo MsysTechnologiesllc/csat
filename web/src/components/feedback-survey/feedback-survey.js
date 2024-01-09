@@ -10,6 +10,10 @@ import { LineOutlined } from "@ant-design/icons";
 
 export const FeedBackSurvey = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [isAnswerSelected, setIsAnswerSelected] = useState(false);
+  const handleChange = () => {
+    setIsAnswerSelected(true);
+  };
   const navigate = useNavigate();
   const customIcons = {
     1: <LineOutlined className="rating-icon" />,
@@ -28,13 +32,13 @@ export const FeedBackSurvey = () => {
           </p>
           <Radio.Group name="radiogroup" className="radio-group-images">
             {step1Options.map((option) => (
-              <div key={option.value} className="radio-img-container">
+              <label key={option.value} className="radio-img-container">
                 <div className={`emoji-container ${option.value}`}>
                   <img src={option.imgSrc} alt={option.label} />
                   <p className="label">{option.label}</p>
                 </div>
-                <Radio value={option.value} />
-              </div>
+                <Radio value={option.value} onChange={handleChange} />
+              </label>
             ))}
           </Radio.Group>
         </>
@@ -49,7 +53,10 @@ export const FeedBackSurvey = () => {
             <span className="required-star"> *</span>
           </p>
           <div className="rating-scale-container">
-            <Rate character={({ index = 0 }) => customIcons[index + 1]} />
+            <Rate
+              character={({ index = 0 }) => customIcons[index + 1]}
+              onChange={handleChange}
+            />
             <div className="rating-desc-container">
               <span>Extremely Unsatisfied</span>
               <span className="satisfied">Extremely satisfied</span>
@@ -65,7 +72,7 @@ export const FeedBackSurvey = () => {
           <p className="question">
             What would be your overall rating for the team ?
           </p>
-          <Rate allowHalf className="rate" />
+          <Rate allowHalf className="rate" onChange={handleChange} />
         </>
       ),
     },
@@ -79,15 +86,15 @@ export const FeedBackSurvey = () => {
           </p>
           <Radio.Group name="radiogroup" className="radio-group-images">
             {step4Options.map((option) => (
-              <div key={option.value} className="radio-img-container ">
+              <label key={option.value} className="radio-img-container ">
                 <div className={`emoji-container ${option.value}`}>
                   <img src={option.imgSrc} alt={option.label} />
                   <p className={`label ${option.colorClassName}`}>
                     {option.label}
                   </p>
                 </div>
-                <Radio value={option.value} />
-              </div>
+                <Radio value={option.value} onChange={handleChange} />
+              </label>
             ))}
           </Radio.Group>
         </>
@@ -103,7 +110,7 @@ export const FeedBackSurvey = () => {
           </p>
           <Radio.Group name="radiogroup" className="radio-group-images">
             {step5Options.map((option, index) => (
-              <div key={index} className="speedometer radio-img-container">
+              <label key={index} className="speedometer radio-img-container">
                 <img
                   src="./images/gauge.svg"
                   alt="gauge"
@@ -115,8 +122,8 @@ export const FeedBackSurvey = () => {
                   className={option.className}
                 />
                 <label className="label">{option.label}</label>
-                <Radio value={option.value} />
-              </div>
+                <Radio value={option.value} onChange={handleChange} />
+              </label>
             ))}
           </Radio.Group>
         </>
@@ -129,7 +136,12 @@ export const FeedBackSurvey = () => {
           <p className="question">
             What other information would you like to share with us ?
           </p>
-          <TextArea rows={5} placeholder="Your message" className="text-area" />
+          <TextArea
+            rows={5}
+            placeholder="Your message"
+            onChange={handleChange}
+            className="text-area"
+          />
         </>
       ),
     },
@@ -155,6 +167,8 @@ export const FeedBackSurvey = () => {
         setCurrentStep={setCurrentStep}
         steps={steps}
         handleTeamMemberFeedback={handleTeamMemberFeedback}
+        isAnswerSelected={isAnswerSelected}
+        setIsAnswerSelected={setIsAnswerSelected}
       />
       <WizardProgressBar currentStep={currentStep} steps={steps} />
     </div>

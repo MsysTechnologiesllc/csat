@@ -57,18 +57,26 @@ export const TeamMembersFeedBack = () => {
             <Col span={12}>
               <p>Positives</p>
               <Form.Item name="positives">
-                <TextArea placeholder="Your Message" rows={4} />
+                <TextArea
+                  placeholder="Your Message"
+                  rows={4}
+                  className="text-area"
+                />
               </Form.Item>
             </Col>
             <Col span={11}>
               <p>Areas of Improvement</p>
               <Form.Item name="improvements">
-                <TextArea rows={4} placeholder="Your Message" />
+                <TextArea
+                  rows={4}
+                  placeholder="Your Message"
+                  className="text-area"
+                />
               </Form.Item>
             </Col>
           </Row>
           <Col span={24} className="rating-btn-container">
-            <p>Overall rating</p>
+            <p className="overall-ratting">Overall rating</p>
             <Form.Item name="rating">
               <Rate className="rating" />
             </Form.Item>
