@@ -38,6 +38,9 @@
           @include active-btn;
           font-family: "Roboto";
         }
+        .disabled-button {
+          opacity: 0.7;
+        }
         .draft-button {
           @include draft-btn;
           font-family: "Roboto";
@@ -57,7 +60,7 @@
       font-family: "Roboto";
     }
     .rate {
-      font-size: 7rem;
+      font-size: 5rem;
     }
     .required-star {
       color: #ff4081;
@@ -80,7 +83,7 @@
       .rating-desc-container {
         position: relative;
         bottom: 4rem;
-        padding:0 5rem 0 1rem;
+        padding: 0 5rem 0 1rem;
         @include justify-content-between;
         margin-top: 1rem;
         span {
