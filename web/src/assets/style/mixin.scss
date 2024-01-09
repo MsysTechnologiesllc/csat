@@ -153,10 +153,6 @@
   text-transform: uppercase;
   border-radius: 0.4rem;
   border: 0.1rem solid var(--csat-light-primary, #c5cae9);
-  &:hover {
-    opacity: 1;
-    border: 0.1rem solid var(--csat-light-primary, #3f51b5);
-  }
 }
 @mixin previous-btn {
   @include align-items-center;
@@ -166,10 +162,6 @@
   font-weight: 550;
   border: none;
   color: #828282;
-  &:hover {
-    border: 0;
-    background-color: none;
-  }
 }
 
 @mixin disable-btn {
