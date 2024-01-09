@@ -110,8 +110,12 @@ export const FeedBackSurvey = () => {
           </p>
           <Radio.Group name="radiogroup" className="radio-group-images">
             {step5Options.map((option, index) => (
-              <label key={index} className="radio-img-container">
-                <img src="./images/gauge.svg" alt="gauge" />
+              <label key={index} className="speedometer radio-img-container">
+                <img
+                  src="./images/gauge.svg"
+                  alt="gauge"
+                  className="speedometer-image"
+                />
                 <img
                   src="./images/needle.svg"
                   alt="needle"
@@ -156,7 +160,7 @@ export const FeedBackSurvey = () => {
     navigate("/teamFeedback");
   };
   return (
-    <div className="wizard-progress-bar-container">
+    <div className="wizard-wrapper">
       <Wizard
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
