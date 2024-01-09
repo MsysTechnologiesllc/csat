@@ -30,7 +30,7 @@ export const TeamMembersFeedBack = () => {
   return (
     <Row className="feedback-container">
       <Col span={8} className="card-search-container">
-        <Input className="search-input" placeholder="Enter here" />
+        <Input className="search-input" placeholder="Search by Name" />
         <div className="cards-container">
           {teamMembersList.map((member) => (
             <Card

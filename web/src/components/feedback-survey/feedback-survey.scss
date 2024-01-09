@@ -80,10 +80,14 @@
       .rating-desc-container {
         position: relative;
         bottom: 4rem;
+        padding:0 5rem 0 1rem;
         @include justify-content-between;
         margin-top: 1rem;
         span {
           width: 2rem;
+          font-size: 1.6rem;
+          font-family: Roboto;
+          font-weight: 500;
         }
       }
     }
