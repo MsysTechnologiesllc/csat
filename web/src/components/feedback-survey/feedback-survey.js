@@ -48,7 +48,7 @@ export const FeedBackSurvey = () => {
             How well does our team meet the overall project goals?
             <span className="required-star"> *</span>
           </p>
-          <div>
+          <div className="rating-scale-container">
             <Rate character={({ index = 0 }) => customIcons[index + 1]} />
             <div className="rating-desc-container">
               <span>Extremely Unsatisfied</span>
@@ -82,7 +82,9 @@ export const FeedBackSurvey = () => {
               <div key={option.value} className="radio-img-container ">
                 <div className={`emoji-container ${option.value}`}>
                   <img src={option.imgSrc} alt={option.label} />
-                  <p className="label">{option.label}</p>
+                  <p className={`label ${option.colorClassName}`}>
+                    {option.label}
+                  </p>
                 </div>
                 <Radio value={option.value} />
               </div>

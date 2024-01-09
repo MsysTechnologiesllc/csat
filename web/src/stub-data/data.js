@@ -29,14 +29,31 @@ export const step4Options = [
     label: "Very Low",
     value: "very-low",
     imgSrc: "./images/very-low.svg",
+    colorClassName: "very-low-color",
   },
-  { label: "Low", value: "low", imgSrc: "./images/low.svg" },
-  { label: "Average", value: "avg", imgSrc: "./images/avg.svg" },
-  { label: "High", value: "high", imgSrc: "./images/high.svg" },
+  {
+    label: "Low",
+    value: "low",
+    imgSrc: "./images/low.svg",
+    colorClassName: "low-color",
+  },
+  {
+    label: "Average",
+    value: "avg",
+    imgSrc: "./images/avg.svg",
+    colorClassName: "avg-color",
+  },
+  {
+    label: "High",
+    value: "high",
+    imgSrc: "./images/high.svg",
+    colorClassName: "high-color",
+  },
   {
     label: "Very High",
     value: "very-high",
     imgSrc: "./images/very-high.svg",
+    colorClassName: "very-high-color",
   },
 ];
 export const step5Options = [

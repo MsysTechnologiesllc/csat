@@ -75,9 +75,17 @@
         background-color: #fadb14;
       }
     }
-    .rating-desc-container {
-      @include justify-content-between;
-      margin-top: 1rem;
+    .rating-scale-container {
+      position: relative;
+      .rating-desc-container {
+        position: relative;
+        bottom: 4rem;
+        @include justify-content-between;
+        margin-top: 1rem;
+        span {
+          width: 2rem;
+        }
+      }
     }
   }
 }
@@ -120,6 +128,21 @@
         font-weight: 700;
         line-height: 3.3rem;
       }
+    }
+    .very-low-color {
+      color: #df3734;
+    }
+    .low-color {
+      color: #ef5350;
+    }
+    .avg-color {
+      color: #ffb300;
+    }
+    .high-color {
+      color: #349d38;
+    }
+    .very-high-color {
+      color: #018106;
     }
     .yes {
       background-color: rgba(219, 239, 220, 1);
