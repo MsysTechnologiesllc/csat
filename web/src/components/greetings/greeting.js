@@ -13,8 +13,12 @@ function GreetingsPage() {
   return (
     <div className="greetings-container">
       <Row className="greetings-image-container">
-        <Col span={14}>
-          <img src="images/greetings-image.svg" alt="greetings-image" />
+        <Col span={14} className="greetings-image-wrapper">
+          <img
+            src="images/greetings-image.svg"
+            alt="greetings-image"
+            className="greetings-image"
+          />
         </Col>
         <Col span={9} className="greetings-description">
           <h1 className="greetings-title">Greetings</h1>

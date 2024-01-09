@@ -52,7 +52,7 @@ export const FeedBackSurvey = () => {
             <Rate character={({ index = 0 }) => customIcons[index + 1]} />
             <div className="rating-desc-container">
               <span>Extremely Unsatisfied</span>
-              <span>Extremely satisfied</span>
+              <span className="satisfied">Extremely satisfied</span>
             </div>
           </div>
         </>
@@ -129,7 +129,7 @@ export const FeedBackSurvey = () => {
           <p className="question">
             What other information would you like to share with us ?
           </p>
-          <TextArea rows={5} placeholder="Your message" />
+          <TextArea rows={5} placeholder="Your message" className="text-area" />
         </>
       ),
     },

@@ -136,10 +136,10 @@
   border-radius: 0.5rem;
   color: #fff;
   gap: 0.8rem;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-style: normal;
   font-weight: 700;
-  line-height: 120%;
+  line-height: 1.7rem;
   text-transform: uppercase;
 }
 @mixin draft-btn {
@@ -147,7 +147,7 @@
   opacity: 0.5;
   font-size: 1.4rem;
   font-style: normal;
-  font-weight: 550;
+  font-weight: 500;
   line-height: 2.4rem;
   letter-spacing: 0.4px;
   text-transform: uppercase;
@@ -159,7 +159,7 @@
   @include justify-content-between;
   @include draft-btn;
   font-size: 1.4rem;
-  font-weight: 550;
+  font-weight: 700;
   border: none;
   color: #828282;
 }
