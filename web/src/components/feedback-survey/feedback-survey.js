@@ -9,12 +9,14 @@ import { useNavigate } from "react-router";
 import { LineOutlined } from "@ant-design/icons";
 
 export const FeedBackSurvey = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [isAnswerSelected, setIsAnswerSelected] = useState(false);
+  const [hoveredValue, setHoveredValue] = useState(0);
+  console.log(hoveredValue);
   const handleChange = () => {
     setIsAnswerSelected(true);
   };
-  const navigate = useNavigate();
   const customIcons = {
     1: <LineOutlined className="rating-icon" />,
     2: <LineOutlined className="rating-icon" />,
@@ -30,10 +32,10 @@ export const FeedBackSurvey = () => {
           <p className="question">
             Is the sprint on track ? <span className="required-star">*</span>
           </p>
-          <Radio.Group name="radiogroup" className="radio-group-images">
+          <Radio.Group name="radiogroup" className="radio-group-images ">
             {step1Options.map((option) => (
-              <label key={option.value} className="radio-img-container">
-                <div className={`emoji-container ${option.value}`}>
+              <label key={option.value} className="radio-img-container ">
+                <div className={`emoji-container ${option.value} `}>
                   <img src={option.imgSrc} alt={option.label} />
                   <p className="label">{option.label}</p>
                 </div>
@@ -56,6 +58,7 @@ export const FeedBackSurvey = () => {
             <Rate
               character={({ index = 0 }) => customIcons[index + 1]}
               onChange={handleChange}
+              onHoverChange={(value) => setHoveredValue(value)}
             />
             <div className="rating-desc-container">
               <span>Extremely Unsatisfied</span>
@@ -148,12 +151,12 @@ export const FeedBackSurvey = () => {
     {
       title: "Step 7",
       content: (
-        <div className="share-feedback">
-          <img src="./images/mdi_ticket.svg" alt="" />
+        <>
+          <img src="./images/mdi_ticket.svg" alt="ticket" />
           <p className="question">
             Would you like to share your feedback for the team members?
           </p>
-        </div>
+        </>
       ),
     },
   ];
