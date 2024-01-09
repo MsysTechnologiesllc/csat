@@ -16,7 +16,6 @@
   @include flex-column;
   @include justify-content-around;
   box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.16);
-  // margin-top: 3rem;
   .steps-action {
     .btn-container {
       @include justify-content-between;
@@ -40,9 +39,20 @@
       }
       .draft-submit-btns {
         @include justify-content-around;
+        margin-left: auto;
+        gap: 2rem;
         .active-button {
           @include active-btn;
           font-family: "Roboto";
+          @include justify-content-center;
+          @include align-items-center;
+          color: #f9f7f7;
+          span {
+            margin-right: 0.5rem;
+          }
+          .arrow-icon {
+            font-size: 1.8rem;
+          }
         }
         .disabled-button {
           opacity: 0.7;
@@ -62,7 +72,7 @@
       font-weight: 500;
       line-height: 4rem;
       text-align: center;
-      padding: 2rem 5rem;
+      padding: 2rem 4rem;
       font-family: "Roboto";
     }
     .rate {
@@ -70,9 +80,6 @@
     }
     .required-star {
       color: #ff4081;
-    }
-    .share-feedback {
-      padding-top: 7rem;
     }
     .rating-container {
       width: 12.2rem;
@@ -85,6 +92,29 @@
       }
     }
     .rating-scale-container {
+      .rating-icon {
+        font-size: 11rem;
+      }
+      .ant-rate {
+        .ant-rate-star:first-child {
+          color: #d32f2f;
+        }
+        .ant-rate-star:nth-child(2) {
+          color: #ef5350;
+        }
+        .ant-rate-star:nth-child(3) {
+          color: #ffc107;
+        }
+        .ant-rate-star:nth-child(4) {
+          color: #00e676;
+        }
+        .ant-rate-star:last-child {
+          color: #00c853;
+        }
+      }
+      .ant-rate .ant-rate-star:not(:last-child) {
+        margin-inline-end: 0;
+      }
       position: relative;
       .rating-desc-container {
         position: relative;
@@ -122,16 +152,16 @@
       }
     }
   }
-.speedometer{
-  min-width: 10rem;
-  .speedometer-image{
-    width: 11.5rem
+  .speedometer {
+    min-width: 10rem;
+    .speedometer-image {
+      width: 11.5rem;
+    }
   }
-}
+
   .radio-img-container {
     @include flex-column;
     @include align-items-center;
-    // margin: 1rem;
     position: relative;
     .emoji-container {
       min-width: 10rem;
@@ -165,9 +195,13 @@
     }
     .yes {
       background-color: rgba(219, 239, 220, 1);
+      min-width: 14rem;
+      min-height: 14rem;
     }
     .no {
       background-color: rgba(255, 235, 238, 1);
+      min-width: 14rem;
+      min-height: 14rem;
     }
     .very-low {
       background-color: rgba(239, 83, 80, 0.2);
@@ -227,6 +261,7 @@
     }
   }
 }
+
 .progress-bar-container {
   span.current-step {
     margin-top: 0.5rem;
@@ -239,6 +274,5 @@
     }
   }
 }
-.rating-icon {
-  font-size: 10rem;
-}
+
+

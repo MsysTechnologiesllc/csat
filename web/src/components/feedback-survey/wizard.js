@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Row, Col } from "antd";
 import PropTypes from "prop-types";
-import { GoArrowLeft } from "react-icons/go";
+import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import { useNavigate } from "react-router";
 import "./feedback-survey.scss";
 import NotifyStatus from "../notify-status/notify-status";
@@ -56,49 +56,42 @@ const Wizard = ({
           )}
         </Col>
         {isLastStep ? (
-          <Col span={16}>
-            <div className="draft-submit-btns">
-              <Button className="draft-button">SAVE AS DRAFT</Button>
-              <Button
-                type="text"
-                onClick={handleTeamMemberFeedback}
-                className="draft-button"
-              >
-                YES, PROCEED
-              </Button>
-              <Button
-                type="primary"
-                onClick={handleSubmit}
-                className="active-button"
-              >
-                NO, SUBMIT
-              </Button>
-            </div>
-          </Col>
+          <div className="draft-submit-btns">
+            <Button className="draft-button">SAVE AS DRAFT</Button>
+            <Button onClick={handleTeamMemberFeedback} className="draft-button">
+              YES, PROCEED
+            </Button>
+            <Button
+              type="primary"
+              onClick={handleSubmit}
+              className="active-button"
+            >
+              NO, SUBMIT
+            </Button>
+          </div>
         ) : (
-          <Col span={10}>
-            <div className="draft-submit-btns">
-              <Button
-                className="draft-button"
-                disabled={!isAnswerSelected}
-                onClick={() => handleDraft()}
-              >
-                SAVE AS DRAFT
-              </Button>
-              <Button
-                type="primary"
-                onClick={nextStep}
-                className={
-                  isAnswerSelected
-                    ? "active-button"
-                    : "active-button disabled-button"
-                }
-                disabled={!isAnswerSelected}
-              >
-                NEXT
-              </Button>
-            </div>
-          </Col>
+          <div className="draft-submit-btns">
+            <Button
+              className="draft-button"
+              disabled={!isAnswerSelected}
+              onClick={() => handleDraft()}
+            >
+              SAVE AS DRAFT
+            </Button>
+            <Button
+              type="primary"
+              onClick={nextStep}
+              className={
+                isAnswerSelected
+                  ? "active-button"
+                  : "active-button disabled-button"
+              }
+              disabled={!isAnswerSelected}
+            >
+              <span> NEXT</span>
+              <GoArrowRight className="arrow-icon" />
+            </Button>
+          </div>
         )}
         {notify && (
           <NotifyStatus status={notify} msg="Draft saved successfully" />
