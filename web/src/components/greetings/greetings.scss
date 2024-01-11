@@ -13,65 +13,43 @@
       @include flex-column;
       @include justify-content-end;
       text-align: left;
-
       .greetings-title {
-        font-size: 2vw;
-        font-weight: 400;
-        line-height: 3.4vw;
-        font-family: Inter;
+        @include font-style(#000, 2vw, 3.4vw, 400, Inter);
       }
 
       .greetings-desc {
-        font-size: 1.3vw;
-        font-weight: 400;
-        line-height: 2.2vw;
-        color: #4f4f4f;
-        font-family: Inter;
+        @include font-style(#4f4f4f, 1.3vw, 2.2vw, 400, Inter);
       }
     }
   }
 
   .details-container {
-    background-color: #fff;
-    padding: 1.6rem 3rem;
-    width: 100%;
-    height: 20vh;
-    position: fixed;
-    bottom: 0;
+    @include horizontal-line(100%, 20vh, #fff);
     @include align-items-center;
     @include justify-content-between;
-
+    padding: 1.6rem 3rem;
+    position: fixed;
+    bottom: 0;
     .project-details-container {
-      width: 60%;
-      // @include d-flex;
       @include justify-content-between;
+      width: 60%;
       text-align: left;
       gap: 2rem;
 
       .title {
-        font-family: Inter;
-        font-size: 1.3vw;
-        font-weight: 400;
-        line-height: 1vw;
-        color: #757575;
+        @include font-style(#757575, 1.3vw, 1vw, 400, Inter);
         margin-bottom: 1rem;
       }
 
       .desc {
-        font-family: Inter;
-        font-size: 1.5vw;
-        font-weight: 500;
-        line-height: 2.2vw;
-        color: #303f9f;
+        @include font-style(#303f9f, 1.5vw, 2.2vw, 500, Inter);
       }
     }
 
     .btn {
-      width: 20rem;
-      height: 6.6rem;
+      @include horizontal-line(20rem, 6.6rem, #4153af);
       padding: 1.6rem;
       border-radius: 0.8rem;
-      background-color: #4153af;
       color: white;
     }
 
@@ -82,7 +60,7 @@
       margin-right: 5vw;
 
       &:hover {
-        color: white;
+        color: #fff;
       }
     }
   }
@@ -99,9 +77,9 @@
       }
 
       .greetings-image {
+        @include d-block;
         width: 80%;
         height: auto;
-        display: block;
         max-width: 100%;
         max-height: 100%;
       }
@@ -136,14 +114,12 @@
       .project-details-container {
         width: 80%;
         @include justify-content-between;
-        flex-wrap: wrap;
+        @include flex-wrap;
         padding: 2vw 0;
-
         .title {
           font-size: 1.5rem;
           text-align: center;
         }
-
         .desc {
           font-size: 1.3rem;
           margin-top: 0.3rem;
@@ -174,7 +150,7 @@
     }
   }
 
-  @media only screen and (min-width:1400px) {
+  @media only screen and (min-width: 1400px) {
     @include justify-content-center;
     @include align-items-center;
   }

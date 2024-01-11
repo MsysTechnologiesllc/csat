@@ -19,18 +19,13 @@
       border: 0.2rem solid var(--Primary-color, #4153af);
     }
     .member-card {
-      // height: 5.2rem;
       padding: 1.3rem;
       border-radius: 0.8rem;
       margin-bottom: 1rem;
       background-color: rgba(189, 189, 189, 0.15);
       text-align: center;
-      color: #212121;
-      font-family: Roboto;
-      font-size: 1.9rem;
+      @include font-style(#212121, 1.9rem, 2.4rem, 700, Roboto);
       font-style: normal;
-      font-weight: 700;
-      line-height: 2.4rem;
       letter-spacing: 0.015rem;
       text-align: left;
       cursor: pointer;
@@ -59,10 +54,7 @@
       line-height: 1.92rem;
     }
     .name {
-      color: #3f51b5;
-      font-size: 1.9rem;
-      font-weight: 700;
-      line-height: 2.4rem;
+      @include font-style(#3f5165, 1.9rem, 2.4rem, 700, Roboto);
       letter-spacing: 0.02rem;
     }
   }
@@ -76,24 +68,16 @@
     margin: 2rem 0;
     p {
       margin-bottom: 1rem;
-      color: #000;
-      font-family: Roboto;
-      font-size: 1.6rem;
+      @include font-style(#000, 1.6rem, 2.4rem, 400,Roboto);
       font-style: normal;
-      font-weight: 400;
-      line-height: 2.4rem;
       letter-spacing: 0.02rem;
     }
     .text-area {
       border-radius: 0.4rem;
       border: 0.1rem solid rgba(0, 0, 0, 0.23);
       &::placeholder {
-        color: rgba(0, 0, 0, 0.6);
-        font-family: Roboto;
-        font-size: 1.6rem;
+        @include font-style(rgba(0, 0, 0, 0.6), 1.6rem, 2.4rem, 400,Roboto);
         font-style: normal;
-        font-weight: 400;
-        line-height: 2.4rem;
         letter-spacing: 0.015rem;
       }
     }
@@ -106,12 +90,8 @@
       padding-left: 0;
     }
     .overall-ratting {
-      color: #000;
-      font-family: Roboto;
-      font-size: 1.6rem;
+      @include font-style(#000, 1.6rem, 2.4rem, 400,Roboto);
       font-style: normal;
-      font-weight: 400;
-      line-height: 2.4rem;
       letter-spacing: 0.02rem;
     }
     .rating-btn {
@@ -140,14 +120,10 @@
     width: 100%;
     position: sticky;
     .cancel-button {
-      color: #828282;
-      font-family: Roboto;
-      font-size: 1.4rem;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 120%;
-      text-transform: uppercase;
+      @include font-style(#828282, 1.4rem, 120%, 700, Roboto);
       @include align-items-center;
+      font-style: normal;
+      text-transform: uppercase;
       .arrow-icon {
         font-size: 1.8rem;
         margin-right: 0.5rem;
@@ -176,9 +152,9 @@
       }
     }
   }
-  @media (min-width:'768px') {
+  @media (min-width: "768px") {
     gap: 1.5rem;
-    .text-area-container{
+    .text-area-container {
       gap: 1rem;
     }
   }
