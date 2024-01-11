@@ -245,29 +245,29 @@
       }
 
       .no {
-        background-color: ($blush-pink);
+        background-color: $blush-pink;
         min-width: 14rem;
         min-height: 14rem;
       }
 
       .very-low {
-        background-color: ($muted-pink);
+        background-color: $muted-pink;
       }
 
       .low {
-        background-color: ($blush-pink);
+        background-color: $blush-pink;
       }
 
       .avg {
-        background-color: ($pale-yellow);
+        background-color: $pale-yellow;
       }
 
       .high {
-        background-color: ($muted-green);
+        background-color: $muted-green;
       }
 
       .very-high {
-        background-color: ($muted-deep-green);
+        background-color: $muted-deep-green;
       }
 
       img {
@@ -325,7 +325,7 @@
       margin-left: 0.5rem;
 
       .ant-progress-bg {
-        background-color: ($wild-red);
+        background-color:$wild-red;
       }
     }
   }

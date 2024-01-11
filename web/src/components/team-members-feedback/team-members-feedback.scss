@@ -2,7 +2,7 @@
 
 .feedback-container {
   margin-top: 0.2rem;
-  background-color: ($white);
+  background-color: $white;
   gap: 4rem;
   padding: 2rem;
 
@@ -21,16 +21,16 @@
       margin-bottom: 2rem;
       padding: 1.5rem;
       border-radius: 0.4rem;
-      border: 0.2rem solid ($med-slate-blue);
+      border: 0.2rem solid $med-slate-blue;
     }
 
     .member-card {
       padding: 1.3rem;
       border-radius: 0.8rem;
       margin-bottom: 1rem;
-      background-color: ($muted-silver);
+      background-color: $muted-silver;
       text-align: center;
-      @include font-style(($jet-black), 1.9rem, 2.4rem, 700, Roboto);
+      @include font-style($jet-black, 1.9rem, 2.4rem, 700, Roboto);
       font-style: normal;
       letter-spacing: 0.015rem;
       text-align: left;
@@ -42,7 +42,7 @@
     }
 
     .bg {
-      background-color: ($muted-lilac);
+      background-color: $muted-lilac;
     }
   }
 
@@ -67,7 +67,7 @@
     }
 
     .name {
-      @include font-style(($indigo), 1.9rem, 2.4rem, 700, Roboto);
+      @include font-style($indigo, 1.9rem, 2.4rem, 700, Roboto);
       letter-spacing: 0.02rem;
     }
   }
@@ -85,17 +85,17 @@
 
     p {
       margin-bottom: 1rem;
-      @include font-style(var($black), 1.6rem, 2.4rem, 400, Roboto);
+      @include font-style($black, 1.6rem, 2.4rem, 400, Roboto);
       font-style: normal;
       letter-spacing: 0.02rem;
     }
 
     .text-area {
       border-radius: 0.4rem;
-      border: 0.1rem solid var($border-black-20);
+      border: 0.1rem solid $border-black-20;
 
       &::placeholder {
-        @include font-style(var($border-black), 1.6rem, 2.4rem, 400, Roboto);
+        @include font-style($border-black, 1.6rem, 2.4rem, 400, Roboto);
         font-style: normal;
         letter-spacing: 0.015rem;
       }
@@ -111,7 +111,7 @@
     }
 
     .overall-ratting {
-      @include font-style(var($black), 1.6rem, 2.4rem, 400, Roboto);
+      @include font-style($black, 1.6rem, 2.4rem, 400, Roboto);
       font-style: normal;
       letter-spacing: 0.02rem;
     }
@@ -148,7 +148,7 @@
     position: sticky;
 
     .cancel-button {
-      @include font-style(var($ash-grey), 1.4rem, 120%, 700, Roboto);
+      @include font-style($ash-grey, 1.4rem, 120%, 700, Roboto);
       @include align-items-center;
       font-style: normal;
       text-transform: uppercase;
