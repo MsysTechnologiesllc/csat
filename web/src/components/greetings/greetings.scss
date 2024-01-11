@@ -13,23 +13,25 @@
       @include flex-column;
       @include justify-content-end;
       text-align: left;
+
       .greetings-title {
-        @include font-style(#000, 2vw, 3.4vw, 400, Inter);
+        @include font-style($black, 2vw, 3.4vw, 400, Inter);
       }
 
       .greetings-desc {
-        @include font-style(#4f4f4f, 1.3vw, 2.2vw, 400, Inter);
+        @include font-style($metal-black, 1.3vw, 2.2vw, 400, Inter);
       }
     }
   }
 
   .details-container {
-    @include horizontal-line(100%, 20vh, #fff);
+    @include horizontal-line(100%, 20vh, $white);
     @include align-items-center;
     @include justify-content-between;
     padding: 1.6rem 3rem;
     position: fixed;
     bottom: 0;
+
     .project-details-container {
       @include justify-content-between;
       width: 60%;
@@ -37,20 +39,20 @@
       gap: 2rem;
 
       .title {
-        @include font-style(#757575, 1.3vw, 1vw, 400, Inter);
+        @include font-style($steel-grey, 1.3vw, 1vw, 400, Inter);
         margin-bottom: 1rem;
       }
 
       .desc {
-        @include font-style(#303f9f, 1.5vw, 2.2vw, 500, Inter);
+        @include font-style($royal-blue, 1.5vw, 2.2vw, 500, Inter);
       }
     }
 
     .btn {
-      @include horizontal-line(20rem, 6.6rem, #4153af);
+      @include horizontal-line(20rem, 6.6rem, $med-slate-blue);
       padding: 1.6rem;
       border-radius: 0.8rem;
-      color: white;
+      color: $white;
     }
 
     .active-button {
@@ -60,7 +62,7 @@
       margin-right: 5vw;
 
       &:hover {
-        color: #fff;
+        color: $white;
       }
     }
   }
@@ -116,10 +118,12 @@
         @include justify-content-between;
         @include flex-wrap;
         padding: 2vw 0;
+
         .title {
           font-size: 1.5rem;
           text-align: center;
         }
+
         .desc {
           font-size: 1.3rem;
           margin-top: 0.3rem;
