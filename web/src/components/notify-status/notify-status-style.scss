@@ -1,0 +1,42 @@
+@use "../../assets/style/" as *;
+
+.notify-status-container {
+  .message-title {
+    margin: 0;
+    color: black;
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: normal;
+  }
+
+  .icon-container {
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .icon {
+    margin: auto;
+    border-radius: 50%;
+    border: none;
+  }
+
+  .tick-container {
+    .tick {
+      @extend .icon;
+      font-size: 2.5rem;
+      background-color: #fff;
+      color: green;
+    }
+  }
+}
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice {
+    padding: 18px 24px;
+    @include align-items-center;
+}
+.ant-notification
+  .ant-notification-notice-wrapper
+  .ant-notification-notice-with-icon
+  .ant-notification-notice-message {
+  margin-bottom: 0;
+}

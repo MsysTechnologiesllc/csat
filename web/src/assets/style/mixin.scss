@@ -1,134 +1,169 @@
 //CSS flex Reference
 @mixin d-flex {
-    display: -webkit-box ;
-    display: -ms-flexbox ;
-    display: flex ;
-  }
-  
-  @mixin flex-row-wrap {
-    @include d-flex;
-    -webkit-box-orient: horizontal ;
-    -webkit-box-direction: normal ;
-    -ms-flex-flow: row wrap ;
-    flex-flow: row wrap ;
-  }
-  @mixin flex-row {
-    @include d-flex;
-    -webkit-box-orient: horizontal ;
-    -webkit-box-direction: normal ;
-    -ms-flex-direction: row ;
-    flex-direction: row ;
-  }
-  @mixin flex-row-reverse {
-    @include d-flex;
-    -webkit-box-direction: row-reverse ;
-    -ms-flex-direction: row-reverse ;
-    flex-direction: row-reverse ;
-  }
-  @mixin flex-column {
-    @include d-flex;
-    -webkit-box-orient: vertical ;
-    -webkit-box-direction: normal ;
-    -ms-flex-direction: column ;
-    flex-direction: column ;
-  }
-  @mixin flex-wrap {
-    @include d-flex;
-    flex-wrap: wrap ;
-  }
-  @mixin justify-content-start {
-    @include d-flex;
-    -webkit-box-pack: start ;
-    -ms-flex-pack: start ;
-    justify-content: flex-start ;
-  }
-  
-  @mixin justify-content-end {
-    @include d-flex;
-    -webkit-box-pack: end ;
-    -ms-flex-pack: end ;
-    justify-content: flex-end ;
-  }
-  
-  @mixin justify-content-center {
-    @include d-flex;
-    -webkit-box-pack: center ;
-    -ms-flex-pack: center ;
-    justify-content: center ;
-  }
-  @mixin justify-content-right {
-    @include d-flex;
-    -webkit-box-pack: right ;
-    -ms-flex-pack: right ;
-    justify-content: right ;
-  }
-  
-  @mixin justify-content-between {
-    @include d-flex;
-    -webkit-box-pack: justify ;
-    -ms-flex-pack: justify ;
-    justify-content: space-between ;
-  }
-  
-  @mixin justify-content-around {
-    @include d-flex;
-    -ms-flex-pack: distribute ;
-    justify-content: space-around ;
-  }
-  
-  @mixin justify-content-evenly {
-    @include d-flex;
-    -webkit-box-pack: space-evenly ;
-    -ms-flex-pack: space-evenly ;
-    justify-content: space-evenly ;
-  }
-  @mixin justify-content-unset {
-    @include d-flex;
-    -ms-flex-pack: unset ;
-    justify-content: unset ;
-  }
-  @mixin align-items-start {
-    @include d-flex;
-    -webkit-box-align: start ;
-    -ms-flex-align: start ;
-    align-items: flex-start ;
-  }
-  @mixin align-items-end {
-    @include d-flex;
-    -webkit-box-align: end ;
-    -ms-flex-align: end ;
-    align-items: flex-end ;
-  }
-  @mixin align-items-center {
-    @include d-flex;
-    -webkit-box-align: center ;
-    -ms-flex-align: center ;
-    align-items: center ;
-  }
-  @mixin align-items-baseline {
-    @include d-flex;
-    -webkit-box-align: baseline ;
-    -ms-flex-align: baseline ;
-    align-items: baseline ;
-  }
-  
-  @mixin align-items-stretch {
-    @include d-flex;
-    -webkit-box-align: stretch ;
-    -ms-flex-align: stretch ;
-    align-items: stretch ;
-  }
-  
-  @mixin align-justify-center {
-    @include d-flex;
-    -webkit-box-align: center ;
-    -ms-flex-align: center ;
-    align-items: center ;
-    -webkit-box-pack: center ;
-    -ms-flex-pack: center ;
-    justify-content: center ;
-  }
-  
-  @mixin d-none {
-    display: none ;
-  }
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+@mixin flex-row-wrap {
+  @include d-flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+@mixin flex-row {
+  @include d-flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+@mixin flex-row-reverse {
+  @include d-flex;
+  -webkit-box-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+}
+@mixin flex-column {
+  @include d-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+@mixin flex-wrap {
+  @include d-flex;
+  flex-wrap: wrap;
+}
+@mixin justify-content-start {
+  @include d-flex;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+@mixin justify-content-end {
+  @include d-flex;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+@mixin justify-content-center {
+  @include d-flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+@mixin justify-content-right {
+  @include d-flex;
+  -webkit-box-pack: right;
+  -ms-flex-pack: right;
+  justify-content: right;
+}
+
+@mixin justify-content-between {
+  @include d-flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+@mixin justify-content-around {
+  @include d-flex;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+}
+
+@mixin justify-content-evenly {
+  @include d-flex;
+  -webkit-box-pack: space-evenly;
+  -ms-flex-pack: space-evenly;
+  justify-content: space-evenly;
+}
+@mixin justify-content-unset {
+  @include d-flex;
+  -ms-flex-pack: unset;
+  justify-content: unset;
+}
+@mixin align-items-start {
+  @include d-flex;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+}
+@mixin align-items-end {
+  @include d-flex;
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: flex-end;
+}
+@mixin align-items-center {
+  @include d-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+@mixin align-items-baseline {
+  @include d-flex;
+  -webkit-box-align: baseline;
+  -ms-flex-align: baseline;
+  align-items: baseline;
+}
+
+@mixin align-items-stretch {
+  @include d-flex;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@mixin align-justify-center {
+  @include d-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+@mixin d-none {
+  display: none;
+}
+@mixin active-btn {
+  background-color: #3f51b5;
+  border-radius: 0.5rem;
+  color: #fff;
+  gap: 0.8rem;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.7rem;
+  text-transform: uppercase;
+}
+@mixin draft-btn {
+  color: #3f51b5;
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2.4rem;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  border-radius: 0.4rem;
+  border: 0.1rem solid #c5cae9;
+  opacity: 1;
+}
+@mixin previous-btn {
+  @include align-items-center;
+  @include justify-content-between;
+  @include draft-btn;
+  font-size: 1.4rem;
+  font-weight: 700;
+  border: none;
+  color: #828282;
+}
+
+@mixin disable-btn {
+  background-color: #828282;
+}
