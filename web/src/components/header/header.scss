@@ -2,13 +2,11 @@
 
 .header-container {
   padding: 1.6rem 2.5rem;
-  background-color: #fff;
+  background-color: $white;
   .csat {
-    color: #212121;
-    font-weight: 600;
+    @include font-style($jet-black,2rem,normal,600,Roboto);
     @include align-items-center;
     margin-left: 0.8rem;
-    font-size: 2rem;
     span {
       font-weight: 400;
       margin-left: 0.5rem;

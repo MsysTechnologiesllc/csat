@@ -21,13 +21,16 @@
 
         .cancel-button {
           @include font-style($ash-grey, 1.4rem, 120%, 700, Roboto);
-          font-style: normal;
           text-transform: uppercase;
         }
 
         .previous-button {
-          @include previous-btn;
-
+          @include align-items-center;
+          @include justify-content-between;
+          @include custom-btn($white, 0.4rem, 1);
+          @include font-style($ash-grey, 1.4rem, 2.4rem, 700, Roboto);
+          letter-spacing: 0.4px;
+          border: none;
           .arrow-icon {
             font-size: 1.8rem;
           }
@@ -43,11 +46,11 @@
           gap: 0.4rem;
 
           .active-button {
-            @include active-btn;
+            @include custom-btn($indigo, 0.5rem, 1);
+            @include font-style($very-light-gray, 1.4rem, 1.7rem, 700, Roboto);
             @include justify-content-center;
             @include align-items-center;
-            color:$very-light-gray;
-
+            gap: 0.8rem;
             span {
               margin-right: 0.5rem;
             }
@@ -57,12 +60,14 @@
             }
           }
 
+          .draft-button {
+            @include custom-btn("", 0.4rem, 1);
+            @include font-style($indigo, 1.4rem, 2.4rem, 600, Roboto);
+            letter-spacing: 0.04rem;
+            border: 0.1rem solid $powder-blue;
+          }
           .disabled-button {
             opacity: 0.7;
-          }
-
-          .draft-button {
-            @include draft-btn;
           }
         }
       }
@@ -84,7 +89,6 @@
 
         &::placeholder {
           @include font-style($border-black, 1.6rem, 2.4rem, 400, Roboto);
-          font-style: normal;
           letter-spacing: 0.015rem;
         }
       }
@@ -147,13 +151,10 @@
 
           span {
             width: 10rem;
-            font-size: 1.6rem;
-            font-family: Roboto;
-            font-weight: 500;
+            @include font-style("",1.6rem,normal,500,Roboto);
             text-align: left;
             letter-spacing: 0.04rem;
           }
-
           .satisfied {
             text-align: right;
           }
@@ -210,10 +211,7 @@
         @include align-items-center;
 
         .label {
-          font-size: 2rem;
-          font-family: Roboto;
-          font-weight: 700;
-          line-height: 3.3rem;
+          @include font-style("",2rem,3.3rem,700,Roboto);
           letter-spacing: 0.04rem;
         }
       }
@@ -280,10 +278,7 @@
       }
 
       .label {
-        font-size: 2rem;
-        font-family: Roboto;
-        font-weight: 700;
-        line-height: 3.3rem;
+        @include font-style("",2rem,3.3rem,700,Roboto);
       }
 
       .very-low-scale {
@@ -325,7 +320,7 @@
       margin-left: 0.5rem;
 
       .ant-progress-bg {
-        background-color:$wild-red;
+        background-color: $wild-red;
       }
     }
   }
@@ -351,12 +346,10 @@
           }
 
           .draft-submit-btns {
-
             .active-button,
             .draft-button {
               font-size: 1rem;
-              font-weight: 600;
-              padding: 1rem 1rem;
+              padding: 1rem;
               @include align-items-center;
             }
           }
@@ -452,20 +445,18 @@
 
         .smiles-container {
           @include d-flex;
-          flex-wrap: wrap;
+          @include flex-wrap;
           width: 100%;
           height: 100%;
 
           .radio-img-container {
             max-height: 2vh;
-
             .no,
             .yes {
               margin-top: 1vw;
               min-width: 10rem;
               max-width: 10rem;
             }
-
             .very-low,
             .low,
             .avg,

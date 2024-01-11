@@ -57,7 +57,9 @@ const Wizard = ({
         </Col>
         {isLastStep ? (
           <div className="draft-submit-btns">
-            <Button className="draft-button">SAVE AS DRAFT</Button>
+            <Button className="draft-button" onClick={() => handleDraft()}>
+              SAVE AS DRAFT
+            </Button>
             <Button onClick={handleTeamMemberFeedback} className="draft-button">
               YES, PROCEED
             </Button>
@@ -72,7 +74,11 @@ const Wizard = ({
         ) : (
           <div className="draft-submit-btns">
             <Button
-              className="draft-button"
+              className={
+                isAnswerSelected
+                  ? "draft-button"
+                  : "draft-button disabled-button"
+              }
               disabled={!isAnswerSelected}
               onClick={() => handleDraft()}
             >
@@ -94,7 +100,7 @@ const Wizard = ({
           </div>
         )}
         {notify && (
-          <NotifyStatus status={notify} msg="Draft saved successfully" />
+          <NotifyStatus status={notify} message="Draft saved successfully" />
         )}
       </Row>
     );

@@ -56,11 +56,12 @@
     }
 
     .active-button {
-      @include active-btn;
+      @include custom-btn($indigo, 0.5rem, 1);
+      @include font-style($white, 1.4rem, 1.7rem, 700, Roboto);
       width: 20rem;
       height: 4rem;
       margin-right: 5vw;
-
+      gap: 0.8rem;
       &:hover {
         color: $white;
       }

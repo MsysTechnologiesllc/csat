@@ -9,7 +9,6 @@ const AppRoutes = () => {
   const routes = [
     { path: "/survey/submitted" },
     { path: "/teamFeedback/submitted" },
-    // Add more route paths as needed
   ];
   return (
     <Router>
