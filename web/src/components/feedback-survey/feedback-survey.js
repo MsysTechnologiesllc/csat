@@ -116,7 +116,10 @@ export const FeedBackSurvey = () => {
             How is the team’s overall productivity?
             <span className="required-star"> *</span>
           </p>
-          <Radio.Group name="radiogroup" className="radio-group-images">
+          <Radio.Group
+            name="radiogroup"
+            className="radio-group-images speedometer-group-images"
+          >
             {step5Options.map((option, index) => (
               <label key={index} className="speedometer radio-img-container">
                 <img

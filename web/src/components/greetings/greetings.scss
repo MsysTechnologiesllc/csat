@@ -138,7 +138,29 @@
       }
     }
   }
+  
+  @media only screen and ((min-width: 425px) and (max-width: 767px)) {
+    .greetings-main-container {
+      height: 50vh;
+      overflow: scroll;
+      @include flex-column;
+      @include justify-content-center;
+      @include align-items-center;
 
+      .greetings-image-container {
+        width: 80%;
+      }
+
+      .greetings-image {
+        width: 50%;
+        max-width: 100%;
+      }
+
+      .greetings-description {
+        margin-top: 1rem;
+      }
+    }
+  }
   @media only screen and ((min-width: 768px) and (max-width: 1200px)) {
     .greetings-main-container {
       @include align-items-center;
