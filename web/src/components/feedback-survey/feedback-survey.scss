@@ -31,6 +31,7 @@
           @include font-style($ash-grey, 1.4rem, 2.4rem, 700, Roboto);
           letter-spacing: 0.4px;
           border: none;
+
           .arrow-icon {
             font-size: 1.8rem;
           }
@@ -51,6 +52,7 @@
             @include justify-content-center;
             @include align-items-center;
             gap: 0.8rem;
+
             span {
               margin-right: 0.5rem;
             }
@@ -663,6 +665,74 @@
         object-fit: contain;
       }
 
+      .speedometer-group-images {
+        @include d-flex;
+        flex-wrap: wrap;
+        position: relative;
+
+        .speedometer {
+          min-width: 7.5rem;
+          max-width: 7.5rem;
+          margin-top: 3vw;
+          max-height: 7rem;
+          min-height: 7rem;
+          @include align-items-center;
+          @include justify-content-center;
+
+          .speedometer-image {
+            width: 100%;
+            margin-bottom: 0.2rem;
+          }
+
+          .label {
+            font-size: 1.2rem;
+            height: 2.2rem;
+
+          }
+
+          .very-low-scale,
+          .low-scale,
+          .avg-scale,
+          .high-scale,
+          .very-high-scale {
+            width: 8%;
+          }
+
+          .very-low-scale {
+            position: absolute;
+            rotate: -90deg;
+            left: 2.5rem;
+            top: 1.8rem;
+          }
+
+          .low-scale {
+            position: absolute;
+            rotate: -45deg;
+            left: 2.8rem;
+            top: 1.5rem;
+          }
+
+          .avg-scale {
+            position: absolute;
+            top: 1.3rem;
+          }
+
+          .high-scale {
+            position: absolute;
+            rotate: 45deg;
+            left: 3.9rem;
+            top: 1.5rem;
+          }
+
+          .very-high-scale {
+            position: absolute;
+            rotate: 90deg;
+            left: 4.3rem;
+            top: 1.9rem;
+          }
+        }
+      }
+
       .steps-content {
         .question {
           font-size: 1.8rem;
@@ -671,6 +741,36 @@
         }
       }
 
+      .smiles-container {
+
+        .radio-img-container {
+          .emoji-container {
+            @include justify-content-between;
+            padding: 0.5rem 0;
+          }
+
+          .very-low,
+          .low,
+          .avg,
+          .high,
+          .very-high {
+            min-width: 5rem;
+            max-width: 5rem;
+            min-height: 8rem;
+            max-height: 8rem;
+            margin-bottom: 0.2rem;
+
+            img {
+              width: 2rem;
+            }
+
+            .label {
+              font-size: 1.2rem;
+              line-height: 1.4rem;
+            }
+          }
+        }
+      }
     }
   }
 
