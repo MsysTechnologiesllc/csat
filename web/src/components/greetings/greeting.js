@@ -3,6 +3,7 @@ import { Button } from "antd";
 import { projectDetails } from "../../stub-data/data";
 import { useNavigate } from "react-router";
 import "./greetings.scss";
+import i18n from "../../locales/i18next";
 
 function GreetingsPage() {
   const navigate = useNavigate();
@@ -21,15 +22,8 @@ function GreetingsPage() {
           />
         </div>
         <div className="greetings-description">
-          <h1 className="greetings-title">Greetings</h1>
-          <p className="greetings-desc">
-            We would appreciate if you could spare a few minutes of your time to
-            share your feedback. This feedback will help us to ensure that the
-            project is on track and to meet your expectations. If there are any
-            concerns, we request you to share an open feedback that would enable
-            us to work on those improvement areas and continue to provide our
-            best services.
-          </p>
+          <h1 className="greetings-title">{i18n.t("greetings.greetings")}</h1>
+          <p className="greetings-desc">{i18n.t("greetings.description")}</p>
         </div>
       </div>
       <div className="details-container">
@@ -43,7 +37,7 @@ function GreetingsPage() {
         </div>
 
         <Button className="active-button" onClick={getStarted}>
-          GET STARTED
+          {i18n.t("greetings.getStarted")}
         </Button>
       </div>
     </div>
