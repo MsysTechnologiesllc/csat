@@ -1,0 +1,40 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "User API",
+      "description": "API to retrieve user details",
+      "version": "1.0.0"
+    },
+    "paths": {
+      "/api/user": {
+        "get": {
+          "summary": "Get user details",
+          "description": "Retrieve details of a user",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "id": 1,
+                    "username": "john_doe",
+                    "email": "john@example.com"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "User not found",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "User not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
