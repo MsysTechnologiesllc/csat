@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { GoArrowLeft } from "react-icons/go";
 import { IoStarSharp } from "react-icons/io5";
 import "./team-members-feedback.scss";
+import i18n from "../../locales/i18next";
 
 export const TeamMembersFeedBack = () => {
   const [selectedMember, setSelectedMember] = useState(
@@ -58,7 +59,7 @@ export const TeamMembersFeedBack = () => {
         <Select
           showSearch
           allowClear
-          placeholder="Search by Names"
+          placeholder={i18n.t("placeholder.searchName")}
           optionFilterProp="children"
           filterOption={(input, option) =>
             (option?.label.toLowerCase() ?? "").includes(input)
@@ -71,34 +72,36 @@ export const TeamMembersFeedBack = () => {
       </Col>
       <Col xs={24} md={15}>
         <div className="feeback-names">
-          <p className="feedback-title">Feedback for</p>
+          <p className="feedback-title">{i18n.t("teamFeedBack.feedback")}</p>
           <p className="name">{selectedMember}</p>
         </div>
         <Form form={form} onFinish={onFinish} onValuesChange={onValuesChange}>
           <Row className="text-area-container">
             <Col xs={24} md={12}>
-              <p>Positives</p>
+              <p>{i18n.t("teamFeedBack.positives")}</p>
               <Form.Item name="positives">
                 <TextArea
-                  placeholder="Your Message"
+                  placeholder={i18n.t("placeholder.message")}
                   rows={4}
                   className="text-area"
                 />
               </Form.Item>
             </Col>
             <Col xs={24} md={11}>
-              <p>Areas of Improvement</p>
+              <p>{i18n.t("teamFeedBack.areaOfImprovement")}</p>
               <Form.Item name="improvements">
                 <TextArea
                   rows={4}
-                  placeholder="Your Message"
+                  placeholder={i18n.t("placeholder.message")}
                   className="text-area"
                 />
               </Form.Item>
             </Col>
           </Row>
           <Col span={24} className="rating-btn-container">
-            <p className="overall-ratting">Overall rating</p>
+            <p className="overall-ratting">
+              {i18n.t("teamFeedBack.overallRating")}
+            </p>
             <Form.Item name="rating">
               <Rate
                 className="rating"
@@ -111,7 +114,7 @@ export const TeamMembersFeedBack = () => {
                 disabled={!isAnyFieldFilled}
                 onClick={handleReset}
               >
-                RESET
+                {i18n.t("button.reset")}
               </Button>
               <Button
                 className={
@@ -122,7 +125,7 @@ export const TeamMembersFeedBack = () => {
                 htmlType="submit"
                 disabled={!isAnyFieldFilled}
               >
-                SAVE
+                {i18n.t("button.save")}
               </Button>
             </div>
           </Col>
@@ -130,16 +133,19 @@ export const TeamMembersFeedBack = () => {
       </Col>
       <div className="btn-container">
         <Button type="text" className="cancel-button" onClick={handleBack}>
-          <GoArrowLeft className="arrow-icon" /> <span> BACK</span>
+          <GoArrowLeft className="arrow-icon" />{" "}
+          <span> {i18n.t("button.back")}</span>
         </Button>
         <div className="draft-submit-btns">
-          <Button className="draft-button">SAVE AS DRAFT</Button>
+          <Button className="draft-button">
+            {i18n.t("button.saveAsDraft")}
+          </Button>
           <Button
             type="primary"
             onClick={handleSubmit}
             className="active-button"
           >
-            SUBMIT
+            {i18n.t("button.submit")}
           </Button>
         </div>
       </div>

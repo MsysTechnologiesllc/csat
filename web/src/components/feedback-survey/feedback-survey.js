@@ -8,6 +8,7 @@ import TextArea from "antd/es/input/TextArea";
 import { useNavigate } from "react-router";
 import { LineOutlined } from "@ant-design/icons";
 import { IoStarSharp } from "react-icons/io5";
+import i18n from "../../locales/i18next";
 
 export const FeedBackSurvey = () => {
   const navigate = useNavigate();
@@ -28,7 +29,8 @@ export const FeedBackSurvey = () => {
       content: (
         <>
           <p className="question">
-            Is the sprint on track ? <span className="required-star">*</span>
+            {i18n.t("surveyQuestions.sprintOnTrack")}
+            <span className="required-star">*</span>
           </p>
           <Radio.Group name="radiogroup" className="radio-group-images ">
             {step1Options.map((option) => (
@@ -49,7 +51,7 @@ export const FeedBackSurvey = () => {
       content: (
         <>
           <p className="question">
-            How well does our team meet the overall project goals?
+            {i18n.t("surveyQuestions.overallProjectGoal")}
             <span className="required-star"> *</span>
           </p>
           <div className="rating-scale-container">
@@ -58,8 +60,12 @@ export const FeedBackSurvey = () => {
               onChange={handleChange}
             />
             <div className="rating-desc-container">
-              <span className="unsatisfy-text">Extremely Unsatisfied</span>
-              <span className="satisy-text">Extremely Satisfied</span>
+              <span className="unsatisfy-text">
+                {i18n.t("surveyQuestions.unSatisfied")}
+              </span>
+              <span className="satisy-text">
+                {i18n.t("surveyQuestions.satisfied")}
+              </span>
             </div>
           </div>
         </>
@@ -70,7 +76,7 @@ export const FeedBackSurvey = () => {
       content: (
         <>
           <p className="question">
-            What would be your overall rating for the team ?
+            {i18n.t("surveyQuestions.overallRatingOfTeam")}
           </p>
           <Rate
             character={({ index = 0 }) => customStarIcons[index]}
@@ -86,7 +92,7 @@ export const FeedBackSurvey = () => {
       content: (
         <>
           <p className="question">
-            How well does our team meet your expectations?
+            {i18n.t("surveyQuestions.teamMeetExpectations")}
             <span className="required-star"> *</span>
           </p>
           <Radio.Group
@@ -113,7 +119,7 @@ export const FeedBackSurvey = () => {
       content: (
         <>
           <p className="question">
-            How is the team’s overall productivity?
+            {i18n.t("surveyQuestions.overallProductivity")}
             <span className="required-star"> *</span>
           </p>
           <Radio.Group
@@ -124,12 +130,12 @@ export const FeedBackSurvey = () => {
               <label key={index} className="speedometer radio-img-container">
                 <img
                   src="./images/gauge.svg"
-                  alt="gauge"
+                  alt={i18n.t("imageAlt.gauge")}
                   className="speedometer-image"
                 />
                 <img
                   src="./images/needle.svg"
-                  alt="needle"
+                  alt={i18n.t("imageAlt.needle")}
                   className={option.className}
                 />
                 <label className="label">{option.label}</label>
@@ -145,11 +151,11 @@ export const FeedBackSurvey = () => {
       content: (
         <>
           <p className="question">
-            What other information would you like to share with us ?
+            {i18n.t("surveyQuestions.likeToShareWithUs")}
           </p>
           <TextArea
             rows={5}
-            placeholder="Your message"
+            placeholder={i18n.t("placeholder.message")}
             onChange={handleChange}
             className="text-area"
           />
@@ -160,9 +166,9 @@ export const FeedBackSurvey = () => {
       title: "Step 7",
       content: (
         <>
-          <img src="./images/mdi_ticket.svg" alt="ticket" />
+          <img src="./images/mdi_ticket.svg" alt={i18n.t("imageAlt.ticket")} />
           <p className="question">
-            Would you like to share your feedback for the team members?
+            {i18n.t("surveyQuestions.feedbackForTeamMember")}
           </p>
         </>
       ),

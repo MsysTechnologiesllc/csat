@@ -1,56 +1,58 @@
+import i18n from "../locales/i18next";
+
 export const projectDetails = [
   {
-    title: "Project",
+    title: i18n.t("greetings.project"),
     desc: "Project 1",
   },
   {
-    title: "Project Manager",
+    title: i18n.t("greetings.projectManager"),
     desc: "Vinod J",
   },
   {
-    title: "Delivery Head",
+    title: i18n.t("greetings.deliveryHead"),
     desc: "Ramesh",
   },
   {
-    title: "Share Before",
+    title: i18n.t("greetings.shareBefore"),
     desc: "23 Jan 2023",
   },
 ];
 export const step1Options = [
   {
-    label: "Yes",
+    label: i18n.t("common.yes"),
     value: "yes",
     imgSrc: "./images/yes-image.svg",
   },
-  { label: "No", value: "no", imgSrc: "./images/no-image.svg" },
+  { label: i18n.t("common.no"), value: "no", imgSrc: "./images/no-image.svg" },
 ];
 export const step4Options = [
   {
-    label: "Very Low",
+    label: i18n.t("common.veryLow"),
     value: "very-low",
     imgSrc: "./images/very-low.svg",
     colorClassName: "very-low-color",
   },
   {
-    label: "Low",
+    label: i18n.t("common.low"),
     value: "low",
     imgSrc: "./images/low.svg",
     colorClassName: "low-color",
   },
   {
-    label: "Average",
+    label: i18n.t("common.avg"),
     value: "avg",
     imgSrc: "./images/avg.svg",
     colorClassName: "avg-color",
   },
   {
-    label: "High",
+    label: i18n.t("common.high"),
     value: "high",
     imgSrc: "./images/high.svg",
     colorClassName: "high-color",
   },
   {
-    label: "Very High",
+    label: i18n.t("common.veryHigh"),
     value: "very-high",
     imgSrc: "./images/very-high.svg",
     colorClassName: "very-high-color",
@@ -58,27 +60,27 @@ export const step4Options = [
 ];
 export const step5Options = [
   {
-    label: "Very Low",
+    label: i18n.t("common.veryLow"),
     value: "very-low-scale",
     className: "very-low-scale",
   },
   {
-    label: "Low",
+    label: i18n.t("common.low"),
     value: "low-scale",
     className: "low-scale",
   },
   {
-    label: "Average",
+    label: i18n.t("common.avg"),
     value: "avg-scale",
     className: "avg-scale",
   },
   {
-    label: "High",
+    label: i18n.t("common.high"),
     value: "high-scale",
     className: "high-scale",
   },
   {
-    label: "Very High",
+    label: i18n.t("common.veryHigh"),
     value: "very-high-scale",
     className: "very-high-scale",
   },
