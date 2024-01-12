@@ -27,7 +27,7 @@
       margin-bottom: 1rem;
       background-color: $muted-silver;
       text-align: center;
-      @include font-style($jet-black, 1.9rem, 2.4rem, 700, Roboto);
+      @include font-style($jet-black, 1.9rem, 2.4rem, 700);
       letter-spacing: 0.015rem;
       text-align: left;
       cursor: pointer;
@@ -53,11 +53,11 @@
     text-align: left;
     .feedback-title {
       margin-bottom: 0.5rem;
-      @include font-style($black, 1.6rem, 1.92rem, 500, Roboto);
+      @include font-style($black, 1.6rem, 1.92rem, 500);
     }
 
     .name {
-      @include font-style($indigo, 1.9rem, 2.4rem, 700, Roboto);
+      @include font-style($indigo, 1.9rem, 2.4rem, 700);
       letter-spacing: 0.02rem;
     }
   }
@@ -72,14 +72,14 @@
     }
     p {
       margin-bottom: 1rem;
-      @include font-style($black, 1.6rem, 2.4rem, 400, Roboto);
+      @include font-style($black, 1.6rem, 2.4rem, 400);
       letter-spacing: 0.02rem;
     }
     .text-area {
       border-radius: 0.4rem;
       border: 0.1rem solid $border-black-20;
       &::placeholder {
-        @include font-style($border-black, 1.6rem, 2.4rem, 400, Roboto);
+        @include font-style($border-black, 1.6rem, 2.4rem, 400);
         letter-spacing: 0.015rem;
       }
     }
@@ -92,7 +92,7 @@
       padding-left: 0;
     }
     .overall-ratting {
-      @include font-style($black, 1.6rem, 2.4rem, 400, Roboto);
+      @include font-style($black, 1.6rem, 2.4rem, 400);
       letter-spacing: 0.02rem;
     }
     .rating-btn {
@@ -104,13 +104,13 @@
 
       .active-button {
         @include custom-btn($indigo, 0.5rem, 1);
-        @include font-style($white, 1.4rem, 1.7rem, 700, Roboto);
+        @include font-style($white, 1.4rem, 1.7rem, 700);
         gap: 0.8rem;
       }
 
       .draft-button {
         @include custom-btn("", 0.4rem, 1);
-        @include font-style($indigo, 1.4rem, 2.4rem, 500, Roboto);
+        @include font-style($indigo, 1.4rem, 2.4rem, 500);
         letter-spacing: 0.04rem;
         border: 0.1rem solid $powder-blue;
       }
@@ -132,7 +132,7 @@
     position: sticky;
 
     .cancel-button {
-      @include font-style($ash-grey, 1.4rem, 120%, 700, Roboto);
+      @include font-style($ash-grey, 1.4rem, 120%, 700);
       @include align-items-center;
       text-transform: uppercase;
       .arrow-icon {
@@ -149,12 +149,12 @@
 
       .active-button {
         @include custom-btn($indigo, 0.5rem, 1);
-        @include font-style($white, 1.4rem, 1.7rem, 700, Roboto);
+        @include font-style($white, 1.4rem, 1.7rem, 700);
         gap: 0.8rem;
       }
       .draft-button {
         @include custom-btn("", 0.4rem, 1);
-        @include font-style($indigo, 1.4rem, 2.4rem, 500, Roboto);
+        @include font-style($indigo, 1.4rem, 2.4rem, 500);
         letter-spacing: 0.04rem;
         border: 0.1rem solid $powder-blue;
       }

@@ -3,7 +3,7 @@
 .notify-status-container {
   .message-title {
     margin: 0;
-    @include font-style($black, 1.6rem, normal, 600, Roboto);
+    @include font-style($black, 1.6rem, normal, 600);
   }
 
   .icon-container {

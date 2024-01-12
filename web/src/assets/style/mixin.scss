@@ -134,13 +134,12 @@
 @mixin d-block {
   display: block;
 }
-@mixin font-style($icolor, $size, $lHeight, $fweight, $family) {
+@mixin font-style($icolor, $size, $lHeight, $fweight) {
   font-weight: $fweight;
   font-size: $size;
   line-height: $lHeight;
   color: $icolor;
-  font-family: $family;
-  font-style: normal;
+    font-style: normal;
 }
 @mixin horizontal-line($width, $height, $color) {
   width: $width;

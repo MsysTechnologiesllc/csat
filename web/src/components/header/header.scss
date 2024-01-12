@@ -4,7 +4,7 @@
   padding: 1.6rem 2.5rem;
   background-color: $white;
   .csat {
-    @include font-style($jet-black,2rem,normal,600,Roboto);
+    @include font-style($jet-black, 2rem, normal, 600);
     @include align-items-center;
     margin-left: 0.8rem;
     span {

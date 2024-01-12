@@ -2,3 +2,7 @@
 @forward "./mixin.scss";
 @forward "./variable.scss";
 @forward "../style/breakpointes.scss";
+body,
+* {
+  font-family: 'Roboto', sans-serif;
+}

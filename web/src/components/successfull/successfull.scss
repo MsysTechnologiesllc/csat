@@ -10,11 +10,11 @@
   text-align: center;
 
   .title {
-    @include font-style($jet-black,3.3vw,120%,500,Roboto);
+    @include font-style($jet-black, 3.3vw, 120%, 500);
     margin: 0;
   }
   .description {
-    @include font-style($steel-grey,2.2vw,120%,500,Roboto);
+    @include font-style($steel-grey, 2.2vw, 120%, 500);
     margin: 0;
   }
 }
