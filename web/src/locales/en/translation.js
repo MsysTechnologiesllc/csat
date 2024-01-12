@@ -1,4 +1,31 @@
 export const translationEN = {
-
-    
-}
+  common: {
+    yes: "Yes",
+    no: "No",
+    veryLow: "Very Low",
+    low: "Low",
+    avg: "Average",
+    high: "High",
+    veryHigh: "Very High",
+  },
+  button: {
+    cancel: "Cancel",
+    submit: "Submit",
+    save: "Save",
+    next: "Next",
+    saveAsDraft: "Save as Draft",
+    previous: "Previous",
+    back: "Back",
+    reset: "Reset",
+    yesProceed: "yes, proceed",
+    noSubmit: "no, submit",
+  },
+  greetings: {
+    greetings: "Greetings",
+    project: "Project",
+    projectManager: "Project Manager",
+    deliveryHead: "Delivery Head",
+    shareBefore: "Share Before",
+    getStarted: "Get Started",
+  },
+};

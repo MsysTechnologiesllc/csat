@@ -3,6 +3,7 @@ import { Button, Row, Col } from "antd";
 import PropTypes from "prop-types";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import { useNavigate } from "react-router";
+import i18n from "../../locales/i18next";
 import "./feedback-survey.scss";
 import NotifyStatus from "../notify-status/notify-status";
 
@@ -51,24 +52,24 @@ const Wizard = ({
               className="cancel-button"
               onClick={handleCancel}
             >
-              CANCEL
+              {i18n.t("button.cancel")}
             </Button>
           )}
         </Col>
         {isLastStep ? (
           <div className="draft-submit-btns">
             <Button className="draft-button" onClick={() => handleDraft()}>
-              SAVE AS DRAFT
+              {i18n.t("button.saveAsDraft")}
             </Button>
             <Button onClick={handleTeamMemberFeedback} className="draft-button">
-              YES, PROCEED
+              {i18n.t("button.yesProceed")}
             </Button>
             <Button
               type="primary"
               onClick={handleSubmit}
               className="active-button"
             >
-              NO, SUBMIT
+              {i18n.t("button.noSubmit")}
             </Button>
           </div>
         ) : (
@@ -82,7 +83,7 @@ const Wizard = ({
               disabled={!isAnswerSelected}
               onClick={() => handleDraft()}
             >
-              SAVE AS DRAFT
+              {i18n.t("button.saveAsDraft")}
             </Button>
             <Button
               type="primary"
@@ -94,7 +95,7 @@ const Wizard = ({
               }
               disabled={!isAnswerSelected}
             >
-              <span> NEXT</span>
+              <span> {i18n.t("button.next")}</span>
               <GoArrowRight className="arrow-icon" />
             </Button>
           </div>
