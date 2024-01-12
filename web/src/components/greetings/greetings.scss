@@ -68,7 +68,7 @@
     }
   }
 
-  @media only screen and (max-width: 768px) {
+  @include media("<=md") {
     .greetings-main-container {
       height: auto;
       @include flex-column;
@@ -138,8 +138,8 @@
       }
     }
   }
-  
-  @media only screen and ((min-width: 425px) and (max-width: 767px)) {
+
+  @include media(">=425px" and "<md") {
     .greetings-main-container {
       height: 50vh;
       overflow: scroll;
@@ -161,7 +161,7 @@
       }
     }
   }
-  @media only screen and ((min-width: 768px) and (max-width: 1200px)) {
+  @include media(">=md" and "<=xl") {
     .greetings-main-container {
       @include align-items-center;
       height: 60%;
@@ -177,7 +177,7 @@
     }
   }
 
-  @media only screen and (min-width: 1400px) {
+  @include media(">=xxl") {
     @include justify-content-center;
     @include align-items-center;
   }

@@ -330,7 +330,7 @@
   }
 
   .wizard-container {
-    @media only screen and (max-width: 768px) {
+    @include media("<=md") {
       .steps-action {
         .btn-container {
           margin-top: 10%;
@@ -350,7 +350,6 @@
           }
 
           .draft-submit-btns {
-
             .active-button,
             .draft-button {
               font-size: 1rem;
@@ -470,7 +469,6 @@
             .label {
               font-size: 1.2rem;
               height: 2.2rem;
-
             }
 
             .very-low-scale,
@@ -555,7 +553,6 @@
         }
 
         .ant-rate {
-
           .ant-rate-star {
             width: 20%;
 
@@ -581,10 +578,9 @@
         }
       }
 
-      @media only screen and (max-width: 425px) {
+      @include media("<=425px") {
         .steps-content {
           .speedometer-group-images {
-
             .speedometer {
               min-width: 5.5rem;
               max-width: 5.5rem;
@@ -634,8 +630,7 @@
       }
     }
 
-    @media only screen and ((min-width:768px) and (max-width: 1200px)) {
-
+    @include media(">=md" and "<=xl") {
       .ant-rate {
         .ant-rate-star {
           width: 20%;
@@ -687,7 +682,6 @@
           .label {
             font-size: 1.2rem;
             height: 2.2rem;
-
           }
 
           .very-low-scale,
@@ -742,7 +736,6 @@
       }
 
       .smiles-container {
-
         .radio-img-container {
           .emoji-container {
             @include justify-content-between;
@@ -774,7 +767,7 @@
     }
   }
 
-  @media only screen and (max-width: 768px) {
+  @include media("<=md") {
     .progress-bar-container {
       .progress-bar {
         width: 60%;
