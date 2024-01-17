@@ -1,0 +1,20 @@
+@use "../../assets/style/" as *;
+
+.feedback-submitted {
+  width: 100%;
+  height: calc(100vh - 70px);
+  @include flex-column;
+  @include justify-content-center;
+  @include align-items-center;
+  gap: 2.4rem;
+  text-align: center;
+
+  .title {
+    @include font-style($jet-black, 3.3vw, 120%, 500);
+    margin: 0;
+  }
+  .description {
+    @include font-style($steel-grey, 2.2vw, 120%, 500);
+    margin: 0;
+  }
+}

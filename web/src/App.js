@@ -1,11 +1,14 @@
 import React from "react";
-import "./App.css";
-import { plLibComponents } from "./context-provider/component-provider";
+import "./App.scss";
+import { Header } from "./components/header/header";
+import AppRoutes from "./routes/AppRoutes";
+
 function App() {
   const { NoData } = plLibComponents.components;
   return (
     <div className="App">
-      React <NoData />
+      <Header />
+      <AppRoutes />
     </div>
   );
 }

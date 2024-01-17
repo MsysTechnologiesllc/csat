@@ -20,7 +20,7 @@ module.exports = {
     "no-trailing-spaces": "error",
     "no-console": "off",
     "linebreak-style": 0,
-    "max-len": ["warn", { code: 180 }],
+    "max-len": ["warn", { code: 500 }],
     "import/prefer-default-export": "off",
     "comma-dangle": "off",
     "no-plusplus": "off",
