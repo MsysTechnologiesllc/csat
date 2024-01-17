@@ -16,11 +16,11 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-// @title Your Microservice API
+// @title CSAT Swagger documentation
 // @version 1.0
-// @description Your Microservice API with Swagger documentation
-// @host localhost:8080
-// @BasePath /api/v1
+// @CSAT APIs
+// @host localhost:8000
+// @BasePath /csat/rest
 func main() {
 	logger.Log.Printf("Microservice is Running...")
 	corsHandler := handlers.CORS(
