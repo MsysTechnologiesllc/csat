@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 
 export const plLibComponents = require("pl-lib");
 
-console.log(plLibComponents);
-
 export const ComponentProviderContext = createContext();
 
 function ComponentProvider(props) {

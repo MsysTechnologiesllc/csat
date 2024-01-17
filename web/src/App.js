@@ -4,7 +4,6 @@ import { Header } from "./components/header/header";
 import AppRoutes from "./routes/AppRoutes";
 
 function App() {
-  const { NoData } = plLibComponents.components;
   return (
     <div className="App">
       <Header />
