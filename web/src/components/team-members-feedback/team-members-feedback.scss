@@ -1,0 +1,180 @@
+@use "../../assets/style/" as *;
+
+.feedback-container {
+  margin-top: 0.2rem;
+  background-color: $white;
+  gap: 4rem;
+  padding: 2rem;
+  .team-members-list-container {
+    @include d-none;
+    .search-members {
+      width: 100%;
+    }
+  }
+  .card-search-container {
+    @include d-block;
+
+    .search-input {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border-radius: 0.4rem;
+      border: 0.2rem solid $med-slate-blue;
+    }
+
+    .member-card {
+      padding: 1.3rem;
+      border-radius: 0.8rem;
+      margin-bottom: 1rem;
+      background-color: $muted-silver;
+      text-align: center;
+      @include font-style($jet-black, 1.9rem, 2.4rem, 700);
+      letter-spacing: 0.015rem;
+      text-align: left;
+      cursor: pointer;
+      .ant-card-body {
+        padding: 0;
+      }
+    }
+    .bg {
+      background-color: $muted-lilac;
+    }
+  }
+  @include media("<=md") {
+    .card-search-container {
+      @include d-none;
+    }
+
+    .team-members-list-container {
+      @include d-block;
+    }
+  }
+
+  .feeback-names {
+    text-align: left;
+    .feedback-title {
+      margin-bottom: 0.5rem;
+      @include font-style($black, 1.6rem, 1.92rem, 500);
+    }
+
+    .name {
+      @include font-style($indigo, 1.9rem, 2.4rem, 700);
+      letter-spacing: 0.02rem;
+    }
+  }
+
+  .text-area-container {
+    padding: 0 0 0 2rem;
+    gap: 2rem;
+    text-align: left;
+    margin: 2rem 0;
+    @include media("<=md") {
+      padding-left: 0;
+    }
+    p {
+      margin-bottom: 1rem;
+      @include font-style($black, 1.6rem, 2.4rem, 400);
+      letter-spacing: 0.02rem;
+    }
+    .text-area {
+      border-radius: 0.4rem;
+      border: 0.1rem solid $border-black-20;
+      &::placeholder {
+        @include font-style($border-black, 1.6rem, 2.4rem, 400);
+        letter-spacing: 0.015rem;
+      }
+    }
+  }
+  .rating-btn-container {
+    text-align: left;
+    padding: 0 0 0 2rem;
+
+    @include media("<=md") {
+      padding-left: 0;
+    }
+    .overall-ratting {
+      @include font-style($black, 1.6rem, 2.4rem, 400);
+      letter-spacing: 0.02rem;
+    }
+    .rating-btn {
+      text-align: right;
+
+      button {
+        margin-left: 2rem;
+      }
+
+      .active-button {
+        @include custom-btn($indigo, 0.5rem, 1);
+        @include font-style($white, 1.4rem, 1.7rem, 700);
+        gap: 0.8rem;
+      }
+
+      .draft-button {
+        @include custom-btn("", 0.4rem, 1);
+        @include font-style($indigo, 1.4rem, 2.4rem, 500);
+        letter-spacing: 0.04rem;
+        border: 0.1rem solid $powder-blue;
+      }
+
+      .disabled-button {
+        opacity: 0.7;
+      }
+    }
+
+    .rating {
+      font-size: 3.5rem;
+      margin-top: 1.5rem;
+    }
+  }
+
+  .btn-container {
+    @include justify-content-between;
+    width: 100%;
+    position: sticky;
+
+    .cancel-button {
+      @include font-style($ash-grey, 1.4rem, 120%, 700);
+      @include align-items-center;
+      text-transform: uppercase;
+      .arrow-icon {
+        font-size: 1.8rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.2rem;
+      }
+    }
+
+    .draft-submit-btns {
+      @include d-flex;
+      margin-left: auto;
+      gap: 2rem;
+
+      .active-button {
+        @include custom-btn($indigo, 0.5rem, 1);
+        @include font-style($white, 1.4rem, 1.7rem, 700);
+        gap: 0.8rem;
+      }
+      .draft-button {
+        @include custom-btn("", 0.4rem, 1);
+        @include font-style($indigo, 1.4rem, 2.4rem, 500);
+        letter-spacing: 0.04rem;
+        border: 0.1rem solid $powder-blue;
+      }
+    }
+    @include media("<=425px") {
+      @include flex-column;
+      .draft-submit-btns {
+        margin-left: 0;
+        @include justify-content-around;
+      }
+      .cancel-button {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  @include media(">=md") {
+    gap: 1.5rem;
+    .text-area-container {
+      gap: 1rem;
+    }
+  }
+}

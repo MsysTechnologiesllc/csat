@@ -1,0 +1,6 @@
+@use "./assets/style/" as *;
+.App {
+  text-align: center;
+  background: $silver-grey;
+  min-height: 100vh;
+}

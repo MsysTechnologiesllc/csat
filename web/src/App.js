@@ -1,8 +1,12 @@
-import './App.css';
+import "./App.scss";
+import { Header } from "./components/header/header";
+import AppRoutes from "./routes/AppRoutes";
+
 function App() {
   return (
     <div className="App">
-           React
+      <Header />
+      <AppRoutes />
     </div>
   );
 }
