@@ -133,3 +133,44 @@ var UpdateUserFeedback = func(w http.ResponseWriter, r *http.Request) {
 	resp[constants.DATA] = userFeedbackData
 	u.Respond(w, resp)
 }
+
+// @Summary All surveys
+// @Description Retrieve All surveys based on tenant ID
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param tenant_id query int true "Tenant ID (required)" default(101)
+// @Param page query int true "Page (required)" default(1)
+// @Param limit query int true "Limit (required)" default(5)
+// @Param status query string "Status (optional)" default(completed)
+// @Param accountName query string "Account Name (optional)" default(CMS)
+// @Success 200 {object} map[string]interface{} "User details retrieved successfully"
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 401 {object} map[string]interface{} "Unauthorized: Token is missing or invalid"
+// @Failure 404 {object} map[string]interface{} "No user found"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /api/surveys [get]
+var GetAllSurveysByTenant = func(w http.ResponseWriter, r *http.Request) {
+	logger.Log.Println("Logging from Controller")
+
+	// Parse query parameters
+	queryValues := r.URL.Query()
+	tenantIDStr := queryValues.Get("tenant_id")
+	pageStr := queryValues.Get("page")
+	pageSizeStr := queryValues.Get("limit")
+	statusFilter := r.URL.Query().Get("status")
+    accountNameFilter := r.URL.Query().Get("accountName")
+
+	tenantID, _ := strconv.ParseUint(tenantIDStr, 10, 64)
+	page, _ := strconv.Atoi(pageStr)
+    pageSize, _ := strconv.Atoi(pageSizeStr)
+
+	data, err := models.GetAllSurveysFromDB(tenantID, page, pageSize, statusFilter, accountNameFilter)
+	if err != nil {
+		http.Error(w, constants.UPDATED_FAILED, http.StatusInternalServerError)
+		return
+	}
+	resp := u.Message(true, constants.SUCCESS)
+	resp[constants.DATA] = data
+	u.Respond(w, resp)
+}

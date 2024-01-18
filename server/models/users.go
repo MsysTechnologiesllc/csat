@@ -286,3 +286,64 @@ func UpdateUserFeedbackInDB(id uint, updatedFeedback *schema.UserFeedback) (*sch
 
 	return &existingUserFeedback, nil
 }
+
+type SurveyPage struct {
+	Surveys    []schema.Survey
+	TotalCount int
+}
+
+// @Summary All surveys
+// @Description Retrieve All surveys based on tenant ID
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param tenant_id query int true "Tenant ID (required)" default(101)
+// @Param page query int true "Page (required)" default(1)
+// @Param limit query int true "Limit (required)" default(5)
+// @Param status query string "Status (optional)" default(completed)
+// @Param accountName query string "Account Name (optional)" default(CMS)
+// @Success 200 {object} map[string]interface{} "User details retrieved successfully"
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 401 {object} map[string]interface{} "Unauthorized: Token is missing or invalid"
+// @Failure 404 {object} map[string]interface{} "No user found"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /api/surveys [get]
+func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter string) (SurveyPage, error) {
+	var result SurveyPage
+
+	query := db.
+		Preload("Project").
+		Joins("JOIN projects ON surveys.project_id = projects.id").
+		Joins("JOIN accounts ON projects.account_id = accounts.id").
+		Where("accounts.tenant_id = ?", tenantID)
+
+	// Apply search filters
+	if statusFilter != "" {
+		query = query.Where("surveys.status = ?", statusFilter)
+	}
+
+	if accountNameFilter != "" {
+		query = query.Where("accounts.name = ?", accountNameFilter)
+	}
+
+	// Get the count with applied filters
+	filteredCount := 0
+	if err := query.Model(&schema.Survey{}).Count(&filteredCount).Error; err != nil {
+		return result, err
+	}
+
+	// Calculate offset based on page and pageSize
+	offset := (page - 1) * pageSize
+
+	// Implement pagination
+	query = query.Offset(offset).Limit(pageSize)
+
+	if err := query.Find(&result.Surveys).Error; err != nil {
+		return result, err
+	}
+
+	// Set the total count in the result struct
+	result.TotalCount = filteredCount
+
+	return result, nil
+}

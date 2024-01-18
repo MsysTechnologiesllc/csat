@@ -26,6 +26,71 @@ info:
   title: CSAT Swagger documentation
   version: "1.0"
 paths:
+  /api/surveys:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve All surveys based on tenant ID
+      parameters:
+      - default: 101
+        description: Tenant ID (required)
+        in: query
+        name: tenant_id
+        required: true
+        type: integer
+      - default: 1
+        description: Page (required)
+        in: query
+        name: page
+        required: true
+        type: integer
+      - default: 5
+        description: Limit (required)
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: Status (optional)
+        in: query
+        name: status
+        type: integer
+      - default: CMS
+        description: Account Name (optional)
+        in: query
+        name: accountName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User details retrieved successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: 'Unauthorized: Token is missing or invalid'
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: No user found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: All surveys
+      tags:
+      - users
   /api/team-list:
     get:
       consumes:

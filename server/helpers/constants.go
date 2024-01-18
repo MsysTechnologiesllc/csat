@@ -17,8 +17,8 @@ const (
 	TENANT_NOT_FOUND    = "Tenant not found for this user"
 	TOKEN_MISSING       = "Missing auth token"
 	TOKEN_INVALID       = "Invalid/Malformed authentication token"
-	REQ_BODY_FAILED       = "Failed to decode JSON request body"
-	PROJECT_ID_REQUIRED       = "Project Id required"
+	REQ_BODY_FAILED     = "Failed to decode JSON request body"
+	PROJECT_ID_REQUIRED = "Project Id required"
 
 	// Success Response Message
 	SUCCESS            = "Success"
@@ -26,7 +26,7 @@ const (
 	USER_CREATED       = "User account has been created"
 	LOGGED_IN          = "Logged In Successfully"
 	UPDATED_SUCCESS    = "Data Updated Successfully"
-	UPDATED_FAILED    = "Data Updated Failed"
+	UPDATED_FAILED     = "Data Updated Failed"
 
 	// Table Names
 
