@@ -3,13 +3,30 @@ package utils
 import (
 	"html/template"
 	"net/smtp"
+	"os"
 	"path/filepath"
+	"strings"
+
+	"github.com/joho/godotenv"
 )
+
+// Load environment variables from .env file
+func init() {
+	err := godotenv.Load()
+	if err != nil {
+		panic("Error loading .env file")
+	}
+}
 
 // EmailData struct represents the data to be passed to the email template.
 type EmailData struct {
 	Name        string
 	ProjectName string
+}
+
+type EmailRecipient struct {
+	To      []string
+	Subject string
 }
 
 // Config struct holds configuration values for sending emails.
@@ -23,7 +40,7 @@ type Config struct {
 }
 
 // sendMail sends an email using the provided configuration and data.
-func SendMail(templateName string, data EmailData) error {
+func SendMail(templateName string, data EmailData, r EmailRecipient ) error {
 	
 	// templateFile := templateName + ".html"
 	templateFile := filepath.Join("templates", templateName+".html")
@@ -44,11 +61,10 @@ func SendMail(templateName string, data EmailData) error {
 	}
 
 	config := &Config{
-		SMTPServer:   "smtp.gmail.com",
-		SMTPPort:     "587",
-		SenderEmail:  "rahulsharmars1854@gmail.com",
-		SenderPass:   "ldpe yjzz bwxm ygpd",
-		TemplateName: "email_template",
+		SMTPServer:   os.Getenv("SMTP_SERVER"),
+		SMTPPort:     os.Getenv("SMTP_PORT"),
+		SenderEmail:  os.Getenv("SENDER_EMAIL"),
+		SenderPass:   os.Getenv("SENDER_PASS"),
 	}
 
 
@@ -57,9 +73,9 @@ func SendMail(templateName string, data EmailData) error {
 	auth := smtp.PlainAuth("", config.SenderEmail, config.SenderPass, config.SMTPServer)
 
 	// Compose the email
-	to := []string{"sharmar@msystechnologies.com"} // Change this to the recipient's email address
-	msg := []byte("To: " + to[0] + "\r\n" +
-		"Subject: Survey Mail\r\n" +
+	to := r.To // Change this to the recipient's email address
+	msg := []byte("To: " + strings.Join(r.To, ",") + "\r\n" +
+		"Subject: " + r.Subject + "\r\n" +
 		"Content-Type: text/html\r\n" +
 		"\r\n" +
 		bodyText)
