@@ -10,4 +10,5 @@ type UserFeedback struct {
 	Description string `gorm:"unique" json:"description"`
 	Rating      uint   `gorm:"unique" json:"rating"`
 	SurveyID    uint   `gorm:"null" json:"survey_id"`
+	User        *User  `gorm:"ForeignKey:UserID" json:"user"`
 }

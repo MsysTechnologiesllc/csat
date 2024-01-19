@@ -23,14 +23,15 @@ const (
 	// DB Field Names
 	NAME       = "name"
 	PROJECT_ID = "project_id"
+	ID         = "id"
 
 	// Others
-	DATA = "data"
-	USER = "user"
-
+	DATA   = "data"
+	USER   = "user"
+	SURVEY = "survey"
 
 	// DB Connection
-	DB_CONNECTED = "Connected to DB"
+	DB_CONNECTED        = "Connected to DB"
 	DB_CONNECTION_ERROR = "DB Connection Error"
-	ENV_ERROR = "ENV Loading Error"
+	ENV_ERROR           = "ENV Loading Error"
 )

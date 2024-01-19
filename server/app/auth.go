@@ -15,8 +15,15 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		notAuth := []string{"/api/user/new", "/api/user/login"}
+		notAuth := []string{"/csat/rest/api/user/new", "/csat/rest/api/user/login", "/swagger/"}
 		requestPath := r.URL.Path
+
+		// Check if the request is made from Swagger UI
+		referer := r.Header.Get("Referer")
+		if strings.Contains(referer, "/swagger/index.html") {
+			next.ServeHTTP(w, r)
+			return
+		}
 
 		for _, value := range notAuth {
 

@@ -19,8 +19,8 @@ import (
 // @title Your Microservice API
 // @version 1.0
 // @description Your Microservice API with Swagger documentation
-// @host localhost:8080
-// @BasePath /api/v1
+// @host localhost:8000
+// @BasePath /csat/rest
 func main() {
 	logger.Log.Printf("Microservice is Running...")
 	corsHandler := handlers.CORS(
