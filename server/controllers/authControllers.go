@@ -96,6 +96,18 @@ var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
+// @Summary Login API
+// @Description Login API
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param email body string true "Email address" example:"Test1@yahoo.com"
+// @Param password body string true "User password" example:"Test@123"
+// @Success 200 {object} map[string]interface{} "User created successfully"
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 401 {object} map[string]interface{} "Unauthorized: Token is missing or invalid"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /api/user/login [post]
 var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 
 	account := &models.User{}

@@ -10,10 +10,12 @@ import (
 
 func SetupRoutes(router *mux.Router) {
 	apiRouter := router.PathPrefix("/csat/rest").Subrouter()
-	apiRouter.HandleFunc("/api/user/test", controllers.CreateTemplate).Methods("GET")
 	apiRouter.HandleFunc("/api/user/new", controllers.CreateAccount).Methods("POST")
 	apiRouter.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
 	apiRouter.HandleFunc("/api/team-list", controllers.GetUserList).Methods("GET")
+	apiRouter.HandleFunc("/api/user", controllers.GetUserDetails).Methods("GET")
+	apiRouter.HandleFunc("/api/userFeedback", controllers.UpdateUserFeedback).Methods("PUT")
+	apiRouter.HandleFunc("/api/surveys", controllers.GetAllSurveysByTenant).Methods("GET")
 
 	apiRouter.Use(app.JwtAuthentication) //attach JWT auth middleware
 }
