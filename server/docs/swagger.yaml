@@ -1,14 +1,263 @@
 basePath: /csat/rest
 definitions:
+  models.LoginRequest:
+    properties:
+      email:
+        example: Test1@yahoo.com
+        type: string
+      password:
+        example: Test@123
+        type: string
+    type: object
+  models.UpdateUserRequest:
+    properties:
+      negatives:
+        type: string
+      positives:
+        type: string
+      rating:
+        type: number
+      userFeedbackId:
+        type: integer
+    type: object
   models.Survey:
     type: object
 host: localhost:8000
 info:
   contact: {}
-  description: Your Microservice API with Swagger documentation
-  title: Your Microservice API
+  title: CSAT Swagger documentation
   version: "1.0"
 paths:
+  /api/surveys:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve All surveys based on tenant ID
+      parameters:
+      - default: 101
+        description: Tenant ID (required)
+        in: query
+        name: tenant_id
+        required: true
+        type: integer
+      - default: 1
+        description: Page (required)
+        in: query
+        name: page
+        required: true
+        type: integer
+      - default: 5
+        description: Limit (required)
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: Status (optional)
+        in: query
+        name: status
+        type: integer
+      - default: CMS
+        description: Account Name (optional)
+        in: query
+        name: accountName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User details retrieved successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: 'Unauthorized: Token is missing or invalid'
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: No user found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: All surveys
+      tags:
+      - users
+  /api/team-list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of users based on name and project ID
+      parameters:
+      - description: User name (optional)
+        in: query
+        name: name
+        type: string
+      - default: 301
+        description: Project ID (required)
+        in: query
+        name: project_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User list retrieved successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: No users found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get user list
+      tags:
+      - users
+  /api/user:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve user details based on User ID
+      parameters:
+      - default: 2
+        description: User ID (required)
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User details retrieved successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: 'Unauthorized: Token is missing or invalid'
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: No user found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Get user Details
+      tags:
+      - users
+  /api/user/login:
+    post:
+      consumes:
+      - application/json
+      description: Login existing user
+      parameters:
+      - description: Login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User created successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: 'Unauthorized: Token is missing or invalid'
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login User
+      tags:
+      - users
+  /api/userFeedback:
+    put:
+      consumes:
+      - application/json
+      description: Update user feedback details
+      parameters:
+      - description: Update User Feedback Request
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/models.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'User feedback updated successfully" example:"{''message'':
+            ''Feedback updated successfully''}'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: 'Invalid request" example:"{''error'': ''Invalid request''}'
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: 'Unauthorized: Token is missing or invalid" example:"{''error'':
+            ''Unauthorized''}'
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: 'Internal server error" example:"{''error'': ''Internal server
+            error''}'
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update user feedback
+      tags:
+      - users
   /api/survey:
     post:
       consumes:

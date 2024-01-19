@@ -16,9 +16,9 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-// @title Your Microservice API
+// @title CSAT Swagger documentation
 // @version 1.0
-// @description Your Microservice API with Swagger documentation
+// @CSAT APIs
 // @host localhost:8000
 // @BasePath /csat/rest
 func main() {

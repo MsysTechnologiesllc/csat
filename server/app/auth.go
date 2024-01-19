@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"csat/helpers"
 	"csat/models"
 	u "csat/utils"
 	"net/http"
@@ -37,7 +38,7 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 		tokenHeader := r.Header.Get("Authorization")
 
 		if tokenHeader == "" {
-			response = u.Message(false, "Missing auth token")
+			response = u.Message(false, constants.TOKEN_MISSING)
 			w.WriteHeader(http.StatusForbidden)
 			w.Header().Add("Content-Type", "application/json")
 			u.Respond(w, response)
@@ -46,7 +47,7 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 
 		splitted := strings.Split(tokenHeader, " ")
 		if len(splitted) != 2 {
-			response = u.Message(false, "Invalid/Malformed auth token")
+			response = u.Message(false, constants.TOKEN_INVALID)
 			w.WriteHeader(http.StatusForbidden)
 			w.Header().Add("Content-Type", "application/json")
 			u.Respond(w, response)
@@ -61,7 +62,7 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 		})
 
 		if err != nil {
-			response = u.Message(false, "Malformed authentication token")
+			response = u.Message(false, constants.TOKEN_INVALID)
 			w.WriteHeader(http.StatusForbidden)
 			w.Header().Add("Content-Type", "application/json")
 			u.Respond(w, response)
@@ -69,7 +70,7 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 		}
 
 		if !token.Valid {
-			response = u.Message(false, "Token is not valid.")
+			response = u.Message(false, constants.TOKEN_INVALID)
 			w.WriteHeader(http.StatusForbidden)
 			w.Header().Add("Content-Type", "application/json")
 			u.Respond(w, response)

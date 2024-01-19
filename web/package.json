@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/preset-env": "^7.23.7",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -13,7 +14,9 @@
     "i18next-http-backend": "^2.4.2",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
+    "pl-lib": "github:MsysTechnologiesllc/pl-lib#develop",
     "react": "^18.2.0",
+    "react-dev-utils": "^12.0.1",
     "react-dom": "^18.2.0",
     "react-i18next": "^14.0.0",
     "react-icons": "^4.12.0",
@@ -25,9 +28,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -54,6 +57,7 @@
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-prettier": "^5.1.2",
     "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "react-app-rewired": "^2.2.1"
   }
 }
