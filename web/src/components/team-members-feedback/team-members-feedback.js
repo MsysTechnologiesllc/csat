@@ -55,7 +55,16 @@ export const TeamMembersFeedBack = () => {
                   : "member-card"
               }
             >
-              {member.label}
+              <div className="text-image-container">
+                {member.label}
+                {member.hasFeedback === 1 && (
+                  <img
+                    src="./images/feedback_updated.svg"
+                    alt={i18n.t("imageAlt.gauge")}
+                    className="feedback-updated-image"
+                  />
+                )}
+              </div>
             </Card>
           ))}
         </div>

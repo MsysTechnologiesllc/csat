@@ -89,25 +89,31 @@ export const teamMembersList = [
   {
     value: "Savannah Nguyen",
     label: "Savannah Nguyen",
+    hasFeedback: 0,
   },
   {
     value: "Cody Fisher",
     label: "Cody Fisher",
+    hasFeedback: 0,
   },
   {
     value: "Bessie Cooper",
     label: "Bessie Cooper",
+    hasFeedback: 0,
   },
   {
     value: "Guy Hawkins",
     label: "Guy Hawkins",
+    hasFeedback: 0,
   },
   {
     value: "Theresa Web",
     label: "Theresa Web",
+    hasFeedback: 1,
   },
   {
     value: "Courtney Henry",
     label: "Courtney Henry",
+    hasFeedback: 0,
   },
 ];

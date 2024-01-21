@@ -34,6 +34,9 @@
       .ant-card-body {
         padding: 0;
       }
+      .text-image-container {
+        @include justify-content-between;
+      }
     }
     .bg {
       background-color: $muted-lilac;
