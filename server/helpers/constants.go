@@ -33,11 +33,13 @@ const (
 	// DB Field Names
 	NAME       = "name"
 	PROJECT_ID = "project_id"
+	ID         = "id"
 	USER_ID    = "user_id"
 
 	// Others
 	DATA   = "data"
 	USER   = "user"
+	SURVEY = "survey"
 	TENANT = "tenant"
 
 	// DB Connection
