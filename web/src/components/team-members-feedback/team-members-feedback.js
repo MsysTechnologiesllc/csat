@@ -50,7 +50,7 @@ export const TeamMembersFeedBack = () => {
               key={member.value}
               onClick={() => setSelectedMember(member.value)}
               className={
-                selectedMember.value === member.value
+                selectedMember === member.value
                   ? "member-card bg"
                   : "member-card"
               }

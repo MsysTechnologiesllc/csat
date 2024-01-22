@@ -31,6 +31,9 @@
       letter-spacing: 0.015rem;
       text-align: left;
       cursor: pointer;
+      &:hover{
+        background-color: $muted-lilac;
+      }
       .ant-card-body {
         padding: 0;
       }
