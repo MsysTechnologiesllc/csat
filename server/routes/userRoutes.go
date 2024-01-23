@@ -20,5 +20,7 @@ func SetupRoutes(router *mux.Router) {
 	apiRouter.HandleFunc("/api/userFeedback", controllers.UpdateUserFeedback).Methods("PUT")
 	apiRouter.HandleFunc("/api/surveys", controllers.GetAllSurveysByTenant).Methods("GET")
 
+	apiRouter.HandleFunc("/api/populateDB", controllers.UpdateDataFromExcel).Methods("GET")
+
 	apiRouter.Use(app.JwtAuthentication) //attach JWT auth middleware
 }
