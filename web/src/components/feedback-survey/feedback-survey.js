@@ -39,14 +39,14 @@ export const FeedBackSurvey = () => {
             <span className="required-star">*</span>
           </p>
           <Radio.Group name="radiogroup" className="radio-group-images ">
-            {step1Options.options.map((option) => (
-              <label key={option.value} className="radio-img-container ">
-                <div className={`emoji-container ${option.value} `}>
-                  <img src={option.imgSrc} alt={option.label} />
-                  <p className="label">{option.label}</p>
+            {step1Options.options.map(({ value, label, imgSrc }) => (
+              <label key={value} className="radio-img-container ">
+                <div className={`emoji-container ${value} `}>
+                  <img src={imgSrc} alt={label} />
+                  <p className="label">{label}</p>
                 </div>
                 <Radio
-                  value={option.value}
+                  value={value}
                   onChange={(event) =>
                     handleChange(step1Options.question, event.target.value)
                   }
@@ -117,22 +117,22 @@ export const FeedBackSurvey = () => {
             name="radiogroup"
             className="radio-group-images smiles-container"
           >
-            {step4Options.options.map((option) => (
-              <label key={option.value} className="radio-img-container ">
-                <div className={`emoji-container ${option.value}`}>
-                  <img src={option.imgSrc} alt={option.label} />
-                  <p className={`label ${option.colorClassName}`}>
-                    {option.label}
-                  </p>
-                </div>
-                <Radio
-                  value={option.value}
-                  onChange={(event) =>
-                    handleChange(step4Options.question, event.target.value)
-                  }
-                />
-              </label>
-            ))}
+            {step4Options.options.map(
+              ({ value, label, imgSrc, colorClassName }) => (
+                <label key={value} className="radio-img-container ">
+                  <div className={`emoji-container ${value}`}>
+                    <img src={imgSrc} alt={label} />
+                    <p className={`label ${colorClassName}`}>{label}</p>
+                  </div>
+                  <Radio
+                    value={value}
+                    onChange={(event) =>
+                      handleChange(step4Options.question, event.target.value)
+                    }
+                  />
+                </label>
+              ),
+            )}
           </Radio.Group>
         </>
       ),
@@ -149,7 +149,7 @@ export const FeedBackSurvey = () => {
             name="radiogroup"
             className="radio-group-images speedometer-group-images"
           >
-            {step5Options.options.map((option, index) => (
+            {step5Options.options.map(({ className, label, value }, index) => (
               <label key={index} className="speedometer radio-img-container">
                 <img
                   src="./images/gauge.svg"
@@ -159,11 +159,11 @@ export const FeedBackSurvey = () => {
                 <img
                   src="./images/needle.svg"
                   alt={i18n.t("imageAlt.needle")}
-                  className={option.className}
+                  className={className}
                 />
-                <label className="label">{option.label}</label>
+                <label className="label">{label}</label>
                 <Radio
-                  value={option.value}
+                  value={value}
                   onChange={(event) =>
                     handleChange(step5Options.question, event.target.value)
                   }
@@ -184,13 +184,13 @@ export const FeedBackSurvey = () => {
           <TextArea
             rows={5}
             placeholder={i18n.t("placeholder.message")}
-            className="text-area"
             onChange={(event) =>
               handleChange(
                 i18n.t("surveyQuestions.likeToShareWithUs"),
                 event.target.value,
               )
             }
+            className="text-area"
           />
         </>
       ),
