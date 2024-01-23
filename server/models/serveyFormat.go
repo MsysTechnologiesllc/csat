@@ -76,9 +76,9 @@ func CreateSurveyFormat(db *gorm.DB, tenantID, accountID, projectID uint, title,
 
 func CreateMCQQuestion(db *gorm.DB, surveyFormatID uint, questionDescription string, questionType string, questionOptions string) (schema.McqQuestions, error) {
 	mcqFormat := schema.McqQuestions{
-		Description: questionDescription,
-		Type: questionType,
-		Options: questionOptions,
+		Description:    questionDescription,
+		Type:           questionType,
+		Options:        questionOptions,
 		SurveyFormatID: surveyFormatID,
 	}
 
@@ -101,4 +101,48 @@ func CreateUsersProject(db *gorm.DB, userID uint, projectID uint, role string) e
 	}
 
 	return nil
+}
+
+func CreateSurveyWithUserFeedback(db *gorm.DB, surveyFormat schema.SurveyFormat, users []schema.User, mcqQuestions []schema.McqQuestions) ([]*schema.UserFeedback, []*schema.SurveyAnswers, uint, error) {
+	survey := schema.Survey{
+		SurveyFormatID: surveyFormat.ID,
+		Name:           surveyFormat.Title,
+		Description:    surveyFormat.Message,
+		Status:         "pending",
+	}
+
+	var userFeedbacksData []*schema.UserFeedback
+	var surveyQuestionsData []*schema.SurveyAnswers
+	surveyID, err := CreateSurvey(&survey)
+	if err != nil {
+		return nil, nil, 0, fmt.Errorf("failed to store survey in the database: %v", err)
+	}
+
+	// Create user feedbacks
+	for _, userDetails := range users {
+		userFeedback := &schema.UserFeedback{
+			UserID:   uint(userDetails.ID),
+			SurveyID: surveyID,
+		}
+		userFeedbacks, err := UserFeedbackCreate(userFeedback)
+		if err != nil {
+			return nil, nil, 0, fmt.Errorf("failed to store user feedback in the database: %v", err)
+		}
+		userFeedbacksData = append(userFeedbacksData, userFeedbacks)
+	}
+
+	// Create survey questions
+	for _, questionDetail := range mcqQuestions {
+		surveyQuestion := &schema.SurveyAnswers{
+			QuestionID: uint(questionDetail.ID),
+			SurveyID:   surveyID,
+		}
+		surveyQuestions, err := SurveyAnswersCreate(surveyQuestion)
+		if err != nil {
+			return nil, nil, 0, fmt.Errorf("failed to store survey question in the database: %v", err)
+		}
+		surveyQuestionsData = append(surveyQuestionsData, surveyQuestions)
+	}
+
+	return userFeedbacksData, surveyQuestionsData, surveyID, nil
 }

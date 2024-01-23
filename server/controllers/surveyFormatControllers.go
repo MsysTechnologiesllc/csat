@@ -164,73 +164,40 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//creating new survey
-	survey := schema.Survey{
-		Name:        surveyFormat.Title,
-		Description: surveyFormat.Message,
-		Status:      "pending",
-	}
-
 	var userFeedbacksData []*schema.UserFeedback
 	var surveyQuestionsData []*schema.SurveyAnswers
-	surveyID, err := models.CreateSurvey(&survey)
-	if err != nil {
-		http.Error(w, "Failed to store survey in the database", http.StatusInternalServerError)
-		return
-	}
-
-	for _, userDetails := range users {
-		// Create user feedback
-		userFeedback := &schema.UserFeedback{
-			UserID:   uint(userDetails.ID),
-			SurveyID: surveyID,
-		}
-		userFeedbacks, err := models.UserFeedbackCreate(userFeedback)
-		if err != nil {
-			http.Error(w, "Failed to store survey in the database", http.StatusInternalServerError)
-			return
-		}
-		userFeedbacksData = append(userFeedbacksData, userFeedbacks)
-	}
-
-	for _, questionDetail := range mcqQuestions {
-		// Create questions
-		surveyQuestion := &schema.SurveyAnswers{
-			QuestionID: uint(questionDetail.ID),
-			SurveyID:   surveyID,
-		}
-		surveyQuestions, err := models.SurveyAnswersCreate(surveyQuestion)
-		if err != nil {
-			http.Error(w, "Failed to store survey in the database", http.StatusInternalServerError)
-			return
-		}
-		surveyQuestionsData = append(surveyQuestionsData, surveyQuestions)
-	}
-
+	var surveyID uint
 	//Sending mail
 	for _, user := range users {
-		// fullURL := fmt.Sprintf("http://test.com/csat?surveyid=%d", surveyID)
 		if user.Role == "client" {
+			userFeedbacks, surveyQuestions, surveyId, err := models.CreateSurveyWithUserFeedback(db, surveyFormat, users, mcqQuestions)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			userFeedbacksData = userFeedbacks
+			surveyQuestionsData = surveyQuestions
+			surveyID = surveyId
+
 			emailData := u.EmailData{
 				Name:        user.Name,
 				ProjectName: project.Name,
-				SurveyID: fmt.Sprintf("http://test.com/csat?surveyid=%d", surveyID),
+				SurveyID:    fmt.Sprintf("http://test.com/csat?surveyid=%d", surveyID),
 			}
 			emailRecipient := u.EmailRecipient{
-				To:      []string{"rbalachandar@msystechnologies.com"},
+				To:      []string{user.Email},
 				Subject: "Survey Mail",
 			}
 
 			templateName := "email_template"
 
 			// Send mail using the populated emailData and emailRecipient
-			err := u.SendMail(templateName, emailData, emailRecipient)
+			err = u.SendMail(templateName, emailData, emailRecipient)
 			if err != nil {
 				logger.Log.Printf("Failed to send email for user with ID %d: %v\n", user.ID, err)
 			}
 		}
 	}
-	
 
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = map[string]interface{}{"tenant": tenant, "account": account, "project": project, "surveyFormat": surveyFormat, "surveyID": surveyID, "userFeedbacksData": userFeedbacksData, "surveyAnswersData": surveyQuestionsData}

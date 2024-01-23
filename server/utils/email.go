@@ -3,6 +3,7 @@ package utils
 import (
 	"html/template"
 	"net/smtp"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -60,11 +61,10 @@ func SendMail(templateName string, data EmailData, r EmailRecipient) error {
 	}
 
 	config := &Config{
-		SMTPServer: "smtp.gmail.com",
-		SMTPPort: "587",
-		SenderEmail: "rahulsharmars1854@gmail.com",
-		SenderPass: "ldpe yjzz bwxm ygpd",
-		TemplateName: "email_template",
+		SMTPServer:  os.Getenv("SMTP_SERVER"),
+		SMTPPort:    os.Getenv("SMTP_PORT"),
+		SenderEmail: os.Getenv("SENDER_EMAIL"),
+		SenderPass:  os.Getenv("SENDER_PASS"),
 	}
 
 	// SMTP server configuration
@@ -73,7 +73,9 @@ func SendMail(templateName string, data EmailData, r EmailRecipient) error {
 
 	// Compose the email
 	to := r.To // Change this to the recipient's email address
+	from := "no-reply@msystechnologies.com.com"
 	msg := []byte("To: " + strings.Join(r.To, ",") + "\r\n" +
+		"Reply-To: " + from + "\r\n" +
 		"Subject: " + r.Subject + "\r\n" +
 		"Content-Type: text/html\r\n" +
 		"\r\n" +
