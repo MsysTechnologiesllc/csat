@@ -1,6 +1,7 @@
 import React from "react";
-import "./successfull.scss";
 import { plLibComponents } from "../../context-provider/component-provider";
+import i18n from "../../locales/i18next";
+import "./successfull.scss";
 
 export const Successfull = () => {
   const { NoData } = plLibComponents.components;
@@ -9,8 +10,8 @@ export const Successfull = () => {
       <div className="feedback-submitted">
         <NoData
           image="/images/submitted-logo.svg"
-          heading="Your feedback is submitted successfully!"
-          descriptionLine1="We sincerely thank you for sharing the feedback"
+          heading={i18n.t("submittedSuccessfully.submitted")}
+          descriptionLine1={i18n.t("submittedSuccessfully.description")}
           descriptionLine2=""
         />
       </div>

@@ -4,18 +4,18 @@ import { teamMembersList } from "../../stub-data/data";
 import { useNavigate } from "react-router";
 import { GoArrowLeft } from "react-icons/go";
 import { IoStarSharp } from "react-icons/io5";
-import "./team-members-feedback.scss";
 import i18n from "../../locales/i18next";
 import { plLibComponents } from "../../context-provider/component-provider";
+import "./team-members-feedback.scss";
 
 export const TeamMembersFeedBack = () => {
   const { InputField, InputTextArea } = plLibComponents.components;
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
   const [selectedMember, setSelectedMember] = useState(
     teamMembersList[0].value,
   );
   const [isAnyFieldFilled, setIsAnyFieldFilled] = useState(false);
-  const navigate = useNavigate();
-  const [form] = Form.useForm();
   const onValuesChange = () => {
     const formValues = form.getFieldsValue();
     const anyFieldHasValue = Object.values(formValues).some((value) => !!value);
@@ -42,7 +42,8 @@ export const TeamMembersFeedBack = () => {
         <InputField
           isForm={false}
           type="textinput"
-          labelText="Search by Name"
+          labelText={i18n.t("placeholder.searchName")}
+          placeholder={i18n.t("placeholder.search")}
         />
         <div className="cards-container">
           {teamMembersList.map((member) => (

@@ -5,6 +5,7 @@
   background-color: $white;
   gap: 4rem;
   padding: 2rem;
+  min-height: 89vh;
   .team-members-list-container {
     @include d-none;
     .search-members {
