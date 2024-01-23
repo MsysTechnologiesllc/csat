@@ -1,22 +1,28 @@
 import React, { useState } from "react";
 import Wizard from "./wizard";
 import { WizardProgressBar } from "./wizard-progress-bar";
-import { Radio, Rate } from "antd";
-import "./feedback-survey.scss";
+import { Radio, Rate, Input } from "antd";
 import { step1Options, step4Options, step5Options } from "../../stub-data/data";
-import TextArea from "antd/es/input/TextArea";
 import { useNavigate } from "react-router";
 import { LineOutlined } from "@ant-design/icons";
 import { IoStarSharp } from "react-icons/io5";
 import i18n from "../../locales/i18next";
+import "./feedback-survey.scss";
 
 export const FeedBackSurvey = () => {
+  const { TextArea } = Input;
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [isAnswerSelected, setIsAnswerSelected] = useState(false);
-  const handleChange = () => {
+  const [questionsData, setQuestionsData] = useState([]);
+  const handleChange = (ques, value) => {
     setIsAnswerSelected(true);
+    setQuestionsData((prevData) => ({
+      ...prevData,
+      [ques]: value,
+    }));
   };
+  console.log(questionsData, "entered data");
   const customIcons = Array.from({ length: 5 }, (_, index) => (
     <LineOutlined key={index} className="rating-icon" />
   ));
@@ -29,17 +35,22 @@ export const FeedBackSurvey = () => {
       content: (
         <>
           <p className="question">
-            {i18n.t("surveyQuestions.sprintOnTrack")}
+            {step1Options.question}
             <span className="required-star">*</span>
           </p>
           <Radio.Group name="radiogroup" className="radio-group-images ">
-            {step1Options.map((option) => (
+            {step1Options.options.map((option) => (
               <label key={option.value} className="radio-img-container ">
                 <div className={`emoji-container ${option.value} `}>
                   <img src={option.imgSrc} alt={option.label} />
                   <p className="label">{option.label}</p>
                 </div>
-                <Radio value={option.value} onChange={handleChange} />
+                <Radio
+                  value={option.value}
+                  onChange={(event) =>
+                    handleChange(step1Options.question, event.target.value)
+                  }
+                />
               </label>
             ))}
           </Radio.Group>
@@ -57,7 +68,12 @@ export const FeedBackSurvey = () => {
           <div className="rating-scale-container">
             <Rate
               character={({ index = 0 }) => customIcons[index]}
-              onChange={handleChange}
+              onChange={(value) =>
+                handleChange(
+                  i18n.t("surveyQuestions.overallProjectGoal"),
+                  value,
+                )
+              }
             />
             <div className="rating-desc-container">
               <span className="unsatisfy-text">
@@ -82,7 +98,9 @@ export const FeedBackSurvey = () => {
             character={({ index = 0 }) => customStarIcons[index]}
             allowHalf
             className="rate"
-            onChange={handleChange}
+            onChange={(value) =>
+              handleChange(i18n.t("surveyQuestions.overallRatingOfTeam"), value)
+            }
           />
         </>
       ),
@@ -92,14 +110,14 @@ export const FeedBackSurvey = () => {
       content: (
         <>
           <p className="question">
-            {i18n.t("surveyQuestions.teamMeetExpectations")}
+            {step4Options.question}
             <span className="required-star"> *</span>
           </p>
           <Radio.Group
             name="radiogroup"
             className="radio-group-images smiles-container"
           >
-            {step4Options.map((option) => (
+            {step4Options.options.map((option) => (
               <label key={option.value} className="radio-img-container ">
                 <div className={`emoji-container ${option.value}`}>
                   <img src={option.imgSrc} alt={option.label} />
@@ -107,7 +125,12 @@ export const FeedBackSurvey = () => {
                     {option.label}
                   </p>
                 </div>
-                <Radio value={option.value} onChange={handleChange} />
+                <Radio
+                  value={option.value}
+                  onChange={(event) =>
+                    handleChange(step4Options.question, event.target.value)
+                  }
+                />
               </label>
             ))}
           </Radio.Group>
@@ -119,14 +142,14 @@ export const FeedBackSurvey = () => {
       content: (
         <>
           <p className="question">
-            {i18n.t("surveyQuestions.overallProductivity")}
+            {step5Options.question}
             <span className="required-star"> *</span>
           </p>
           <Radio.Group
             name="radiogroup"
             className="radio-group-images speedometer-group-images"
           >
-            {step5Options.map((option, index) => (
+            {step5Options.options.map((option, index) => (
               <label key={index} className="speedometer radio-img-container">
                 <img
                   src="./images/gauge.svg"
@@ -139,7 +162,12 @@ export const FeedBackSurvey = () => {
                   className={option.className}
                 />
                 <label className="label">{option.label}</label>
-                <Radio value={option.value} onChange={handleChange} />
+                <Radio
+                  value={option.value}
+                  onChange={(event) =>
+                    handleChange(step5Options.question, event.target.value)
+                  }
+                />
               </label>
             ))}
           </Radio.Group>
@@ -156,8 +184,13 @@ export const FeedBackSurvey = () => {
           <TextArea
             rows={5}
             placeholder={i18n.t("placeholder.message")}
-            onChange={handleChange}
             className="text-area"
+            onChange={(event) =>
+              handleChange(
+                i18n.t("surveyQuestions.likeToShareWithUs"),
+                event.target.value,
+              )
+            }
           />
         </>
       ),
