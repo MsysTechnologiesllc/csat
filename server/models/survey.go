@@ -74,3 +74,14 @@ func UserFeedbackCreate(userFeedback *schema.UserFeedback) (*schema.UserFeedback
 	}
 	return userFeedback, nil
 }
+
+func GetSurveyFormatFromDB(id uint) (*schema.SurveyFormat, error) {
+	var surveyFormat schema.SurveyFormat
+
+	if err := GetDB().Where("id = ?", id).Preload("Surveys.UserFeedback").Preload("Surveys.SurveyAnswers").Preload("Surveys.Project").Preload("McqQuestions").First(&surveyFormat).Error; err != nil {
+		logger.Log.Println("Error", err)
+		return nil, err
+	}
+
+	return &surveyFormat, nil
+}

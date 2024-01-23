@@ -8,6 +8,7 @@ import (
 	u "csat/utils"
 	"encoding/json"
 	"net/http"
+	"strconv"
 )
 
 // @Summary Get Survey Details
@@ -135,5 +136,20 @@ var CreateSurvey = func(w http.ResponseWriter, r *http.Request) {
 	resp["userFeedback"] = userFeedbacksData
 	resp["surveyQuestions"] = surveyQuestionsData
 
+	u.Respond(w, resp)
+}
+
+var GetSurveyFormatByID = func(w http.ResponseWriter, r *http.Request) {
+	logger.Log.Println("Logging from Controller")
+
+	surveyFormatIDStr := r.URL.Query().Get("surveyFormatID")
+    surveyFormatID, err := strconv.ParseUint(surveyFormatIDStr, 10, 64)
+    if err != nil {
+        http.Error(w, "Invalid surveyFormatID", http.StatusBadRequest)
+        return
+    }
+	data, _ := models.GetSurveyFormatFromDB(uint(surveyFormatID))
+	resp := u.Message(true, constants.SUCCESS)
+	resp[constants.DATA] = data
 	u.Respond(w, resp)
 }
