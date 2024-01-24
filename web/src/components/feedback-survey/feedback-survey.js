@@ -7,9 +7,11 @@ import { useNavigate } from "react-router";
 import { LineOutlined } from "@ant-design/icons";
 import { IoStarSharp } from "react-icons/io5";
 import i18n from "../../locales/i18next";
+import { plLibComponents } from "../../context-provider/component-provider";
 import "./feedback-survey.scss";
 
 export const FeedBackSurvey = () => {
+  const { RadioWithEmoji, RadioWithSpeedometer } = plLibComponents.components;
   const { TextArea } = Input;
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
@@ -40,18 +42,16 @@ export const FeedBackSurvey = () => {
           </p>
           <Radio.Group name="radiogroup" className="radio-group-images ">
             {step1Options.options.map(({ value, label, imgSrc }) => (
-              <label key={value} className="radio-img-container ">
-                <div className={`emoji-container ${value} `}>
-                  <img src={imgSrc} alt={label} />
-                  <p className="label">{label}</p>
-                </div>
-                <Radio
-                  value={value}
-                  onChange={(event) =>
-                    handleChange(step1Options.question, event.target.value)
-                  }
-                />
-              </label>
+              <RadioWithEmoji
+                imageSrc={imgSrc}
+                label={label}
+                value={value}
+                textColor={label}
+                key={value}
+                handleChange={(event) =>
+                  handleChange(step1Options.question, event.target.value)
+                }
+              />
             ))}
           </Radio.Group>
         </>
@@ -119,18 +119,16 @@ export const FeedBackSurvey = () => {
           >
             {step4Options.options.map(
               ({ value, label, imgSrc, colorClassName }) => (
-                <label key={value} className="radio-img-container ">
-                  <div className={`emoji-container ${value}`}>
-                    <img src={imgSrc} alt={label} />
-                    <p className={`label ${colorClassName}`}>{label}</p>
-                  </div>
-                  <Radio
-                    value={value}
-                    onChange={(event) =>
-                      handleChange(step4Options.question, event.target.value)
-                    }
-                  />
-                </label>
+                <RadioWithEmoji
+                  imageSrc={imgSrc}
+                  label={label}
+                  value={value}
+                  textColor={colorClassName}
+                  key={value}
+                  handleChange={(event) =>
+                    handleChange(step4Options.question, event.target.value)
+                  }
+                />
               ),
             )}
           </Radio.Group>
@@ -149,26 +147,17 @@ export const FeedBackSurvey = () => {
             name="radiogroup"
             className="radio-group-images speedometer-group-images"
           >
-            {step5Options.options.map(({ className, label, value }, index) => (
-              <label key={index} className="speedometer radio-img-container">
-                <img
-                  src="./images/gauge.svg"
-                  alt={i18n.t("imageAlt.gauge")}
-                  className="speedometer-image"
-                />
-                <img
-                  src="./images/needle.svg"
-                  alt={i18n.t("imageAlt.needle")}
-                  className={className}
-                />
-                <label className="label">{label}</label>
-                <Radio
-                  value={value}
-                  onChange={(event) =>
-                    handleChange(step5Options.question, event.target.value)
-                  }
-                />
-              </label>
+            {step5Options.options.map(({ label, value }, index) => (
+              <RadioWithSpeedometer
+                key={index}
+                speedometerImage="./images/gauge.svg"
+                needleImage="./images/needle.svg"
+                label={label}
+                value={value}
+                handleChange={(event) =>
+                  handleChange(step5Options.question, event.target.value)
+                }
+              />
             ))}
           </Radio.Group>
         </>

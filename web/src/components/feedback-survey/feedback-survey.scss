@@ -79,13 +79,11 @@
     .steps-content {
       height: 70%;
       padding: 0 3rem;
-
       .question {
         @include font-style($jet-black, 3.3rem, 4rem, 500);
         text-align: center;
         padding: 2rem 3rem;
       }
-
       .text-area {
         border-radius: 0.4rem;
         border: 0.1rem solid $border-black-20;
@@ -95,11 +93,14 @@
           letter-spacing: 0.015rem;
         }
       }
-
+      .speedometer-group-images {
+        .speedometer .speedometer-image {
+          width: 10rem;
+        }
+      }
       .rate {
         font-size: 5rem;
       }
-
       .required-star {
         color: $wild-red;
       }
@@ -111,21 +112,18 @@
           @include horizontal-line(12.2rem, 3rem, $golden-yellow);
         }
       }
-
       .rating-scale-container {
         position: relative;
-
         .rating-icon {
           font-size: 11rem;
         }
-
         .ant-rate {
           .ant-rate-star:first-child {
-            color: $brick-red;
+            color: $strong-red;
           }
 
           .ant-rate-star:nth-child(2) {
-            color: $coral-pink;
+            color: $muted-bold-red;
           }
 
           .ant-rate-star:nth-child(3) {
@@ -140,25 +138,21 @@
             color: $vibrant-green;
           }
         }
-
         .ant-rate .ant-rate-star:not(:last-child) {
           margin-inline-end: 0;
         }
-
         .rating-desc-container {
           position: relative;
           bottom: 4rem;
           padding: 0 4rem 0 2.5rem;
           @include justify-content-between;
           margin-top: 1rem;
-
           span {
             width: 10rem;
             @include font-style("", 1.6rem, normal, 500);
             text-align: left;
             letter-spacing: 0.04rem;
           }
-
           .satisfied {
             text-align: right;
           }
@@ -166,7 +160,6 @@
       }
     }
   }
-
   .radio-group-images {
     @include justify-content-center;
     gap: 2rem;
@@ -191,25 +184,17 @@
         }
       }
     }
-
-    .speedometer {
-      min-width: 10rem;
-
-      .speedometer-image {
-        width: 11.5rem;
-      }
-    }
-
     .radio-img-container {
       @include flex-column;
       @include align-items-center;
       position: relative;
 
       .emoji-container {
-        min-width: 10rem;
+        min-width: 9rem;
         min-height: 11rem;
         border-radius: 0.5rem;
         margin-bottom: 1.5rem;
+        padding: 0.2rem;
         @include flex-column;
         @include justify-content-center;
         @include align-items-center;
@@ -218,26 +203,6 @@
           @include font-style("", 2rem, 3.3rem, 700);
           letter-spacing: 0.04rem;
         }
-      }
-
-      .very-low-color {
-        color: $bold-red;
-      }
-
-      .low-color {
-        color: $muted-bold-red;
-      }
-
-      .avg-color {
-        color: $sandal-yellow;
-      }
-
-      .high-color {
-        color: $forest-green;
-      }
-
-      .very-high-color {
-        color: $emerald-green;
       }
 
       .yes {
@@ -252,26 +217,6 @@
         min-height: 14rem;
       }
 
-      .very-low {
-        background-color: $muted-pink;
-      }
-
-      .low {
-        background-color: $blush-pink;
-      }
-
-      .avg {
-        background-color: $pale-yellow;
-      }
-
-      .high {
-        background-color: $muted-green;
-      }
-
-      .very-high {
-        background-color: $muted-deep-green;
-      }
-
       img {
         margin-bottom: 1rem;
       }
@@ -283,33 +228,6 @@
 
       .label {
         @include font-style("", 2rem, 3.3rem, 700);
-      }
-
-      .very-low-scale {
-        @include placement(absolute, -90deg, 3rem, 3rem);
-      }
-
-      .low-scale {
-        @include placement(absolute, -45deg, 4rem, 2rem);
-      }
-
-      .avg-scale {
-        position: absolute;
-        top: 2rem;
-      }
-
-      .high-scale {
-        position: absolute;
-        rotate: 45deg;
-        top: 2rem;
-        right: 4rem;
-      }
-
-      .very-high-scale {
-        position: absolute;
-        rotate: 90deg;
-        top: 3rem;
-        right: 3rem;
       }
     }
   }
@@ -385,7 +303,7 @@
             .satisy-text {
               font-size: 1rem;
               width: 30%;
-              text-align: center;
+              text-align: right;
             }
           }
         }
@@ -741,7 +659,6 @@
             @include justify-content-between;
             padding: 0.5rem 0;
           }
-
           .very-low,
           .low,
           .avg,
