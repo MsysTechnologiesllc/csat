@@ -7,7 +7,9 @@ import (
 	"csat/schema"
 	u "csat/utils"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 
 	"github.com/tealeg/xlsx"
 )
@@ -15,9 +17,45 @@ import (
 var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 	logger.Log.Println("Update Data from Excel - Controller")
 
-	filePath := "DB_Data.xlsx"
+	err := r.ParseMultipartForm(10 << 20) // 10 MB limit
+	if err != nil {
+		u.Respond(w, u.Message(false, "Unable to parse form"))
+		return
+	}
+	var fileName string
 
-	xlFile, err := xlsx.OpenFile(filePath)
+	for _, fileHeaders := range r.MultipartForm.File {
+		for _, fileHeader := range fileHeaders {
+			fileName = fileHeader.Filename
+			break
+		}
+	}
+
+	// Get the file from the request
+	file, _, err := r.FormFile(fileName)
+	if err != nil {
+		u.Respond(w, u.Message(false, "Unable to get file"))
+		return
+	}
+	defer file.Close()
+
+	// Create a temporary file to store the uploaded file
+	tempFile, err := os.CreateTemp("", "temp-excel-*.xlsx")
+	if err != nil {
+		u.Respond(w, u.Message(false, "Unable to create temporary file"))
+		return
+	}
+	defer tempFile.Close()
+
+	// Copy the uploaded file to the temporary file
+	_, err = io.Copy(tempFile, file)
+	if err != nil {
+		u.Respond(w, u.Message(false, "Unable to copy file"))
+		return
+	}
+
+	// Open the Excel file
+	xlFile, err := xlsx.OpenFile(tempFile.Name())
 	if err != nil {
 		u.Respond(w, u.Message(false, "Error opening Excel file"))
 		return
