@@ -9,12 +9,12 @@
   gap: 2.4rem;
   text-align: center;
 
-  .title {
+  .no-data-heading {
     @include font-style($jet-black, 3.3vw, 120%, 500);
     margin: 0;
   }
-  .description {
+  .no-data-desc {
     @include font-style($steel-grey, 2.2vw, 120%, 500);
-    margin: 0;
+    margin: 2.4rem 0 0 0;
   }
 }
