@@ -3,6 +3,8 @@
 .header-container {
   padding: 1.6rem 2.5rem;
   background-color: $white;
+  position: fixed;
+  width: 100%;
   .csat {
     @include font-style($jet-black, 2rem, normal, 600);
     @include align-items-center;

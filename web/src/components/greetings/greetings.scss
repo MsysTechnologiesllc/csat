@@ -1,58 +1,304 @@
 @use "../../assets/style/" as *;
 
+// .greetings-container {
+//   @include flex-column;
+//   height: 89vh;
+
+//   .greetings-main-container {
+//     padding: 2rem 2.5rem 5rem;
+//     @include justify-content-end;
+//     @include align-items-end;
+
+//     .greetings-description {
+//       @include flex-column;
+//       @include justify-content-end;
+//       text-align: left;
+
+//       .greetings-title {
+//         @include font-style($black, 2vw, 3.4vw, 400);
+//       }
+
+//       .greetings-desc {
+//         @include font-style($metal-black, 1.3vw, 2.2vw, 400);
+//       }
+//     }
+//   }
+
+//   .details-container {
+//     @include horizontal-line(100%, 20vh, $white);
+//     @include align-items-center;
+//     @include justify-content-between;
+//     padding: 1.6rem 3rem;
+//     position: fixed;
+//     bottom: 0;
+
+//     .project-details-container {
+//       @include justify-content-between;
+//       width: 60%;
+//       text-align: left;
+//       gap: 2rem;
+
+//       .title {
+//         @include font-style($steel-grey, 1.3vw, 1vw, 400);
+//         margin-bottom: 1rem;
+//       }
+
+//       .desc {
+//         @include font-style($royal-blue, 1.5vw, 2.2vw, 500);
+//       }
+//     }
+
+//     .btn {
+//       @include horizontal-line(20rem, 6.6rem, $med-slate-blue);
+//       padding: 1.6rem;
+//       border-radius: 0.8rem;
+//       color: $white;
+//     }
+
+//     .active-button {
+//       @include custom-btn($indigo, 0.5rem, 1);
+//       @include font-style($white, 1.4rem, 1.7rem, 700);
+//       width: 20rem;
+//       height: 4rem;
+//       margin-right: 5vw;
+//       gap: 0.8rem;
+//       &:hover {
+//         color: $white;
+//       }
+//     }
+//   }
+
+//   @include media("<=md") {
+//     .greetings-main-container {
+//       height: auto;
+//       @include flex-column;
+//       @include justify-content-between;
+
+//       .greetings-image-container {
+//         // width: 100%;
+//         @include justify-content-center;
+//         .greetings-image {
+//           @include d-block;
+//           max-width: 100%;
+//           max-height: 100%;
+//         }
+//       }
+
+
+
+//       .greetings-description {
+//         @include justify-content-center;
+//         @include align-items-center;
+//         text-align: center;
+//         margin-top: 8vw;
+
+//         .greetings-title {
+//           text-align: center;
+//           font-size: 2.2rem;
+//         }
+
+//         .greetings-desc {
+//           margin-top: 3vw;
+//           text-align: center;
+//           font-size: 1.3rem;
+//           line-height: 1.5rem;
+//         }
+//       }
+//     }
+
+//     .details-container {
+//       height: auto;
+//       padding: 4vw 0;
+//       @include flex-column;
+//       @include justify-content-between;
+//       @include align-items-center;
+
+//       .project-details-container {
+//         width: 80%;
+//         @include justify-content-between;
+//         @include flex-wrap;
+//         padding: 2vw 0;
+
+//         .title {
+//           font-size: 1.5rem;
+//           text-align: center;
+//         }
+
+//         .desc {
+//           font-size: 1.3rem;
+//           margin-top: 0.3rem;
+//           text-align: center;
+//         }
+//       }
+
+//       .active-button {
+//         font-size: 1.3rem;
+//         border-radius: 0.4rem;
+//       }
+//     }
+//   }
+//   @include media(">=425px" and "<md") {
+//     .greetings-main-container {
+//       height: 50vh;
+//       overflow: scroll;
+//       @include flex-column;
+//       @include justify-content-center;
+//       @include align-items-center;
+
+//       .greetings-image-container {
+//         width: 80%;
+//       }
+
+//       .greetings-image {
+//         width: 50%;
+//         max-width: 100%;
+//       }
+
+//       .greetings-description {
+//         margin-top: 1rem;
+//       }
+//     }
+//   }
+//   @include media(">=md" and "<=xl") {
+//     .greetings-main-container {
+//       @include align-items-center;
+//       height: 60%;
+
+//       .greetings-image {
+//         max-width: 100%;
+//         max-height: 100%;
+//       }
+//     }
+
+//     .greetings-description {
+//       width: 60%;
+//     }
+//   }
+//   @include media(">=xxl") {
+//     @include justify-content-center;
+//     @include align-items-center;
+//   }
+// }
+
+
 .greetings-container {
-  @include flex-column;
-  height: 89vh;
+  padding-top: 6rem;
+  min-height: calc(100vh - 6rem);
 
   .greetings-main-container {
-    padding: 2rem 2.5rem 5rem;
-    @include justify-content-end;
-    @include align-items-end;
+    padding: 3rem 1.6rem;
+
+    @media only screen and ((min-width: 768px) and (max-width:1200px)) {
+      padding: 4.5rem 6.5rem;
+    }
+
+    @media only screen and ((min-width: 1200px)) {
+      padding: 3rem 6rem;
+      @include justify-content-between;
+      @include align-items-end;
+      min-height: 45vh;
+    }
+
+    .greetings-image-container {
+      width: 100%;
+      max-height: 20%;
+
+      .greetings-image {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      @media only screen and ((min-width: 768px) and (max-width:1200px)) {
+        width: 100%;
+        max-height: 29.8rem;
+      }
+
+      @media only screen and ((min-width: 1200px)) {
+        max-height: 100%;
+        max-width: 45%;
+
+        .greetings-image {
+          max-width: 95%;
+          max-height: 100%;
+        }
+      }
+    }
 
     .greetings-description {
-      @include flex-column;
-      @include justify-content-end;
       text-align: left;
 
+      @media only screen and ((min-width: 1200px)) {
+        max-width: 48%;
+      }
+
       .greetings-title {
-        @include font-style($black, 2vw, 3.4vw, 400);
+        @include font-style($black, 2rem, 120%, 400);
+        margin: 1.6rem 0;
+
+        @media only screen and ((min-width: 768px)) {
+          font-size: 2.8rem;
+          margin: 2rem 0;
+        }
       }
 
       .greetings-desc {
-        @include font-style($metal-black, 1.3vw, 2.2vw, 400);
+        @include font-style($metal-black, 1.4rem, 2.2rem, 400);
+
+        @media only screen and ((min-width: 768px)) {
+          @include font-style($metal-black, 1.6rem, 175%, 400);
+          margin: 2rem 0;
+        }
+
+        @media only screen and ((min-width: 1200px)) {
+          line-height: 2.5rem;
+        }
       }
     }
   }
 
   .details-container {
-    @include horizontal-line(100%, 20vh, $white);
-    @include align-items-center;
-    @include justify-content-between;
-    padding: 1.6rem 3rem;
-    position: fixed;
-    bottom: 0;
+    @include horizontal-line(auto, 20vh, $white);
+    padding: 3rem 1.6rem;
+
+    @media only screen and ((min-width: 768px)) {
+      padding: 4rem;
+    }
+
+    @media only screen and ((min-width: 1200px)) {
+      @include justify-content-between;
+      @include align-items-center;
+    }
 
     .project-details-container {
       @include justify-content-between;
-      width: 60%;
-      text-align: left;
-      gap: 2rem;
+      flex-wrap: wrap;
+      gap: 2.4rem;
 
-      .title {
-        @include font-style($steel-grey, 1.3vw, 1vw, 400);
-        margin-bottom: 1rem;
+      @media only screen and ((min-width: 1200px)) {
+        width: 50%;
       }
 
-      .desc {
-        @include font-style($royal-blue, 1.5vw, 2.2vw, 500);
-      }
-    }
+      .details {
+        width: 45%;
+        text-align: start;
 
-    .btn {
-      @include horizontal-line(20rem, 6.6rem, $med-slate-blue);
-      padding: 1.6rem;
-      border-radius: 0.8rem;
-      color: $white;
+        @media only screen and ((min-width: 768px) and (max-width:1200px)) {
+          width: 30%;
+        }
+
+        @media only screen and ((min-width: 1200px)) {
+          width: 20%;
+        }
+
+        .title {
+          @include font-style($steel-grey, 1.4rem, normal, 400);
+          margin-bottom: 1rem;
+        }
+
+        .desc {
+          @include font-style($royal-blue, 1.6rem, normal, 500);
+        }
+      }
     }
 
     .active-button {
@@ -60,125 +306,15 @@
       @include font-style($white, 1.4rem, 1.7rem, 700);
       width: 20rem;
       height: 4rem;
-      margin-right: 5vw;
-      gap: 0.8rem;
+      margin-top: 2rem;
+
+      @media only screen and ((max-width: 1200px)) {
+        margin-bottom: 2rem;
+      }
+
       &:hover {
         color: $white;
       }
     }
-  }
-
-  @include media("<=md") {
-    .greetings-main-container {
-      height: auto;
-      @include flex-column;
-      @include justify-content-between;
-
-      .greetings-image-container {
-        width: 100%;
-        @include justify-content-center;
-      }
-
-      .greetings-image {
-        @include d-block;
-        width: 80%;
-        height: auto;
-        max-width: 100%;
-        max-height: 100%;
-      }
-
-      .greetings-description {
-        @include justify-content-center;
-        @include align-items-center;
-        text-align: center;
-        margin-top: 8vw;
-
-        .greetings-title {
-          text-align: center;
-          font-size: 2.2rem;
-        }
-
-        .greetings-desc {
-          margin-top: 3vw;
-          text-align: center;
-          font-size: 1.3rem;
-          line-height: 1.5rem;
-        }
-      }
-    }
-
-    .details-container {
-      height: auto;
-      padding: 4vw 0;
-      @include flex-column;
-      @include justify-content-between;
-      @include align-items-center;
-
-      .project-details-container {
-        width: 80%;
-        @include justify-content-between;
-        @include flex-wrap;
-        padding: 2vw 0;
-
-        .title {
-          font-size: 1.5rem;
-          text-align: center;
-        }
-
-        .desc {
-          font-size: 1.3rem;
-          margin-top: 0.3rem;
-          text-align: center;
-        }
-      }
-
-      .active-button {
-        font-size: 1.3rem;
-        border-radius: 0.4rem;
-      }
-    }
-  }
-
-  @include media(">=425px" and "<md") {
-    .greetings-main-container {
-      height: 50vh;
-      overflow: scroll;
-      @include flex-column;
-      @include justify-content-center;
-      @include align-items-center;
-
-      .greetings-image-container {
-        width: 80%;
-      }
-
-      .greetings-image {
-        width: 50%;
-        max-width: 100%;
-      }
-
-      .greetings-description {
-        margin-top: 1rem;
-      }
-    }
-  }
-  @include media(">=md" and "<=xl") {
-    .greetings-main-container {
-      @include align-items-center;
-      height: 60%;
-
-      .greetings-image {
-        max-width: 100%;
-        max-height: 100%;
-      }
-    }
-
-    .greetings-description {
-      width: 60%;
-    }
-  }
-
-  @include media(">=xxl") {
-    @include justify-content-center;
-    @include align-items-center;
   }
 }
