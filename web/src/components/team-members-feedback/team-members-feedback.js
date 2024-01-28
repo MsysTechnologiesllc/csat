@@ -9,11 +9,11 @@ import { plLibComponents } from "../../context-provider/component-provider";
 import "./team-members-feedback.scss";
 
 export const TeamMembersFeedBack = () => {
-  const { InputField, InputTextArea } = plLibComponents.components;
+  const { InputField, InputTextArea, SearchInput } = plLibComponents.components;
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [selectedMember, setSelectedMember] = useState(
-    teamMembersList[0].value,
+    teamMembersList[0].value
   );
   const [isAnyFieldFilled, setIsAnyFieldFilled] = useState(false);
   const onValuesChange = () => {
@@ -38,12 +38,13 @@ export const TeamMembersFeedBack = () => {
   ));
   return (
     <Row className="feedback-container">
-      <Col xs={24} md={8} className="card-search-container">
+      <Col xs={24} md={7} xl={7} className="card-search-container">
         <InputField
           isForm={false}
           type="textinput"
           labelText={i18n.t("placeholder.searchName")}
           placeholder={i18n.t("placeholder.search")}
+          onChange={(e)=>console.log(e.value)}
         />
         <div className="cards-container">
           {teamMembersList.map((member) => (
@@ -56,7 +57,7 @@ export const TeamMembersFeedBack = () => {
                   : "member-card"
               }
             >
-              <div className="text-image-container">
+              <p className="text-image-container">
                 {member.label}
                 {member.hasFeedback === 1 && (
                   <img
@@ -65,34 +66,19 @@ export const TeamMembersFeedBack = () => {
                     className="feedback-updated-image"
                   />
                 )}
-              </div>
+              </p>
             </Card>
           ))}
         </div>
       </Col>
-      <Col xs={24} md={24} className="team-members-list-container">
-        <Select
-          showSearch
-          allowClear
-          placeholder={i18n.t("placeholder.searchName")}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.label.toLowerCase() ?? "").includes(input)
-          }
-          options={teamMembersList}
-          className="search-members"
-          defaultValue={teamMembersList[0].label}
-          onChange={(value) => setSelectedMember(value)}
-        />
-      </Col>
-      <Col xs={24} md={15}>
+      <Col xs={24} md={16} xl={16}>
         <div className="feeback-names">
           <p className="feedback-title">{i18n.t("teamFeedBack.feedback")}</p>
           <p className="name">{selectedMember}</p>
         </div>
         <Form form={form} onFinish={onFinish} onValuesChange={onValuesChange}>
           <Row className="text-area-container">
-            <Col xs={24} md={12}>
+            <Col xs={24} >
               <p>{i18n.t("teamFeedBack.positives")}</p>
               <Form.Item name="positives">
                 <InputTextArea
@@ -102,7 +88,7 @@ export const TeamMembersFeedBack = () => {
                 />
               </Form.Item>
             </Col>
-            <Col xs={24} md={11}>
+            <Col xs={24} >
               <p>{i18n.t("teamFeedBack.areaOfImprovement")}</p>
               <Form.Item name="improvements">
                 <InputTextArea

@@ -15,23 +15,23 @@
   .card-search-container {
     @include d-block;
 
-    .search-input {
-      margin-bottom: 2rem;
-      padding: 1.5rem;
+    .input-container {
       border-radius: 0.4rem;
       border: 0.2rem solid $med-slate-blue;
     }
 
     .member-card {
-      padding: 1.3rem;
+      padding: 0.6rem;
       border-radius: 0.8rem;
       margin-bottom: 1rem;
       background-color: $muted-silver;
       text-align: center;
-      @include font-style($jet-black, 1.9rem, 2.4rem, 700);
+      @include font-style($jet-black, 1.4rem, 2.4rem, 700);
+      height: 3.5rem;
       letter-spacing: 0.015rem;
       text-align: left;
       cursor: pointer;
+      @include align-items-center;
       &:hover{
         background-color: $muted-lilac;
       }
@@ -40,6 +40,11 @@
       }
       .text-image-container {
         @include justify-content-between;
+       
+      }
+      @media only screen and ((min-width: 768px)) {
+        height: 5rem;
+        font-size: 1.9rem;
       }
     }
     .bg {
@@ -47,9 +52,6 @@
     }
   }
   @include media("<=md") {
-    .card-search-container {
-      @include d-none;
-    }
 
     .team-members-list-container {
       @include d-block;
@@ -60,12 +62,18 @@
     text-align: left;
     .feedback-title {
       margin-bottom: 0.5rem;
-      @include font-style($black, 1.6rem, 1.92rem, 500);
+      @include font-style($black, 1.4rem, 1.68rem, 500);
+      @media only screen and ((min-width:  768px)) {
+        font-size: 1.6rem;
+      }
     }
 
     .name {
-      @include font-style($indigo, 1.9rem, 2.4rem, 700);
+      @include font-style($indigo, 1.6rem, 2.4rem, 700);
       letter-spacing: 0.02rem;
+      @media only screen and ((min-width: 768px)) {
+        font-size: 1.9rem;
+      }
     }
   }
 
