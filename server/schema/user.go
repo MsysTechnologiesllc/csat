@@ -12,10 +12,10 @@ type User struct {
 	Email     string    `gorm:"unique" json:"email"`
 	Password  string    `json:"password"`
 	Role      string    `gorm:"null" json:"role"`
-	Token     string    `json:"token";sql:"-"`
+	Token     string    `json:"token" json:"-"`
 	AccountID uint      `gorm:"null" json:"account_id"`
-	Account   *Account  `gorm:"ForeignKey:AccountID" json:"account, omitempty"`
-	Projects  []Project `gorm:"many2many:user_projects;" json:"user_projects, omitempty"`
+	Account   *Account  `gorm:"ForeignKey:AccountID" json:"account"`
+	Projects  []Project `gorm:"many2many:user_projects;" json:"user_projects"`
 }
 
 type Token struct {
