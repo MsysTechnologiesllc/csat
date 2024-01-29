@@ -307,7 +307,7 @@
             }
 
             .label {
-              @include font-style($bold-red, 1.2rem, 1.9rem, 700);
+              @include font-style('', 1.2rem, 1.9rem, 700);
 
               @include media (">=md") {
                 font-size: 1.8rem;
@@ -417,8 +417,10 @@
         .draft-submit-btns {
           @include justify-content-around;
           margin-left: auto;
-          gap: 0.4rem;
-
+          gap: 1rem;
+          @include media ("<=md") {
+            margin-bottom: 0.7rem;
+          }
           @include media (">=xl") {
             gap: 2rem;
           }
