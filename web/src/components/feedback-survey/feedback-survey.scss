@@ -17,9 +17,16 @@
     width: 88%;
     @include flex-column;
     @include justify-content-between;
+
     .cancel-button {
       @include font-style($ash-grey, 1.4rem, 120%, 700);
       text-transform: uppercase;
+      padding: 0;
+
+      &:hover {
+        @include font-style($ash-grey, 1.4rem, 120%, 700);
+        background-color: transparent;
+      }
     }
 
     .previous-button {
@@ -29,6 +36,12 @@
       @include font-style($ash-grey, 1.4rem, 2.4rem, 700);
       letter-spacing: 0.4px;
       border: none;
+      padding: 0;
+
+      &:hover {
+        @include font-style($ash-grey, 1.4rem, 2.4rem, 700);
+        background-color: transparent;
+      }
 
       .arrow-icon {
         font-size: 1.8rem;
@@ -38,13 +51,16 @@
         margin-left: 0.3rem;
       }
     }
-    .top-btn-container{
+
+    .top-btn-container {
       display: none;
-      @include media ("<md"){
+
+      @include media ("<md") {
         display: block;
         text-align: left;
       }
     }
+
     @include media(">=xl") {
       padding: 4rem;
       width: 50%;
@@ -63,7 +79,7 @@
 
       .question {
         @include font-style($jet-black, 2rem, 3rem, 500);
-        margin-bottom: 2rem;
+        margin: 2rem 0;
 
         @include media(">=md", "<=xl") {
           font-size: 2.4rem;
@@ -161,6 +177,11 @@
         width: 100%;
         position: relative;
 
+        @include media (">=md", "<=lg") {
+          width: 90%;
+          padding: 0 2rem;
+        }
+
         .rating-icon {
           font-size: 4.5rem;
 
@@ -169,7 +190,7 @@
           }
 
           @include media (">=md") {
-            font-size: 11rem;
+            font-size: 12rem;
           }
         }
 
@@ -201,7 +222,6 @@
 
         .rating-desc-container {
           @include justify-content-between;
-          margin-top: 0.7rem;
 
           .unsatisfy-text,
           .satisy-text {
@@ -240,6 +260,7 @@
       .smiles-container {
         width: 100%;
         gap: 0.4rem;
+
         @include media (">=md") {
           width: 80%;
           gap: 0.7rem;
@@ -266,7 +287,7 @@
             padding: 1rem 0;
             justify-content: space-between !important;
             @include justify-content-between;
-            
+
             @include media ("<md") {
               min-height: 6rem;
               max-height: 6rem;
@@ -276,7 +297,7 @@
             @include media (">=md", "<lg") {
               min-width: 10rem;
             }
-        
+
             img {
               width: 3rem;
 
@@ -384,33 +405,14 @@
 
       .btn-container {
         @include justify-content-between;
-        .prev-cancel-container{
+
+        .prev-cancel-container {
           display: block;
-          @include media('<md'){
+
+          @include media('<md') {
             display: none;
           }
         }
-        // .cancel-button {
-        //   @include font-style($ash-grey, 1.4rem, 120%, 700);
-        //   text-transform: uppercase;
-        // }
-
-        // .previous-button {
-        //   @include align-items-center;
-        //   @include justify-content-between;
-        //   @include custom-btn($white, 0.4rem, 1);
-        //   @include font-style($ash-grey, 1.4rem, 2.4rem, 700);
-        //   letter-spacing: 0.04rem;
-        //   border: none;
-
-        //   .arrow-icon {
-        //     font-size: 1.8rem;
-        //   }
-
-        //   span {
-        //     margin-left: 0.3rem;
-        //   }
-        // }
 
         .draft-submit-btns {
           @include justify-content-around;
