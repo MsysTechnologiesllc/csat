@@ -11,17 +11,16 @@
   .wizard-container {
     height: 59%;
     width: auto;
-    margin: 0 1rem;
     padding: 1rem;
     background-color: $white;
     border-radius: 0.8rem;
-    box-shadow: 0px 4px 50px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0.4rem 5rem 2.4rem $border-black-30;
 
-    @media only screen and ((min-width: 768px) and (max-width: 1200px)) {
-      width: 90%;
+    @include media(">=md", "<=xl") {
+      width: 88%;
     }
 
-    @media only screen and ((min-width: 1200px)) {
+    @include media(">=xl") {
       padding: 4rem;
       width: 55%;
     }
@@ -35,11 +34,11 @@
         @include font-style($jet-black, 2rem, 3rem, 500);
         margin-bottom: 2rem;
 
-        @media only screen and ((min-width: 768px) and (max-width: 1200px)) {
+        @include media(">=md", "<=xl") {
           font-size: 2.4rem;
         }
 
-        @media only screen and ((min-width:1200px)) {
+        @include media(">=xl") {
           @include font-style($jet-black, 3.2rem, 4rem, 500);
         }
       }
@@ -52,14 +51,18 @@
         @include justify-content-around;
         min-width: 90%;
 
-        @media only screen and ((min-width: 768px) and (max-width: 1200px)) {
+        @include media (">=sm", "<=md") {
+          @include justify-content-between;
+          min-width: 40%;
+        }
+
+        @include media (">=md", "<=xl") {
           @include justify-content-between;
           min-width: 30%;
         }
 
-        @media only screen and ((min-width:1200px)) {
+        @include media (">=xl") {
           min-width: 50%;
-
         }
 
         .yes,
@@ -70,7 +73,7 @@
           max-height: 9rem;
           margin-bottom: 0.7rem;
 
-          @media only screen and ((min-width:1200px)) {
+          @include media (">=xl") {
             min-width: 11rem;
             min-height: 11rem;
           }
@@ -79,7 +82,7 @@
           .No {
             @include font-style($black, 1.6rem, 2.5rem, 700);
 
-            @media only screen and ((min-width: 1200px)) {
+            @include media (">=xl") {
               @include font-style($jet-black, 2.2rem, 4rem, 500);
               letter-spacing: 0.04rem;
             }
@@ -169,7 +172,7 @@
         .ant-rate-star {
           font-size: 4rem;
 
-          @media only screen and ((min-width:1200px)) {
+          @include media (">=xl") {
             font-size: 6rem;
           }
 
@@ -180,7 +183,7 @@
         width: 100%;
         gap: 0.4rem;
 
-        @media only screen and ((min-width:768px)) {
+        @include media (">=md") {
           width: 80%;
         }
 
@@ -196,14 +199,14 @@
             justify-content: space-between !important;
             @include justify-content-between;
 
-            @media only screen and ((min-width: 768px)) {
+            @include media (">=md") {
               min-width: 90%;
             }
 
             img {
               width: 3rem;
 
-              @media only screen and ((min-width:768px)) {
+              @include media (">=md") {
                 width: 4.8rem;
               }
             }
@@ -211,7 +214,7 @@
             .label {
               @include font-style($bold-red, 1.2rem, 1.9rem, 700);
 
-              @media only screen and ((min-width:768px)) {
+              @include media (">=md") {
                 font-size: 2rem;
               }
             }
@@ -229,7 +232,7 @@
           max-width: 7rem;
           margin-bottom: 1rem;
 
-          @media only screen and ((min-width:768px)) {
+          @include media (">=md") {
             min-width: 11rem;
             max-width: 11rem;
           }
@@ -246,7 +249,7 @@
           .very-low-scale {
             @include placement(absolute, -90deg, 2.3rem, 2.3rem);
 
-            @media only screen and ((min-width:768px)) {
+            @include media (">=md") {
               top: 3.4rem;
               left: 3.4rem;
             }
@@ -255,7 +258,7 @@
           .low-scale {
             @include placement(absolute, -45deg, 2.5rem, 1.8rem);
 
-            @media only screen and ((min-width:768px)) {
+            @include media (">=md") {
               top: 2.6rem;
               left: 3.8rem;
             }
@@ -265,7 +268,7 @@
             position: absolute;
             top: 1.8rem;
 
-            @media only screen and ((min-width:768px)) {
+            @include media (">=md") {
               top: 2.4rem;
             }
           }
@@ -273,7 +276,7 @@
           .high-scale {
             @include placement(absolute, 45deg, 3.6rem, 1.9rem);
 
-            @media only screen and ((min-width:768px)) {
+            @include media (">=md") {
               top: 2.5rem;
               left: 5.4rem;
             }
@@ -282,7 +285,7 @@
           .very-high-scale {
             @include placement(absolute, 90deg, 3.6rem, 2.3rem);
 
-            @media only screen and ((min-width:768px)) {
+            @include media (">=md") {
               top: 3.5rem;
               left: 5.8rem;
             }
@@ -291,7 +294,7 @@
           .label {
             font-size: 1.4rem;
 
-            @media only screen and ((min-width:768px)) {
+            @include media (">=md") {
               font-size: 2rem;
             }
           }
@@ -315,7 +318,7 @@
           @include justify-content-between;
           @include custom-btn($white, 0.4rem, 1);
           @include font-style($ash-grey, 1.4rem, 2.4rem, 700);
-          letter-spacing: 0.4px;
+          letter-spacing: 0.04rem;
           border: none;
 
           .arrow-icon {
@@ -332,7 +335,7 @@
           margin-left: auto;
           gap: 0.4rem;
 
-          @media only screen and ((min-width:1200px)) {
+          @include media (">=xl") {
             gap: 2rem;
           }
 
