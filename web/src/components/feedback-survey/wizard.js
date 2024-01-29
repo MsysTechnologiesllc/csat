@@ -41,10 +41,11 @@ const Wizard = ({
 
     return (
       <Row className="btn-container">
-        <Col>
+        <Col className="prev-cancel-container">
           {currentStep > 0 ? (
             <Button onClick={prevStep} className="previous-button" type="text">
               <GoArrowLeft className="arrow-icon" />
+              {i18n.t("button.previous")}
             </Button>
           ) : (
             <Button
@@ -58,9 +59,9 @@ const Wizard = ({
         </Col>
         {isLastStep ? (
           <div className="draft-submit-btns">
-            {/* <Button className="draft-button" onClick={() => handleDraft()}>
+            <Button className="draft-button" onClick={() => handleDraft()}>
               {i18n.t("button.saveAsDraft")}
-            </Button> */}
+            </Button>
             <Button onClick={handleTeamMemberFeedback} className="draft-button">
               {i18n.t("button.yesProceed")}
             </Button>
@@ -108,6 +109,18 @@ const Wizard = ({
   };
   return (
     <div className="wizard-container">
+      <div className="top-btn-container">
+        {currentStep > 0 ? (
+          <Button onClick={prevStep} className="previous-button" type="text">
+            <GoArrowLeft className="arrow-icon" />
+            {i18n.t("button.previous")}
+          </Button>
+        ) : (
+          <Button type="text" className="cancel-button" onClick={handleCancel}>
+            {i18n.t("button.cancel")}
+          </Button>
+        )}
+      </div>
       <div className="steps-content">{steps[currentStep].content}</div>
       <div className="steps-action">{renderButtons()}</div>
     </div>

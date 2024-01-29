@@ -9,26 +9,57 @@
   padding-top: 7rem;
 
   .wizard-container {
-    height: 59%;
-    width: auto;
+    min-height: 63vh;
     padding: 1rem;
     background-color: $white;
     border-radius: 0.8rem;
     box-shadow: 0 0.4rem 5rem 2.4rem $border-black-30;
-
-    @include media(">=md", "<=xl") {
-      width: 88%;
+    width: 88%;
+    @include flex-column;
+    @include justify-content-between;
+    .cancel-button {
+      @include font-style($ash-grey, 1.4rem, 120%, 700);
+      text-transform: uppercase;
     }
 
+    .previous-button {
+      @include align-items-center;
+      @include justify-content-between;
+      @include custom-btn($white, 0.4rem, 1);
+      @include font-style($ash-grey, 1.4rem, 2.4rem, 700);
+      letter-spacing: 0.4px;
+      border: none;
+
+      .arrow-icon {
+        font-size: 1.8rem;
+      }
+
+      span {
+        margin-left: 0.3rem;
+      }
+    }
+    .top-btn-container{
+      display: none;
+      @include media ("<md"){
+        display: block;
+        text-align: left;
+      }
+    }
     @include media(">=xl") {
       padding: 4rem;
-      width: 55%;
+      width: 50%;
+      min-height: 53vh;
+      @include flex-column;
+      @include justify-content-between;
     }
 
     .steps-content {
       @include flex-column;
-      @include justify-content-center;
       @include align-items-center;
+
+      @include media("<=md") {
+        min-height: 45vh;
+      }
 
       .question {
         @include font-style($jet-black, 2rem, 3rem, 500);
@@ -128,32 +159,59 @@
 
       .rating-scale-container {
         width: 100%;
+        position: relative;
+
+        .rating-icon {
+          font-size: 4.5rem;
+
+          @include media (">=sm", "<=md") {
+            font-size: 9rem;
+          }
+
+          @include media (">=md") {
+            font-size: 11rem;
+          }
+        }
 
         .ant-rate {
-          width: 100%;
-
           .ant-rate-star {
+            margin: 0;
+          }
 
-            .anticon,
-            .anticon-line {
-              width: 5rem;
+          .ant-rate-star:nth-child(1) {
+            color: $strong-red;
+          }
 
-              svg {
-                width: 4rem;
-              }
-            }
+          .ant-rate-star:nth-child(2) {
+            color: $muted-bold-red;
+          }
+
+          .ant-rate-star:nth-child(3) {
+            color: $yellow;
+          }
+
+          .ant-rate-star:nth-child(4) {
+            color: $green;
+          }
+
+          .ant-rate-star:last-child {
+            color: $vibrant-green;
           }
         }
 
         .rating-desc-container {
           @include justify-content-between;
-          margin-top: 1.4rem;
+          margin-top: 0.7rem;
 
           .unsatisfy-text,
           .satisy-text {
             @include d-flex;
             @include font-style($jet-black, 1.4rem, normal, 500);
             width: 7rem;
+
+            @include media (">=md") {
+              font-size: 1.6rem;
+            }
           }
 
           .unsatisfy-text {
@@ -172,7 +230,7 @@
         .ant-rate-star {
           font-size: 4rem;
 
-          @include media (">=xl") {
+          @include media (">=md") {
             font-size: 6rem;
           }
 
@@ -182,27 +240,43 @@
       .smiles-container {
         width: 100%;
         gap: 0.4rem;
-
         @include media (">=md") {
           width: 80%;
+          gap: 0.7rem;
+        }
+
+        @include media ("<=md") {
+          @include d-flex;
+          flex-wrap: wrap;
         }
 
         .radio-img-container {
           width: 100%;
+
+          @include media ("<=md") {
+            min-width: 8.4rem;
+            max-width: 8.4rem;
+            margin-bottom: 0.5rem;
+          }
 
           .emoji-container {
             min-width: 100%;
             min-height: 9rem;
             max-height: 9rem;
             padding: 1rem 0;
-            // ********************************************************************************
             justify-content: space-between !important;
             @include justify-content-between;
-
-            @include media (">=md") {
-              min-width: 90%;
+            
+            @include media ("<md") {
+              min-height: 6rem;
+              max-height: 6rem;
+              margin-bottom: 0.5rem;
             }
 
+            @include media (">=md", "<lg") {
+              min-width: 10rem;
+            }
+        
             img {
               width: 3rem;
 
@@ -215,7 +289,7 @@
               @include font-style($bold-red, 1.2rem, 1.9rem, 700);
 
               @include media (">=md") {
-                font-size: 2rem;
+                font-size: 1.8rem;
               }
             }
           }
@@ -227,9 +301,13 @@
         display: flex;
         flex-wrap: wrap;
 
+        @include media (">=xl") {
+          margin-top: 3rem;
+        }
+
         .speedometer {
-          min-width: 7rem;
-          max-width: 7rem;
+          min-width: 7.5rem;
+          max-width: 7.5rem;
           margin-bottom: 1rem;
 
           @include media (">=md") {
@@ -243,7 +321,6 @@
 
           img {
             width: 10%;
-
           }
 
           .very-low-scale {
@@ -307,28 +384,33 @@
 
       .btn-container {
         @include justify-content-between;
-
-        .cancel-button {
-          @include font-style($ash-grey, 1.4rem, 120%, 700);
-          text-transform: uppercase;
-        }
-
-        .previous-button {
-          @include align-items-center;
-          @include justify-content-between;
-          @include custom-btn($white, 0.4rem, 1);
-          @include font-style($ash-grey, 1.4rem, 2.4rem, 700);
-          letter-spacing: 0.04rem;
-          border: none;
-
-          .arrow-icon {
-            font-size: 1.8rem;
-          }
-
-          span {
-            margin-left: 0.3rem;
+        .prev-cancel-container{
+          display: block;
+          @include media('<md'){
+            display: none;
           }
         }
+        // .cancel-button {
+        //   @include font-style($ash-grey, 1.4rem, 120%, 700);
+        //   text-transform: uppercase;
+        // }
+
+        // .previous-button {
+        //   @include align-items-center;
+        //   @include justify-content-between;
+        //   @include custom-btn($white, 0.4rem, 1);
+        //   @include font-style($ash-grey, 1.4rem, 2.4rem, 700);
+        //   letter-spacing: 0.04rem;
+        //   border: none;
+
+        //   .arrow-icon {
+        //     font-size: 1.8rem;
+        //   }
+
+        //   span {
+        //     margin-left: 0.3rem;
+        //   }
+        // }
 
         .draft-submit-btns {
           @include justify-content-around;
