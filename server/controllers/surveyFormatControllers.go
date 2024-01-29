@@ -24,17 +24,22 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 	}
 	var fileName string
 
-	for _, fileHeaders := range r.MultipartForm.File {
-		for _, fileHeader := range fileHeaders {
-			fileName = fileHeader.Filename
-			break
-		}
+	for key := range r.MultipartForm.File {
+		fileName = key
+		break
 	}
 
-	// Get the file from the request
-	file, _, err := r.FormFile(fileName)
+	// Check if any files were uploaded
+	fileHeaders, ok := r.MultipartForm.File[fileName]
+	if !ok || len(fileHeaders) == 0 {
+		u.Respond(w, u.Message(false, "No file uploaded"))
+		return
+	}
+
+	// Open the file directly without using r.FormFile
+	file, err := fileHeaders[0].Open()
 	if err != nil {
-		u.Respond(w, u.Message(false, "Unable to get file"))
+		u.Respond(w, u.Message(false, "Unable to open file"))
 		return
 	}
 	defer file.Close()

@@ -19,4 +19,5 @@ type Survey struct {
 	UserFeedback   []UserFeedback  `gorm:"ForeignKey:SurveyID" json:"user_feedbacks"`
 	SurveyAnswers  []SurveyAnswers `gorm:"ForeignKey:SurveyID" json:"survey_answers"`
 	Project        *Project         `gorm:"ForeignKey:ProjectID" json:"project"`
+	SurveyFrequencyDays uint            `gorm:"null" json:"survey_frequency_days"`
 }

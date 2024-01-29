@@ -105,10 +105,12 @@ func CreateUsersProject(db *gorm.DB, userID uint, projectID uint, role string) e
 
 func CreateSurveyWithUserFeedback(db *gorm.DB, surveyFormat schema.SurveyFormat, users []schema.User, mcqQuestions []schema.McqQuestions) ([]*schema.UserFeedback, []*schema.SurveyAnswers, uint, error) {
 	survey := schema.Survey{
-		SurveyFormatID: surveyFormat.ID,
-		Name:           surveyFormat.Title,
-		Description:    surveyFormat.Message,
-		Status:         "pending",
+		SurveyFormatID:      surveyFormat.ID,
+		Name:                surveyFormat.Title,
+		Description:         surveyFormat.Message,
+		ProjectID:           surveyFormat.ProjectID,
+		SurveyFrequencyDays: surveyFormat.SurveyFrequencyDays,
+		Status:              "pending",
 	}
 
 	var userFeedbacksData []*schema.UserFeedback
