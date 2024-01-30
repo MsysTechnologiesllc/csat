@@ -285,7 +285,6 @@
             min-height: 9rem;
             max-height: 9rem;
             padding: 1rem 0;
-            justify-content: space-between !important;
             @include justify-content-between;
 
             @include media ("<md") {

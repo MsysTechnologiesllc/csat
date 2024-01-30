@@ -2,20 +2,22 @@
 
 .greetings-container {
   padding-top: 6rem;
-  min-height: calc(100vh - 6rem);
+  min-height: calc(100vh - 7rem);
 
   .greetings-main-container {
     padding: 3rem 1.6rem;
 
-    @include media(">=md","<=xl") {
+    @include media(">=md", "<=xl") {
       padding: 4.5rem 6.5rem;
+
     }
 
     @include media(">=xl") {
       padding: 3rem 6rem;
       @include justify-content-between;
       @include align-items-end;
-      min-height: 45vh;
+      min-height: 49vh;
+      max-height: 49vh;
     }
 
     .greetings-image-container {
@@ -27,7 +29,7 @@
         max-height: 100%;
       }
 
-      @include media(">=md","<=xl") {
+      @include media(">=md", "<=xl") {
         width: 100%;
         max-height: 29.8rem;
       }
@@ -76,7 +78,7 @@
   }
 
   .details-container {
-    @include horizontal-line(auto, 20vh, $white);
+    @include horizontal-line(auto, 25vh, $white);
     padding: 3rem 1.6rem;
 
     @include media(">=md") {
@@ -84,8 +86,14 @@
     }
 
     @include media(">=xl") {
+      height: 20vh;
+      padding: 3rem;
       @include justify-content-between;
       @include align-items-center;
+    }
+
+    @include media(">=xxl") {
+      height: 25vh;
     }
 
     .project-details-container {
@@ -101,7 +109,7 @@
         width: 45%;
         text-align: start;
 
-        @include media(">=md","<=xl") {
+        @include media(">=md", "<=xl") {
           width: 30%;
         }
 
@@ -126,6 +134,10 @@
       width: 20rem;
       height: 4rem;
       margin-top: 2rem;
+
+      @include media("<=md") {
+        margin-bottom: 2rem;
+      }
 
       @include media(">=xl") {
         margin-bottom: 2rem;
