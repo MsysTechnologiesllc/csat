@@ -566,7 +566,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8000",
+	Host:             "172.30.44.77:8000",
 	BasePath:         "/csat/rest",
 	Schemes:          []string{},
 	Title:            "CSAT Swagger documentation",
