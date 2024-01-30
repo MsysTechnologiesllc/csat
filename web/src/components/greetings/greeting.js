@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "antd";
-import { projectDetails } from "../../stub-data/data";
 import { useNavigate } from "react-router";
 import "./greetings.scss";
 import i18n from "../../locales/i18next";
+import { surveyDetails } from "../../stub-data/survey-details";
+import { DaysAdded } from "../../utils/utils";
 
 function GreetingsPage() {
   const navigate = useNavigate();
@@ -11,6 +12,11 @@ function GreetingsPage() {
     navigate("/survey");
   };
 
+  // console.log(DaysAdded(7));
+
+  useEffect(() => {
+    console.log(surveyDetails);
+  });
   return (
     <div className="greetings-container">
       <div className="greetings-main-container">
@@ -22,18 +28,32 @@ function GreetingsPage() {
           />
         </div>
         <div className="greetings-description">
-          <h1 className="greetings-title">{i18n.t("greetings.greetings")}</h1>
-          <p className="greetings-desc">{i18n.t("greetings.description")}</p>
+          <h1 className="greetings-title">
+            {surveyDetails.SurveyFormat.title}
+          </h1>
+          <p className="greetings-desc">{surveyDetails.SurveyFormat.message}</p>
         </div>
       </div>
       <div className="details-container">
         <div className="project-details-container">
-          {projectDetails.map((item, i) => (
-            <div key={i} span={4} className="details">
-              <p className="title">{item.title}</p>
-              <p className="desc">{item.desc}</p>
-            </div>
-          ))}
+          <div span={4} className="details">
+            <p className="title">{i18n.t("greetings.project")}</p>
+            <p className="desc">{surveyDetails.Survey.project.name}</p>
+          </div>
+          <div span={4} className="details">
+            <p className="title">{i18n.t("greetings.projectManager")}</p>
+            <p className="desc">{surveyDetails.SurveyFormat.PM_name}</p>
+          </div>
+          <div span={4} className="details">
+            <p className="title">{i18n.t("greetings.deliveryHead")}</p>
+            <p className="desc">{surveyDetails.SurveyFormat.DH_name}</p>
+          </div>
+          <div span={4} className="details">
+            <p className="title">{i18n.t("greetings.shareBefore")}</p>
+            <p className="desc">
+              {DaysAdded(surveyDetails.SurveyFormat.survey_frequency_days)}
+            </p>
+          </div>
         </div>
 
         <Button className="active-button" onClick={getStarted}>
