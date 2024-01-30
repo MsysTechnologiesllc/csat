@@ -3,10 +3,13 @@ package main
 
 import (
 	"csat/logger"
+	"csat/models"
 	"csat/routes"
 	"fmt"
 	"net/http"
 	"os"
+
+	cron "github.com/robfig/cron/v3"
 
 	_ "csat/docs" // Required for Swagger docs
 
@@ -22,6 +25,14 @@ import (
 // @host localhost:8000
 // @BasePath /csat/rest
 func main() {
+	cronJob := cron.New()
+	_, err := cronJob.AddFunc("0 1 * * *", models.CronJob)
+	if err != nil {
+		fmt.Println("Error adding cron job:", err)
+		return
+	}
+	go cronJob.Start()
+
 	logger.Log.Printf("Microservice is Running...")
 	corsHandler := handlers.CORS(
 		handlers.AllowedOrigins([]string{"*"}),
@@ -42,7 +53,7 @@ func main() {
 
 	logger.Log.Printf(port)
 
-	err := http.ListenAndServe(":"+port, corsHandler(router)) //Launch the app, visit localhost:8000/api
+	err = http.ListenAndServe(":"+port, corsHandler(router)) //Launch the app, visit localhost:8000/api
 	if err != nil {
 		fmt.Print(err)
 	}
