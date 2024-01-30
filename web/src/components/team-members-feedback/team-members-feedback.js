@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Form, Row, Select, Rate } from "antd";
+import { Button, Card, Col, Form, Row, Rate } from "antd";
 import { teamMembersList } from "../../stub-data/data";
 import { useNavigate } from "react-router";
 import { GoArrowLeft } from "react-icons/go";
@@ -9,11 +9,11 @@ import { plLibComponents } from "../../context-provider/component-provider";
 import "./team-members-feedback.scss";
 
 export const TeamMembersFeedBack = () => {
-  const { InputField, InputTextArea, SearchInput } = plLibComponents.components;
+  const { InputField, InputTextArea } = plLibComponents.components;
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [selectedMember, setSelectedMember] = useState(
-    teamMembersList[0].value
+    teamMembersList[0].value,
   );
   const [isAnyFieldFilled, setIsAnyFieldFilled] = useState(false);
   const onValuesChange = () => {

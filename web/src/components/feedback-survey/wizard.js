@@ -59,7 +59,10 @@ const Wizard = ({
         </Col>
         {isLastStep ? (
           <div className="draft-submit-btns">
-            <Button className="draft-button" onClick={() => handleDraft()}>
+            <Button
+              className="draft-button hide-on-tablet"
+              onClick={() => handleDraft()}
+            >
               {i18n.t("button.saveAsDraft")}
             </Button>
             <Button onClick={handleTeamMemberFeedback} className="draft-button">
@@ -111,10 +114,21 @@ const Wizard = ({
     <div className="wizard-container">
       <div className="top-btn-container">
         {currentStep > 0 ? (
-          <Button onClick={prevStep} className="previous-button" type="text">
-            <GoArrowLeft className="arrow-icon" />
-            {i18n.t("button.previous")}
-          </Button>
+          <>
+            <Button onClick={prevStep} className="previous-button" type="text">
+              <GoArrowLeft className="arrow-icon" />
+              {i18n.t("button.previous")}
+            </Button>
+            {currentStep === 6 && (
+              <Button
+                className="draft-button"
+                type="text"
+                onClick={() => handleDraft()}
+              >
+                {i18n.t("button.saveAsDraft")}
+              </Button>
+            )}
+          </>
         ) : (
           <Button type="text" className="cancel-button" onClick={handleCancel}>
             {i18n.t("button.cancel")}
