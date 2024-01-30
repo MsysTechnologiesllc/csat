@@ -5,6 +5,7 @@
   background-color: $white;
   gap: 4rem;
   padding: 2rem;
+  min-height: 89vh;
   .team-members-list-container {
     @include d-none;
     .search-members {
@@ -31,8 +32,14 @@
       letter-spacing: 0.015rem;
       text-align: left;
       cursor: pointer;
+      &:hover{
+        background-color: $muted-lilac;
+      }
       .ant-card-body {
         padding: 0;
+      }
+      .text-image-container {
+        @include justify-content-between;
       }
     }
     .bg {

@@ -56,11 +56,16 @@ export const translationEN = {
   placeholder: {
     message: "Your message",
     searchName: "Search by Names",
+    search: "Search here",
   },
   teamFeedBack: {
     feedback: "Feedback for",
     positives: "Positives",
     areaOfImprovement: "Areas of Improvement",
     overallRating: "Overall rating",
+  },
+  submittedSuccessfully: {
+    submitted: "Your feedback is submitted successfully!",
+    description: "We sincerely thank you for sharing the feedback",
   },
 };

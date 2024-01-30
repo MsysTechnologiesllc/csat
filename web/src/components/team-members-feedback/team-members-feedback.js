@@ -1,20 +1,21 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Form, Input, Rate, Row, Select } from "antd";
-import TextArea from "antd/es/input/TextArea";
+import { Button, Card, Col, Form, Row, Select, Rate } from "antd";
 import { teamMembersList } from "../../stub-data/data";
 import { useNavigate } from "react-router";
 import { GoArrowLeft } from "react-icons/go";
 import { IoStarSharp } from "react-icons/io5";
-import "./team-members-feedback.scss";
 import i18n from "../../locales/i18next";
+import { plLibComponents } from "../../context-provider/component-provider";
+import "./team-members-feedback.scss";
 
 export const TeamMembersFeedBack = () => {
+  const { InputField, InputTextArea } = plLibComponents.components;
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
   const [selectedMember, setSelectedMember] = useState(
     teamMembersList[0].value,
   );
   const [isAnyFieldFilled, setIsAnyFieldFilled] = useState(false);
-  const navigate = useNavigate();
-  const [form] = Form.useForm();
   const onValuesChange = () => {
     const formValues = form.getFieldsValue();
     const anyFieldHasValue = Object.values(formValues).some((value) => !!value);
@@ -38,19 +39,33 @@ export const TeamMembersFeedBack = () => {
   return (
     <Row className="feedback-container">
       <Col xs={24} md={8} className="card-search-container">
-        <Input className="search-input" placeholder="Search by Name" />
+        <InputField
+          isForm={false}
+          type="textinput"
+          labelText={i18n.t("placeholder.searchName")}
+          placeholder={i18n.t("placeholder.search")}
+        />
         <div className="cards-container">
           {teamMembersList.map((member) => (
             <Card
               key={member.value}
               onClick={() => setSelectedMember(member.value)}
               className={
-                selectedMember.value === member.value
+                selectedMember === member.value
                   ? "member-card bg"
                   : "member-card"
               }
             >
-              {member.label}
+              <div className="text-image-container">
+                {member.label}
+                {member.hasFeedback === 1 && (
+                  <img
+                    src="./images/feedback_updated.svg"
+                    alt={i18n.t("imageAlt.gauge")}
+                    className="feedback-updated-image"
+                  />
+                )}
+              </div>
             </Card>
           ))}
         </div>
@@ -80,9 +95,9 @@ export const TeamMembersFeedBack = () => {
             <Col xs={24} md={12}>
               <p>{i18n.t("teamFeedBack.positives")}</p>
               <Form.Item name="positives">
-                <TextArea
-                  placeholder={i18n.t("placeholder.message")}
-                  rows={4}
+                <InputTextArea
+                  placeHolderText={i18n.t("placeholder.message")}
+                  rowCount={4}
                   className="text-area"
                 />
               </Form.Item>
@@ -90,9 +105,9 @@ export const TeamMembersFeedBack = () => {
             <Col xs={24} md={11}>
               <p>{i18n.t("teamFeedBack.areaOfImprovement")}</p>
               <Form.Item name="improvements">
-                <TextArea
-                  rows={4}
-                  placeholder={i18n.t("placeholder.message")}
+                <InputTextArea
+                  rowCount={4}
+                  placeHolderText={i18n.t("placeholder.message")}
                   className="text-area"
                 />
               </Form.Item>
