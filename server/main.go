@@ -26,7 +26,7 @@ import (
 // @BasePath /csat/rest
 func main() {
 	cronJob := cron.New()
-	_, err := cronJob.AddFunc("* * * * *", models.CronJob)
+	_, err := cronJob.AddFunc("0 0 * * *", models.CronJob)
 	if err != nil {
 		fmt.Println("Error adding cron job:", err)
 		return
