@@ -130,8 +130,9 @@ Wizard.propTypes = {
   currentStep: PropTypes.number.isRequired,
   steps: PropTypes.array.isRequired,
   handleTeamMemberFeedback: PropTypes.func.isRequired,
-  setCurrentStep: PropTypes.number.isRequired,
   isAnswerSelected: PropTypes.bool.isRequired,
-  setIsAnswerSelected: PropTypes.bool.isRequired,
+  setCurrentStep: PropTypes.func.isRequired,
+  setIsAnswerSelected: PropTypes.func.isRequired,
 };
+
 export default Wizard;
