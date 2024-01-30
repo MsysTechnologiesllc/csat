@@ -44,7 +44,7 @@ export const TeamMembersFeedBack = () => {
           type="textinput"
           labelText={i18n.t("placeholder.searchName")}
           placeholder={i18n.t("placeholder.search")}
-          onChange={(e)=>console.log(e.value)}
+          onChange={(event) => console.log(event.value)}
         />
         <div className="cards-container">
           {teamMembersList.map((member) => (
@@ -78,7 +78,7 @@ export const TeamMembersFeedBack = () => {
         </div>
         <Form form={form} onFinish={onFinish} onValuesChange={onValuesChange}>
           <Row className="text-area-container">
-            <Col xs={24} >
+            <Col xs={24}>
               <p>{i18n.t("teamFeedBack.positives")}</p>
               <Form.Item name="positives">
                 <InputTextArea
@@ -88,7 +88,7 @@ export const TeamMembersFeedBack = () => {
                 />
               </Form.Item>
             </Col>
-            <Col xs={24} >
+            <Col xs={24}>
               <p>{i18n.t("teamFeedBack.areaOfImprovement")}</p>
               <Form.Item name="improvements">
                 <InputTextArea
