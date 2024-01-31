@@ -6,7 +6,7 @@ import AppRoutes from "./routes/AppRoutes";
 function App() {
   return (
     <div className="App">
-      <Header />
+      <Header prjTitle={"Project"} />
       <AppRoutes />
     </div>
   );
