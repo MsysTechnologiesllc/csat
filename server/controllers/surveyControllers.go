@@ -8,6 +8,7 @@ import (
 	u "csat/utils"
 	"encoding/json"
 	"net/http"
+	"strconv"
 )
 
 // @Summary Get Survey Details
@@ -28,7 +29,7 @@ var GetSurveyDetails = func(w http.ResponseWriter, r *http.Request) {
 	// Parse query parameters
 	queryValues := r.URL.Query()
 	id := queryValues.Get(constants.ID)
-	data := models.GetSurvey(id)
+	data, _ := models.GetSurvey(id)
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = data
 	u.Respond(w, resp)
@@ -37,6 +38,9 @@ var GetSurveyDetails = func(w http.ResponseWriter, r *http.Request) {
 // Struct for survey API request body sample
 type CreateSurveyRequest struct {
 	schema.Survey
+}
+type UpdateAnswerRequest struct {
+	schema.SurveyAnswers
 }
 
 // @Summary Create Survey
@@ -136,4 +140,62 @@ var CreateSurvey = func(w http.ResponseWriter, r *http.Request) {
 	resp["surveyQuestions"] = surveyQuestionsData
 
 	u.Respond(w, resp)
+}
+
+// @Summary Get Survey format
+// @Description Retrieve survey format based on ID
+// @Tags survey
+// @Accept json
+// @Produce json
+// @Param surveyFormatID query int true "survey Format ID (required)" default(2)
+// @Success 200 {object} map[string]interface{} "Survey format retrieved successfully"
+// @Failure 400 {object} map[string]interface{} "Invalid request"
+// @Failure 401 {object} map[string]interface{} "Unauthorized: Token is missing or invalid"
+// @Failure 404 {object} map[string]interface{} "No user found"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /api/survey-format [get]
+var GetSurveyFormatByID = func(w http.ResponseWriter, r *http.Request) {
+	logger.Log.Println("Logging from Controller")
+
+	surveyFormatIDStr := r.URL.Query().Get("surveyFormatID")
+	surveyFormatID, err := strconv.ParseUint(surveyFormatIDStr, 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid surveyFormatID", http.StatusBadRequest)
+		return
+	}
+	data, _ := models.GetSurveyFormatFromDB(uint(surveyFormatID))
+	resp := u.Message(true, constants.SUCCESS)
+	resp[constants.DATA] = data
+	u.Respond(w, resp)
+}
+
+// @Summary Create Survey
+// @Description Create Survey
+// @Tags Survey
+// @Accept json
+// @Produce json
+// @Param request body UpdateAnswerRequest false "Create Survey Request"
+// @Success 200 {object} map[string]interface{} "Survey Createed Successfully" example:"{'message': 'Survey Createed Successfully'}"
+// @Failure 400 {object} map[string]interface{} "Invalid request" example:"{'error': 'Invalid request'}"
+// @Failure 401 {object} map[string]interface{} "Unauthorized: Token is missing or invalid" example:"{'error': 'Unauthorized'}"
+// @Failure 500 {object} map[string]interface{} "Internal server error" example:"{'error': 'Internal server error'}"
+// @Router /api/survey-answers [put]
+func BulkUpdateSurveyAnswers(w http.ResponseWriter, r *http.Request) {
+    var requestData []map[string]interface{}
+    if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
+        http.Error(w, "Invalid request body", http.StatusBadRequest)
+        return
+    }
+
+    // Call the model function for bulk update
+    updatedSurveyAnswers, err := models.BulkUpdateSurveyAnswers(requestData)
+    if err != nil {
+        http.Error(w, "Failed to update survey answers", http.StatusInternalServerError)
+        return
+    }
+
+    // Respond with the updated survey answers
+    response := u.Message(true, "Bulk update successful")
+    response["data"] = updatedSurveyAnswers
+    u.Respond(w, response)
 }

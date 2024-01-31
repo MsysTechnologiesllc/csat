@@ -93,12 +93,13 @@ export const TeamMembersFeedBack = () => {
   ));
   return (
     <Row className="feedback-container">
-      <Col xs={24} md={8} className="card-search-container">
+      <Col xs={24} md={7} xl={7} className="card-search-container">
         <InputField
           isForm={false}
           type="textinput"
           labelText={i18n.t("placeholder.searchName")}
           placeholder={i18n.t("placeholder.search")}
+          onChange={(event) => console.log(event.value)}
         />
         <div className="cards-container">
           {usersList.map((member) => (
@@ -147,7 +148,7 @@ export const TeamMembersFeedBack = () => {
         </div>
         <Form form={form} onFinish={onFinish} onValuesChange={onValuesChange}>
           <Row className="text-area-container">
-            <Col xs={24} md={12}>
+            <Col xs={24}>
               <p>{i18n.t("teamFeedBack.positives")}</p>
               <Form.Item name="positives">
                 <InputTextArea
@@ -164,7 +165,7 @@ export const TeamMembersFeedBack = () => {
                 />
               </Form.Item>
             </Col>
-            <Col xs={24} md={11}>
+            <Col xs={24}>
               <p>{i18n.t("teamFeedBack.areaOfImprovement")}</p>
               <Form.Item name="improvements">
                 <InputTextArea
