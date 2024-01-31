@@ -1,37 +1,73 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Form, Row, Select, Rate } from "antd";
-import { teamMembersList } from "../../stub-data/data";
+import { GetService } from "../../services/get";
 import { useNavigate } from "react-router";
 import { GoArrowLeft } from "react-icons/go";
 import { IoStarSharp } from "react-icons/io5";
 import i18n from "../../locales/i18next";
 import { plLibComponents } from "../../context-provider/component-provider";
 import "./team-members-feedback.scss";
+import { PutService } from "../../services/put";
 
 export const TeamMembersFeedBack = () => {
   const { InputField, InputTextArea } = plLibComponents.components;
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [selectedMember, setSelectedMember] = useState(
-    teamMembersList[0].value,
-  );
+  const [usersList, setUsersList] = useState([]);
+  const [selectedMember, setSelectedMember] = useState([]);
   const [isAnyFieldFilled, setIsAnyFieldFilled] = useState(false);
+  const [membersData, setMembersData] = useState([]);
+  const [feedBack, setFeedBack] = useState({
+    positives: "",
+    negatives: "",
+    rating: "",
+  });
+  useEffect(() => {
+    new GetService().getTeamList(4, (result) => {
+      setUsersList(result?.data?.data?.users);
+      setSelectedMember(result?.data?.data?.users[0]);
+      const membersList = [];
+      result?.data?.data?.users.map((user) => {
+        membersList.push({ value: user.name, label: user.name });
+      });
+      setMembersData(membersList);
+    });
+  }, []);
   const onValuesChange = () => {
     const formValues = form.getFieldsValue();
     const anyFieldHasValue = Object.values(formValues).some((value) => !!value);
     setIsAnyFieldFilled(anyFieldHasValue);
   };
-  const handleSubmit = () => {
-    navigate("/teamFeedback/submitted");
-  };
   const handleBack = () => {
     navigate("/survey");
   };
   const onFinish = (values) => {
-    console.log(values, "form output");
+    const payload = {
+      userFeedbackId: selectedMember.ID,
+      positives: feedBack.positives,
+      negatives: feedBack.negatives,
+      rating: values.rating,
+    };
+    console.log(payload);
+    new PutService().updateFeedback(payload, (result) => {
+      console.log(result);
+      // navigate("/teamFeedback/submitted");
+    });
+    // setFeedBack({
+    //   positives: feedBack.positives,
+    //   negatives: feedBack.negatives,
+    //   rating: values.rating,
+    // });
+  };
+  const handleSubmit = () => {
+    //here complete survey is published
   };
   const handleReset = () => {
     form.resetFields();
+  };
+  const handleOnChange = (value) => {
+    const foundUser = usersList.find((user) => user.name.includes(value));
+    setSelectedMember(foundUser);
   };
   const customStarIcons = Array.from({ length: 5 }, (_, index) => (
     <IoStarSharp key={index} className="rating-icon" />
@@ -46,19 +82,19 @@ export const TeamMembersFeedBack = () => {
           placeholder={i18n.t("placeholder.search")}
         />
         <div className="cards-container">
-          {teamMembersList.map((member) => (
+          {usersList.map((member) => (
             <Card
-              key={member.value}
-              onClick={() => setSelectedMember(member.value)}
+              key={member.ID}
+              onClick={() => setSelectedMember(member)}
               className={
-                selectedMember === member.value
+                selectedMember?.name === member?.name
                   ? "member-card bg"
                   : "member-card"
               }
             >
               <div className="text-image-container">
-                {member.label}
-                {member.hasFeedback === 1 && (
+                {member?.name}
+                {member?.hasFeedback === 1 && (
                   <img
                     src="./images/feedback_updated.svg"
                     alt={i18n.t("imageAlt.gauge")}
@@ -79,16 +115,16 @@ export const TeamMembersFeedBack = () => {
           filterOption={(input, option) =>
             (option?.label.toLowerCase() ?? "").includes(input)
           }
-          options={teamMembersList}
+          options={membersData}
           className="search-members"
-          defaultValue={teamMembersList[0].label}
-          onChange={(value) => setSelectedMember(value)}
+          defaultValue={membersData[0]?.label}
+          onChange={handleOnChange}
         />
       </Col>
       <Col xs={24} md={15}>
         <div className="feeback-names">
           <p className="feedback-title">{i18n.t("teamFeedBack.feedback")}</p>
-          <p className="name">{selectedMember}</p>
+          <p className="name">{selectedMember?.name}</p>
         </div>
         <Form form={form} onFinish={onFinish} onValuesChange={onValuesChange}>
           <Row className="text-area-container">
@@ -99,6 +135,13 @@ export const TeamMembersFeedBack = () => {
                   placeHolderText={i18n.t("placeholder.message")}
                   rowCount={4}
                   className="text-area"
+                  handleResultString={(value) =>
+                    setFeedBack({
+                      positives: value,
+                      negatives: feedBack.negatives,
+                      rating: feedBack.rating,
+                    })
+                  }
                 />
               </Form.Item>
             </Col>
@@ -109,6 +152,13 @@ export const TeamMembersFeedBack = () => {
                   rowCount={4}
                   placeHolderText={i18n.t("placeholder.message")}
                   className="text-area"
+                  handleResultString={(value) =>
+                    setFeedBack({
+                      positives: feedBack.positives,
+                      negatives: value,
+                      rating: feedBack.rating,
+                    })
+                  }
                 />
               </Form.Item>
             </Col>
