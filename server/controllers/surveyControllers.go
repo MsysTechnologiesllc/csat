@@ -7,6 +7,7 @@ import (
 	"csat/schema"
 	u "csat/utils"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 )
@@ -181,21 +182,57 @@ var GetSurveyFormatByID = func(w http.ResponseWriter, r *http.Request) {
 // @Failure 500 {object} map[string]interface{} "Internal server error" example:"{'error': 'Internal server error'}"
 // @Router /api/survey-answers [put]
 func BulkUpdateSurveyAnswers(w http.ResponseWriter, r *http.Request) {
-    var requestData []map[string]interface{}
-    if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
-        http.Error(w, "Invalid request body", http.StatusBadRequest)
-        return
-    }
+	var requestData map[string]interface{}
+	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
+		fmt.Println("Error decoding request body:", err)
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
 
-    // Call the model function for bulk update
-    updatedSurveyAnswers, err := models.BulkUpdateSurveyAnswers(requestData)
-    if err != nil {
-        http.Error(w, "Failed to update survey answers", http.StatusInternalServerError)
-        return
-    }
+	surveyStatus, ok := requestData["survey_status"].(string)
+	if !ok {
+		http.Error(w, "Invalid 'survey_status' format", http.StatusBadRequest)
+		return
+	}
+	surveyId, ok := requestData["survey_id"].(float64)
+	if !ok {
+		http.Error(w, "Invalid 'survey_id' format", http.StatusBadRequest)
+		return
+	}
+	surveyID := uint(surveyId)
 
-    // Respond with the updated survey answers
-    response := u.Message(true, "Bulk update successful")
-    response["data"] = updatedSurveyAnswers
-    u.Respond(w, response)
+	answersInterface, ok := requestData["survey_answers"].([]interface{})
+	if !ok {
+		http.Error(w, "Invalid 'survey_answers' format", http.StatusBadRequest)
+		return
+	}
+
+	var surveyAnswers []map[string]interface{}
+	for _, ans := range answersInterface {
+		answerMap, ok := ans.(map[string]interface{})
+		if !ok {
+			http.Error(w, "Invalid 'answer' format", http.StatusBadRequest)
+			return
+		}
+		surveyAnswers = append(surveyAnswers, answerMap)
+	}
+
+	// Prepare the updated request data
+	updatedRequestData := map[string]interface{}{
+		"survey_status":  surveyStatus,
+		"survey_answers": surveyAnswers,
+		"survey_id":      surveyID,
+	}
+
+	// Call the model function for bulk update
+	updatedSurveyAnswers, err := models.BulkUpdateSurveyAnswers(updatedRequestData)
+	if err != nil {
+		http.Error(w, "Failed to update survey answers", http.StatusInternalServerError)
+		return
+	}
+
+	// Respond with the updated survey answers
+	response := u.Message(true, "Bulk update successful")
+	response["data"] = updatedSurveyAnswers
+	u.Respond(w, response)
 }

@@ -10,6 +10,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/tealeg/xlsx"
 )
@@ -96,6 +97,13 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 				pmEmail = row.Cells[6].String()
 				dhName = row.Cells[7].String()
 				dhEmail = row.Cells[8].String()
+				surveyFrequencyStr := row.Cells[9].String()
+
+				surveyFrequency, err := strconv.ParseUint(surveyFrequencyStr, 10, 0)
+				if err != nil {
+					fmt.Printf("Error converting surveyFrequencyStr to uint: %v\n", err)
+					surveyFrequency = 0
+				}
 
 				tenant, err = models.GetOrCreateTenant(db, tenantName)
 				if err != nil {
@@ -143,7 +151,7 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 				accountFound = true
 
 				if !surveyFormatCreated {
-					surveyFormat, err = models.CreateSurveyFormat(db, tenant.ID, account.ID, project.ID, title, message, pmName, pmEmail, dhName, dhEmail, 7)
+					surveyFormat, err = models.CreateSurveyFormat(db, tenant.ID, account.ID, project.ID, title, message, pmName, pmEmail, dhName, dhEmail, uint(surveyFrequency))
 					if err != nil {
 						http.Error(w, err.Error(), http.StatusInternalServerError)
 						return
