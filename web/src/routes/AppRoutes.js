@@ -14,7 +14,7 @@ const AppRoutes = () => {
     <Router>
       <Routes>
         <Route path="/" element={<GreetingsPage />} exact />
-        <Route path="/survey" element={<FeedBackSurvey />} exact />
+        <Route path="/survey/:surveyId" element={<FeedBackSurvey />} exact />
         <Route path="/teamFeedBack" element={<TeamMembersFeedBack />} exact />
         {routes.map((route, index) => (
           <Route

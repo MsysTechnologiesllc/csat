@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import Wizard from "./wizard";
 import { WizardProgressBar } from "./wizard-progress-bar";
 import { Input, Radio, Rate } from "antd";
-// import { step1Options } from "../../stub-data/data";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { LineOutlined } from "@ant-design/icons";
 import { IoStarSharp } from "react-icons/io5";
 import i18n from "../../locales/i18next";
 import { plLibComponents } from "../../context-provider/component-provider";
 import "./feedback-survey.scss";
-import { surveyDetails } from "../../stub-data/survey-details";
+import { PutService } from "../../services/put";
 
 export const FeedBackSurvey = () => {
   const { RadioWithEmoji, RadioWithSpeedometer } = plLibComponents.components;
@@ -18,21 +17,22 @@ export const FeedBackSurvey = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isAnswerSelected, setIsAnswerSelected] = useState(false);
   const [questionsData, setQuestionsData] = useState([]);
+  const [notify, setNotify] = useState("");
   const [text, setText] = useState("");
-  // const [scaleRate, setScaleRate] = useState([]);
-  // const [starRate, setStarRate] = useState([]);
+  const { state } = useLocation();
+  const { surveyDetails } = state;
   const handleChange = (ques, value) => {
+    const surveyAnswers = {};
     const scaleRes = [];
     setIsAnswerSelected(true);
     if (ques.question.type === "scale-rating") {
-      console.log("done");
       for (let i = 1; i <= value; i++) {
         const key = String.fromCharCode(96 + i); // Random lowercase letter (a-z)
         scaleRes.push({ [key]: i });
       }
-      ques.answer = scaleRes;
-      setQuestionsData((prevData) => [...prevData, ques]);
-      // setScaleRate(scaleRes);
+      surveyAnswers.ID = ques.ID;
+      surveyAnswers.answer = scaleRes;
+      setQuestionsData((prevData) => [...prevData, surveyAnswers]);
     } else if (ques.question.type === "star-rating") {
       console.log("done");
       let length = value * 2;
@@ -40,18 +40,15 @@ export const FeedBackSurvey = () => {
         const key = String.fromCharCode(96 + i); // Random lowercase letter (a-z)
         scaleRes.push({ [key]: i / 2 });
       }
-      ques.answer = scaleRes;
-      // setStarRate(scaleRes);
-      setQuestionsData((prevData) => [...prevData, ques]);
+      surveyAnswers.ID = ques.ID;
+      surveyAnswers.answer = scaleRes;
+      setQuestionsData((prevData) => [...prevData, surveyAnswers]);
     } else {
-      ques.answer = value;
-      setQuestionsData((prevData) => [...prevData, ques]);
+      scaleRes.push({ [String.fromCharCode(97)]: value });
+      surveyAnswers.ID = ques.ID;
+      surveyAnswers.answer = scaleRes;
+      setQuestionsData((prevData) => [...prevData, surveyAnswers]);
     }
-
-    // console.log(starRate, scaleRate);
-
-    // ques.answer = value;
-    // setQuestionsData((prevData) => [...prevData, ques]);
   };
   const customIcons = Array.from({ length: 5 }, (_, index) => (
     <LineOutlined key={index} className="rating-icon" />
@@ -59,9 +56,44 @@ export const FeedBackSurvey = () => {
   const customStarIcons = Array.from({ length: 5 }, (_, index) => (
     <IoStarSharp key={index} className="rating-icon" />
   ));
-
+  const handleTeamMemberFeedback = () => {
+    const payload = [...questionsData];
+    // const payload = {
+    //   answers: questionsData,
+    //   survey_status: "pending",
+    // };
+    new PutService().updateFeedback(payload, (result) => {
+      if (result?.status === 200) {
+        navigate("/teamFeedback", {
+          state: { surveyDetails: surveyDetails, questionsData: questionsData },
+        });
+      }
+    });
+  };
+  const handleSaveAsDraft = () => {
+    const payload = {
+      answers: questionsData,
+      survey_status: "draft",
+    };
+    new PutService().updateFeedback(payload, (result) => {
+      if (result?.status === 200) {
+        setNotify("draft");
+      }
+    });
+  };
+  const handleSubmit = () => {
+    const payload = {
+      answers: questionsData,
+      survey_status: "publish",
+    };
+    new PutService().updateFeedback(payload, (result) => {
+      if (result?.status === 200) {
+        navigate("/survey/submitted");
+      }
+    });
+  };
   const dynamicSteps = (dynamicStepsData) => {
-    return dynamicStepsData.map((each, index) => {
+    return dynamicStepsData?.map((each, index) => {
       return {
         title: `Step ${index}`,
         content: (
@@ -73,12 +105,12 @@ export const FeedBackSurvey = () => {
               />
             )}
             <p className="question">
-              {each.question.description}
+              {each?.question?.description}
               <span className="required-star">*</span>
             </p>
             {each.question.type === "boolean" && (
               <Radio.Group name="radiogroup" className="radio-group-images ">
-                {each.question.options.map((option) => (
+                {JSON.parse(each.question.options).map((option) => (
                   <RadioWithEmoji
                     imageSrc={
                       Object.values(option)[0] === "yes"
@@ -133,7 +165,7 @@ export const FeedBackSurvey = () => {
                 name="radiogroup"
                 className="radio-group-images smiles-container"
               >
-                {each.question.options.map((option) => (
+                {JSON.parse(each.question.options).map((option) => (
                   <RadioWithEmoji
                     imageSrc={
                       Object.values(option)[0] === "Very Low"
@@ -182,7 +214,7 @@ export const FeedBackSurvey = () => {
                 name="radiogroup"
                 className="radio-group-images speedometer-group-images"
               >
-                {each.question.options.map((option, index) => (
+                {JSON.parse(each.question.options).map((option, index) => (
                   <RadioWithSpeedometer
                     key={index}
                     speedometerImage="./images/gauge.svg"
@@ -221,12 +253,8 @@ export const FeedBackSurvey = () => {
     });
   };
 
-  const steps = dynamicSteps(surveyDetails.Survey.survey_answers);
+  const steps = dynamicSteps(surveyDetails?.Survey?.survey_answers);
 
-  const handleTeamMemberFeedback = () => {
-    console.log(questionsData, "entered data");
-    navigate("/teamFeedback");
-  };
   return (
     <div className="wizard-wrapper">
       <Wizard
@@ -234,8 +262,12 @@ export const FeedBackSurvey = () => {
         setCurrentStep={setCurrentStep}
         steps={steps}
         handleTeamMemberFeedback={handleTeamMemberFeedback}
+        handleSaveAsDraft={handleSaveAsDraft}
         isAnswerSelected={isAnswerSelected}
         setIsAnswerSelected={setIsAnswerSelected}
+        notify={notify}
+        setNotify={setNotify}
+        handleSubmit={handleSubmit}
       />
       <WizardProgressBar currentStep={currentStep} steps={steps} />
     </div>

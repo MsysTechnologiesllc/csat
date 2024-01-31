@@ -29,9 +29,15 @@ export class BaseService {
       });
   }
 
-  async put(url, data, headers, callback) {
+  async put(url, data, callback, headers) {
+    let header = headers
+      ? headers
+      : {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        };
     return await axios
-      .put(url, data, headers)
+      .put(url, data, header)
       .then(async (res) => {
         callback(res);
       })
@@ -41,13 +47,10 @@ export class BaseService {
   }
 
   async get(url, callback, headers) {
-    console.log(url, callback, headers);
     let header = headers
       ? headers
       : {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          Authorization: "Bearer undefined",
         };
     return await axios
       .get(url, header)

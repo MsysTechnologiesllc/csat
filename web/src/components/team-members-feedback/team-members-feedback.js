@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Form, Row, Select, Rate } from "antd";
-import { GetService } from "../../services/get";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { GoArrowLeft } from "react-icons/go";
 import { IoStarSharp } from "react-icons/io5";
 import i18n from "../../locales/i18next";
 import { plLibComponents } from "../../context-provider/component-provider";
-import "./team-members-feedback.scss";
 import { PutService } from "../../services/put";
+import NotifyStatus from "../notify-status/notify-status";
+import "./team-members-feedback.scss";
 
 export const TeamMembersFeedBack = () => {
   const { InputField, InputTextArea } = plLibComponents.components;
@@ -17,21 +17,23 @@ export const TeamMembersFeedBack = () => {
   const [selectedMember, setSelectedMember] = useState([]);
   const [isAnyFieldFilled, setIsAnyFieldFilled] = useState(false);
   const [membersData, setMembersData] = useState([]);
+  const [notify, setNotify] = useState("");
+  const [message, setMessage] = useState("");
   const [feedBack, setFeedBack] = useState({
     positives: "",
     negatives: "",
     rating: "",
   });
+  const { state } = useLocation();
+  const { surveyDetails, questionsData } = state;
   useEffect(() => {
-    new GetService().getTeamList(4, (result) => {
-      setUsersList(result?.data?.data?.users);
-      setSelectedMember(result?.data?.data?.users[0]);
-      const membersList = [];
-      result?.data?.data?.users.map((user) => {
-        membersList.push({ value: user.name, label: user.name });
-      });
-      setMembersData(membersList);
+    setSelectedMember(surveyDetails?.Survey?.user_feedbacks[0]);
+    setUsersList(surveyDetails?.Survey?.user_feedbacks);
+    const membersList = [];
+    surveyDetails?.Survey?.user_feedbacks.map((user) => {
+      membersList.push({ value: user.user.name, label: user.user.name });
     });
+    setMembersData(membersList);
   }, []);
   const onValuesChange = () => {
     const formValues = form.getFieldsValue();
@@ -39,7 +41,9 @@ export const TeamMembersFeedBack = () => {
     setIsAnyFieldFilled(anyFieldHasValue);
   };
   const handleBack = () => {
-    navigate("/survey");
+    navigate(`/survey/${surveyDetails?.Survey.ID}`, {
+      state: { surveyDetails: surveyDetails },
+    });
   };
   const onFinish = (values) => {
     const payload = {
@@ -48,25 +52,40 @@ export const TeamMembersFeedBack = () => {
       negatives: feedBack.negatives,
       rating: values.rating,
     };
-    console.log(payload);
     new PutService().updateFeedback(payload, (result) => {
-      console.log(result);
-      // navigate("/teamFeedback/submitted");
+      if (result?.status === 200) {
+        setMessage("User feedback saved succesfully");
+      }
     });
-    // setFeedBack({
-    //   positives: feedBack.positives,
-    //   negatives: feedBack.negatives,
-    //   rating: values.rating,
-    // });
+  };
+  const handleFeedbackasDraft = () => {
+    const payload = {
+      answers: questionsData,
+      survey_status: "draft",
+    };
+    new PutService().updateFeedback(payload, (result) => {
+      if (result?.status === 200) {
+        setNotify("draft");
+        setMessage("Draft saved successfully");
+      }
+    });
   };
   const handleSubmit = () => {
-    //here complete survey is published
+    const payload = {
+      answers: questionsData,
+      survey_status: "publish",
+    };
+    new PutService().updateFeedback(payload, (result) => {
+      if (result?.status === 200) {
+        navigate("/survey/submitted");
+      }
+    });
   };
   const handleReset = () => {
     form.resetFields();
   };
   const handleOnChange = (value) => {
-    const foundUser = usersList.find((user) => user.name.includes(value));
+    const foundUser = usersList?.find((each) => each.user.name.includes(value));
     setSelectedMember(foundUser);
   };
   const customStarIcons = Array.from({ length: 5 }, (_, index) => (
@@ -84,16 +103,16 @@ export const TeamMembersFeedBack = () => {
         <div className="cards-container">
           {usersList.map((member) => (
             <Card
-              key={member.ID}
+              key={member.user.ID}
               onClick={() => setSelectedMember(member)}
               className={
-                selectedMember?.name === member?.name
+                selectedMember?.user?.name === member?.user?.name
                   ? "member-card bg"
                   : "member-card"
               }
             >
               <div className="text-image-container">
-                {member?.name}
+                {member?.user?.name}
                 {member?.hasFeedback === 1 && (
                   <img
                     src="./images/feedback_updated.svg"
@@ -117,14 +136,14 @@ export const TeamMembersFeedBack = () => {
           }
           options={membersData}
           className="search-members"
-          defaultValue={membersData[0]?.label}
+          defaultValue={membersData[0]?.user?.label}
           onChange={handleOnChange}
         />
       </Col>
       <Col xs={24} md={15}>
         <div className="feeback-names">
           <p className="feedback-title">{i18n.t("teamFeedBack.feedback")}</p>
-          <p className="name">{selectedMember?.name}</p>
+          <p className="name">{selectedMember?.user?.name}</p>
         </div>
         <Form form={form} onFinish={onFinish} onValuesChange={onValuesChange}>
           <Row className="text-area-container">
@@ -202,7 +221,7 @@ export const TeamMembersFeedBack = () => {
           <span> {i18n.t("button.back")}</span>
         </Button>
         <div className="draft-submit-btns">
-          <Button className="draft-button">
+          <Button className="draft-button" classNames={handleFeedbackasDraft}>
             {i18n.t("button.saveAsDraft")}
           </Button>
           <Button
@@ -214,6 +233,7 @@ export const TeamMembersFeedBack = () => {
           </Button>
         </div>
       </div>
+      {notify && <NotifyStatus status={notify} message={message} />}
     </Row>
   );
 };

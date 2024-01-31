@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, Row, Col } from "antd";
 import PropTypes from "prop-types";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
@@ -12,14 +12,14 @@ const Wizard = ({
   setCurrentStep,
   steps,
   handleTeamMemberFeedback,
+  handleSaveAsDraft,
+  handleSubmit,
   isAnswerSelected,
   setIsAnswerSelected,
+  setNotify,
+  notify,
 }) => {
   const navigate = useNavigate();
-  const [notify, setNotify] = useState("");
-  const handleDraft = () => {
-    setNotify("draft");
-  };
   const nextStep = () => {
     setCurrentStep(currentStep + 1);
     setIsAnswerSelected(false);
@@ -33,12 +33,8 @@ const Wizard = ({
   const handleCancel = () => {
     navigate("/");
   };
-  const handleSubmit = () => {
-    navigate("/survey/submitted");
-  };
   const renderButtons = () => {
     const isLastStep = currentStep === steps.length - 1;
-
     return (
       <Row className="btn-container">
         <Col span={6}>
@@ -58,7 +54,7 @@ const Wizard = ({
         </Col>
         {isLastStep ? (
           <div className="draft-submit-btns">
-            <Button className="draft-button" onClick={() => handleDraft()}>
+            <Button className="draft-button" onClick={handleSaveAsDraft}>
               {i18n.t("button.saveAsDraft")}
             </Button>
             <Button onClick={handleTeamMemberFeedback} className="draft-button">
@@ -81,7 +77,7 @@ const Wizard = ({
                   : "draft-button disabled-button"
               }
               disabled={!isAnswerSelected}
-              onClick={() => handleDraft()}
+              onClick={handleSaveAsDraft}
             >
               {i18n.t("button.saveAsDraft")}
             </Button>
@@ -117,8 +113,12 @@ Wizard.propTypes = {
   currentStep: PropTypes.number.isRequired,
   steps: PropTypes.array.isRequired,
   handleTeamMemberFeedback: PropTypes.func.isRequired,
+  handleSaveAsDraft: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
   setCurrentStep: PropTypes.number.isRequired,
   isAnswerSelected: PropTypes.bool.isRequired,
   setIsAnswerSelected: PropTypes.bool.isRequired,
+  notify: PropTypes.string.isRequired,
+  setNotify: PropTypes.string.isRequired,
 };
 export default Wizard;
