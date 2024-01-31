@@ -1,4 +1,3 @@
-// main.go
 package main
 
 import (
@@ -34,27 +33,31 @@ func main() {
 	go cronJob.Start()
 
 	logger.Log.Printf("Microservice is Running...")
-	corsHandler := handlers.CORS(
-		handlers.AllowedOrigins([]string{"*"}),
-		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
-	)
-	router := mux.NewRouter()
+	r := mux.NewRouter()
 
-	// Use the SetupRoutes function from the routes package to set up routes
-	router.PathPrefix("/swagger/").Handler(httpSwagger.Handler(
-		httpSwagger.URL("/swagger/doc.json"),
+	// Use routes.SetupRoutes function to set up routes
+	routes.SetupRoutes(r)
+
+	// Swagger documentation
+	r.PathPrefix("/swagger/").Handler(httpSwagger.Handler(
+		httpSwagger.URL("/swagger/doc.json"), // The URL pointing to API definition
 	))
-	routes.SetupRoutes(router)
+
+	// Enable CORS and logging middleware using gorilla/handlers
+	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"})
+	headersOk := handlers.AllowedHeaders([]string{"Authorization", "Content-Type"})
+
+	// Create a logger with os.Stdout to log requests
+	logging := handlers.LoggingHandler(os.Stdout, r)
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8000" //localhost
+		port = "8000" // localhost
 	}
 
 	logger.Log.Printf(port)
 
-	err = http.ListenAndServe(":"+port, corsHandler(router)) //Launch the app, visit localhost:8000/api
-	if err != nil {
-		fmt.Print(err)
-	}
+	logger.Log.Printf("Server listening on :%s...\n", port)
+	http.ListenAndServe(fmt.Sprintf(":%s", port), handlers.CORS(allowedOrigins, allowedMethods, headersOk)(logging))
 }
