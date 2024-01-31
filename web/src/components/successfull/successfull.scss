@@ -1,20 +1,44 @@
 @use "../../assets/style/" as *;
 
 .feedback-submitted {
-  width: 100%;
-  height: calc(100vh - 70px);
+  width: auto;
+  height: calc(100vh - 7rem);
   @include flex-column;
   @include justify-content-center;
   @include align-items-center;
   gap: 2.4rem;
   text-align: center;
+  padding: 2rem;
+
+  .no-data-image {
+    min-height: 9.6rem;
+    max-height: 9.6rem;
+    min-width: 9.6rem;
+    max-width: 9.6rem;
+
+    @include media(">=md") {
+      min-height: 14.8rem;
+      max-height: 14.8rem;
+      min-width: 14.8rem;
+      max-width: 14.8rem;
+    }
+  }
 
   .no-data-heading {
-    @include font-style($jet-black, 3.3vw, 120%, 500);
+    @include font-style($jet-black, 2.5rem, 120%, 500);
     margin: 0;
+
+    @include media(">=md") {
+      font-size: 3.3rem;
+    }
   }
+
   .no-data-desc {
-    @include font-style($steel-grey, 2.2vw, 120%, 500);
+    @include font-style($steel-grey, 1.6rem, 120%, 500);
     margin: 2.4rem 0 0 0;
+
+    @include media(">=md") {
+      font-size: 2.2rem;
+    }
   }
 }

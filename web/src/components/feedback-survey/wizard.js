@@ -41,10 +41,11 @@ const Wizard = ({
 
     return (
       <Row className="btn-container">
-        <Col span={6}>
+        <Col className="prev-cancel-container">
           {currentStep > 0 ? (
             <Button onClick={prevStep} className="previous-button" type="text">
               <GoArrowLeft className="arrow-icon" />
+              {i18n.t("button.previous")}
             </Button>
           ) : (
             <Button
@@ -58,7 +59,10 @@ const Wizard = ({
         </Col>
         {isLastStep ? (
           <div className="draft-submit-btns">
-            <Button className="draft-button" onClick={() => handleDraft()}>
+            <Button
+              className="draft-button hide-on-tablet"
+              onClick={() => handleDraft()}
+            >
               {i18n.t("button.saveAsDraft")}
             </Button>
             <Button onClick={handleTeamMemberFeedback} className="draft-button">
@@ -108,6 +112,29 @@ const Wizard = ({
   };
   return (
     <div className="wizard-container">
+      <div className="top-btn-container">
+        {currentStep > 0 ? (
+          <>
+            <Button onClick={prevStep} className="previous-button" type="text">
+              <GoArrowLeft className="arrow-icon" />
+              {i18n.t("button.previous")}
+            </Button>
+            {currentStep === 6 && (
+              <Button
+                className="draft-button"
+                type="text"
+                onClick={() => handleDraft()}
+              >
+                {i18n.t("button.saveAsDraft")}
+              </Button>
+            )}
+          </>
+        ) : (
+          <Button type="text" className="cancel-button" onClick={handleCancel}>
+            {i18n.t("button.cancel")}
+          </Button>
+        )}
+      </div>
       <div className="steps-content">{steps[currentStep].content}</div>
       <div className="steps-action">{renderButtons()}</div>
     </div>
@@ -117,8 +144,9 @@ Wizard.propTypes = {
   currentStep: PropTypes.number.isRequired,
   steps: PropTypes.array.isRequired,
   handleTeamMemberFeedback: PropTypes.func.isRequired,
-  setCurrentStep: PropTypes.number.isRequired,
   isAnswerSelected: PropTypes.bool.isRequired,
-  setIsAnswerSelected: PropTypes.bool.isRequired,
+  setCurrentStep: PropTypes.func.isRequired,
+  setIsAnswerSelected: PropTypes.func.isRequired,
 };
+
 export default Wizard;

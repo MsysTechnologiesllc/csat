@@ -7,6 +7,7 @@ export const translationEN = {
     avg: "Average",
     high: "High",
     veryHigh: "Very High",
+    logo: "Logo",
   },
   header: {
     title: "CSAT",
