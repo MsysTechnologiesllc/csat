@@ -15,7 +15,7 @@ import (
 
 // @Summary Get user list
 // @Description Retrieve a list of users based on name and project ID
-// @Tags users
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param name query string false "User name (optional)"
@@ -41,7 +41,7 @@ var GetUserList = func(w http.ResponseWriter, r *http.Request) {
 
 // @Summary Get user Details
 // @Description Retrieve user details based on User ID
-// @Tags users
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param user_id query int true "User ID (required)" default(2)
@@ -84,7 +84,7 @@ type UpdateUserRequest struct {
 
 // @Summary Update user feedback
 // @Description Update user feedback details
-// @Tags users
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param request body UpdateUserRequest false "Update User Feedback Request"
@@ -136,7 +136,7 @@ var UpdateUserFeedback = func(w http.ResponseWriter, r *http.Request) {
 
 // @Summary All surveys
 // @Description Retrieve All surveys based on tenant ID
-// @Tags users
+// @Tags Survey
 // @Accept json
 // @Produce json
 // @Param tenant_id query int true "Tenant ID (required)" default(101)

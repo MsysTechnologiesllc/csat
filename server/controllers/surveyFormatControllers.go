@@ -218,6 +218,7 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 	var userFeedbacksData []*schema.UserFeedback
 	var surveyQuestionsData []*schema.SurveyAnswers
 	var surveyID uint
+	linkURL := os.Getenv("EMAIL_BASE_URL")
 	//Sending mail
 	for _, user := range users {
 		if user.Role == "client" {
@@ -228,12 +229,12 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 			}
 			userFeedbacksData = userFeedbacks
 			surveyQuestionsData = surveyQuestions
-			surveyID = surveyId
+			surveyID := strconv.Itoa(int(surveyId))
 
 			emailData := u.EmailData{
 				Name:        user.Name,
 				ProjectName: project.Name,
-				SurveyID:    fmt.Sprintf("http://test.com/csat?surveyid=%d", surveyID),
+				SurveyID:    linkURL + surveyID,
 			}
 			emailRecipient := u.EmailRecipient{
 				To:      []string{user.Email},
