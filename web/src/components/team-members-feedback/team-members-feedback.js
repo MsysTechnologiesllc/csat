@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Form, Row, Rate } from "antd";
+import { Button, Card, Col, Form, Row, Rate, Input } from "antd";
 import { useLocation, useNavigate } from "react-router";
 import { GoArrowLeft } from "react-icons/go";
 import { IoStarSharp } from "react-icons/io5";
@@ -8,9 +8,11 @@ import { plLibComponents } from "../../context-provider/component-provider";
 import { PutService } from "../../services/put";
 import NotifyStatus from "../notify-status/notify-status";
 import "./team-members-feedback.scss";
+import { GetService } from "../../services/get";
 
 export const TeamMembersFeedBack = () => {
-  const { InputField, InputTextArea } = plLibComponents.components;
+  const { TextArea } = Input;
+  const { InputField } = plLibComponents.components;
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [usersList, setUsersList] = useState([]);
@@ -18,17 +20,39 @@ export const TeamMembersFeedBack = () => {
   const [isAnyFieldFilled, setIsAnyFieldFilled] = useState(false);
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
-  const [feedBack, setFeedBack] = useState({
-    positives: "",
-    negatives: "",
-    rating: "",
-  });
+  const [searchInput, setSearchInput] = useState("");
+  const [save, setSave] = useState(false);
   const { state } = useLocation();
   const { surveyDetails, questionsData } = state;
   useEffect(() => {
-    setSelectedMember(surveyDetails?.Survey?.user_feedbacks[0]);
-    setUsersList(surveyDetails?.Survey?.user_feedbacks);
-  }, []);
+    new GetService().getSurveyDetails(surveyDetails?.Survey.ID, (result) => {
+      if (result?.data?.data) {
+        setUsersList(result?.data?.data?.Survey?.user_feedbacks);
+        setSelectedMember(result?.data?.data?.Survey?.user_feedbacks[0]);
+        setSave(false);
+        if (searchInput !== "") {
+          const searchedUser =
+            result?.data?.data?.Survey?.user_feedbacks.filter((member) => {
+              if (
+                member.user.name
+                  .toLowerCase()
+                  .includes(searchInput.toLowerCase())
+              ) {
+                return member;
+              }
+            });
+          setUsersList(searchedUser);
+        }
+      }
+    });
+  }, [save, searchInput]);
+  useEffect(() => {
+    form.setFieldsValue({
+      positives: selectedMember?.positives,
+      improvements: selectedMember?.negatives,
+      rating: selectedMember?.rating,
+    });
+  }, [selectedMember]);
   const onValuesChange = () => {
     const formValues = form.getFieldsValue();
     const anyFieldHasValue = Object.values(formValues).some((value) => !!value);
@@ -42,13 +66,15 @@ export const TeamMembersFeedBack = () => {
   const onFinish = (values) => {
     const payload = {
       userFeedbackId: selectedMember.ID,
-      positives: feedBack.positives,
-      negatives: feedBack.negatives,
+      positives: values.positives,
+      negatives: values.improvements,
       rating: values.rating,
     };
     new PutService().updateFeedback(payload, (result) => {
       if (result?.status === 200) {
-        setMessage("User feedback saved succesfully");
+        setSave(true);
+        setNotify("success");
+        setMessage(i18n.t("common.userFeedbackSubmitted"));
       }
     });
   };
@@ -60,8 +86,8 @@ export const TeamMembersFeedBack = () => {
     };
     new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
-        setNotify("draft");
-        setMessage("Draft saved successfully");
+        setNotify("success");
+        setMessage(i18n.t("common.draftMessage"));
       }
     });
   };
@@ -80,10 +106,9 @@ export const TeamMembersFeedBack = () => {
   const handleReset = () => {
     form.resetFields();
   };
-  // const handleOnChange = (value) => {
-  //   const foundUser = usersList?.find((each) => each.user.name.includes(value));
-  //   setSelectedMember(foundUser);
-  // };
+  const handleSearch = (value) => {
+    setSearchInput(value.value);
+  };
   const customStarIcons = Array.from({ length: 5 }, (_, index) => (
     <IoStarSharp key={index} className="rating-icon" />
   ));
@@ -95,7 +120,7 @@ export const TeamMembersFeedBack = () => {
           type="textinput"
           labelText={i18n.t("placeholder.searchName")}
           placeholder={i18n.t("placeholder.search")}
-          onChange={(event) => console.log(event.value)}
+          onChange={handleSearch}
         />
         <div className="cards-container">
           {usersList.map((member) => (
@@ -110,13 +135,15 @@ export const TeamMembersFeedBack = () => {
             >
               <div className="text-image-container">
                 {member?.user?.name}
-                {member?.hasFeedback === 1 && (
-                  <img
-                    src="./images/feedback_updated.svg"
-                    alt={i18n.t("imageAlt.gauge")}
-                    className="feedback-updated-image"
-                  />
-                )}
+                {member?.positives !== "" &&
+                  member?.negatives !== "" &&
+                  member?.rating !== 0 && (
+                    <img
+                      src="./images/feedback_updated.svg"
+                      alt={i18n.t("imageAlt.gauge")}
+                      className="feedback-updated-image"
+                    />
+                  )}
               </div>
             </Card>
           ))}
@@ -132,34 +159,20 @@ export const TeamMembersFeedBack = () => {
             <Col xs={24} lg={12}>
               <p>{i18n.t("teamFeedBack.positives")}</p>
               <Form.Item name="positives">
-                <InputTextArea
-                  placeHolderText={i18n.t("placeholder.message")}
-                  rowCount={4}
+                <TextArea
+                  rows={4}
                   className="text-area"
-                  handleResultString={(value) =>
-                    setFeedBack({
-                      positives: value,
-                      negatives: feedBack.negatives,
-                      rating: feedBack.rating,
-                    })
-                  }
+                  placeholder={i18n.t("placeholder.message")}
                 />
               </Form.Item>
             </Col>
             <Col xs={24} lg={11}>
               <p>{i18n.t("teamFeedBack.areaOfImprovement")}</p>
               <Form.Item name="improvements">
-                <InputTextArea
-                  rowCount={4}
-                  placeHolderText={i18n.t("placeholder.message")}
+                <TextArea
+                  rows={4}
                   className="text-area"
-                  handleResultString={(value) =>
-                    setFeedBack({
-                      positives: feedBack.positives,
-                      negatives: value,
-                      rating: feedBack.rating,
-                    })
-                  }
+                  placeholder={i18n.t("placeholder.message")}
                 />
               </Form.Item>
             </Col>
@@ -170,6 +183,7 @@ export const TeamMembersFeedBack = () => {
             </p>
             <Form.Item name="rating">
               <Rate
+                allowHalf
                 className="rating"
                 character={({ index = 0 }) => customStarIcons[index]}
               />

@@ -8,6 +8,8 @@ export const translationEN = {
     high: "High",
     veryHigh: "Very High",
     logo: "Logo",
+    draftMessage: "Draft saved successfully",
+    userFeedbackSubmitted: "User feedback saved succesfully",
   },
   header: {
     title: "CSAT",

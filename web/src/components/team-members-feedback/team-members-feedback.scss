@@ -42,14 +42,18 @@
 
       .ant-card-body {
         padding: 0;
+        width: 100%;
       }
 
       .text-image-container {
         @include justify-content-between;
-
+      }
+      .feedback-updated-image {
+        min-width: 1.5rem;
+        max-width: 1.5rem;
       }
 
-      @include media(">=md")  {
+      @include media(">=md") {
         height: 5rem;
         font-size: 1.9rem;
       }
