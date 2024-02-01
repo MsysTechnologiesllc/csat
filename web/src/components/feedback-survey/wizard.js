@@ -55,7 +55,10 @@ const Wizard = ({
         </Col>
         {isLastStep ? (
           <div className="draft-submit-btns">
-            <Button className="draft-button" onClick={handleSaveAsDraft}>
+            <Button
+              className="draft-button hide-on-tablet"
+              onClick={handleSaveAsDraft}
+            >
               {i18n.t("button.saveAsDraft")}
             </Button>
             <Button onClick={handleTeamMemberFeedback} className="draft-button">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Form, Row, Select, Rate } from "antd";
+import { Button, Card, Col, Form, Row, Rate } from "antd";
 import { useLocation, useNavigate } from "react-router";
 import { GoArrowLeft } from "react-icons/go";
 import { IoStarSharp } from "react-icons/io5";
@@ -16,7 +16,6 @@ export const TeamMembersFeedBack = () => {
   const [usersList, setUsersList] = useState([]);
   const [selectedMember, setSelectedMember] = useState([]);
   const [isAnyFieldFilled, setIsAnyFieldFilled] = useState(false);
-  const [membersData, setMembersData] = useState([]);
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
   const [feedBack, setFeedBack] = useState({
@@ -29,11 +28,6 @@ export const TeamMembersFeedBack = () => {
   useEffect(() => {
     setSelectedMember(surveyDetails?.Survey?.user_feedbacks[0]);
     setUsersList(surveyDetails?.Survey?.user_feedbacks);
-    const membersList = [];
-    surveyDetails?.Survey?.user_feedbacks.map((user) => {
-      membersList.push({ value: user.user.name, label: user.user.name });
-    });
-    setMembersData(membersList);
   }, []);
   const onValuesChange = () => {
     const formValues = form.getFieldsValue();
@@ -84,10 +78,10 @@ export const TeamMembersFeedBack = () => {
   const handleReset = () => {
     form.resetFields();
   };
-  const handleOnChange = (value) => {
-    const foundUser = usersList?.find((each) => each.user.name.includes(value));
-    setSelectedMember(foundUser);
-  };
+  // const handleOnChange = (value) => {
+  //   const foundUser = usersList?.find((each) => each.user.name.includes(value));
+  //   setSelectedMember(foundUser);
+  // };
   const customStarIcons = Array.from({ length: 5 }, (_, index) => (
     <IoStarSharp key={index} className="rating-icon" />
   ));
@@ -126,29 +120,14 @@ export const TeamMembersFeedBack = () => {
           ))}
         </div>
       </Col>
-      <Col xs={24} md={24} className="team-members-list-container">
-        <Select
-          showSearch
-          allowClear
-          placeholder={i18n.t("placeholder.searchName")}
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            (option?.label.toLowerCase() ?? "").includes(input)
-          }
-          options={membersData}
-          className="search-members"
-          defaultValue={membersData[0]?.user?.label}
-          onChange={handleOnChange}
-        />
-      </Col>
-      <Col xs={24} md={15}>
+      <Col xs={24} md={16} xl={16}>
         <div className="feeback-names">
           <p className="feedback-title">{i18n.t("teamFeedBack.feedback")}</p>
           <p className="name">{selectedMember?.user?.name}</p>
         </div>
         <Form form={form} onFinish={onFinish} onValuesChange={onValuesChange}>
           <Row className="text-area-container">
-            <Col xs={24}>
+            <Col xs={24} lg={12}>
               <p>{i18n.t("teamFeedBack.positives")}</p>
               <Form.Item name="positives">
                 <InputTextArea
@@ -165,7 +144,7 @@ export const TeamMembersFeedBack = () => {
                 />
               </Form.Item>
             </Col>
-            <Col xs={24}>
+            <Col xs={24} lg={11}>
               <p>{i18n.t("teamFeedBack.areaOfImprovement")}</p>
               <Form.Item name="improvements">
                 <InputTextArea
