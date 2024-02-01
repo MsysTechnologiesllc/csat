@@ -43,6 +43,10 @@ export const FeedBackSurvey = () => {
       surveyAnswers.ID = ques.ID;
       surveyAnswers.answer = scaleRes;
       setQuestionsData((prevData) => [...prevData, surveyAnswers]);
+    } else if (ques.question.type === "textarea-feedback") {
+      surveyAnswers.ID = ques.ID;
+      surveyAnswers.answer = value;
+      setQuestionsData((prevData) => [...prevData, surveyAnswers]);
     } else {
       scaleRes.push({ [String.fromCharCode(97)]: value });
       surveyAnswers.ID = ques.ID;
@@ -57,12 +61,12 @@ export const FeedBackSurvey = () => {
     <IoStarSharp key={index} className="rating-icon" />
   ));
   const handleTeamMemberFeedback = () => {
-    const payload = [...questionsData];
-    // const payload = {
-    //   answers: questionsData,
-    //   survey_status: "pending",
-    // };
-    new PutService().updateFeedback(payload, (result) => {
+    const payload = {
+      survey_id: surveyDetails.Survey.ID,
+      survey_status: "pending",
+      survey_answers: questionsData,
+    };
+    new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
         navigate("/teamFeedback", {
           state: { surveyDetails: surveyDetails, questionsData: questionsData },
@@ -72,10 +76,11 @@ export const FeedBackSurvey = () => {
   };
   const handleSaveAsDraft = () => {
     const payload = {
-      answers: questionsData,
+      survey_id: surveyDetails.Survey.ID,
+      survey_answers: questionsData,
       survey_status: "draft",
     };
-    new PutService().updateFeedback(payload, (result) => {
+    new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
         setNotify("draft");
       }
@@ -83,10 +88,11 @@ export const FeedBackSurvey = () => {
   };
   const handleSubmit = () => {
     const payload = {
-      answers: questionsData,
+      survey_id: surveyDetails.Survey.ID,
+      survey_answers: questionsData,
       survey_status: "publish",
     };
-    new PutService().updateFeedback(payload, (result) => {
+    new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
         navigate("/survey/submitted");
       }
@@ -100,7 +106,7 @@ export const FeedBackSurvey = () => {
           <>
             {each.question.type === "team-members-feedback" && (
               <img
-                src="./images/mdi_ticket.svg"
+                src="/images/mdi_ticket.svg"
                 alt={i18n.t("imageAlt.ticket")}
               />
             )}
@@ -217,8 +223,8 @@ export const FeedBackSurvey = () => {
                 {JSON.parse(each.question.options).map((option, index) => (
                   <RadioWithSpeedometer
                     key={index}
-                    speedometerImage="./images/gauge.svg"
-                    needleImage="./images/needle.svg"
+                    speedometerImage="/images/gauge.svg"
+                    needleImage="/images/needle.svg"
                     label={Object.values(option)[0]}
                     value={
                       Object.values(option)[0] === "Very Low"
@@ -253,7 +259,11 @@ export const FeedBackSurvey = () => {
     });
   };
 
-  const steps = dynamicSteps(surveyDetails?.Survey?.survey_answers);
+  const steps = dynamicSteps(
+    surveyDetails?.Survey?.survey_answers.sort((a, b) => {
+      return a.ID - b.ID;
+    }),
+  );
 
   return (
     <div className="wizard-wrapper">
