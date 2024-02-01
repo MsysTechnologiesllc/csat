@@ -54,10 +54,11 @@ export const TeamMembersFeedBack = () => {
   };
   const handleFeedbackasDraft = () => {
     const payload = {
-      answers: questionsData,
+      survey_id: surveyDetails.Survey.ID,
+      survey_answers: questionsData,
       survey_status: "draft",
     };
-    new PutService().updateFeedback(payload, (result) => {
+    new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
         setNotify("draft");
         setMessage("Draft saved successfully");
@@ -66,10 +67,11 @@ export const TeamMembersFeedBack = () => {
   };
   const handleSubmit = () => {
     const payload = {
-      answers: questionsData,
+      survey_id: surveyDetails.Survey.ID,
+      survey_answers: questionsData,
       survey_status: "publish",
     };
-    new PutService().updateFeedback(payload, (result) => {
+    new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
         navigate("/survey/submitted");
       }

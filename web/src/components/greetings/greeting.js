@@ -17,7 +17,9 @@ function GreetingsPage() {
     });
   }, []);
   const getStarted = (id) => {
-    navigate(`/survey/${id}`, { state: { surveyDetails: surveyDetails } });
+    navigate(`/survey/${id}`, {
+      state: { surveyDetails: surveyDetails },
+    });
   };
 
   return (
@@ -25,7 +27,7 @@ function GreetingsPage() {
       <div className="greetings-main-container">
         <div className="greetings-image-container">
           <img
-            src="images/greetings-image.svg"
+            src="/images/greetings-image.svg"
             alt="greetings-image"
             className="greetings-image"
           />
