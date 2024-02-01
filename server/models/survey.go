@@ -123,55 +123,76 @@ func GetSurveyFormatFromDB(id uint) (*schema.SurveyFormat, error) {
 // @Failure 401 {object} map[string]interface{} "Unauthorized: Token is missing or invalid" example:"{'error': 'Unauthorized'}"
 // @Failure 500 {object} map[string]interface{} "Internal server error" example:"{'error': 'Internal server error'}"
 // @Router /api/survey-answers [put]
-func BulkUpdateSurveyAnswers(requestData []map[string]interface{}) ([]SurveyAnswers, error) {
-    var updatedSurveyAnswers []SurveyAnswers
+func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswers, error) {
+	var updatedSurveyAnswers []SurveyAnswers
 
-    db := GetDB()
+	db := GetDB()
 
-    tx := db.Begin()
-    defer func() {
-        if r := recover(); r != nil {
-            tx.Rollback()
-        }
-    }()
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
 
-    for _, data := range requestData {
-        // Perform validation if needed
+	for _, data := range requestData["survey_answers"].([]map[string]interface{}) {
+		// Perform validation if needed
 
-        // Extract data
-        answers, ok := data["answer"].([]interface{})
-        if !ok {
-            return nil, fmt.Errorf("invalid 'answer' format")
-        }
+		// Extract data
+		answer, ok := data["answer"]
+		if !ok {
+			return nil, fmt.Errorf("missing 'answer' field")
+		}
 
-        // Convert the answer slice to a pq.StringArray
-        answerArray := make(pq.StringArray, len(answers))
-        for i, ans := range answers {
-            ansMap, ok := ans.(map[string]interface{})
-            if !ok {
-                return nil, fmt.Errorf("invalid 'answer' format")
-            }
+		// Check if the answer is a number, string, or an array
+		switch answer := answer.(type) {
+		case float64, int, int64:
+			// Convert the number to a string
+			data["answer"] = fmt.Sprintf("%v", answer)
+		case string:
+			// Answer is already a string, no conversion needed
+			data["answer"] = fmt.Sprintf("\"%v\"", answer)
+		case []interface{}:
+			// Convert the array to a JSON string
+			answerJSON, err := json.Marshal(answer)
+			if err != nil {
+				tx.Rollback()
+				fmt.Println(err)
+				return nil, err
+			}
+			data["answer"] = string(answerJSON)
+		default:
+			// Handle other cases, such as a string
+			data["answer"] = fmt.Sprintf("%v", answer)
+		}
 
-            // Convert each map to a JSON string
-            ansJSON, err := json.Marshal(ansMap)
-            if err != nil {
-                return nil, err
-            }
+		// Convert the answer to a pq.StringArray
+		answerArray := pq.StringArray{fmt.Sprintf("%v", data["answer"])}
 
-            answerArray[i] = string(ansJSON)
-        }
+		// Update the survey answer
+		var surveyAnswer SurveyAnswers
+		if err := tx.Model(&surveyAnswer).Where("ID = ?", data["ID"]).Updates(map[string]interface{}{"answer": answerArray}).Scan(&surveyAnswer).Error; err != nil {
+			tx.Rollback()
+			fmt.Println(err)
+			return nil, err
+		}
 
-        // Update the survey answer
-        var surveyAnswer SurveyAnswers
-        if err := tx.Model(&surveyAnswer).Where("id = ?", data["ID"]).Updates(map[string]interface{}{"answer": answerArray}).Scan(&surveyAnswer).Error; err != nil {
-            tx.Rollback()
-            return nil, err
-        }
+		updatedSurveyAnswers = append(updatedSurveyAnswers, surveyAnswer)
+	}
+	surveyID, ok := requestData["survey_id"].(uint)
+	if ok {
+		surveyStatus, ok := requestData["survey_status"].(string)
+		if !ok {
+			return nil, fmt.Errorf("invalid 'survey_status' format")
+		}
 
-        updatedSurveyAnswers = append(updatedSurveyAnswers, surveyAnswer)
-    }
+		if err := tx.Model(&Survey{}).Where("ID = ?", surveyID).Update("status", surveyStatus).Error; err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+	}
 
-    tx.Commit()
+	tx.Commit()
 
-    return updatedSurveyAnswers, nil
+	return updatedSurveyAnswers, nil
 }
