@@ -92,7 +92,7 @@ type LoginRequest struct {
 
 // @Summary Login User
 // @Description Login existing user
-// @Tags users
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param request body LoginRequest true "Login request"
@@ -144,7 +144,7 @@ func GetUser(u uint) *User {
 
 // @Summary Get user list
 // @Description Retrieve a list of users based on name and project ID
-// @Tags users
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param name query string false "User name (optional)"
@@ -208,7 +208,7 @@ func GetUsersList(name, projectID string) map[string]interface{} {
 
 // @Summary Get user Details
 // @Description Retrieve user details based on User ID
-// @Tags users
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param user_id query int true "User ID (required)" default(2)
@@ -254,7 +254,7 @@ type UpdateUserRequest struct {
 
 // @Summary Update user feedback
 // @Description Update user feedback details
-// @Tags users
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param request body UpdateUserRequest false "Update User Feedback Request"
@@ -294,14 +294,14 @@ type SurveyPage struct {
 
 // @Summary All surveys
 // @Description Retrieve All surveys based on tenant ID
-// @Tags users
+// @Tags Survey
 // @Accept json
 // @Produce json
 // @Param tenant_id query int true "Tenant ID (required)" default(101)
 // @Param page query int true "Page (required)" default(1)
 // @Param limit query int true "Limit (required)" default(5)
-// @Param status query string "Status (optional)" default(completed)
-// @Param accountName query string "Account Name (optional)" default(CMS)
+// @Param status query string false "Status (optional)"
+// @Param accountName query string false "Account Name (optional)" default(CMS)
 // @Success 200 {object} map[string]interface{} "User details retrieved successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid request"
 // @Failure 401 {object} map[string]interface{} "Unauthorized: Token is missing or invalid"

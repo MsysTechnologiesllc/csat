@@ -98,7 +98,7 @@ var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 
 // @Summary Login API
 // @Description Login API
-// @Tags users
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param email body string true "Email address" example:"Test1@yahoo.com"

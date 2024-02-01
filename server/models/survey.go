@@ -26,9 +26,13 @@ type SurveyDetails struct {
 	SurveyFormat schema.SurveyFormat
 }
 
+type UpdateAnswerRequest struct {
+	Survey       schema.Survey
+}
+
 // @Summary Get Survey Details
 // @Description Retrieve survey details based on Survey ID
-// @Tags survey
+// @Tags Survey
 // @Accept json
 // @Produce json
 // @Param id query int true "Survey ID (required)" default(2)
@@ -91,10 +95,10 @@ func UserFeedbackCreate(userFeedback *schema.UserFeedback) (*schema.UserFeedback
 
 // @Summary Get Survey format
 // @Description Retrieve survey format based on ID
-// @Tags survey
+// @Tags Survey
 // @Accept json
 // @Produce json
-// @Param surveyFormatID query int true "survey Format ID (required)" default(2)
+// @Param surveyFormatID query int true "Survey Format ID (required)" default(56)
 // @Success 200 {object} map[string]interface{} "Survey format retrieved successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid request"
 // @Failure 401 {object} map[string]interface{} "Unauthorized: Token is missing or invalid"
