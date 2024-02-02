@@ -16,7 +16,6 @@ export const FeedBackSurvey = () => {
   const { TextArea } = Input;
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
-  const [isAnswerSelected, setIsAnswerSelected] = useState(false);
   const [questionsData, setQuestionsData] = useState([]);
   const [notify, setNotify] = useState("");
   const [text, setText] = useState("");
@@ -74,7 +73,6 @@ export const FeedBackSurvey = () => {
   };
   const nextStep = (ques) => {
     setCurrentStep(currentStep + 1);
-    setIsAnswerSelected(false);
     setNotify("");
     const defaultSurveAns = {};
     if (ques?.answer?.length && selectedValue === "") {
@@ -84,7 +82,6 @@ export const FeedBackSurvey = () => {
     } else {
       const surveyAnswers = {};
       const scaleRes = [];
-      setIsAnswerSelected(true);
       if (ques.question.type === "scale-rating") {
         for (let i = 1; i <= selectedValue; i++) {
           const key = String.fromCharCode(96 + i);
@@ -117,7 +114,6 @@ export const FeedBackSurvey = () => {
   };
   const prevStep = () => {
     setCurrentStep(currentStep - 1);
-    setIsAnswerSelected(false);
     setQuestionsData(questionsData.slice(0, -1));
     setSelectedValue("");
   };
@@ -148,7 +144,6 @@ export const FeedBackSurvey = () => {
                   name="radiogroup"
                   className="radio-group-images"
                   defaultValue={JSON.parse(each?.answer)[0].a}
-                  onFocus={() => setIsAnswerSelected(true)}
                 >
                   {JSON.parse(each.question.options).map((option) => (
                     <RadioWithEmoji
@@ -376,15 +371,8 @@ export const FeedBackSurvey = () => {
     <div className="wizard-wrapper">
       <Wizard
         currentStep={currentStep}
-        setCurrentStep={setCurrentStep}
         steps={steps}
-        handleTeamMemberFeedback={handleTeamMemberFeedback}
-        handleSaveAsDraft={handleSaveAsDraft}
-        isAnswerSelected={isAnswerSelected}
-        setIsAnswerSelected={setIsAnswerSelected}
         notify={notify}
-        setNotify={setNotify}
-        handleSubmit={handleSubmit}
         prevStep={prevStep}
         handleCancel={handleCancel}
         message={message}

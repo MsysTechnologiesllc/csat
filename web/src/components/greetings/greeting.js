@@ -28,7 +28,7 @@ function GreetingsPage() {
         <div className="greetings-image-container">
           <img
             src="/images/greetings-image.svg"
-            alt="greetings-image"
+            alt={i18n.t("greetings.altText")}
             className="greetings-image"
           />
         </div>
