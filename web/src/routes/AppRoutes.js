@@ -5,12 +5,13 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
+import PropTypes from "prop-types";
 import GreetingsPage from "../components/greetings/greeting";
 import { FeedBackSurvey } from "../components/feedback-survey/feedback-survey";
 import { TeamMembersFeedBack } from "../components/team-members-feedback/team-members-feedback";
 import { Successfull } from "../components/successfull/successfull";
 
-const AppRoutes = () => {
+const AppRoutes = ({ getUrlPath }) => {
   const routes = [
     { path: "/survey/submitted" },
     { path: "/teamFeedback/submitted" },
@@ -27,7 +28,11 @@ const AppRoutes = () => {
           element={<GreetingsPage />}
           exact
         />
-        <Route path="/survey/:surveyId" element={<FeedBackSurvey />} exact />
+        <Route
+          path="/survey/:surveyId"
+          element={<FeedBackSurvey getUrlPath={getUrlPath} />}
+          exact
+        />
         <Route path="/teamFeedBack" element={<TeamMembersFeedBack />} exact />
         {routes.map((route, index) => (
           <Route
@@ -43,3 +48,7 @@ const AppRoutes = () => {
 };
 
 export default AppRoutes;
+
+AppRoutes.propTypes = {
+  getUrlPath: PropTypes.func.isRequired,
+};
