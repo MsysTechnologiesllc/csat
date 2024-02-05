@@ -2,21 +2,24 @@
 package routes
 
 import (
-	// "csat/app"
+	"csat/app"
 	"csat/controllers"
+	"csat/validation"
+	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
 func SetupRoutes(router *mux.Router) {
 	apiRouter := router.PathPrefix("/csat/rest").Subrouter()
-	apiRouter.HandleFunc("/api/user/new", controllers.CreateAccount).Methods("POST")
-	apiRouter.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
+	apiRouter.Handle("/api/user/new", validation.LoginValidationMiddleware(http.HandlerFunc(controllers.CreateAccount))).Methods("POST")
+	apiRouter.Handle("/api/user/login", validation.LoginValidationMiddleware(http.HandlerFunc(controllers.Authenticate))).Methods("POST")
 	apiRouter.HandleFunc("/api/team-list", controllers.GetUserList).Methods("GET")
 	apiRouter.HandleFunc("/api/survey-details", controllers.GetSurveyDetails).Methods("GET")
-	apiRouter.HandleFunc("/api/template-details", controllers.GetTemplateDetails).Methods("GET")
+	apiRouter.Handle("/api/template-details", validation.TemplateValidationMiddleware(http.HandlerFunc(controllers.GetTemplateDetails))).Methods("GET")
 	apiRouter.HandleFunc("/api/survey", controllers.CreateSurvey).Methods("POST")
-	apiRouter.HandleFunc("/api/user", controllers.GetUserDetails).Methods("GET")
+	apiRouter.Handle("/api/user", validation.UserValidationMiddleware(http.HandlerFunc(controllers.GetUserDetails))).Methods("GET")
+	
 	apiRouter.HandleFunc("/api/userFeedback", controllers.UpdateUserFeedback).Methods("PUT")
 	apiRouter.HandleFunc("/api/surveys", controllers.GetAllSurveysByTenant).Methods("GET")
 
@@ -24,5 +27,5 @@ func SetupRoutes(router *mux.Router) {
 	apiRouter.HandleFunc("/api/survey-format", controllers.GetSurveyFormatByID).Methods("GET")
 	apiRouter.HandleFunc("/api/survey-answers", controllers.BulkUpdateSurveyAnswers).Methods("PUT")
 
-	// apiRouter.Use(app.JwtAuthentication) //attach JWT auth middleware
+	apiRouter.Use(app.JwtAuthentication) //attach JWT auth middleware
 }
