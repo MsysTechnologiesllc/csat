@@ -71,7 +71,7 @@ export const FeedBackSurvey = () => {
               onChange={(value) =>
                 handleChange(
                   i18n.t("surveyQuestions.overallProjectGoal"),
-                  value
+                  value,
                 )
               }
             />
@@ -129,7 +129,7 @@ export const FeedBackSurvey = () => {
                     handleChange(step4Options.question, event.target.value)
                   }
                 />
-              )
+              ),
             )}
           </Radio.Group>
         </>
@@ -176,7 +176,7 @@ export const FeedBackSurvey = () => {
             onChange={(event) =>
               handleChange(
                 i18n.t("surveyQuestions.likeToShareWithUs"),
-                event.target.value
+                event.target.value,
               )
             }
             className="text-area"

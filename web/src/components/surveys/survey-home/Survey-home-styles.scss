@@ -1,0 +1,86 @@
+@use "../../../assets/style/" as *;
+
+.survey-home-container {
+    padding: 1.6rem;
+    background-color: $white;
+    // border: 1px solid red;
+
+    .survey-header-container {
+        // border: 1px solid red;
+
+        .survey-heading {
+            @include font-style($indigo, 3.4rem, 4rem, 400);
+            text-align: start;
+        }
+
+        .survey-filter-section {
+            // border: 1px solid red;
+            @include justify-content-end;
+
+            .filter-button {
+                &:hover {
+                    background-color: transparent;
+                }
+            }
+        }
+    }
+
+    .survey-list-container {
+        border: 1px solid $very-light-gray;
+        border-radius: 0.4rem;
+        margin-top: 1.6rem;
+
+        .ant-table-wrapper {
+            padding: 1.6rem;
+            border: 1px solid red;
+            min-height:78vh;
+            max-height:78vh;
+            .check {
+                border: 1px solid blue;
+            }
+
+            .ant-pagination-total-text {
+                margin-right: 3rem;
+            }
+
+            .ant-pagination-simple-pager {
+                display: none;
+            }
+
+            .ant-pagination-options {
+                // border: 1px solid red;
+                position: absolute;
+                right: 16rem;
+            }
+
+            .even-row {
+                background-color: $very-light-gray;
+            }
+
+            .ant-table {
+             
+
+                .ant-table-thead>tr>th {
+                    @include font-style($indigo, 1.6rem, 2.4rem, 500);
+                    background-color: $white;
+                    border-bottom: none;
+                }
+
+
+                .ant-table-tbody>tr>td {
+                    padding: 1.6rem 0;
+                    @include font-style($black, 1.4rem, 2rem, 400);
+
+                    // border: 1px solid red;
+                    &:nth-child(0) {
+                        border: 1px solid blue;
+                    }
+                }
+            }
+        }
+
+        .ant-select-single.ant-select-sm .ant-select-selector {
+            border: none;
+        }
+    }
+}

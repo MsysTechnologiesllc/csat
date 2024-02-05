@@ -1,13 +1,10 @@
 import React from "react";
 import "./App.scss";
-import { Header } from "./components/header/header";
-import AppRoutes from "./routes/AppRoutes";
-
+import SurveyHome from "./components/surveys/survey-home/Survey-home";
 function App() {
   return (
     <div className="App">
-      <Header prjTitle={"Project"} />
-      <AppRoutes />
+      <SurveyHome />
     </div>
   );
 }
