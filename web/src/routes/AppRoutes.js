@@ -16,15 +16,16 @@ const AppRoutes = ({ getUrlPath }) => {
     { path: "/survey/submitted" },
     { path: "/teamFeedback/submitted" },
   ];
+
   return (
     <Router>
       <Routes>
         <Route
           path="/"
-          element={<Navigate to="/customer-survey/survey_id=:id" replace />}
+          element={<Navigate to={`/customer-survey/:survey_id`} replace />}
         />
         <Route
-          path="/customer-survey/survey_id=:id"
+          path={`/customer-survey/:survey_id`}
           element={<GreetingsPage />}
           exact
         />

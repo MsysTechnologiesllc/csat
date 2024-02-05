@@ -59,6 +59,7 @@ export const TeamMembersFeedBack = () => {
     setIsAnyFieldFilled(anyFieldHasValue);
   };
   const handleBack = () => {
+    setNotify("");
     navigate(`/survey/${surveyDetails?.Survey.ID}`, {
       state: { surveyDetails: surveyDetails },
     });
@@ -75,6 +76,9 @@ export const TeamMembersFeedBack = () => {
         setSave(true);
         setNotify("success");
         setMessage(i18n.t("common.userFeedbackSubmitted"));
+        setTimeout(() => {
+          setNotify("");
+        }, 2000);
       }
     });
   };
@@ -88,6 +92,9 @@ export const TeamMembersFeedBack = () => {
       if (result?.status === 200) {
         setNotify("success");
         setMessage(i18n.t("common.draftMessage"));
+        setTimeout(() => {
+          setNotify("");
+        }, 2000);
       }
     });
   };
@@ -99,6 +106,7 @@ export const TeamMembersFeedBack = () => {
     };
     new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
+        setNotify("");
         navigate("/survey/submitted");
       }
     });
@@ -217,7 +225,7 @@ export const TeamMembersFeedBack = () => {
           <span> {i18n.t("button.back")}</span>
         </Button>
         <div className="draft-submit-btns">
-          <Button className="draft-button" classNames={handleFeedbackasDraft}>
+          <Button className="draft-button" onClick={handleFeedbackasDraft}>
             {i18n.t("button.saveAsDraft")}
           </Button>
           <Button

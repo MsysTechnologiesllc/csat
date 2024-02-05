@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "antd";
-import { useNavigate } from "react-router";
-import "./greetings.scss";
+import { useNavigate, useParams } from "react-router";
 import i18n from "../../locales/i18next";
 import { DaysAdded } from "../../utils/utils";
 import { GetService } from "../../services/get";
+import "./greetings.scss";
 
 function GreetingsPage() {
   const navigate = useNavigate();
+  const { survey_id } = useParams();
   const [surveyDetails, setSurveyDetails] = useState({});
   useEffect(() => {
-    new GetService().getSurveyDetails(9, (result) => {
+    new GetService().getSurveyDetails(survey_id, (result) => {
       if (result?.data?.data) {
         setSurveyDetails(result?.data?.data);
       }
@@ -21,7 +22,6 @@ function GreetingsPage() {
       state: { surveyDetails: surveyDetails },
     });
   };
-
   return (
     <div className="greetings-container">
       <div className="greetings-main-container">

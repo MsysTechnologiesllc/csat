@@ -9,8 +9,8 @@ import { IoStarSharp } from "react-icons/io5";
 import i18n from "../../locales/i18next";
 import { plLibComponents } from "../../context-provider/component-provider";
 import { GoArrowLeft, GoArrowRight } from "react-icons/go";
-import "./feedback-survey.scss";
 import { PutService } from "../../services/put";
+import "./feedback-survey.scss";
 
 export const FeedBackSurvey = ({ getUrlPath }) => {
   const { RadioWithEmoji, RadioWithSpeedometer } = plLibComponents.components;
@@ -24,8 +24,29 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
   const { surveyDetails } = state;
   const [message, setMessage] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
+  const [isAnswerSelected, setIsAnsweraSelected] = useState(false);
+  const [draft, setDraft] = useState("");
+  useEffect(() => {
+    if (draft === "draft") {
+      setIsAnsweraSelected(false);
+      const payload = {
+        survey_id: surveyDetails.Survey.ID,
+        survey_answers: questionsData,
+        survey_status: "draft",
+      };
+      new PutService().updateSurveyDetails(payload, (result) => {
+        if (result?.status === 200) {
+          setQuestionsData([]);
+          setDraft("");
+          setNotify("success");
+          setMessage(i18n.t("common.draftMessage"));
+        }
+      });
+    }
+  }, [questionsData, draft]);
   const handleChange = (value) => {
     setSelectedValue(value);
+    setIsAnsweraSelected(true);
   };
   const customIcons = Array.from({ length: 5 }, (_, index) => (
     <LineOutlined key={index} className="rating-icon" />
@@ -33,48 +54,7 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
   const customStarIcons = Array.from({ length: 5 }, (_, index) => (
     <IoStarSharp key={index} className="rating-icon" />
   ));
-  const handleTeamMemberFeedback = () => {
-    const payload = {
-      survey_id: surveyDetails.Survey.ID,
-      survey_status: "pending",
-      survey_answers: questionsData,
-    };
-    new PutService().updateSurveyDetails(payload, (result) => {
-      if (result?.status === 200) {
-        navigate("/teamFeedback", {
-          state: { surveyDetails: surveyDetails, questionsData: questionsData },
-        });
-      }
-    });
-  };
-  const handleSaveAsDraft = () => {
-    const payload = {
-      survey_id: surveyDetails.Survey.ID,
-      survey_answers: questionsData,
-      survey_status: "draft",
-    };
-    new PutService().updateSurveyDetails(payload, (result) => {
-      if (result?.status === 200) {
-        setNotify("success");
-        setMessage(i18n.t("common.draftMessage"));
-      }
-    });
-  };
-  const handleSubmit = () => {
-    const payload = {
-      survey_id: surveyDetails.Survey.ID,
-      survey_answers: questionsData,
-      survey_status: "publish",
-    };
-    new PutService().updateSurveyDetails(payload, (result) => {
-      if (result?.status === 200) {
-        navigate("/survey/submitted");
-      }
-    });
-  };
-  const nextStep = (ques) => {
-    setCurrentStep(currentStep + 1);
-    setNotify("");
+  const answersSetting = (ques) => {
     const defaultSurveAns = {};
     if (ques?.answer?.length && selectedValue === "") {
       defaultSurveAns.ID = ques.ID;
@@ -111,16 +91,58 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
         setQuestionsData((prevData) => [...prevData, surveyAnswers]);
       }
     }
+  };
+  const handleTeamMemberFeedback = () => {
+    const payload = {
+      survey_id: surveyDetails.Survey.ID,
+      survey_status: "pending",
+      survey_answers: questionsData,
+    };
+    new PutService().updateSurveyDetails(payload, (result) => {
+      if (result?.status === 200) {
+        navigate("/teamFeedback", {
+          state: { surveyDetails: surveyDetails, questionsData: questionsData },
+        });
+      }
+    });
+  };
+  const handleSaveAsDraft = (ques) => {
+    answersSetting(ques);
+    setDraft("draft");
+  };
+  const handleSubmit = () => {
+    const payload = {
+      survey_id: surveyDetails.Survey.ID,
+      survey_answers: questionsData,
+      survey_status: "publish",
+    };
+    new PutService().updateSurveyDetails(payload, (result) => {
+      if (result?.status === 200) {
+        navigate("/survey/submitted");
+      }
+    });
+  };
+  const nextStep = (ques) => {
+    setCurrentStep(currentStep + 1);
+    setNotify("");
+    setIsAnsweraSelected(false);
+    answersSetting(ques);
     setSelectedValue("");
   };
   const prevStep = () => {
     setCurrentStep(currentStep - 1);
     setQuestionsData(questionsData.slice(0, -1));
     setSelectedValue("");
+    setIsAnsweraSelected(false);
   };
   const handleCancel = () => {
-    navigate("/");
+    navigate(`/customer-survey/${surveyDetails?.Survey?.ID}`);
     setSelectedValue("");
+    setIsAnsweraSelected(false);
+  };
+  const handleTextArea = (event) => {
+    setText(event.target.value);
+    setIsAnsweraSelected(true);
   };
   const dynamicSteps = (dynamicStepsData) => {
     const isLastStep = currentStep === dynamicStepsData?.length - 1;
@@ -144,7 +166,7 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
                 <Radio.Group
                   name="radiogroup"
                   className="radio-group-images"
-                  defaultValue={JSON.parse(each?.answer)[0].a}
+                  defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
                 >
                   {JSON.parse(each.question.options).map((option) => (
                     <RadioWithEmoji
@@ -175,7 +197,9 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
                   <Rate
                     character={({ index = 0 }) => customIcons[index]}
                     onChange={(value) => handleChange(value)}
-                    defaultValue={JSON.parse(each?.answer).length}
+                    defaultValue={
+                      each?.answer && JSON.parse(each?.answer).length
+                    }
                   />
                   <div className="rating-desc-container">
                     <span className="unsatisfy-text">
@@ -193,14 +217,16 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
                   allowHalf
                   className="rate"
                   onChange={(value) => handleChange(value)}
-                  defaultValue={JSON.parse(each?.answer).length / 2}
+                  defaultValue={
+                    each?.answer && JSON.parse(each?.answer).length / 2
+                  }
                 />
               )}
               {each.question.type === "emoji-options" && (
                 <Radio.Group
                   name="radiogroup"
                   className="radio-group-images smiles-container"
-                  defaultValue={JSON.parse(each?.answer)[0].a}
+                  defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
                 >
                   {JSON.parse(each.question.options).map((option) => (
                     <RadioWithEmoji
@@ -248,7 +274,7 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
                 <Radio.Group
                   name="radiogroup"
                   className="radio-group-images speedometer-group-images"
-                  defaultValue={JSON.parse(each?.answer)[0].a}
+                  defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
                 >
                   {JSON.parse(each.question.options).map((option, index) => (
                     <RadioWithSpeedometer
@@ -277,9 +303,9 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
                   rows={5}
                   placeholder={i18n.t("placeholder.message")}
                   onBlur={() => handleChange(text)}
-                  onChange={(event) => setText(event.target.value)}
+                  onChange={(event) => handleTextArea(event)}
                   className="text-area"
-                  defaultValue={JSON.parse(each?.answer)}
+                  defaultValue={each?.answer && JSON.parse(each?.answer)}
                 />
               )}
             </div>
@@ -309,7 +335,10 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
                   <Button
                     className="draft-button hide-on-tablet"
                     onClick={handleSaveAsDraft}
-                    disabled={!each?.answer?.length}
+                    disabled={
+                      (each?.answer?.length !== 0 ? false : true) &&
+                      !isAnswerSelected
+                    }
                   >
                     {i18n.t("button.saveAsDraft")}
                   </Button>
@@ -331,12 +360,16 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
                 <div className="draft-submit-btns">
                   <Button
                     className={
-                      each?.answer?.length
+                      (each?.answer?.length && each?.answer?.length) ||
+                      isAnswerSelected
                         ? "draft-button"
                         : "draft-button disabled-button"
                     }
-                    disabled={!each?.answer?.length}
-                    onClick={handleSaveAsDraft}
+                    disabled={
+                      (each?.answer?.length !== 0 ? false : true) &&
+                      !isAnswerSelected
+                    }
+                    onClick={() => handleSaveAsDraft(each)}
                   >
                     {i18n.t("button.saveAsDraft")}
                   </Button>
@@ -344,11 +377,15 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
                     type="primary"
                     onClick={() => nextStep(each)}
                     className={
-                      each?.answer?.length
+                      (each?.answer?.length && each?.answer?.length) ||
+                      isAnswerSelected
                         ? "active-button"
                         : "active-button disabled-button"
                     }
-                    disabled={!each?.answer?.length}
+                    disabled={
+                      (each?.answer?.length !== 0 ? false : true) &&
+                      !isAnswerSelected
+                    }
                   >
                     <span> {i18n.t("button.next")}</span>
                     <GoArrowRight className="arrow-icon" />
