@@ -298,6 +298,7 @@ type SurveyPage struct {
 // @Accept json
 // @Produce json
 // @Param tenant_id query int true "Tenant ID (required)" default(101)
+// @Param survey_format_id query int false "Survey Format ID (optional)"
 // @Param page query int true "Page (required)" default(1)
 // @Param limit query int true "Limit (required)" default(5)
 // @Param status query string false "Status (optional)"
@@ -308,11 +309,15 @@ type SurveyPage struct {
 // @Failure 404 {object} map[string]interface{} "No user found"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/surveys [get]
-func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter string) (SurveyPage, error) {
+func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter string, surveyFormatIDFilter uint) (SurveyPage, error) {
 	var result SurveyPage
 
 	query := db.
 		Preload("Project").
+		Preload("UserFeedback").
+		Preload("UserFeedback.User").
+		Preload("SurveyAnswers").
+		Preload("SurveyAnswers.McqQuestions").
 		Joins("JOIN projects ON surveys.project_id = projects.id").
 		Joins("JOIN accounts ON projects.account_id = accounts.id").
 		Where("accounts.tenant_id = ?", tenantID)
@@ -324,6 +329,10 @@ func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter strin
 
 	if accountNameFilter != "" {
 		query = query.Where("accounts.name = ?", accountNameFilter)
+	}
+
+	if surveyFormatIDFilter != 0 {
+		query = query.Where("surveys.survey_format_id = ?", surveyFormatIDFilter)
 	}
 
 	// Get the count with applied filters

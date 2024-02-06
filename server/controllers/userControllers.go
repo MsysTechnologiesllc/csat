@@ -140,6 +140,7 @@ var UpdateUserFeedback = func(w http.ResponseWriter, r *http.Request) {
 // @Accept json
 // @Produce json
 // @Param tenant_id query int true "Tenant ID (required)" default(101)
+// @Param survey_format_id query int false "Survey Format ID (optional)"
 // @Param page query int true "Page (required)" default(1)
 // @Param limit query int true "Limit (required)" default(5)
 // @Param status query string "Status (optional)" default(completed)
@@ -160,12 +161,14 @@ var GetAllSurveysByTenant = func(w http.ResponseWriter, r *http.Request) {
 	pageSizeStr := queryValues.Get("limit")
 	statusFilter := r.URL.Query().Get("status")
     accountNameFilter := r.URL.Query().Get("accountName")
+    surveyFormatIDStr := r.URL.Query().Get("survey_format_id")
 
 	tenantID, _ := strconv.ParseUint(tenantIDStr, 10, 64)
 	page, _ := strconv.Atoi(pageStr)
     pageSize, _ := strconv.Atoi(pageSizeStr)
+	surveyFormatIDFilter, _ := strconv.ParseUint(surveyFormatIDStr, 10, 64)
 
-	data, err := models.GetAllSurveysFromDB(tenantID, page, pageSize, statusFilter, accountNameFilter)
+	data, err := models.GetAllSurveysFromDB(tenantID, page, pageSize, statusFilter, accountNameFilter, uint(surveyFormatIDFilter))
 	if err != nil {
 		http.Error(w, constants.UPDATED_FAILED, http.StatusInternalServerError)
 		return

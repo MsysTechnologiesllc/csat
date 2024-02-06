@@ -40,11 +40,12 @@ func GetOrCreateProject(db *gorm.DB, projectName string, accountID uint) (schema
 	return project, nil
 }
 
-func CreateUser(db *gorm.DB, name, email, role string) (schema.User, error) {
+func CreateUser(db *gorm.DB, name string, email string, role string, accountId uint) (schema.User, error) {
 	user := schema.User{
 		Name:  name,
 		Email: email,
 		Role:  role,
+		AccountID:  accountId,
 	}
 
 	if err := db.Create(&user).Error; err != nil {
