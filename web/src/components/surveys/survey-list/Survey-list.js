@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Table } from "antd";
+import PropTypes from "prop-types";
 
-const SurveyList = () => {
+const SurveyList = ({ filteredData }) => {
   const getRowClassName = (record, index) => {
     return index % 2 === 0 ? "even-row" : "odd-row";
   };
@@ -24,7 +25,12 @@ const SurveyList = () => {
       key: "responce",
       ellipsis: true,
     },
-    { title: "Status", dataIndex: "status", key: "status" },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (text) => text.toUpperCase(),
+    },
     {
       title: "Action",
       dataIndex: "action",
@@ -39,405 +45,14 @@ const SurveyList = () => {
       </div>
     ),
   };
-  const tableData = [
-    {
-      surveyName: "Liquidwar",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidwa",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidws",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidwe",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquide",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liware Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidre",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquare Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liqware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquire",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liqare",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liqure Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidwar",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidwa Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquare Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: " Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware ",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Lidware Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidwe",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid ware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidwre",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidwa  re",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidw Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquire Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquie Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware ",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidwe Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquidware",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "Liquid Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "L ware Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "L ware Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "L ware Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "L ware Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-    {
-      surveyName: "L ware Labs",
-      prjName: "Project",
-      responce: "27 Jan",
-      status: "Completed",
-    },
-  ];
   const pageSizeOptions = ["6", "10", "15", "20"];
-  //   const customPageSizeOptions = pageSizeOptions.map((size) => (
-  //     <Select.Option key={size} value={size}>
-  //       Rows per page: {size}
-  //     </Select.Option>
-  //   ));
   const [state, setState] = useState(6);
   const pagination = {
     pageSize: state,
-    total: tableData.length,
+    total: filteredData.length,
     pageSizeOptions: pageSizeOptions.map((size) => `${size}`),
     itemRender: (current, type, originalElement) => {
-      if (type === "pageSize") {
+      if (type === current) {
         return <>{`Rows per page: ${originalElement}`}</>;
       }
       return originalElement;
@@ -458,8 +73,8 @@ const SurveyList = () => {
     <div className="survey-list-container">
       <Table
         size="small"
-        dataSource={tableData}
-        locale={tableData?.length === 0 && customLocale}
+        dataSource={filteredData}
+        locale={filteredData?.length === 0 && customLocale}
         columns={columnsData}
         pagination={pagination}
         rowKey="key"
@@ -479,3 +94,7 @@ const SurveyList = () => {
 };
 
 export default SurveyList;
+
+SurveyList.propTypes = {
+  filteredData: PropTypes.array.isRequired,
+};

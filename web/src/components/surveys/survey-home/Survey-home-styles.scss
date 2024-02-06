@@ -1,20 +1,51 @@
 @use "../../../assets/style/" as *;
 
+
+.filter-sider {
+    .ant-drawer-header {
+        border: none;
+    }
+
+    .close-section {
+        @include font-style($slate-blue, 1.4rem, 2.4rem, 500);
+        border: none;
+    }
+
+    .ant-drawer-body {
+        padding-top: 0;
+    }
+
+    .filters-container {
+
+        .ant-radio,
+        .ant-checkbox {
+            border: 0.2rem solid $mid-grey;
+        }
+
+        .filter-type-heading {
+            @include font-style($mid-grey, 1.4rem, 4.8rem, 500);
+            margin-left: 0.7rem
+        }
+
+        .radio-text,
+        .checkbox-text {
+            @include font-style($mid-grey, 1.6rem, 2.4rem, 400);
+            margin-bottom: 1rem;
+        }
+    }
+}
+
 .survey-home-container {
     padding: 1.6rem;
     background-color: $white;
-    // border: 1px solid red;
 
     .survey-header-container {
-        // border: 1px solid red;
-
         .survey-heading {
             @include font-style($indigo, 3.4rem, 4rem, 400);
             text-align: start;
         }
 
         .survey-filter-section {
-            // border: 1px solid red;
             @include justify-content-end;
 
             .filter-button {
@@ -22,7 +53,17 @@
                     background-color: transparent;
                 }
             }
+
+            .filters-container {
+                border: 1px solid red;
+
+                .ant-checkbox-group {
+                    border: 1px solid red;
+                    @include flex-column;
+                }
+            }
         }
+
     }
 
     .survey-list-container {
@@ -32,12 +73,8 @@
 
         .ant-table-wrapper {
             padding: 1.6rem;
-            border: 1px solid red;
-            min-height:78vh;
-            max-height:78vh;
-            .check {
-                border: 1px solid blue;
-            }
+            min-height: 78vh;
+            max-height: 78vh;
 
             .ant-pagination-total-text {
                 margin-right: 3rem;
@@ -48,7 +85,6 @@
             }
 
             .ant-pagination-options {
-                // border: 1px solid red;
                 position: absolute;
                 right: 16rem;
             }
@@ -58,22 +94,20 @@
             }
 
             .ant-table {
-             
-
                 .ant-table-thead>tr>th {
                     @include font-style($indigo, 1.6rem, 2.4rem, 500);
                     background-color: $white;
                     border-bottom: none;
                 }
 
-
                 .ant-table-tbody>tr>td {
                     padding: 1.6rem 0;
                     @include font-style($black, 1.4rem, 2rem, 400);
+                }
 
-                    // border: 1px solid red;
-                    &:nth-child(0) {
-                        border: 1px solid blue;
+                .ant-table-row.ant-table-row-level-0 {
+                    .ant-table-cell:nth-child(1) {
+                        padding-left: 1rem;
                     }
                 }
             }
