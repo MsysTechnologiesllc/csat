@@ -72,4 +72,15 @@ export const translationEN = {
     submitted: "Your feedback is submitted successfully!",
     description: "We sincerely thank you for sharing the feedback",
   },
+  surveyDetails: {
+    surveyDetails: "Survey Details",
+    name: "Survey Name",
+    contact: "Point of Contact",
+    completion: "Date of Completion",
+    survey: "Survey",
+    feedback: "Team feedback",
+    optionType: "Option Type",
+    hide: "Hide",
+    show: "Show",
+  },
 };

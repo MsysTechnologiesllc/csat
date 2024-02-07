@@ -1,0 +1,52 @@
+@use "../../assets/style/" as *;
+
+.survey-details-container {
+  padding-top: 7rem;
+  min-height: 88vh;
+  background-color: $white;
+  .survey-details-title {
+    @include font-style($black, 3.4rem, 4.12rem, 400);
+    text-align: left;
+  }
+  .details {
+    @include d-flex;
+    .details-name {
+      @include font-style($indigo, 1.6rem, 2.66rem, 400);
+      text-align: left;
+      width: 25%;
+    }
+    .details-name-data {
+      @include font-style($black, 1.6rem, 2.66rem, 500);
+    }
+  }
+
+  .details-container {
+    border: 0.1rem solid $light-grey;
+    border-radius: 0.4rem;
+    padding: 1.6rem;
+  }
+  .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    @include font-style($wild-red, 1.4rem, 2.4rem, 500);
+  }
+  .ant-tabs-tab {
+    width: 22.4rem;
+    @include justify-content-center;
+    text-transform:uppercase;
+  }
+  .ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar {
+    background-color: $wild-red;
+  }
+  .feeback-names,
+  .input-container,
+  .rating-btn,
+  .btn-container {
+    display: none;
+  }
+  .feedback-container {
+    min-height: 50vh;
+    padding: 0;
+    .text-area-container {
+      margin: 0;
+    }
+  }
+}

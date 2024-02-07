@@ -7,8 +7,8 @@ import i18n from "../../locales/i18next";
 import { plLibComponents } from "../../context-provider/component-provider";
 import { PutService } from "../../services/put";
 import NotifyStatus from "../notify-status/notify-status";
-import "./team-members-feedback.scss";
 import { GetService } from "../../services/get";
+import "./team-members-feedback.scss";
 
 export const TeamMembersFeedBack = () => {
   const { TextArea } = Input;
@@ -23,28 +23,30 @@ export const TeamMembersFeedBack = () => {
   const [searchInput, setSearchInput] = useState("");
   const [save, setSave] = useState(false);
   const { state } = useLocation();
-  const { surveyDetails, questionsData } = state;
   useEffect(() => {
-    new GetService().getSurveyDetails(surveyDetails?.Survey.ID, (result) => {
-      if (result?.data?.data) {
-        setUsersList(result?.data?.data?.Survey?.user_feedbacks);
-        setSelectedMember(result?.data?.data?.Survey?.user_feedbacks[0]);
-        setSave(false);
-        if (searchInput !== "") {
-          const searchedUser =
-            result?.data?.data?.Survey?.user_feedbacks.filter((member) => {
-              if (
-                member.user.name
-                  .toLowerCase()
-                  .includes(searchInput.toLowerCase())
-              ) {
-                return member;
-              }
-            });
-          setUsersList(searchedUser);
+    new GetService().getSurveyDetails(
+      state?.surveyDetails ? state?.surveyDetails?.Survey.ID : 9,
+      (result) => {
+        if (result?.data?.data) {
+          setUsersList(result?.data?.data?.Survey?.user_feedbacks);
+          setSelectedMember(result?.data?.data?.Survey?.user_feedbacks[0]);
+          setSave(false);
+          if (searchInput !== "") {
+            const searchedUser =
+              result?.data?.data?.Survey?.user_feedbacks.filter((member) => {
+                if (
+                  member.user.name
+                    .toLowerCase()
+                    .includes(searchInput.toLowerCase())
+                ) {
+                  return member;
+                }
+              });
+            setUsersList(searchedUser);
+          }
         }
-      }
-    });
+      },
+    );
   }, [save, searchInput]);
   useEffect(() => {
     form.setFieldsValue({
@@ -60,8 +62,8 @@ export const TeamMembersFeedBack = () => {
   };
   const handleBack = () => {
     setNotify("");
-    navigate(`/survey/${surveyDetails?.Survey.ID}`, {
-      state: { surveyDetails: surveyDetails },
+    navigate(`/survey/${state?.surveyDetails?.Survey.ID}`, {
+      state: { surveyDetails: state?.surveyDetails },
     });
   };
   const onFinish = (values) => {
@@ -84,8 +86,8 @@ export const TeamMembersFeedBack = () => {
   };
   const handleFeedbackasDraft = () => {
     const payload = {
-      survey_id: surveyDetails.Survey.ID,
-      survey_answers: questionsData,
+      survey_id: state?.surveyDetails.Survey.ID,
+      survey_answers: state?.questionsData,
       survey_status: "draft",
     };
     new PutService().updateSurveyDetails(payload, (result) => {
@@ -100,8 +102,8 @@ export const TeamMembersFeedBack = () => {
   };
   const handleSubmit = () => {
     const payload = {
-      survey_id: surveyDetails.Survey.ID,
-      survey_answers: questionsData,
+      survey_id: state?.surveyDetails.Survey.ID,
+      survey_answers: state?.questionsData,
       survey_status: "publish",
     };
     new PutService().updateSurveyDetails(payload, (result) => {
