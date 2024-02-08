@@ -1,280 +1,275 @@
 @use "../../../assets/style/" as *;
 
-
 .filter-sider {
-    .ant-drawer-header {
-        border: none;
+  .ant-drawer-header {
+    border: none;
+  }
+
+  .close-section {
+    @include font-style($slate-blue, 1.4rem, 2.4rem, 500);
+    border: none;
+  }
+
+  .ant-drawer-body {
+    padding-top: 0;
+  }
+
+  .filters-container {
+    .ant-radio {
+      border: 0.15rem solid $border-black;
+
+      &:hover {
+        .ant-radio-inner {
+          border: 0.1rem solid $border-black;
+        }
+      }
+
+      &.ant-radio-checked {
+        .ant-radio-inner {
+          border: 0.2rem solid $border-black;
+          background-color: $white;
+
+          &:after {
+            background-color: $indigo;
+          }
+        }
+      }
     }
 
-    .close-section {
-        @include font-style($slate-blue, 1.4rem, 2.4rem, 500);
-        border: none;
+    .filter-type-heading {
+      @include font-style($mid-grey, 1.4rem, 4.8rem, 500);
+      margin-left: 0.7rem;
     }
 
-    .ant-drawer-body {
-        padding-top: 0;
+    .radio-text,
+    .checkbox-text {
+      @include font-style($mid-grey, 1.6rem, 2.4rem, 400);
+      margin-bottom: 1rem;
     }
 
-    .filters-container {
-        .ant-radio {
-            border: 0.15rem solid $border-black;
+    .account-filter {
+      .ant-checkbox-group {
+        @include flex-column;
+      }
 
-            &:hover {
-                .ant-radio-inner {
-                    border: 0.1rem solid $border-black;
-                }
-            }
+      .ant-col {
+        .ant-checkbox {
+          border: 0.15rem solid $border-black;
 
-            &.ant-radio-checked {
-                .ant-radio-inner {
-                    border: 0.2rem solid $border-black;
-                    background-color: $white;
-
-                    &:after {
-                        background-color: $indigo;
-                    }
-                }
-            }
+          .ant-checkbox-inner {
+            background-color: transparent;
+          }
         }
 
-        .filter-type-heading {
-            @include font-style($mid-grey, 1.4rem, 4.8rem, 500);
-            margin-left: 0.7rem
+        .ant-checkbox:hover {
+          .ant-checkbox-inner {
+            border-radius: 0;
+          }
         }
 
-        .radio-text,
-        .checkbox-text {
-            @include font-style($mid-grey, 1.6rem, 2.4rem, 400);
-            margin-bottom: 1rem;
+        .ant-checkbox-checked .ant-checkbox-inner {
+          background-color: $indigo;
+          border-radius: 0;
+          width: 1.5rem;
         }
-
-        .account-filter {
-
-            .ant-checkbox-group {
-                @include flex-column;
-            }
-
-            .ant-col {
-                .ant-checkbox {
-                    border: 0.15rem solid $border-black;
-
-                    .ant-checkbox-inner {
-                        background-color: transparent;
-
-                    }
-                }
-
-                .ant-checkbox:hover {
-                    .ant-checkbox-inner {
-                        border-radius: 0;
-                    }
-                }
-
-                .ant-checkbox-checked .ant-checkbox-inner {
-                    background-color: $indigo;
-                    border-radius: 0;
-                    width: 1.5rem;
-                }
-            }
-        }
+      }
     }
+  }
 }
 
 .survey-home-container {
-    padding: 1.6rem;
-    background-color: $white;
-    height: 99.4vh;
-    overflow: hidden;
+  padding: 1.6rem;
+  background-color: $white;
+  height: 99.4vh;
+  overflow: hidden;
 
-    .survey-header-container {
-        .survey-heading {
-            @include font-style($black, 2rem, 2.5rem, 400);
-            text-align: start;
-            margin: 0;
+  .survey-header-container {
+    .survey-heading {
+      @include font-style($black, 2rem, 2.5rem, 400);
+      text-align: start;
+      margin: 0;
 
-            @include media('>=md') {
-                @include font-style($black, 3.4rem, 4rem, 400);
-            }
-
-        }
-
-        .survey-filter-section {
-            @include justify-content-end;
-
-            .filter-button {
-                @include align-items-center;
-                @include font-style($indigo, 1.4rem, 2.4rem, 500);
-
-                &:hover {
-                    background-color: transparent;
-                }
-            }
-        }
+      @include media(">=md") {
+        @include font-style($black, 3.4rem, 4rem, 400);
+      }
     }
 
-    .survey-list-container {
-        border: 0.1rem solid $very-light-gray;
-        border-radius: 0.4rem;
-        margin-top: 0.5rem;
+    .survey-filter-section {
+      @include justify-content-end;
 
-        .action-svg {
-            min-height: 3rem;
-            @include align-items-center;
+      .filter-button {
+        @include align-items-center;
+        @include font-style($indigo, 1.4rem, 2.4rem, 500);
+
+        &:hover {
+          background-color: transparent;
         }
-
-        .custom-scrollbar-table .ant-table-body {
-            min-height: 34rem;
-            max-height: 34rem;
-            overflow-y: auto;
-
-        }
-
-        .custom-scrollbar-table .ant-table-body::-webkit-scrollbar {
-            width: 0.5rem;
-            height: 0.5rem;
-        }
-
-        .custom-scrollbar-table .ant-table-body::-webkit-scrollbar-thumb {
-            background-color: $white;
-            border-radius: 0.4rem;
-        }
-
-        .custom-scrollbar-table .ant-table-body::-webkit-scrollbar-track {
-            background-color: transparent;
-        }
-
-        .custom-scrollbar-table .ant-table-body:hover::-webkit-scrollbar-thumb {
-            background-color: $dark-grey;
-        }
-
-        .ant-table-wrapper {
-            padding: 1.6rem;
-            min-height: 66vh;
-            max-height: 66vh;
-            border: 0.1rem solid $light-grey;
-            border-radius: 0.4rem;
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-            border-bottom: none;
-
-            @include media ("<=md") {
-                min-height: 75vh;
-                max-height: 75vh;
-            }
-
-            .even-row {
-                background-color: $very-light-gray;
-            }
-
-            .ant-table {
-                min-height: 60vh;
-                max-height: 60vh;
-
-                .ant-table-body {
-                    min-height: 59vh;
-                    max-height: 59vh;
-
-                    @include media(">=md") {
-                        min-height: 61vh;
-                        max-height: 61vh;
-                    }
-
-                    @include media(">=lg") {
-                        min-height: 55vh;
-                        max-height: 55vh;
-                    }
-                }
-
-                .ant-table-thead>tr>th {
-                    @include font-style($indigo, 1.6rem, 2.4rem, 500);
-                    background-color: $white;
-                    border-bottom: none;
-                    padding-bottom: 1.3rem;
-                    white-space: nowrap;
-                }
-
-                .ant-table-tbody>tr>td {
-                    white-space: nowrap;
-                    padding: 1.2rem 0;
-                    @include font-style($black, 1.4rem, 2rem, 400);
-                    min-width: 13rem;
-                    max-width: 13rem;
-                    text-overflow: ellipsis;
-
-                    @include media ("<=md") {
-                        padding: 0rem 0;
-                    }
-                }
-
-                .ant-table-tbody>tr>td:nth-child(3) {
-                    min-width: 23rem;
-                    max-width: 23rem;
-                }
-
-                .ant-table-row.ant-table-row-level-0 {
-                    .ant-table-cell:nth-child(1) {
-                        padding-left: 1rem;
-                    }
-                }
-            }
-        }
-
-        .pagination-container {
-            @include justify-content-center;
-            @include align-items-center;
-            border: 0.1rem solid $light-grey;
-            border-radius: 0.4rem;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            border-top: none;
-            min-height: 7rem;
-            max-height: 7rem;
-            white-space: nowrap;
-            padding: 0 1rem;
-
-            @include media("<=md") {
-                padding-bottom: 3rem;
-            }
-
-            @include media(">=md") {
-                @include justify-content-end;
-            }
-
-            .selector-text {
-                @include font-style($dark-grey, 1.2rem, 2rem, 400);
-            }
-
-            .ant-select {
-                @include align-items-center;
-
-                .ant-select-selector {
-                    border: none;
-                    margin-right: 0.7rem;
-                    height: 2.4rem;
-                    width: 5rem;
-                }
-
-                .ant-select-selection-item {
-                    padding: 0;
-                }
-            }
-
-            .ant-pagination {
-                @include align-items-center;
-            }
-
-            .ant-pagination-simple-pager {
-                display: none;
-            }
-
-            .ant-pagination-prev,
-            .ant-pagination-total-text {
-                margin: 0;
-            }
-        }
-
-        .ant-select-single.ant-select-sm .ant-select-selector {
-            border: none;
-        }
+      }
     }
+  }
+
+  .survey-list-container {
+    border: 0.1rem solid $very-light-gray;
+    border-radius: 0.4rem;
+    margin-top: 0.5rem;
+
+    .action-svg {
+      min-height: 3rem;
+      @include align-items-center;
+    }
+
+    .custom-scrollbar-table .ant-table-body {
+      min-height: 34rem;
+      max-height: 34rem;
+      overflow-y: auto;
+    }
+
+    .custom-scrollbar-table .ant-table-body::-webkit-scrollbar {
+      width: 0.5rem;
+      height: 0.5rem;
+    }
+
+    .custom-scrollbar-table .ant-table-body::-webkit-scrollbar-thumb {
+      background-color: $white;
+      border-radius: 0.4rem;
+    }
+
+    .custom-scrollbar-table .ant-table-body::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    .custom-scrollbar-table .ant-table-body:hover::-webkit-scrollbar-thumb {
+      background-color: $dark-grey;
+    }
+
+    .ant-table-wrapper {
+      padding: 1.6rem;
+      min-height: 66vh;
+      max-height: 66vh;
+      border: 0.1rem solid $light-grey;
+      border-radius: 0.4rem;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom: none;
+
+      @include media("<=md") {
+        min-height: 75vh;
+        max-height: 75vh;
+      }
+
+      .even-row {
+        background-color: $very-light-gray;
+      }
+
+      .ant-table {
+        min-height: 60vh;
+        max-height: 60vh;
+
+        .ant-table-body {
+          min-height: 59vh;
+          max-height: 59vh;
+
+          @include media(">=md") {
+            min-height: 61vh;
+            max-height: 61vh;
+          }
+
+          @include media(">=lg") {
+            min-height: 55vh;
+            max-height: 55vh;
+          }
+        }
+
+        .ant-table-thead > tr > th {
+          @include font-style($indigo, 1.6rem, 2.4rem, 500);
+          background-color: $white;
+          border-bottom: none;
+          padding-bottom: 1.3rem;
+          white-space: nowrap;
+        }
+
+        .ant-table-tbody > tr > td {
+          white-space: nowrap;
+          padding: 1.2rem 0;
+          @include font-style($black, 1.4rem, 2rem, 400);
+          min-width: 13rem;
+          max-width: 13rem;
+          text-overflow: ellipsis;
+
+          @include media("<=md") {
+            padding: 0rem 0;
+          }
+        }
+
+        .ant-table-tbody > tr > td:nth-child(3) {
+          min-width: 23rem;
+          max-width: 23rem;
+        }
+
+        .ant-table-row.ant-table-row-level-0 {
+          .ant-table-cell:nth-child(1) {
+            padding-left: 1rem;
+          }
+        }
+      }
+    }
+
+    .pagination-container {
+      @include justify-content-center;
+      @include align-items-center;
+      border: 0.1rem solid $light-grey;
+      border-radius: 0.4rem;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-top: none;
+      min-height: 7rem;
+      max-height: 7rem;
+      white-space: nowrap;
+      padding: 0 1rem;
+
+      @include media("<=md") {
+        padding-bottom: 3rem;
+      }
+
+      @include media(">=md") {
+        @include justify-content-end;
+      }
+
+      .selector-text {
+        @include font-style($dark-grey, 1.2rem, 2rem, 400);
+      }
+
+      .ant-select {
+        @include align-items-center;
+
+        .ant-select-selector {
+          border: none;
+          margin-right: 0.7rem;
+          height: 2.4rem;
+          width: 5rem;
+        }
+
+        .ant-select-selection-item {
+          padding: 0;
+        }
+      }
+
+      .ant-pagination {
+        @include align-items-center;
+      }
+
+      .ant-pagination-simple-pager {
+        display: none;
+      }
+
+      .ant-pagination-prev,
+      .ant-pagination-total-text {
+        margin: 0;
+      }
+    }
+
+    .ant-select-single.ant-select-sm .ant-select-selector {
+      border: none;
+    }
+  }
 }
