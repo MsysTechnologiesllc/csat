@@ -16,10 +16,10 @@ export const SurveyQuestionList = ({ surveyQuestionDetails }) => {
     },
   );
   const CustomPanelHeader = ({ description, type }) => (
-    <div>
+    <div className="details-desc-type">
       <p className="details-description">{description} *</p>
       <p className="details-type">
-        {i18n.t("surveyDetails.optionType")} <span>{type}</span>
+        {i18n.t("surveyDetails.optionType")}: <span>{type}</span>
       </p>
     </div>
   );
@@ -124,10 +124,7 @@ export const SurveyQuestionList = ({ surveyQuestionDetails }) => {
                 />
               )}
               {question.type === "textarea-feedback" && (
-                <TextArea
-                  rows={5}
-                  defaultValue={answer && JSON.parse(answer)}
-                />
+                <TextArea defaultValue={answer && JSON.parse(answer)} />
               )}
             </Panel>
           ),

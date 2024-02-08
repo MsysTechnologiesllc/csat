@@ -1,37 +1,105 @@
 @use "../../assets/style/" as *;
 
 .survey-details-container {
-  padding-top: 7rem;
+  padding: 3rem 2rem 0 2rem;
   min-height: 88vh;
   background-color: $white;
   .survey-details-title {
     @include font-style($black, 3.4rem, 4.12rem, 400);
     text-align: left;
   }
-  .details {
-    @include d-flex;
-    .details-name {
-      @include font-style($indigo, 1.6rem, 2.66rem, 400);
-      text-align: left;
-      width: 25%;
+
+  .details-progress-avg-container {
+    gap: 1.8rem;
+    @include media(">sm", "<md") {
+      gap: 2.5rem;
     }
-    .details-name-data {
-      @include font-style($black, 1.6rem, 2.66rem, 500);
+    @include media(">=md", "<=xl") {
+      gap: 3rem;
+    }
+    .details-container {
+      border: 0.1rem solid $light-grey;
+      border-radius: 0.4rem;
+      padding: 1.6rem;
+      @include flex-column;
+      @include justify-content-center;
+      gap: 1rem;
+      width: 100%;
+      .details {
+        @include d-flex;
+        @include media("<md") {
+          @include flex-column;
+        }
+        .details-name {
+          @include font-style($indigo, 1.6rem, 2.66rem, 400);
+          text-align: left;
+          width: 30%;
+          @include media("<md") {
+            width: 100%;
+          }
+        }
+        .details-name-data {
+          @include font-style($black, 1.6rem, 2.66rem, 500);
+          text-align: left;
+        }
+      }
+    }
+    .progress-container {
+      border: 0.1rem solid $light-grey;
+      border-radius: 0.4rem;
+      padding: 0 1.6rem 1.6rem 1.6rem;
+      @include flex-column;
+      .ant-progress-circle {
+        width: 7.5rem;
+        height: 7.5rem;
+        display: inline-flex;
+        margin: auto;
+        @include justify-content-center;
+        @include align-items-center;
+        .ant-progress-inner {
+          display: flex;
+        }
+      }
+      .score {
+        @include font-style(#212121, 1.4rem, 2.32rem, 500);
+      }
+
+      .ant-progress
+        .ant-progress-inner:not(.ant-progress-circle-gradient)
+        .ant-progress-circle-path {
+        stroke: green;
+      }
+    }
+    .avg-time-container {
+      border: 0.1rem solid $light-grey;
+      border-radius: 0.4rem;
+      padding: 1.6rem 1.2rem;
+      .time-icon {
+        font-size: 4.5rem;
+        color: #3f51b5;
+      }
+      .hrs {
+        @include font-style(#212121, 2.6rem, 4.32rem, 700);
+      }
+      .avg-time {
+        @include font-style(#212121, 1.4rem, 2.32rem, 500);
+      }
     }
   }
 
-  .details-container {
-    border: 0.1rem solid $light-grey;
-    border-radius: 0.4rem;
-    padding: 1.6rem;
-  }
   .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
     @include font-style($wild-red, 1.4rem, 2.4rem, 500);
   }
   .ant-tabs-tab {
     width: 22.4rem;
     @include justify-content-center;
-    text-transform:uppercase;
+    text-transform: uppercase;
+    @include media ("<md"){
+      width: 17.5rem;
+    }
+    @include media ("<xs"){
+      width: 14.1rem;
+    }
   }
   .ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar {
     background-color: $wild-red;

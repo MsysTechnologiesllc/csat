@@ -32,12 +32,11 @@
       transition: 0.5s;
     }
   }
-  .show-right-arrow {
+  .show-arrow {
     @include media("<=lg") {
-      right: 2rem;
+      left: 18rem;
       top: 1.5rem;
       z-index: 50;
-      transition: 0.5s;
     }
   }
   .hide-right-arrow {

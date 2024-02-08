@@ -149,7 +149,7 @@ export const TeamMembersFeedBack = () => {
                   member?.negatives !== "" &&
                   member?.rating !== 0 && (
                     <img
-                      src="./images/feedback_updated.svg"
+                      src="/images/feedback_updated.svg"
                       alt={i18n.t("imageAlt.gauge")}
                       className="feedback-updated-image"
                     />
