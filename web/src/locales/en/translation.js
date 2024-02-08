@@ -98,6 +98,7 @@ export const translationEN = {
     action: "Action",
     noData: "No Data Available",
     rowsPerPage: "Rows per page : ",
+    viewSurvey: "View Survey",
   },
   sidebar: {
     dashboard: "Dashboard",
