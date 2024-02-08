@@ -4,9 +4,27 @@
   width: 100%;
   min-height: 100vh;
   background-color: #eee;
+  .header-layout {
+    display: none;
+    @include media("<=lg") {
+      display: block;
+    }
+    .ant-layout-header {
+      height: 6rem;
+      padding: 0;
+      color: $black;
+      line-height: 64px;
+      background: #fff;
+    }
+    .header-container {
+      z-index: 1;
+      box-shadow: none;
+    }
+  }
   .main-layout-content-container {
     min-height: calc(100vh - 6.5rem);
     margin-left: 21.9rem;
+    z-index: 10;
     .header-container {
       width: 22rem;
       position: relative;
@@ -22,41 +40,62 @@
       @include media("<=lg") {
         @include justify-content-center;
         @include align-items-center;
-        background: linear-gradient(180deg, #00b4b9 100%, #0076bf 100%);
+        background: #f5f7ff;
         position: fixed;
         width: 3.5rem;
         height: 3.3rem;
-        left: 0;
         z-index: 50;
         top: 1.7rem;
         border-radius: 0.5rem;
       }
     }
-    .show-arrow {
+    .header-arrow {
       display: none;
-      color: $white;
       @include media("<=lg") {
-        left: 21.5rem;
+        display: block;
+        @include justify-content-center;
+        @include align-items-center;
+        background: #fff;
+        position: fixed;
+        width: 3.5rem;
+        height: 3.3rem;
         z-index: 50;
+        top: 1.7rem;
+        border-radius: 0.5rem;
+        box-shadow: 0.4rem 0.4rem 0.5rem 0 $border-black-40;
         transition: 0.5s;
       }
-      .icon-right-arrow {
-        @include rotate(180deg);
-        position: relative;
-        left: -0.4rem;
-        &::after {
-          content: "";
-          height: 0.3rem;
-          width: 1.8rem;
-          border-radius: 0.6rem;
-          position: absolute;
-          background-color: $white;
-          right: 0.4rem;
-          top: 0.54rem;
-        }
+    }
+    .show-arrow {
+      @include media("<=lg") {
+        left: 18rem;
+        top: 1.5rem;
+        z-index: 1000;
+        transition: 0.5s;
+      }
+      .arrow-icon {
+        font-size: 2.5rem;
+        color: #000000;
       }
     }
     .hide-arrow {
+      display: none;
+      @include media("<=lg") {
+        left: -36rem;
+        z-index: 10;
+        transition: 0.5s;
+      }
+    }
+    .show-right-arrow {
+      @include media("<=lg") {
+        position: absolute;
+        right: 2rem;
+        top: 1.5rem;
+        z-index: 50;
+        transition: 0.5s;
+      }
+    }
+    .hide-right-arrow {
       display: none;
       @include media("<=lg") {
         left: -36rem;
@@ -116,6 +155,7 @@
       @include flex-column;
       @include justify-content-between;
       border-radius: 0;
+      padding: 0;
       .sidebar-footer-container {
         @include justify-content-between;
         padding: 0 2rem 2rem;

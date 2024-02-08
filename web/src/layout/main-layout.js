@@ -1,12 +1,14 @@
-import { Layout, Space } from "antd";
-import { Content } from "antd/es/layout/layout";
+import { Space } from "antd";
+import Layout, { Content, Header as AntdHeader } from "antd/es/layout/layout";
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import { SideBar } from "../components/side-bar/side-bar";
 import { MdSpaceDashboard } from "react-icons/md";
 import { FaFolder } from "react-icons/fa6";
+import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdStarHalf, IoIosNotifications } from "react-icons/io";
 import "./main-layout.scss";
+import { Header } from "../components/header/header";
 
 const menuItems = [
   {
@@ -32,7 +34,7 @@ const menuItems = [
 ];
 
 export const MainLayout = () => {
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,12 +45,17 @@ export const MainLayout = () => {
   return (
     <>
       <Space direction="vertical" className="main-space" size={[0, 48]}>
+        <Layout className="header-layout">
+          <AntdHeader>
+            <Header prjTitle="" displayPrjTitle={true} />
+          </AntdHeader>
+        </Layout>
         <Layout hasSider className="main-layout-content-container">
           <div
-            className={`nav-arrow ${showSidebar ? "show-arrow" : "hide-arrow"}`}
-            onClick={() => setShowSidebar(false)}
+            className={`header-arrow ${showSidebar === false ? "show-right-arrow" : "hide-right-arrow"}`}
+            onClick={() => setShowSidebar(true)}
           >
-            <i className="icon-right-arrow" />
+            <RxHamburgerMenu className="arrow-icon" />
           </div>
           <div className={`${showSidebar ? "show-sidebar" : "hide-sidebar"}`}>
             <SideBar
@@ -57,12 +64,11 @@ export const MainLayout = () => {
               onClickCallback={(evt) => {
                 navigate(evt.key);
               }}
-              //   width={isCoursePage ? 86 : 220}
               showFooter
-              // footer={!isCoursePage && <FooterLogo />}
               showLogo
-              //   logo={<Logo />}
               selectedKeys={[location.pathname]}
+              setShowSidebar={setShowSidebar}
+              showSidebar={showSidebar}
             />
           </div>
           <Content>
