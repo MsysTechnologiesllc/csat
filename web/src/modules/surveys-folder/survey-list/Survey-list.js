@@ -3,6 +3,7 @@ import { Table, Select, Pagination } from "antd";
 import PropTypes from "prop-types";
 import { TableShimmer } from "../../../components/table-shimmer/table-shimmer";
 import moment from "moment";
+import i18n from "../../../locales/i18next";
 
 const SurveyList = ({
   data,
@@ -35,13 +36,13 @@ const SurveyList = ({
   }
   const columnsData = [
     {
-      title: "Survey Name",
+      title: i18n.t("surveyDetails.name"),
       dataIndex: "name",
       key: "name",
       ellipsis: true,
     },
     {
-      title: "Project Name",
+      title: i18n.t("surveyList.prjName"),
       dataIndex: "prjName",
       key: "prjName",
       ellipsis: true,
@@ -50,7 +51,7 @@ const SurveyList = ({
       },
     },
     {
-      title: "Responce Deadline Date",
+      title: i18n.t("surveyList.deadline"),
       dataIndex: "responce",
       key: "responce",
       ellipsis: true,
@@ -59,20 +60,20 @@ const SurveyList = ({
       },
     },
     {
-      title: "Status",
+      title: i18n.t("surveyList.status"),
       dataIndex: "status",
       key: "status",
       render: (text) => text.toUpperCase(),
     },
     {
-      title: "Action",
+      title: i18n.t("surveyList.action"),
       dataIndex: "status",
       key: "status",
       render: (status) => (
         <div className="action-svg">
           <img
             src={process.env.PUBLIC_URL + actionSvgChanger(status)}
-            alt="/"
+            alt={i18n.t("surveyList.action")}
           />
         </div>
       ),
@@ -81,8 +82,11 @@ const SurveyList = ({
   const customLocale = {
     emptyText: (
       <div className="no-data">
-        <img src="/images/No-Data-table.svg" alt={"img"} />
-        <p>No data</p>
+        <img
+          src="/images/No-Data-table.svg"
+          alt={i18n.t("surveyList.noData")}
+        />
+        <p>{i18n.t("surveyList.noData")}</p>
       </div>
     ),
   };
@@ -124,7 +128,9 @@ const SurveyList = ({
         className="custom-scrollbar-table"
       />
       <div className="pagination-container">
-        <span className="selector-text">Rows per page :</span>
+        <span className="selector-text">
+          {i18n.t("surveyList.rowsPerPage")}
+        </span>
         <Select
           defaultValue={page}
           onChange={handleChange}
