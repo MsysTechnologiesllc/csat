@@ -57,7 +57,7 @@
         @include justify-content-center;
         @include align-items-center;
         .ant-progress-inner {
-          display: flex;
+          @include d-flex;
         }
       }
       .score {

@@ -79,7 +79,7 @@ export const SurveyDetails = () => {
       <NavTabs tabItems={items} defaultOpenTabKey="" />
       <div className="back-btn-container">
         <Button type="text" className="back-btn" onClick={handleBack}>
-          Back
+          {i18n.t("button.back")}
         </Button>
       </div>
     </div>
