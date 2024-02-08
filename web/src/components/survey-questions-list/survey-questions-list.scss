@@ -2,6 +2,9 @@
 
 .icon-holder {
   @include font-style($wild-red, 1.6rem, 2.4rem, 500);
+  .min-and-max {
+    @include d-flex;
+  }
 }
 .survey-questions-container {
   background-color: $white;
@@ -48,6 +51,15 @@
     .rating-scale-container {
       .ant-rate {
         font-size: 7rem;
+        @include media("<md") {
+          font-size: 6rem;
+        }
+        @include media("<=sm") {
+          font-size: 5rem;
+        }
+        @include media("<xs") {
+          font-size: 3rem;
+        }
         .ant-rate-star:nth-child(1) {
           color: $strong-red;
         }

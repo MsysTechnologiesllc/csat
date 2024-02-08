@@ -63,11 +63,11 @@ export const SurveyQuestionList = ({ surveyQuestionDetails }) => {
       expandIcon={({ isActive }) => (
         <span className="icon-holder">
           {isActive ? (
-            <p>
+            <p className="min-and-max">
               {i18n.t("surveyDetails.hide")} <IoMdArrowDropup />
             </p>
           ) : (
-            <p>
+            <p className="min-and-max">
               {i18n.t("surveyDetails.show")} <IoMdArrowDropdown />
             </p>
           )}
