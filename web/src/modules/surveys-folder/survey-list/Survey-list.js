@@ -1,19 +1,21 @@
 import React, { useState } from "react";
-import { Table, Select, Pagination, Row } from "antd";
+import { Table, Select, Pagination } from "antd";
 import PropTypes from "prop-types";
 import { TableShimmer } from "../../../components/table-shimmer/table-shimmer";
 import moment from "moment";
 import { useNavigate } from "react-router";
+import i18n from "../../../locales/i18next";
 
 const SurveyList = ({
   data,
   getPageCount,
   getPagelimit,
+  dataPerPage,
   totalData,
   isDataLoaded,
 }) => {
   const navigate = useNavigate();
-  const [page, setPage] = useState(6);
+  const [page, setPage] = useState(dataPerPage);
   const [current, setCurrent] = useState(1);
   const getRowClassName = (record, index) => {
     return index % 2 === 0 ? "even-row" : "odd-row";
@@ -42,13 +44,13 @@ const SurveyList = ({
   }
   const columnsData = [
     {
-      title: "Survey Name",
+      title: i18n.t("surveyDetails.name"),
       dataIndex: "name",
       key: "name",
       ellipsis: true,
     },
     {
-      title: "Project Name",
+      title: i18n.t("surveyList.prjName"),
       dataIndex: "prjName",
       key: "prjName",
       ellipsis: true,
@@ -57,7 +59,7 @@ const SurveyList = ({
       },
     },
     {
-      title: "Responce Deadline Date",
+      title: i18n.t("surveyList.deadline"),
       dataIndex: "responce",
       key: "responce",
       ellipsis: true,
@@ -66,21 +68,21 @@ const SurveyList = ({
       },
     },
     {
-      title: "Status",
+      title: i18n.t("surveyList.status"),
       dataIndex: "status",
       key: "status",
       render: (text) => text.toUpperCase(),
     },
     {
-      title: "Action",
+      title: i18n.t("surveyList.action"),
       dataIndex: "status",
       key: "status",
       render: (status, record) => (
         <div className="action-svg">
           <img
             src={process.env.PUBLIC_URL + actionSvgChanger(status)}
-            alt="/"
             onClick={() => handleActionOnClick(status, record)}
+            alt={i18n.t("surveyList.action")}
           />
         </div>
       ),
@@ -89,15 +91,18 @@ const SurveyList = ({
   const customLocale = {
     emptyText: (
       <div className="no-data">
-        <img src="/images/No-Data-table.svg" alt={"img"} />
-        <p>No data</p>
+        <img
+          src="/images/No-Data-table.svg"
+          alt={i18n.t("surveyList.noData")}
+        />
+        <p>{i18n.t("surveyList.noData")}</p>
       </div>
     ),
   };
   const pageSizeOptions = [
     {
-      value: 6,
-      label: "6",
+      value: 5,
+      label: "5",
     },
     {
       value: 10,
@@ -127,12 +132,14 @@ const SurveyList = ({
         columns={columnsData}
         pagination={false}
         rowKey="key"
-        scroll={{ y: 300 }}
+        scroll={{ y: 300, x: true }}
         rowClassName={getRowClassName}
         className="custom-scrollbar-table"
       />
-      <Row className="pagination-container">
-        <span className="selector-text">Rows per page :</span>
+      <div className="pagination-container">
+        <span className="selector-text">
+          {i18n.t("surveyList.rowsPerPage")}
+        </span>
         <Select
           defaultValue={page}
           onChange={handleChange}
@@ -151,7 +158,7 @@ const SurveyList = ({
             getPageCount(page);
           }}
         />
-      </Row>
+      </div>
     </div>
   );
 };
@@ -164,6 +171,7 @@ SurveyList.propTypes = {
   getPageCount: PropTypes.func.isRequired,
   getPagelimit: PropTypes.func.isRequired,
   isDataLoaded: PropTypes.bool.isRequired,
+  dataPerPage: PropTypes.number.isRequired,
   row: PropTypes.number.isRequired,
   col: PropTypes.number.isRequired,
 };

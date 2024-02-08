@@ -14,8 +14,8 @@ import { Dashboard } from "../modules/dashboard/dashboard";
 import { CustomerSurveyLayout } from "../layout/customer-survey-layout/customer-survey-layout";
 import { Accounts } from "../modules/accounts/accounts";
 import { Notifications } from "../modules/notifications/notifications";
-import SurveyHome from "../components/surveys/survey-home/Survey-home";
 import { SurveyDetails } from "../components/survey-details/survey-details";
+import SurveyHome from "../modules/surveys-folder/survey-home/Survey-home";
 
 const AppRoutes = () => {
   const routes = [

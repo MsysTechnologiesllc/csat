@@ -1,9 +1,5 @@
 @use "../assets/style" as *;
 
-// .main-space {
-//   width: 100%;
-//   min-height: 100vh;
-//   background-color: #eee;
 .header-layout {
   display: none;
   @include media("<=lg") {
@@ -13,12 +9,43 @@
     height: 6rem;
     padding: 0;
     color: $black;
-    line-height: 64px;
-    background: #fff;
+    line-height: 6.4rem;
+    background: $white;
   }
   .header-container {
     z-index: 1;
-    box-shadow: none;
+  }
+  .header-arrow {
+    display: none;
+    @include media("<=lg") {
+      display: block;
+      @include justify-content-center;
+      @include align-items-center;
+      background: #fff;
+      position: fixed;
+      width: 3.5rem;
+      height: 3.3rem;
+      z-index: 1000;
+      top: 1.7rem;
+      border-radius: 0.5rem;
+      box-shadow: 0.4rem 0.4rem 0.5rem 0 $border-black-40;
+      transition: 0.5s;
+    }
+  }
+  .show-arrow {
+    @include media("<=lg") {
+      left: 18rem;
+      top: 1.5rem;
+      z-index: 50;
+    }
+  }
+  .hide-right-arrow {
+    display: none;
+    @include media("<=lg") {
+      left: -36rem;
+      z-index: 10;
+      transition: 0.5s;
+    }
   }
 }
 .main-layout-content-container {
@@ -49,23 +76,7 @@
       border-radius: 0.5rem;
     }
   }
-  .header-arrow {
-    display: none;
-    @include media("<=lg") {
-      display: block;
-      @include justify-content-center;
-      @include align-items-center;
-      background: #fff;
-      position: fixed;
-      width: 3.5rem;
-      height: 3.3rem;
-      z-index: 50;
-      top: 1.7rem;
-      border-radius: 0.5rem;
-      box-shadow: 0.4rem 0.4rem 0.5rem 0 $border-black-40;
-      transition: 0.5s;
-    }
-  }
+
   .show-arrow {
     @include media("<=lg") {
       left: 18rem;
@@ -86,23 +97,7 @@
       transition: 0.5s;
     }
   }
-  .show-right-arrow {
-    @include media("<=lg") {
-      position: absolute;
-      right: 2rem;
-      top: 1.5rem;
-      z-index: 50;
-      transition: 0.5s;
-    }
-  }
-  .hide-right-arrow {
-    display: none;
-    @include media("<=lg") {
-      left: -36rem;
-      z-index: 10;
-      transition: 0.5s;
-    }
-  }
+
   @include media("<=lg") {
     margin-left: 0;
   }

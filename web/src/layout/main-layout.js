@@ -46,21 +46,22 @@ export const MainLayout = () => {
       <Layout className="header-layout">
         <AntdHeader>
           <Header prjTitle="" displayPrjTitle={true} />
+          <div
+            className={`header-arrow ${showSidebar === false ? "show-right-arrow" : "hide-right-arrow"}`}
+            onClick={() => setShowSidebar(true)}
+          >
+            <RxHamburgerMenu className="arrow-icon" />
+          </div>
         </AntdHeader>
       </Layout>
       <Layout hasSider className="main-layout-content-container">
-        <div
-          className={`header-arrow ${showSidebar === false ? "show-right-arrow" : "hide-right-arrow"}`}
-          onClick={() => setShowSidebar(true)}
-        >
-          <RxHamburgerMenu className="arrow-icon" />
-        </div>
         <div className={`${showSidebar ? "show-sidebar" : "hide-sidebar"}`}>
           <SideBar
             defaultSelectedItem={["/dashboard"]}
             menuItems={menuItems}
             onClickCallback={(evt) => {
               navigate(evt.key);
+              setShowSidebar(false);
             }}
             showFooter
             showLogo
