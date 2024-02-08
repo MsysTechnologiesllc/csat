@@ -1,6 +1,7 @@
 @use "../../../assets/style/" as *;
 
 .filter-sider {
+    max-width: 60vw;
   .ant-drawer-header {
     border: none;
   }

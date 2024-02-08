@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Select, Pagination } from "antd";
+import { Table, Select, Pagination, Tooltip } from "antd";
 import PropTypes from "prop-types";
 import { TableShimmer } from "../../../components/table-shimmer/table-shimmer";
 import moment from "moment";
@@ -24,17 +24,14 @@ const SurveyList = ({
     return moment(value).format("DD MMM YYYY, hh:mm A");
   }
   function actionSvgChanger(status) {
-    let image = "";
-    if (status === "completed") {
-      image = "/images/eye-privacy.svg";
-    } else if (status === "pending") {
-      image = "/images/pending.svg";
-    } else if (status === "overdue") {
-      image = "/images/overdue.svg";
-    } else if (status === "publish") {
-      image = "/images/sent-profile.svg";
-    }
-    return image;
+    const imageMap = {
+      completed: "/images/eye-privacy.svg",
+      pending: "/images/pending.svg",
+      overdue: "/images/overdue.svg",
+      publish: "/images/sent-profile.svg",
+    };
+
+    return imageMap[status] || "";
   }
   function handleActionOnClick(status, record) {
     if (status === "publish" || "pending") {
@@ -78,11 +75,15 @@ const SurveyList = ({
       key: "status",
       render: (status, record) => (
         <div className="action-svg">
-          <img
-            src={process.env.PUBLIC_URL + actionSvgChanger(status)}
-            onClick={() => handleActionOnClick(status, record)}
-            alt={i18n.t("surveyList.action")}
-          />
+          <Tooltip
+            title={status === "completed" && i18n.t("surveyList.viewSurvey")}
+          >
+            <img
+              src={process.env.PUBLIC_URL + actionSvgChanger(status)}
+              onClick={() => handleActionOnClick(status, record)}
+              alt={i18n.t("surveyList.action")}
+            />
+          </Tooltip>
         </div>
       ),
     },
