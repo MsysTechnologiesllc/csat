@@ -13,8 +13,8 @@ import { MainLayout } from "../layout/main-layout";
 import { Dashboard } from "../modules/dashboard/dashboard";
 import { CustomerSurveyLayout } from "../layout/customer-survey-layout/customer-survey-layout";
 import { Accounts } from "../modules/accounts/accounts";
-import { Surveys } from "../modules/surveys/surveys";
 import { Notifications } from "../modules/notifications/notifications";
+import SurveyHome from "../components/surveys/survey-home/Survey-home";
 
 const AppRoutes = () => {
   const routes = [
@@ -59,7 +59,12 @@ const AppRoutes = () => {
             element={<Accounts />}
             exact
           />
-          <Route key="/surveys" path="/surveys" element={<Surveys />} exact />
+          <Route
+            key="/surveys"
+            path="/surveys"
+            element={<SurveyHome />}
+            exact
+          />
           <Route
             key="notifications"
             path="notifications"
