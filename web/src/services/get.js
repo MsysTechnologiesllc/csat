@@ -13,4 +13,10 @@ export class GetService extends BaseService {
       callback,
     );
   }
+  getSurveyList(tenant_id, page, limit, status, accountName, callback) {
+    return this.get(
+      `http://172.30.44.77:8000/csat/rest/api/surveys?tenant_id=${tenant_id}&page=${page}&limit=${limit}&accountName=${accountName}&status=${status}`,
+      callback,
+    );
+  }
 }

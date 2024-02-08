@@ -25,6 +25,7 @@
     "react-router": "^6.21.1",
     "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",
+    "react-shimmer-effects": "^1.0.3",
     "sass": "^1.69.5",
     "scss": "^0.2.4",
     "web-vitals": "^2.1.4"
