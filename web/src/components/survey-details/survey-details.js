@@ -19,7 +19,6 @@ export const SurveyDetails = () => {
       }
     });
   }, []);
-  console.log(surveyDetails);
   const items = [
     {
       key: "1",

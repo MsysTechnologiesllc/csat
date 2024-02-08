@@ -27,7 +27,6 @@ const SurveyHome = () => {
         status,
         (result) => {
           if (result?.data?.data.Surveys) {
-            console.log(result);
             setIsDataLoaded(true);
             setData(result.data.data.Surveys);
             setTotlaData(result.data.data.TotalCount);
@@ -37,7 +36,6 @@ const SurveyHome = () => {
     }
   }, [pageNumber, dataPerPage, filterStatus, filterAccounts]);
   function getStatusFilterUpdates(value) {
-    console.log(value);
     if (value === "all") {
       setFilterStatus("");
     } else {
@@ -54,11 +52,9 @@ const SurveyHome = () => {
   }
 
   function getPageCount(value) {
-    console.log(value);
     setPageNumber(value);
   }
   function getPagelimit(value) {
-    console.log(value);
     setDataPerPage(value);
   }
   return (
