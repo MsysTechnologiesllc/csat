@@ -148,3 +148,15 @@ func CreateSurveyWithUserFeedback(db *gorm.DB, surveyFormat schema.SurveyFormat,
 
 	return userFeedbacksData, surveyQuestionsData, surveyID, nil
 }
+
+func UpdateSurveyFormatPMInfo(db *gorm.DB, surveyFormatID uint, pmName, pmEmail string) error {
+	return db.Model(&schema.SurveyFormat{}).
+		Where("ID = ?", surveyFormatID).
+		Updates(map[string]interface{}{"PM_name": pmName, "PM_email": pmEmail}).Error
+}
+
+func UpdateSurveyFormatDHInfo(db *gorm.DB, surveyFormatID uint, dhName, dhEmail string) error {
+	return db.Model(&schema.SurveyFormat{}).
+		Where("ID = ?", surveyFormatID).
+		Updates(map[string]interface{}{"DH_name": dhName, "DH_email": dhEmail}).Error
+}

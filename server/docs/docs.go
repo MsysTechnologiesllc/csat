@@ -204,10 +204,16 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "default": 56,
-                        "description": "Survey Format ID (required)",
+                        "description": "Survey Format ID (optional)",
                         "name": "surveyFormatID",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Project ID (optional)",
+                        "name": "project_id",
+                        "in": "query"
                     }
                 ],
                 "responses": {

@@ -46,4 +46,8 @@ const (
 	DB_CONNECTED        = "Connected to DB"
 	DB_CONNECTION_ERROR = "DB Connection Error"
 	ENV_ERROR           = "ENV Loading Error"
+
+	// user roles
+	PROJECT_MANAGER = "projectManager"
+	DELIVERY_HEAD = "deliveryHead"
 )

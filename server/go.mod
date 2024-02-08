@@ -11,6 +11,8 @@ require (
 )
 
 require (
+	cloud.google.com/go/compute v1.23.3 // indirect
+	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver/v3 v3.2.1 // indirect
 	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
@@ -129,6 +131,7 @@ require (
 	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/net v0.20.0 // indirect
+	golang.org/x/oauth2 v0.16.0
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.16.0 // indirect
 	golang.org/x/text v0.14.0 // indirect

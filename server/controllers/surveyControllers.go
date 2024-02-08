@@ -148,7 +148,8 @@ var CreateSurvey = func(w http.ResponseWriter, r *http.Request) {
 // @Tags Survey
 // @Accept json
 // @Produce json
-// @Param surveyFormatID query int true "Survey Format ID (required)" default(56)
+// @Param surveyFormatID query int false "Survey Format ID (optional)" default(56)
+// @Param project_id query int false "Project ID (optional)" default(1)
 // @Success 200 {object} map[string]interface{} "Survey format retrieved successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid request"
 // @Failure 401 {object} map[string]interface{} "Unauthorized: Token is missing or invalid"
@@ -156,18 +157,37 @@ var CreateSurvey = func(w http.ResponseWriter, r *http.Request) {
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/survey-format [get]
 var GetSurveyFormatByID = func(w http.ResponseWriter, r *http.Request) {
-	logger.Log.Println("Logging from Controller")
+    logger.Log.Println("Logging from Controller")
 
-	surveyFormatIDStr := r.URL.Query().Get("surveyFormatID")
-	surveyFormatID, err := strconv.ParseUint(surveyFormatIDStr, 10, 64)
-	if err != nil {
-		http.Error(w, "Invalid surveyFormatID", http.StatusBadRequest)
-		return
-	}
-	data, _ := models.GetSurveyFormatFromDB(uint(surveyFormatID))
-	resp := u.Message(true, constants.SUCCESS)
-	resp[constants.DATA] = data
-	u.Respond(w, resp)
+    surveyFormatIDStr := r.URL.Query().Get("surveyFormatID")
+    projectIDStr := r.URL.Query().Get("project_id")
+
+    if surveyFormatIDStr != "" {
+        // If surveyFormatID is provided, get survey format by ID
+        surveyFormatID, err := strconv.ParseUint(surveyFormatIDStr, 10, 64)
+        if err != nil {
+            http.Error(w, "Invalid surveyFormatID", http.StatusBadRequest)
+            return
+        }
+        data, _ := models.GetSurveyFormatFromDB(uint(surveyFormatID), 0) // 0 as projectID
+        resp := u.Message(true, constants.SUCCESS)
+        resp[constants.DATA] = data
+        u.Respond(w, resp)
+    } else if projectIDStr != "" {
+        // If projectID is provided, get survey format by projectID
+        projectID, err := strconv.ParseUint(projectIDStr, 10, 64)
+        if err != nil {
+            http.Error(w, "Invalid Project ID", http.StatusBadRequest)
+            return
+        }
+        data, _ := models.GetSurveyFormatFromDB(0, uint(projectID)) // 0 as surveyFormatID
+        resp := u.Message(true, constants.SUCCESS)
+        resp[constants.DATA] = data
+        u.Respond(w, resp)
+    } else {
+        http.Error(w, "Either surveyFormatID or projectID must be provided", http.StatusBadRequest)
+        return
+    }
 }
 
 // @Summary Create Survey

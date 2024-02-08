@@ -167,10 +167,14 @@ paths:
       description: Retrieve survey format based on ID
       parameters:
       - default: 56
-        description: Survey Format ID (required)
+        description: Survey Format ID (optional)
         in: query
         name: surveyFormatID
-        required: true
+        type: integer
+      - default: 1
+        description: Project ID (optional)
+        in: query
+        name: project_id
         type: integer
       produces:
       - application/json
