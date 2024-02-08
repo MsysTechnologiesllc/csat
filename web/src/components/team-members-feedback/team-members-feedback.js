@@ -8,9 +8,10 @@ import { plLibComponents } from "../../context-provider/component-provider";
 import { PutService } from "../../services/put";
 import NotifyStatus from "../notify-status/notify-status";
 import { GetService } from "../../services/get";
+import PropTypes from "prop-types";
 import "./team-members-feedback.scss";
 
-export const TeamMembersFeedBack = () => {
+export const TeamMembersFeedBack = ({ surveyId }) => {
   const { TextArea } = Input;
   const { InputField } = plLibComponents.components;
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export const TeamMembersFeedBack = () => {
   const { state } = useLocation();
   useEffect(() => {
     new GetService().getSurveyDetails(
-      state?.surveyDetails ? state?.surveyDetails?.Survey.ID : 9,
+      surveyId ? surveyId : state?.surveyDetails?.Survey?.ID,
       (result) => {
         if (result?.data?.data) {
           setUsersList(result?.data?.data?.Survey?.user_feedbacks);
@@ -86,7 +87,7 @@ export const TeamMembersFeedBack = () => {
   };
   const handleFeedbackasDraft = () => {
     const payload = {
-      survey_id: state?.surveyDetails.Survey.ID,
+      survey_id: state?.surveyDetails?.Survey?.ID,
       survey_answers: state?.questionsData,
       survey_status: "draft",
     };
@@ -102,7 +103,7 @@ export const TeamMembersFeedBack = () => {
   };
   const handleSubmit = () => {
     const payload = {
-      survey_id: state?.surveyDetails.Survey.ID,
+      survey_id: state?.surveyDetails?.Survey?.ID,
       survey_answers: state?.questionsData,
       survey_status: "publish",
     };
@@ -135,7 +136,7 @@ export const TeamMembersFeedBack = () => {
         <div className="cards-container">
           {usersList.map((member) => (
             <Card
-              key={member.user.ID}
+              key={member?.user?.ID}
               onClick={() => setSelectedMember(member)}
               className={
                 selectedMember?.user?.name === member?.user?.name
@@ -242,4 +243,7 @@ export const TeamMembersFeedBack = () => {
       {notify && <NotifyStatus status={notify} message={message} />}
     </Row>
   );
+};
+TeamMembersFeedBack.propTypes = {
+  surveyId: PropTypes.number.isRequired,
 };
