@@ -61,7 +61,7 @@
         }
       }
       .score {
-        @include font-style(#212121, 1.4rem, 2.32rem, 500);
+        @include font-style($jet-black, 1.4rem, 2.32rem, 500);
       }
 
       .ant-progress
@@ -79,10 +79,10 @@
         color: #3f51b5;
       }
       .hrs {
-        @include font-style(#212121, 2.6rem, 4.32rem, 700);
+        @include font-style($jet-black, 2.6rem, 4.32rem, 700);
       }
       .avg-time {
-        @include font-style(#212121, 1.4rem, 2.32rem, 500);
+        @include font-style($jet-black, 1.4rem, 2.32rem, 500);
       }
     }
   }
@@ -94,10 +94,10 @@
     width: 22.4rem;
     @include justify-content-center;
     text-transform: uppercase;
-    @include media ("<md"){
+    @include media("<md") {
       width: 17.5rem;
     }
-    @include media ("<xs"){
+    @include media("<xs") {
       width: 14.1rem;
     }
   }
@@ -115,6 +115,15 @@
     padding: 0;
     .text-area-container {
       margin: 0;
+    }
+    @include media("<md") {
+      .cards-container {
+        @include flex-wrap;
+        gap: 1rem;
+        .feedback-updated-image {
+          margin-left: 2rem;
+        }
+      }
     }
   }
 }

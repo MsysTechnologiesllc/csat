@@ -21,7 +21,7 @@
       display: block;
       @include justify-content-center;
       @include align-items-center;
-      background: #fff;
+      background: $white;
       position: fixed;
       width: 3.5rem;
       height: 3.3rem;
@@ -32,9 +32,9 @@
       transition: 0.5s;
     }
   }
-  .show-arrow {
+  .show-right-arrow {
     @include media("<=lg") {
-      left: 18rem;
+      right: 2rem;
       top: 1.5rem;
       z-index: 50;
     }
@@ -56,7 +56,7 @@
     width: 22rem;
     position: relative;
     margin-bottom: 3.2rem;
-    background-color: #f5f7ff;
+    background-color: $ghost-white;
     box-shadow: none;
   }
   .ant-layout {
@@ -67,7 +67,7 @@
     @include media("<=lg") {
       @include justify-content-center;
       @include align-items-center;
-      background: #f5f7ff;
+      background: $ghost-white;
       position: fixed;
       width: 3.5rem;
       height: 3.3rem;
@@ -86,7 +86,7 @@
     }
     .arrow-icon {
       font-size: 2.5rem;
-      color: #000000;
+      color: $black;
     }
   }
   .hide-arrow {
@@ -128,12 +128,12 @@
     .ant-layout-sider-children {
       .ant-menu-item-selected {
         background: none !important;
-        box-shadow: inset 0 10rem 0 0 #3f51b5;
+        box-shadow: inset 0 10rem 0 0 $indigo;
         color: $white;
         border-radius: 0;
       }
       .ant-menu-inline.ant-menu-root .ant-menu-item > .ant-menu-title-content {
-        @include font-style(#212121, 1.6rem, 2.4rem, 400);
+        @include font-style($jet-black, 1.6rem, 2.4rem, 400);
         text-align: left;
       }
       .ant-menu-inline.ant-menu-root
@@ -152,12 +152,12 @@
     .sidebar-footer-container {
       @include justify-content-between;
       padding: 0 2rem 2rem;
-      border-bottom: 0.1rem solid #c6cbe6bf;
+      border-bottom: 0.1rem solid $lavender-gray;
       .side0bar-footer-text-container {
         @include d-flex;
         .sidebar-footer-text {
           margin-left: 1rem;
-          @include font-style(#212121, 1.6rem, 2.4rem, 400);
+          @include font-style($jet-black, 1.6rem, 2.4rem, 400);
           text-align: left;
         }
       }
@@ -166,7 +166,7 @@
       }
     }
     .footer-copyright-text {
-      @include font-style(#000000, 1.2rem, 2rem, 400);
+      @include font-style($black, 1.2rem, 2rem, 400);
       padding: 1rem 0;
     }
   }
