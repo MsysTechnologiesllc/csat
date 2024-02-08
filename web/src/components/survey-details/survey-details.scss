@@ -1,8 +1,8 @@
 @use "../../assets/style/" as *;
 
 .survey-details-container {
-  padding: 3rem 2rem 0 2rem;
-  min-height: 88vh;
+  padding: 3rem 2rem 2rem 2rem;
+  min-height: 100vh;
   background-color: $white;
   .survey-details-title {
     @include font-style($black, 3.4rem, 4.12rem, 400);
@@ -124,6 +124,14 @@
           margin-left: 2rem;
         }
       }
+    }
+  }
+  .back-btn-container {
+    text-align: right;
+    .back-btn {
+      background-color: #3f51b5;
+      color: $white;
+      border-radius: 0.4rem;
     }
   }
 }

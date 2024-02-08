@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Progress, Row } from "antd";
+import { Button, Col, Progress, Row } from "antd";
 import { plLibComponents } from "../../context-provider/component-provider";
 import { GetService } from "../../services/get";
 import { MdTimer } from "react-icons/md";
@@ -8,10 +8,11 @@ import { SurveyQuestionList } from "../survey-questions-list/survey-questions-li
 import { TeamMembersFeedBack } from "../team-members-feedback/team-members-feedback";
 import i18n from "../../locales/i18next";
 import "./survey-details.scss";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 export const SurveyDetails = () => {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const { NavTabs } = plLibComponents.components;
   const [surveyDetails, setSurveyDetails] = useState({});
   useEffect(() => {
@@ -33,6 +34,9 @@ export const SurveyDetails = () => {
       children: <TeamMembersFeedBack surveyId={state?.survey_id} />,
     },
   ];
+  const handleBack = () => {
+    navigate("/surveys");
+  };
   return (
     <div className="survey-details-container">
       <h1 className="survey-details-title">
@@ -73,6 +77,11 @@ export const SurveyDetails = () => {
         </Col>
       </Row>
       <NavTabs tabItems={items} defaultOpenTabKey="" />
+      <div className="back-btn-container">
+        <Button type="text" className="back-btn" onClick={handleBack}>
+          Back
+        </Button>
+      </div>
     </div>
   );
 };
