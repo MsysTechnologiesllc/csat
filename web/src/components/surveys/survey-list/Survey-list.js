@@ -3,6 +3,7 @@ import { Table, Select, Pagination, Row } from "antd";
 import PropTypes from "prop-types";
 import { TableShimmer } from "../../../components/table-shimmer/table-shimmer";
 import moment from "moment";
+import { useNavigate } from "react-router";
 
 const SurveyList = ({
   data,
@@ -11,6 +12,7 @@ const SurveyList = ({
   totalData,
   isDataLoaded,
 }) => {
+  const navigate = useNavigate();
   const [page, setPage] = useState(6);
   const [current, setCurrent] = useState(1);
   const getRowClassName = (record, index) => {
@@ -31,6 +33,12 @@ const SurveyList = ({
       image = "/images/sent-profile.svg";
     }
     return image;
+  }
+  function handleActionOnClick(status, record) {
+    console.log(record);
+    if (status === "completed") {
+      navigate("/surveys/surveyDetails");
+    }
   }
   const columnsData = [
     {
@@ -67,11 +75,12 @@ const SurveyList = ({
       title: "Action",
       dataIndex: "status",
       key: "status",
-      render: (status) => (
+      render: (status, record) => (
         <div className="action-svg">
           <img
             src={process.env.PUBLIC_URL + actionSvgChanger(status)}
             alt="/"
+            onClick={() => handleActionOnClick(status, record)}
           />
         </div>
       ),

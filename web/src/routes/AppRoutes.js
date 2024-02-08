@@ -15,6 +15,7 @@ import { CustomerSurveyLayout } from "../layout/customer-survey-layout/customer-
 import { Accounts } from "../modules/accounts/accounts";
 import { Notifications } from "../modules/notifications/notifications";
 import SurveyHome from "../components/surveys/survey-home/Survey-home";
+import { SurveyDetails } from "../components/survey-details/survey-details";
 
 const AppRoutes = () => {
   const routes = [
@@ -63,6 +64,12 @@ const AppRoutes = () => {
             key="/surveys"
             path="/surveys"
             element={<SurveyHome />}
+            exact
+          />
+          <Route
+            key="/surveys"
+            path="/surveys/surveyDetails"
+            element={<SurveyDetails />}
             exact
           />
           <Route

@@ -1,4 +1,3 @@
-import { Space } from "antd";
 import Layout, { Content, Header as AntdHeader } from "antd/es/layout/layout";
 import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
@@ -44,38 +43,36 @@ export const MainLayout = () => {
   }, [showSidebar]);
   return (
     <>
-      <Space direction="vertical" className="main-space" size={[0, 48]}>
-        <Layout className="header-layout">
-          <AntdHeader>
-            <Header prjTitle="" displayPrjTitle={true} />
-          </AntdHeader>
-        </Layout>
-        <Layout hasSider className="main-layout-content-container">
-          <div
-            className={`header-arrow ${showSidebar === false ? "show-right-arrow" : "hide-right-arrow"}`}
-            onClick={() => setShowSidebar(true)}
-          >
-            <RxHamburgerMenu className="arrow-icon" />
-          </div>
-          <div className={`${showSidebar ? "show-sidebar" : "hide-sidebar"}`}>
-            <SideBar
-              defaultSelectedItem={["/dashboard"]}
-              menuItems={menuItems}
-              onClickCallback={(evt) => {
-                navigate(evt.key);
-              }}
-              showFooter
-              showLogo
-              selectedKeys={[location.pathname]}
-              setShowSidebar={setShowSidebar}
-              showSidebar={showSidebar}
-            />
-          </div>
-          <Content>
-            <Outlet />
-          </Content>
-        </Layout>
-      </Space>
+      <Layout className="header-layout">
+        <AntdHeader>
+          <Header prjTitle="" displayPrjTitle={true} />
+        </AntdHeader>
+      </Layout>
+      <Layout hasSider className="main-layout-content-container">
+        <div
+          className={`header-arrow ${showSidebar === false ? "show-right-arrow" : "hide-right-arrow"}`}
+          onClick={() => setShowSidebar(true)}
+        >
+          <RxHamburgerMenu className="arrow-icon" />
+        </div>
+        <div className={`${showSidebar ? "show-sidebar" : "hide-sidebar"}`}>
+          <SideBar
+            defaultSelectedItem={["/dashboard"]}
+            menuItems={menuItems}
+            onClickCallback={(evt) => {
+              navigate(evt.key);
+            }}
+            showFooter
+            showLogo
+            selectedKeys={[location.pathname]}
+            setShowSidebar={setShowSidebar}
+            showSidebar={showSidebar}
+          />
+        </div>
+        <Content>
+          <Outlet />
+        </Content>
+      </Layout>
     </>
   );
 };
