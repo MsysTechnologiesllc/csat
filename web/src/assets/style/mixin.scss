@@ -186,3 +186,11 @@
   left: $left;
   top: $top;
 }
+
+@mixin rotate($deg) {
+  transform: rotate($deg);
+  -webkit-transform: rotate($deg);
+  -moz-transform: rotate($deg);
+  display: inline-block;
+  transition: transform 0.2s;
+}

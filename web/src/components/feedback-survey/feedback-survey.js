@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Wizard from "./wizard";
 import { WizardProgressBar } from "./wizard-progress-bar";
 import { Button, Col, Input, Radio, Rate, Row } from "antd";
-import PropTypes from "prop-types";
 import { useLocation, useNavigate } from "react-router";
 import { LineOutlined } from "@ant-design/icons";
 import { IoStarSharp } from "react-icons/io5";
@@ -12,7 +11,7 @@ import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import { PutService } from "../../services/put";
 import "./feedback-survey.scss";
 
-export const FeedBackSurvey = ({ getUrlPath }) => {
+export const FeedBackSurvey = () => {
   const { RadioWithEmoji, RadioWithSpeedometer } = plLibComponents.components;
   const { TextArea } = Input;
   const navigate = useNavigate();
@@ -398,9 +397,6 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
       };
     });
   };
-  useEffect(() => {
-    getUrlPath(window.location.pathname);
-  }, []);
   const steps = dynamicSteps(
     surveyDetails?.Survey?.survey_answers.sort((a, b) => {
       return a.ID - b.ID;
@@ -420,8 +416,4 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
       <WizardProgressBar currentStep={currentStep} steps={steps} />
     </div>
   );
-};
-
-FeedBackSurvey.propTypes = {
-  getUrlPath: PropTypes.func.isRequired,
 };

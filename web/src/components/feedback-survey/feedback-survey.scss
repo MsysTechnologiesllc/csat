@@ -81,7 +81,7 @@
 
     @include media(">=xl") {
       padding: 4rem;
-      width: 50%;
+      width: 60%;
       min-height: 53vh;
       @include flex-column;
       @include justify-content-between;

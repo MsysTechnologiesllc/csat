@@ -2,14 +2,14 @@
 
 .greetings-container {
   padding-top: 6rem;
-  min-height: calc(100vh - 7rem);
-
+  min-height: calc(100vh - 6rem);
+  @include flex-column;
+  @include justify-content-end;
   .greetings-main-container {
     padding: 3rem 1.6rem;
 
     @include media(">=md", "<=xl") {
       padding: 4.5rem 6.5rem;
-
     }
 
     @include media(">=xl") {
@@ -90,9 +90,11 @@
   .details-container {
     @include horizontal-line(auto, 25vh, $white);
     padding: 3rem 1.6rem;
+    height: inherit;
 
     @include media(">=md") {
       padding: 4rem;
+      bottom: 0;
     }
 
     @include media(">=xl") {
