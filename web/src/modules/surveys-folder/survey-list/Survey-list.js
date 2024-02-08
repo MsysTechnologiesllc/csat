@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Select, Pagination, Row } from "antd";
+import { Table, Select, Pagination } from "antd";
 import PropTypes from "prop-types";
 import { TableShimmer } from "../../../components/table-shimmer/table-shimmer";
 import moment from "moment";
@@ -8,10 +8,11 @@ const SurveyList = ({
   data,
   getPageCount,
   getPagelimit,
+  dataPerPage,
   totalData,
   isDataLoaded,
 }) => {
-  const [page, setPage] = useState(6);
+  const [page, setPage] = useState(dataPerPage);
   const [current, setCurrent] = useState(1);
   const getRowClassName = (record, index) => {
     return index % 2 === 0 ? "even-row" : "odd-row";
@@ -87,8 +88,8 @@ const SurveyList = ({
   };
   const pageSizeOptions = [
     {
-      value: 6,
-      label: "6",
+      value: 5,
+      label: "5",
     },
     {
       value: 10,
@@ -118,11 +119,11 @@ const SurveyList = ({
         columns={columnsData}
         pagination={false}
         rowKey="key"
-        scroll={{ y: 300 }}
+        scroll={{ y: 300, x: true }}
         rowClassName={getRowClassName}
         className="custom-scrollbar-table"
       />
-      <Row className="pagination-container">
+      <div className="pagination-container">
         <span className="selector-text">Rows per page :</span>
         <Select
           defaultValue={page}
@@ -142,7 +143,7 @@ const SurveyList = ({
             getPageCount(page);
           }}
         />
-      </Row>
+      </div>
     </div>
   );
 };
@@ -155,6 +156,7 @@ SurveyList.propTypes = {
   getPageCount: PropTypes.func.isRequired,
   getPagelimit: PropTypes.func.isRequired,
   isDataLoaded: PropTypes.bool.isRequired,
+  dataPerPage: PropTypes.number.isRequired,
   row: PropTypes.number.isRequired,
   col: PropTypes.number.isRequired,
 };

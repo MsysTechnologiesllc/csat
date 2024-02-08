@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "./Survey-home-styles.scss";
-import SurveyHeader from "../../surveys/survey-header/Survey-header";
+import SurveyHeader from "../survey-header/Survey-header";
 import SurveyList from "../survey-list/Survey-list";
 import { GetService } from "../../../services/get";
+import { useDetectMobileOrDesktop } from "../../../hooks/useDetectMobileOrDesktop";
+
 const SurveyHome = () => {
+  const { isMobile } = useDetectMobileOrDesktop();
   const [data, setData] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
-  const [dataPerPage, setDataPerPage] = useState(6);
+  const [dataPerPage, setDataPerPage] = useState(isMobile ? 10 : 5);
   const [totalData, setTotlaData] = useState(0);
   const [filterStatus, setFilterStatus] = useState("");
   const [filterAccounts, setFilterAccounts] = useState("");
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+
   let id = 1001;
   let page = pageNumber;
   let limit = dataPerPage;
