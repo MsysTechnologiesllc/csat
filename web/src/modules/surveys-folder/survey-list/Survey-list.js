@@ -37,9 +37,8 @@ const SurveyList = ({
     return image;
   }
   function handleActionOnClick(status, record) {
-    console.log(record);
-    if (status === "completed") {
-      navigate("/surveys/surveyDetails");
+    if (status === "publish" || "pending") {
+      navigate("/surveys/surveyDetails", { state: { survey_id: record.ID } });
     }
   }
   const columnsData = [

@@ -8,7 +8,6 @@ import "./survey-questions-list.scss";
 import i18n from "../../locales/i18next";
 
 export const SurveyQuestionList = ({ surveyQuestionDetails }) => {
-  console.log(surveyQuestionDetails);
   const { TextArea } = Input;
   const { Panel } = Collapse;
   const questionsList = surveyQuestionDetails?.Survey?.survey_answers.sort(
