@@ -126,7 +126,7 @@
             min-height: 34rem;
             max-height: 34rem;
             overflow-y: auto;
-           
+
         }
 
         .custom-scrollbar-table .ant-table-body::-webkit-scrollbar {
@@ -231,6 +231,10 @@
             max-height: 7rem;
             white-space: nowrap;
             padding: 0 1rem;
+
+            @include media("<=md") {
+                padding-bottom: 3rem;
+            }
 
             @include media(">=md") {
                 @include justify-content-end;
