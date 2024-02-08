@@ -308,13 +308,15 @@ type SurveyPage struct {
 // @Failure 404 {object} map[string]interface{} "No user found"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/surveys [get]
-func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter string) (SurveyPage, error) {
+func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter string, userID uint64) (SurveyPage, error) {
 	var result SurveyPage
 
 	query := db.
 		Preload("Project").
 		Joins("JOIN projects ON surveys.project_id = projects.id").
 		Joins("JOIN accounts ON projects.account_id = accounts.id").
+		Joins("JOIN user_projects ON projects.id = user_projects.project_id").
+		Where("user_projects.user_id = ?", userID).
 		Where("accounts.tenant_id = ?", tenantID)
 
 	// Apply search filters
@@ -323,7 +325,7 @@ func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter strin
 	}
 
 	if accountNameFilter != "" {
-		query = query.Where("accounts.name = ?", accountNameFilter)
+		query = query.Where("projects.name = ?", accountNameFilter)
 	}
 
 	// Get the count with applied filters
