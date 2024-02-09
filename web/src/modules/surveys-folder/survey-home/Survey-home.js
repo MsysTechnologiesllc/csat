@@ -15,11 +15,12 @@ const SurveyHome = () => {
   const [filterAccounts, setFilterAccounts] = useState("");
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  let id = 328;
+  let id = 1001;
   let page = pageNumber;
   let limit = dataPerPage;
   let accName = "";
   let status = filterStatus;
+  let user_id = 328;
   useEffect(() => {
     if (id) {
       setIsDataLoaded(false);
@@ -29,13 +30,14 @@ const SurveyHome = () => {
         limit,
         accName,
         status,
+        user_id,
         (result) => {
           if (result?.data?.data.Surveys) {
             setIsDataLoaded(true);
             setData(result.data.data.Surveys);
             setTotlaData(result.data.data.TotalCount);
           }
-        },
+        }
       );
     }
   }, [pageNumber, dataPerPage, filterStatus, filterAccounts]);
