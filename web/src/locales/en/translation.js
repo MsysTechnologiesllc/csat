@@ -89,6 +89,7 @@ export const translationEN = {
     completed: "Completed",
     overdue: "Overdue",
     pending: "Pending",
+    publish: "Published",
     close: "CLOSE",
     accName: "Account Name",
     surveys: "Surveys",

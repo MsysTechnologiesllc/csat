@@ -117,6 +117,15 @@
     .action-svg {
       min-height: 3rem;
       @include align-items-center;
+      .action-avatar {
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
+      .blur {
+        opacity: 0.5;
+      }
     }
 
     .custom-scrollbar-table .ant-table-body {

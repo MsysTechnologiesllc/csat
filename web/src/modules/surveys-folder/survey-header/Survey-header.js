@@ -26,9 +26,9 @@ const SurveyHeader = ({ getStatusFilterUpdates, getAccountFilterUpdates }) => {
   };
   const radioOptions = [
     { label: i18n.t("surveyList.all"), value: "all" },
-    { label: i18n.t("surveyList.toFollow"), value: "publish" },
-    { label: i18n.t("surveyList.completed"), value: "completed" },
-    { label: i18n.t("surveyList.overdue"), value: "pending" },
+    { label: i18n.t("surveyList.toFollow"), value: "pending" },
+    { label: i18n.t("surveyList.publish"), value: "publish" },
+    { label: i18n.t("surveyList.overdue"), value: "overdue" },
   ];
   const checkboxOptions = [
     { label: "Rubic", value: "rubic" },

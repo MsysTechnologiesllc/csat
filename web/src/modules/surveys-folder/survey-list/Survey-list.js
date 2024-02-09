@@ -29,6 +29,7 @@ const SurveyList = ({
       pending: "/images/pending.svg",
       overdue: "/images/overdue.svg",
       publish: "/images/eye-privacy.svg",
+      draft: "/images/pending.svg",
     };
     const isOverdue = moment(record.project.end_date).isBefore(moment());
     const result =
@@ -50,9 +51,7 @@ const SurveyList = ({
   const capitalizeFirstLetter = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
-  function checkPendingStatus(date) {
-    return moment(date).isBefore(moment()) ? "Overdue" : "Pending";
-  }
+
   const columnsData = [
     {
       title: i18n.t("surveyDetails.name"),
@@ -82,13 +81,7 @@ const SurveyList = ({
       title: i18n.t("surveyList.status"),
       dataIndex: "status",
       key: "status",
-      render: (text, record) => (
-        <div>
-          {record.status === "pending"
-            ? checkPendingStatus(record.project.end_date)
-            : capitalizeFirstLetter(text)}
-        </div>
-      ),
+      render: (text) => <>{capitalizeFirstLetter(text)}</>,
     },
     {
       title: i18n.t("surveyList.action"),
@@ -97,12 +90,15 @@ const SurveyList = ({
       render: (status, record) => (
         <div className="action-svg">
           <Tooltip
-            title={status === "completed" && i18n.t("surveyList.viewSurvey")}
+            title={status === "publish" && i18n.t("surveyList.viewSurvey")}
           >
             <img
               src={process.env.PUBLIC_URL + actionSvgChanger(status, record)}
               onClick={() => handleActionOnClick(status, record)}
               alt={i18n.t("surveyList.action")}
+              className={
+                status === "overdue" ? "action-avatar blur" : "action-avatar"
+              }
             />
           </Tooltip>
         </div>
