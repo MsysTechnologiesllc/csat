@@ -1,8 +1,10 @@
 package models
 
 import (
+	constants "csat/helpers"
 	"csat/schema"
 	"fmt"
+	"time"
 
 	"github.com/jinzhu/gorm"
 )
@@ -42,10 +44,10 @@ func GetOrCreateProject(db *gorm.DB, projectName string, accountID uint) (schema
 
 func CreateUser(db *gorm.DB, name string, email string, role string, accountId uint) (schema.User, error) {
 	user := schema.User{
-		Name:  name,
-		Email: email,
-		Role:  role,
-		AccountID:  accountId,
+		Name:      name,
+		Email:     email,
+		Role:      role,
+		AccountID: accountId,
 	}
 
 	if err := db.Create(&user).Error; err != nil {
@@ -105,6 +107,8 @@ func CreateUsersProject(db *gorm.DB, userID uint, projectID uint, role string) e
 }
 
 func CreateSurveyWithUserFeedback(db *gorm.DB, surveyFormat schema.SurveyFormat, users []schema.User, mcqQuestions []schema.McqQuestions) ([]*schema.UserFeedback, []*schema.SurveyAnswers, uint, error) {
+	currentDate := time.Now()
+	deadline := currentDate.Add(time.Duration(constants.SURVEY_DEADLINE) * 24 * time.Hour)
 	survey := schema.Survey{
 		SurveyFormatID:      surveyFormat.ID,
 		Name:                surveyFormat.Title,
@@ -112,6 +116,7 @@ func CreateSurveyWithUserFeedback(db *gorm.DB, surveyFormat schema.SurveyFormat,
 		ProjectID:           surveyFormat.ProjectID,
 		SurveyFrequencyDays: surveyFormat.SurveyFrequencyDays,
 		Status:              "pending",
+		DeadLine:            deadline,
 	}
 
 	var userFeedbacksData []*schema.UserFeedback

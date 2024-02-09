@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 // @Summary Get Survey Details
@@ -66,11 +67,25 @@ var CreateSurvey = func(w http.ResponseWriter, r *http.Request) {
 	name := data["name"].(string)
 	description := data["description"].(string)
 	status := data["status"].(string)
+	projectIDStr := data["project_id"].(float64)
+	surveyFormatIDStr := data["survey_format_id"].(float64)
+	frequescyDayStr := data["survey_frequency_days"].(float64)
+
+	projectID := uint(projectIDStr)
+	surveyFormatID := uint(surveyFormatIDStr)
+	frequescyDays := uint(frequescyDayStr)
+
+	currentDate := time.Now()
+	deadline := currentDate.Add(time.Duration(constants.SURVEY_DEADLINE) * 24 * time.Hour)
 
 	survey := schema.Survey{
-		Name:        name,
-		Description: description,
-		Status:      status,
+		Name:                name,
+		Description:         description,
+		Status:              status,
+		ProjectID:           projectID,
+		SurveyFormatID:      surveyFormatID,
+		SurveyFrequencyDays: frequescyDays,
+		DeadLine:            deadline,
 	}
 
 	surveyID, err := models.CreateSurvey(&survey)
@@ -200,6 +215,12 @@ func BulkUpdateSurveyAnswers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	surveyID := uint(surveyId)
+	projectId, ok := requestData["project_id"].(float64)
+	if !ok {
+		http.Error(w, "Invalid 'survey_id' format", http.StatusBadRequest)
+		return
+	}
+	projectID := uint(projectId)
 
 	answersInterface, ok := requestData["survey_answers"].([]interface{})
 	if !ok {
@@ -222,6 +243,7 @@ func BulkUpdateSurveyAnswers(w http.ResponseWriter, r *http.Request) {
 		"survey_status":  surveyStatus,
 		"survey_answers": surveyAnswers,
 		"survey_id":      surveyID,
+		"project_id":     projectID,
 	}
 
 	// Call the model function for bulk update

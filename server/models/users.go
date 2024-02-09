@@ -371,3 +371,22 @@ func GetUsersByProjectID(projectID uint) ([]schema.User, error) {
 	}
 	return users, nil
 }
+
+func GetUsersListByProjectID(projectID uint) ([]schema.User, error) {
+	var users []schema.User
+
+	if projectID != 0 {
+		db := GetDB().Joins("JOIN user_projects ON users.id = user_projects.user_id").
+			Joins("JOIN projects ON projects.id = user_projects.project_id").
+			Where("projects.id = ?", projectID)
+
+		// Fetch users from the database
+		if err := db.Find(&users).Error; err != nil {
+			return nil, fmt.Errorf("Error fetching users: %v", err)
+		}
+	} else {
+		return nil, fmt.Errorf("Project ID is required")
+	}
+
+	return users, nil
+}
