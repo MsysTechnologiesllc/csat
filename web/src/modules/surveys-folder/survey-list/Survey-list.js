@@ -23,20 +23,33 @@ const SurveyList = ({
   function dateFormatter(value) {
     return moment(value).format("DD MMM YYYY, hh:mm A");
   }
-  function actionSvgChanger(status) {
+  function actionSvgChanger(status, record) {
     const imageMap = {
       completed: "/images/eye-privacy.svg",
       pending: "/images/pending.svg",
       overdue: "/images/overdue.svg",
-      publish: "/images/sent-profile.svg",
+      publish: "/images/eye-privacy.svg",
     };
+    const isOverdue = moment(record.project.end_date).isBefore(moment());
+    const result =
+      status !== "publish"
+        ? isOverdue
+          ? imageMap.overdue
+          : imageMap[status]
+        : imageMap.publish;
 
-    return imageMap[status] || "";
+    return result;
   }
   function handleActionOnClick(status, record) {
     if (status === "publish" || "pending") {
       navigate("/surveys/surveyDetails", { state: { survey_id: record.ID } });
     }
+  }
+  const capitalizeFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+  function checkPendingStatus(date) {
+    return moment(date).isBefore(moment()) ? "Overdue" : "Pending";
   }
   const columnsData = [
     {
@@ -67,7 +80,13 @@ const SurveyList = ({
       title: i18n.t("surveyList.status"),
       dataIndex: "status",
       key: "status",
-      render: (text) => text.toUpperCase(),
+      render: (text, record) => (
+        <div>
+          {record.status === "pending"
+            ? checkPendingStatus(record.project.end_date)
+            : capitalizeFirstLetter(text)}
+        </div>
+      ),
     },
     {
       title: i18n.t("surveyList.action"),
@@ -79,7 +98,7 @@ const SurveyList = ({
             title={status === "completed" && i18n.t("surveyList.viewSurvey")}
           >
             <img
-              src={process.env.PUBLIC_URL + actionSvgChanger(status)}
+              src={process.env.PUBLIC_URL + actionSvgChanger(status, record)}
               onClick={() => handleActionOnClick(status, record)}
               alt={i18n.t("surveyList.action")}
             />
