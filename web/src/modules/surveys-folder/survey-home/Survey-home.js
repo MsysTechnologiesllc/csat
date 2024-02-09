@@ -44,7 +44,6 @@ const SurveyHome = () => {
   function filterActionsData(data) {
     if (state === "overdue") {
       let datas = data.filter((item) => item.status === "overdue");
-      console.log(datas);
       setData(datas);
       setTotlaData(datas.length);
     } else if (state === "pending") {
