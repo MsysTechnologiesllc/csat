@@ -101,4 +101,12 @@ export const translationEN = {
     rowsPerPage: "Rows per page : ",
     viewSurvey: "View Survey",
   },
+  sidebar: {
+    dashboard: "Dashboard",
+    accounts: "Accounts",
+    surveys: "Surveys",
+    notifications: "Notifications",
+    manager: "Manager",
+    footerText: "© 2022 MSys Technologies",
+  },
 };

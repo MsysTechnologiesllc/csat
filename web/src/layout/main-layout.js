@@ -8,27 +8,28 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdStarHalf, IoIosNotifications } from "react-icons/io";
 import "./main-layout.scss";
 import { Header } from "../components/header/header";
+import i18n from "../locales/i18next";
 
 const menuItems = [
   {
     icon: <MdSpaceDashboard />,
     key: "/dashboard",
-    label: "Dashboard",
+    label: i18n.t("sidebar.dashboard"),
   },
   {
     icon: <FaFolder />,
     key: "/accounts",
-    label: "Accounts",
+    label: i18n.t("sidebar.accounts"),
   },
   {
     icon: <IoMdStarHalf />,
     key: "/surveys",
-    label: "Surveys",
+    label: i18n.t("sidebar.surveys"),
   },
   {
     icon: <IoIosNotifications />,
     key: "/notifications",
-    label: "Notifications",
+    label: i18n.t("sidebar.notifications"),
   },
 ];
 
