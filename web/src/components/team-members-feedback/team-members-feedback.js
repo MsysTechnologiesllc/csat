@@ -24,6 +24,7 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
   const [searchInput, setSearchInput] = useState("");
   const [save, setSave] = useState(false);
   const { state } = useLocation();
+  const [surveyStatus, setSurveyStatus] = useState("");
   useEffect(() => {
     new GetService().getSurveyDetails(
       surveyId ? surveyId : state?.surveyDetails?.Survey?.ID,
@@ -31,6 +32,8 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
         if (result?.data?.data) {
           setUsersList(result?.data?.data?.Survey?.user_feedbacks);
           setSelectedMember(result?.data?.data?.Survey?.user_feedbacks[0]);
+          setSurveyStatus(result?.data?.data?.Survey?.status);
+          // setSurveyStatus()
           setSave(false);
           if (searchInput !== "") {
             const searchedUser =
@@ -90,6 +93,7 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
       survey_id: state?.surveyDetails?.Survey?.ID,
       survey_answers: state?.questionsData,
       survey_status: "draft",
+      project_id: state?.surveyDetails?.Survey?.project_id,
     };
     new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
@@ -106,6 +110,7 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
       survey_id: state?.surveyDetails?.Survey?.ID,
       survey_answers: state?.questionsData,
       survey_status: "publish",
+      project_id: state?.surveyDetails?.Survey?.project_id,
     };
     new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
@@ -202,26 +207,28 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
                 character={({ index = 0 }) => customStarIcons[index]}
               />
             </Form.Item>
-            <div className="rating-btn">
-              <Button
-                classNames="draft-button"
-                disabled={!isAnyFieldFilled}
-                onClick={handleReset}
-              >
-                {i18n.t("button.reset")}
-              </Button>
-              <Button
-                className={
-                  isAnyFieldFilled
-                    ? "active-button"
-                    : "active-button disabled-button"
-                }
-                htmlType="submit"
-                disabled={!isAnyFieldFilled}
-              >
-                {i18n.t("button.save")}
-              </Button>
-            </div>
+            {surveyStatus !== "publish" && (
+              <div className="rating-btn">
+                <Button
+                  classNames="draft-button"
+                  disabled={!isAnyFieldFilled}
+                  onClick={handleReset}
+                >
+                  {i18n.t("button.reset")}
+                </Button>
+                <Button
+                  className={
+                    isAnyFieldFilled
+                      ? "active-button"
+                      : "active-button disabled-button"
+                  }
+                  htmlType="submit"
+                  disabled={!isAnyFieldFilled}
+                >
+                  {i18n.t("button.save")}
+                </Button>
+              </div>
+            )}
           </Col>
         </Form>
       </Col>
@@ -230,18 +237,20 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
           <GoArrowLeft className="arrow-icon" />{" "}
           <span> {i18n.t("button.back")}</span>
         </Button>
-        <div className="draft-submit-btns">
-          <Button className="draft-button" onClick={handleFeedbackasDraft}>
-            {i18n.t("button.saveAsDraft")}
-          </Button>
-          <Button
-            type="primary"
-            onClick={handleSubmit}
-            className="active-button"
-          >
-            {i18n.t("button.submit")}
-          </Button>
-        </div>
+        {surveyStatus !== "publish" && (
+          <div className="draft-submit-btns">
+            <Button className="draft-button" onClick={handleFeedbackasDraft}>
+              {i18n.t("button.saveAsDraft")}
+            </Button>
+            <Button
+              type="primary"
+              onClick={handleSubmit}
+              className="active-button"
+            >
+              {i18n.t("button.submit")}
+            </Button>
+          </div>
+        )}
       </div>
       {notify && <NotifyStatus status={notify} message={message} />}
     </Row>

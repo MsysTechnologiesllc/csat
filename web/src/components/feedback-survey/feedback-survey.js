@@ -93,19 +93,31 @@ export const FeedBackSurvey = () => {
     }
   };
   const handleTeamMemberFeedback = () => {
-    const payload = {
-      survey_id: surveyDetails.Survey.ID,
-      survey_status: "pending",
-      survey_answers: questionsData,
-      project_id: surveyDetails.Survey.project_id,
-    };
-    new PutService().updateSurveyDetails(payload, (result) => {
-      if (result?.status === 200) {
-        navigate("/teamFeedback", {
-          state: { surveyDetails: surveyDetails, questionsData: questionsData },
-        });
-      }
-    });
+    if (surveyDetails?.Survey?.status !== "publish") {
+      const payload = {
+        survey_id: surveyDetails.Survey.ID,
+        survey_status: "pending",
+        survey_answers: questionsData,
+        project_id: surveyDetails.Survey.project_id,
+      };
+      new PutService().updateSurveyDetails(payload, (result) => {
+        if (result?.status === 200) {
+          navigate("/teamFeedback", {
+            state: {
+              surveyDetails: surveyDetails,
+              questionsData: questionsData,
+            },
+          });
+        }
+      });
+    } else {
+      navigate("/teamFeedback", {
+        state: {
+          surveyDetails: surveyDetails,
+          questionsData: questionsData,
+        },
+      });
+    }
   };
   const handleSaveAsDraft = (ques) => {
     answersSetting(ques);
@@ -391,47 +403,54 @@ export const FeedBackSurvey = () => {
               </Col>
               {isLastStep ? (
                 <div className="draft-submit-btns">
-                  <Button
-                    className="draft-button hide-on-tablet"
-                    onClick={handleSaveAsDraft}
-                    disabled={
-                      (each?.answer?.length !== 0 ? false : true) &&
-                      !isAnswerSelected
-                    }
-                  >
-                    {i18n.t("button.saveAsDraft")}
-                  </Button>
+                  {surveyDetails?.Survey?.status !== "publish" && (
+                    <Button
+                      className="draft-button hide-on-tablet"
+                      onClick={handleSaveAsDraft}
+                      disabled={
+                        (each?.answer?.length !== 0 ? false : true) &&
+                        !isAnswerSelected
+                      }
+                    >
+                      {i18n.t("button.saveAsDraft")}
+                    </Button>
+                  )}
                   <Button
                     onClick={handleTeamMemberFeedback}
                     className="draft-button"
                   >
                     {i18n.t("button.yesProceed")}
                   </Button>
-                  <Button
-                    type="primary"
-                    onClick={handleSubmit}
-                    className="active-button"
-                  >
-                    {i18n.t("button.noSubmit")}
-                  </Button>
+                  {surveyDetails?.Survey?.status !== "publish" && (
+                    <Button
+                      type="primary"
+                      onClick={handleSubmit}
+                      className="active-button"
+                    >
+                      {i18n.t("button.noSubmit")}
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <div className="draft-submit-btns">
-                  <Button
-                    className={
-                      (each?.answer?.length && each?.answer?.length) ||
-                      isAnswerSelected
-                        ? "draft-button"
-                        : "draft-button disabled-button"
-                    }
-                    disabled={
-                      (each?.answer?.length !== 0 ? false : true) &&
-                      !isAnswerSelected
-                    }
-                    onClick={() => handleSaveAsDraft(each)}
-                  >
-                    {i18n.t("button.saveAsDraft")}
-                  </Button>
+                  {surveyDetails?.Survey?.status !== "publish" && (
+                    <Button
+                      className={
+                        (each?.answer?.length && each?.answer?.length) ||
+                        isAnswerSelected
+                          ? "draft-button"
+                          : "draft-button disabled-button"
+                      }
+                      disabled={
+                        (each?.answer?.length !== 0 ? false : true) &&
+                        !isAnswerSelected
+                      }
+                      onClick={() => handleSaveAsDraft(each)}
+                    >
+                      {i18n.t("button.saveAsDraft")}
+                    </Button>
+                  )}
+
                   <Button
                     type="primary"
                     onClick={() => nextStep(each)}
