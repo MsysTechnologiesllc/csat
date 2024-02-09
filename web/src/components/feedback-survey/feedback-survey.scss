@@ -282,7 +282,7 @@
         .comment-text-area {
           width: 95%;
           margin-top: 1rem;
-          animation: slideInLeft 0.2s linear;
+          animation: slideInDown 0.2s linear;
         }
 
         .text-area {
@@ -515,9 +515,9 @@
 // .comment-text-area {
 //   animation: slideInLeft 0.2s linear ;
 // }
-@keyframes slideInLeft {
+@keyframes slideInDown {
   from {
-    transform: translate3d(-100%, 0, 0);
+    transform: translate3d(0, -100%, 0);
     visibility: visible;
   }
 
