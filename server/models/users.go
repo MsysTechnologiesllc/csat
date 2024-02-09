@@ -362,3 +362,21 @@ func GetUsersByProjectID(projectID uint) ([]schema.User, error) {
 	}
 	return users, nil
 }
+
+func GetUserProjectsDetailsByID(userID uint) map[string]interface{} {
+	var user schema.User
+
+    if err := GetDB().Preload("Projects").Where("id = ?", userID).First(&user).Error; err != nil {
+        logger.Log.Println("Error", err)
+        return u.Message(false, constants.USER_NOT_FOUND)
+	}
+
+    // Extract project details
+    var projects []schema.Project
+	projects = user.Projects
+
+    response := map[string]interface{}{
+        "projects": projects, // Include project details in the response
+    }
+	return response
+}

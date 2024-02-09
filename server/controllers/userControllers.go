@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-
 )
 
 // @Summary Get user list
@@ -174,3 +173,25 @@ var GetAllSurveysByTenant = func(w http.ResponseWriter, r *http.Request) {
 	resp[constants.DATA] = data
 	u.Respond(w, resp)
 }
+
+var GetUserProjectDetails = func(w http.ResponseWriter, r *http.Request) {
+	logger.Log.Println("Get User Projects Details - Controller")
+
+	user_id := r.URL.Query().Get(constants.USER_ID)
+	userID64, err := strconv.ParseUint(user_id, 10, 32)
+	userID := uint(userID64)
+	if err != nil {
+		u.Respond(w, u.Message(false, constants.INVALID_USERID))
+		return
+	}
+	data := models.GetUserProjectsDetailsByID(userID)
+	if data["status"] == false {
+		errorMessage := u.Message(false, data["message"].(string))
+		u.Respond(w, errorMessage)
+		return
+	}
+	resp := u.Message(true, constants.SUCCESS)
+	resp[constants.DATA] = data
+	u.Respond(w, resp)
+}
+
