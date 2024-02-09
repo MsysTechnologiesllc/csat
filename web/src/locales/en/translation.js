@@ -34,6 +34,7 @@ export const translationEN = {
     deliveryHead: "Delivery Head",
     shareBefore: "Share Before",
     getStarted: "Get Started",
+    reviewFeedback: "Review Feedback",
     altText: "greetings-image",
     description:
       " We would appreciate if you could spare a few minutes of your time to share your feedback. This feedback will help us to ensure that the project is on track and to meet your expectations. If there are any concerns, we request you to share an open feedback that would enable us to work on those improvement areas and continue to provide our best services.",

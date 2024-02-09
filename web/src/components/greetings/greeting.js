@@ -69,7 +69,9 @@ function GreetingsPage() {
           className="active-button"
           onClick={() => getStarted(surveyDetails?.Survey?.ID)}
         >
-          {i18n.t("greetings.getStarted")}
+          {surveyDetails?.Survey?.status === "publish"
+            ? i18n.t("greetings.reviewFeedback")
+            : i18n.t("greetings.getStarted")}
         </Button>
       </div>
     </div>
