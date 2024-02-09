@@ -316,7 +316,6 @@ export const FeedBackSurvey = () => {
               )}
               {each.question.type === "gauge-options" && (
                 <>
-                  {" "}
                   <Radio.Group
                     name="radiogroup"
                     className="radio-group-images speedometer-group-images"
@@ -325,7 +324,7 @@ export const FeedBackSurvey = () => {
                     {JSON.parse(each.question.options).map((option, index) => (
                       <RadioWithSpeedometer
                         key={index}
-                        speedometerImage="/images/gauge.svg"
+                        speedometerImage="/images/Gauge.svg"
                         needleImage="/images/needle.svg"
                         label={Object.values(option)[0]}
                         value={
