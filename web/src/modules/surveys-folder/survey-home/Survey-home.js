@@ -37,7 +37,7 @@ const SurveyHome = () => {
             setData(result.data.data.Surveys);
             setTotlaData(result.data.data.TotalCount);
           }
-        }
+        },
       );
     }
   }, [pageNumber, dataPerPage, filterStatus, filterAccounts]);
