@@ -3,10 +3,12 @@ package models
 import (
 	"csat/logger"
 	"csat/schema"
+	"csat/utils"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"math"
+	"os"
 
 	"github.com/lib/pq"
 )
@@ -224,6 +226,7 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 	}
 	surveyID, ok := requestData["survey_id"].(uint)
 	if ok {
+		projectID, ok := requestData["project_id"].(uint)
 		surveyStatus, ok := requestData["survey_status"].(string)
 		if !ok {
 			return nil, fmt.Errorf("invalid 'survey_status' format")
@@ -232,6 +235,40 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 		if err := tx.Model(&Survey{}).Where("ID = ?", surveyID).Update("status", surveyStatus).Error; err != nil {
 			tx.Rollback()
 			return nil, err
+		}
+		if surveyStatus == "publish" {
+			linkURL := os.Getenv("SURVEY_COMPLETED_BASE_URL")
+			users, err := GetUsersListByProjectID(projectID)
+			if err != nil {
+				return nil, fmt.Errorf("invalid 'survey_status' format")
+			}
+		
+			for _, user := range users {
+				// Check if user role is not "user" and not "client"
+				if user.Role != "user" && user.Role != "client" {
+					fmt.Println(user.Role)
+					fmt.Println(user.Email)
+					surveyIDString := fmt.Sprintf("%d", surveyID)
+					emailData := utils.EmailData{
+						Name:        user.Name,
+						ProjectName: "Completed survey",
+						SurveyID:    linkURL + surveyIDString,
+					}
+					emailRecipient := utils.EmailRecipient{
+						To:      []string{user.Email},
+						Subject: "Survey Completed Mail",
+					}
+		
+					templateName := "email_template"
+		
+					// Send mail using the populated emailData and emailRecipient
+					if err := utils.SendMail(templateName, emailData, emailRecipient); err != nil {
+						tx.Rollback()
+						return nil, fmt.Errorf("Failed to send email for user with ID %d: %v", user.ID, err)
+					}
+					fmt.Println("Mailsent")
+				}
+			}
 		}
 	}
 

@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-
+	"time"
 )
 
 // @Summary Get user list
@@ -76,10 +76,10 @@ var GetUserDetails = func(w http.ResponseWriter, r *http.Request) {
 
 // Struct for userFeedback API request body sample
 type UpdateUserRequest struct {
-    UserFeedbackId int    `json:"userFeedbackId"`
-    Positives      string `json:"positives"`
-    Negatives      string `json:"negatives"`
-    Rating         float64 `json:"rating"`
+	UserFeedbackId int     `json:"userFeedbackId"`
+	Positives      string  `json:"positives"`
+	Negatives      string  `json:"negatives"`
+	Rating         float64 `json:"rating"`
 }
 
 // @Summary Update user feedback
@@ -161,19 +161,28 @@ var GetAllSurveysByTenant = func(w http.ResponseWriter, r *http.Request) {
 	pageStr := queryValues.Get("page")
 	pageSizeStr := queryValues.Get("limit")
 	statusFilter := r.URL.Query().Get("status")
-    accountNameFilter := r.URL.Query().Get("accountName")
-    surveyFormatIDStr := r.URL.Query().Get("survey_format_id")
+	accountNameFilter := r.URL.Query().Get("accountName")
+	surveyFormatIDStr := r.URL.Query().Get("survey_format_id")
 
 	tenantID, _ := strconv.ParseUint(tenantIDStr, 10, 64)
 	userID, _ := strconv.ParseUint(userIDStr, 10, 64)
 	page, _ := strconv.Atoi(pageStr)
-    pageSize, _ := strconv.Atoi(pageSizeStr)
+	pageSize, _ := strconv.Atoi(pageSizeStr)
 	surveyFormatIDFilter, _ := strconv.ParseUint(surveyFormatIDStr, 10, 64)
 
 	data, err := models.GetAllSurveysFromDB(tenantID, page, pageSize, statusFilter, accountNameFilter, userID, uint(surveyFormatIDFilter))
 	if err != nil {
 		http.Error(w, constants.UPDATED_FAILED, http.StatusInternalServerError)
 		return
+	}
+	for i := range data.Surveys {
+		survey := &data.Surveys[i]
+		currentDateTime := time.Now()
+		deadline := survey.CreatedAt.Add(time.Duration(survey.SurveyFrequencyDays) * 24 * time.Hour)
+		if survey.Status == "pending" && deadline.Before(currentDateTime) {
+			survey.Status = "overdue"
+		}
+		data.Surveys[i].DeadLine = deadline
 	}
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = data

@@ -20,4 +20,5 @@ type Survey struct {
 	SurveyAnswers       []SurveyAnswers `gorm:"ForeignKey:SurveyID" json:"survey_answers"`
 	Project             *Project        `gorm:"ForeignKey:ProjectID" json:"project"`
 	SurveyFrequencyDays uint            `gorm:"null" json:"survey_frequency_days"`
+	DeadLine            time.Time       `gorm:"type:timestamptz" json:"dead_line"`
 }

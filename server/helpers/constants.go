@@ -50,4 +50,6 @@ const (
 	// user roles
 	PROJECT_MANAGER = "projectManager"
 	DELIVERY_HEAD = "deliveryHead"
+
+	SURVEY_DEADLINE = 5
 )
