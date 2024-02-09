@@ -41,6 +41,15 @@ func GetOrCreateProject(db *gorm.DB, projectName string, accountID uint) (schema
 }
 
 func CreateUser(db *gorm.DB, name string, email string, role string, accountId uint) (schema.User, error) {
+	var existingUser schema.User
+
+	// Check if user with the given email already exists
+	if err := db.Where("email = ?", email).First(&existingUser).Error; err == nil {
+		// User already exists, return the existing user
+		return existingUser, nil
+	}
+
+	// User doesn't exist, create a new one
 	user := schema.User{
 		Name:  name,
 		Email: email,
@@ -51,6 +60,7 @@ func CreateUser(db *gorm.DB, name string, email string, role string, accountId u
 	if err := db.Create(&user).Error; err != nil {
 		return user, fmt.Errorf("Error creating user '%s'", name)
 	}
+
 	return user, nil
 }
 
@@ -148,4 +158,16 @@ func CreateSurveyWithUserFeedback(db *gorm.DB, surveyFormat schema.SurveyFormat,
 	}
 
 	return userFeedbacksData, surveyQuestionsData, surveyID, nil
+}
+
+func UpdateSurveyFormatPMInfo(db *gorm.DB, surveyFormatID uint, pmName, pmEmail string) error {
+	return db.Model(&schema.SurveyFormat{}).
+		Where("ID = ?", surveyFormatID).
+		Updates(map[string]interface{}{"PM_name": pmName, "PM_email": pmEmail}).Error
+}
+
+func UpdateSurveyFormatDHInfo(db *gorm.DB, surveyFormatID uint, dhName, dhEmail string) error {
+	return db.Model(&schema.SurveyFormat{}).
+		Where("ID = ?", surveyFormatID).
+		Updates(map[string]interface{}{"DH_name": dhName, "DH_email": dhEmail}).Error
 }

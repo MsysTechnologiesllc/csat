@@ -157,6 +157,7 @@ var GetAllSurveysByTenant = func(w http.ResponseWriter, r *http.Request) {
 	// Parse query parameters
 	queryValues := r.URL.Query()
 	tenantIDStr := queryValues.Get("tenant_id")
+	userIDStr := queryValues.Get("user_id")
 	pageStr := queryValues.Get("page")
 	pageSizeStr := queryValues.Get("limit")
 	statusFilter := r.URL.Query().Get("status")
@@ -164,11 +165,12 @@ var GetAllSurveysByTenant = func(w http.ResponseWriter, r *http.Request) {
     surveyFormatIDStr := r.URL.Query().Get("survey_format_id")
 
 	tenantID, _ := strconv.ParseUint(tenantIDStr, 10, 64)
+	userID, _ := strconv.ParseUint(userIDStr, 10, 64)
 	page, _ := strconv.Atoi(pageStr)
     pageSize, _ := strconv.Atoi(pageSizeStr)
 	surveyFormatIDFilter, _ := strconv.ParseUint(surveyFormatIDStr, 10, 64)
 
-	data, err := models.GetAllSurveysFromDB(tenantID, page, pageSize, statusFilter, accountNameFilter, uint(surveyFormatIDFilter))
+	data, err := models.GetAllSurveysFromDB(tenantID, page, pageSize, statusFilter, accountNameFilter, userID, uint(surveyFormatIDFilter))
 	if err != nil {
 		http.Error(w, constants.UPDATED_FAILED, http.StatusInternalServerError)
 		return
