@@ -32,6 +32,7 @@ export const FeedBackSurvey = () => {
         survey_id: surveyDetails.Survey.ID,
         survey_answers: questionsData,
         survey_status: "draft",
+        project_id: surveyDetails.Survey.project_id,
       };
       new PutService().updateSurveyDetails(payload, (result) => {
         if (result?.status === 200) {
@@ -96,6 +97,7 @@ export const FeedBackSurvey = () => {
       survey_id: surveyDetails.Survey.ID,
       survey_status: "pending",
       survey_answers: questionsData,
+      project_id: surveyDetails.Survey.project_id,
     };
     new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
@@ -114,6 +116,7 @@ export const FeedBackSurvey = () => {
       survey_id: surveyDetails.Survey.ID,
       survey_answers: questionsData,
       survey_status: "publish",
+      project_id: surveyDetails.Survey.project_id,
     };
     new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
@@ -143,8 +146,6 @@ export const FeedBackSurvey = () => {
     setText(event.target.value);
     setIsAnsweraSelected(true);
   };
-
-  console.log(selectedValue);
 
   const dynamicSteps = (dynamicStepsData) => {
     const isLastStep = currentStep === dynamicStepsData?.length - 1;
