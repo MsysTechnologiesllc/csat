@@ -34,6 +34,11 @@
         max-height: 29.8rem;
       }
 
+      @include media(">=lg") {
+        @include flex-column;
+        align-self: center;
+      }
+
       @include media(">=xl") {
         max-height: 100%;
         max-width: 45%;
@@ -48,8 +53,13 @@
     .greetings-description {
       text-align: left;
 
-      @include media(">=xl") {
+      @include media(">=lg") {
+        min-width: 48%;
         max-width: 48%;
+        min-height: 20rem;
+        @include flex-column;
+        align-self: center;
+        @include justify-content-center;
       }
 
       .greetings-title {
@@ -58,7 +68,7 @@
 
         @include media(">=md") {
           font-size: 2.8rem;
-          margin: 2rem 0;
+          margin: 2rem 0 0 0;
         }
       }
 

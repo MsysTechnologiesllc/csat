@@ -1,37 +1,121 @@
-import React, { useState } from "react";
-import { Button, Card, Col, Form, Row, Rate } from "antd";
-import { teamMembersList } from "../../stub-data/data";
-import { useNavigate } from "react-router";
+import React, { useEffect, useState } from "react";
+import { Button, Card, Col, Form, Row, Rate, Input } from "antd";
+import { useLocation, useNavigate } from "react-router";
 import { GoArrowLeft } from "react-icons/go";
 import { IoStarSharp } from "react-icons/io5";
 import i18n from "../../locales/i18next";
 import { plLibComponents } from "../../context-provider/component-provider";
+import { PutService } from "../../services/put";
+import NotifyStatus from "../notify-status/notify-status";
 import "./team-members-feedback.scss";
+import { GetService } from "../../services/get";
 
 export const TeamMembersFeedBack = () => {
-  const { InputField, InputTextArea } = plLibComponents.components;
+  const { TextArea } = Input;
+  const { InputField } = plLibComponents.components;
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [selectedMember, setSelectedMember] = useState(
-    teamMembersList[0].value,
-  );
+  const [usersList, setUsersList] = useState([]);
+  const [selectedMember, setSelectedMember] = useState([]);
   const [isAnyFieldFilled, setIsAnyFieldFilled] = useState(false);
+  const [notify, setNotify] = useState("");
+  const [message, setMessage] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [save, setSave] = useState(false);
+  const { state } = useLocation();
+  const { surveyDetails, questionsData } = state;
+  useEffect(() => {
+    new GetService().getSurveyDetails(surveyDetails?.Survey.ID, (result) => {
+      if (result?.data?.data) {
+        setUsersList(result?.data?.data?.Survey?.user_feedbacks);
+        setSelectedMember(result?.data?.data?.Survey?.user_feedbacks[0]);
+        setSave(false);
+        if (searchInput !== "") {
+          const searchedUser =
+            result?.data?.data?.Survey?.user_feedbacks.filter((member) => {
+              if (
+                member.user.name
+                  .toLowerCase()
+                  .includes(searchInput.toLowerCase())
+              ) {
+                return member;
+              }
+            });
+          setUsersList(searchedUser);
+        }
+      }
+    });
+  }, [save, searchInput]);
+  useEffect(() => {
+    form.setFieldsValue({
+      positives: selectedMember?.positives,
+      improvements: selectedMember?.negatives,
+      rating: selectedMember?.rating,
+    });
+  }, [selectedMember]);
   const onValuesChange = () => {
     const formValues = form.getFieldsValue();
     const anyFieldHasValue = Object.values(formValues).some((value) => !!value);
     setIsAnyFieldFilled(anyFieldHasValue);
   };
-  const handleSubmit = () => {
-    navigate("/teamFeedback/submitted");
-  };
   const handleBack = () => {
-    navigate("/survey");
+    setNotify("");
+    navigate(`/survey/${surveyDetails?.Survey.ID}`, {
+      state: { surveyDetails: surveyDetails },
+    });
   };
   const onFinish = (values) => {
-    console.log(values, "form output");
+    const payload = {
+      userFeedbackId: selectedMember.ID,
+      positives: values.positives,
+      negatives: values.improvements,
+      rating: values.rating,
+    };
+    new PutService().updateFeedback(payload, (result) => {
+      if (result?.status === 200) {
+        setSave(true);
+        setNotify("success");
+        setMessage(i18n.t("common.userFeedbackSubmitted"));
+        setTimeout(() => {
+          setNotify("");
+        }, 2000);
+      }
+    });
+  };
+  const handleFeedbackasDraft = () => {
+    const payload = {
+      survey_id: surveyDetails.Survey.ID,
+      survey_answers: questionsData,
+      survey_status: "draft",
+    };
+    new PutService().updateSurveyDetails(payload, (result) => {
+      if (result?.status === 200) {
+        setNotify("success");
+        setMessage(i18n.t("common.draftMessage"));
+        setTimeout(() => {
+          setNotify("");
+        }, 2000);
+      }
+    });
+  };
+  const handleSubmit = () => {
+    const payload = {
+      survey_id: surveyDetails.Survey.ID,
+      survey_answers: questionsData,
+      survey_status: "publish",
+    };
+    new PutService().updateSurveyDetails(payload, (result) => {
+      if (result?.status === 200) {
+        setNotify("");
+        navigate("/survey/submitted");
+      }
+    });
   };
   const handleReset = () => {
     form.resetFields();
+  };
+  const handleSearch = (value) => {
+    setSearchInput(value.value);
   };
   const customStarIcons = Array.from({ length: 5 }, (_, index) => (
     <IoStarSharp key={index} className="rating-icon" />
@@ -44,29 +128,31 @@ export const TeamMembersFeedBack = () => {
           type="textinput"
           labelText={i18n.t("placeholder.searchName")}
           placeholder={i18n.t("placeholder.search")}
-          onChange={(event) => console.log(event.value)}
+          onChange={handleSearch}
         />
         <div className="cards-container">
-          {teamMembersList.map((member) => (
+          {usersList.map((member) => (
             <Card
-              key={member.value}
-              onClick={() => setSelectedMember(member.value)}
+              key={member.user.ID}
+              onClick={() => setSelectedMember(member)}
               className={
-                selectedMember === member.value
+                selectedMember?.user?.name === member?.user?.name
                   ? "member-card bg"
                   : "member-card"
               }
             >
-              <p className="text-image-container">
-                {member.label}
-                {member.hasFeedback === 1 && (
-                  <img
-                    src="./images/feedback_updated.svg"
-                    alt={i18n.t("imageAlt.gauge")}
-                    className="feedback-updated-image"
-                  />
-                )}
-              </p>
+              <div className="text-image-container">
+                {member?.user?.name}
+                {member?.positives !== "" &&
+                  member?.negatives !== "" &&
+                  member?.rating !== 0 && (
+                    <img
+                      src="./images/feedback_updated.svg"
+                      alt={i18n.t("imageAlt.gauge")}
+                      className="feedback-updated-image"
+                    />
+                  )}
+              </div>
             </Card>
           ))}
         </div>
@@ -74,27 +160,27 @@ export const TeamMembersFeedBack = () => {
       <Col xs={24} md={16} xl={16}>
         <div className="feeback-names">
           <p className="feedback-title">{i18n.t("teamFeedBack.feedback")}</p>
-          <p className="name">{selectedMember}</p>
+          <p className="name">{selectedMember?.user?.name}</p>
         </div>
         <Form form={form} onFinish={onFinish} onValuesChange={onValuesChange}>
           <Row className="text-area-container">
-            <Col xs={24}>
+            <Col xs={24} lg={12}>
               <p>{i18n.t("teamFeedBack.positives")}</p>
               <Form.Item name="positives">
-                <InputTextArea
-                  placeHolderText={i18n.t("placeholder.message")}
-                  rowCount={4}
+                <TextArea
+                  rows={4}
                   className="text-area"
+                  placeholder={i18n.t("placeholder.message")}
                 />
               </Form.Item>
             </Col>
-            <Col xs={24}>
+            <Col xs={24} lg={11}>
               <p>{i18n.t("teamFeedBack.areaOfImprovement")}</p>
               <Form.Item name="improvements">
-                <InputTextArea
-                  rowCount={4}
-                  placeHolderText={i18n.t("placeholder.message")}
+                <TextArea
+                  rows={4}
                   className="text-area"
+                  placeholder={i18n.t("placeholder.message")}
                 />
               </Form.Item>
             </Col>
@@ -105,6 +191,7 @@ export const TeamMembersFeedBack = () => {
             </p>
             <Form.Item name="rating">
               <Rate
+                allowHalf
                 className="rating"
                 character={({ index = 0 }) => customStarIcons[index]}
               />
@@ -138,7 +225,7 @@ export const TeamMembersFeedBack = () => {
           <span> {i18n.t("button.back")}</span>
         </Button>
         <div className="draft-submit-btns">
-          <Button className="draft-button">
+          <Button className="draft-button" onClick={handleFeedbackasDraft}>
             {i18n.t("button.saveAsDraft")}
           </Button>
           <Button
@@ -150,6 +237,7 @@ export const TeamMembersFeedBack = () => {
           </Button>
         </div>
       </div>
+      {notify && <NotifyStatus status={notify} message={message} />}
     </Row>
   );
 };

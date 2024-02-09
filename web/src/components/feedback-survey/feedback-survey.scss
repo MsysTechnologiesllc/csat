@@ -62,11 +62,10 @@
         background-color: transparent;
         @include font-style($indigo, 1.4rem, 2.4rem, 600);
       }
-
     }
 
-    .hide-on-tablet{
-      @include media ("<md") {
+    .hide-on-tablet {
+      @include media("<md") {
         display: none;
       }
     }
@@ -74,7 +73,7 @@
     .top-btn-container {
       display: none;
 
-      @include media ("<md") {
+      @include media("<md") {
         @include justify-content-between;
         text-align: left;
       }
@@ -89,345 +88,352 @@
     }
 
     .steps-content {
+      // position: relative;
       @include flex-column;
       @include align-items-center;
-
+      gap: 2rem;
       @include media("<=md") {
         min-height: 45vh;
       }
-
-      .question {
-        @include font-style($jet-black, 2rem, 3rem, 500);
-        margin: 2rem 0;
-
-        @include media(">=md", "<=xl") {
-          font-size: 2.4rem;
+      .question-answer-container {
+        width: 100%;
+        height: 45vh;
+        @include media("<=md") {
+          height: 60vh;
         }
+        .question {
+          @include font-style($jet-black, 2rem, 3rem, 500);
+          margin: 2rem 0;
 
-        @include media(">=xl") {
-          @include font-style($jet-black, 3.2rem, 4rem, 500);
-        }
-      }
-
-      .required-star {
-        color: $wild-red;
-      }
-
-      .radio-group-images {
-        @include justify-content-around;
-        min-width: 90%;
-
-        @include media (">=sm", "<=md") {
-          @include justify-content-between;
-          min-width: 40%;
-        }
-
-        @include media (">=md", "<=xl") {
-          @include justify-content-between;
-          min-width: 30%;
-        }
-
-        @include media (">=xl") {
-          min-width: 50%;
-        }
-
-        .yes,
-        .no {
-          min-width: 7rem;
-          max-width: 7rem;
-          min-height: 9rem;
-          max-height: 9rem;
-          margin-bottom: 0.7rem;
-
-          @include media (">=xl") {
-            min-width: 11rem;
-            min-height: 11rem;
+          @include media(">=md", "<=xl") {
+            font-size: 2.4rem;
           }
 
-          .label.Yes,
-          .No {
-            @include font-style($black, 1.6rem, 2.5rem, 700);
+          @include media(">=xl") {
+            @include font-style($jet-black, 3.2rem, 4rem, 500);
+          }
+        }
 
-            @include media (">=xl") {
-              @include font-style($jet-black, 2.2rem, 4rem, 500);
-              letter-spacing: 0.04rem;
+        .required-star {
+          color: $wild-red;
+        }
+        .radio-group-images {
+          @include justify-content-center;
+          gap: 3rem;
+          min-width: 90%;
+          @include media(">=sm", "<md") {
+            min-width: 40%;
+            gap: 4rem;
+          }
+
+          @include media(">=md", "<xl") {
+            min-width: 30%;
+          }
+
+          @include media(">=xl") {
+            min-width: 50%;
+          }
+
+          .yes,
+          .no {
+            min-width: 7rem;
+            max-width: 7rem;
+            min-height: 9rem;
+            max-height: 9rem;
+            margin-bottom: 0.7rem;
+
+            @include media(">=xl") {
+              min-width: 11rem;
+              min-height: 11rem;
+            }
+
+            .label.Yes,
+            .No {
+              @include font-style($black, 1.6rem, 2.5rem, 700);
+
+              @include media(">=xl") {
+                @include font-style($jet-black, 2.2rem, 4rem, 500);
+                letter-spacing: 0.04rem;
+              }
+            }
+
+            img {
+              min-width: 4.8rem;
+              max-width: 4.8rem;
+              min-height: 4.8rem;
+              max-height: 4.8rem;
             }
           }
 
-          img {
-            min-width: 4.8rem;
-            max-width: 4.8rem;
-            min-height: 4.8rem;
-            max-height: 4.8rem;
+          .yes {
+            background-color: $pale-green;
           }
-        }
 
-        .yes {
-          background-color: $pale-green;
-        }
+          .no {
+            background-color: $blush-pink;
+          }
 
-        .no {
-          background-color: $blush-pink;
-        }
+          .ant-radio {
+            border: 0.15rem solid $border-black;
 
-        .ant-radio {
-          border: 0.15rem solid $border-black;
-
-          &:hover {
-            .ant-radio-inner {
-              border: 0.1rem solid $border-black;
+            &:hover {
+              .ant-radio-inner {
+                border: 0.1rem solid $border-black;
+              }
             }
-          }
 
-          &.ant-radio-checked {
-            .ant-radio-inner {
-              border: 0.2rem solid $border-black;
-              background-color: $white;
+            &.ant-radio-checked {
+              .ant-radio-inner {
+                border: 0.2rem solid $border-black;
+                background-color: $white;
 
-              &:after {
-                background-color: $indigo;
+                &:after {
+                  background-color: $indigo;
+                }
               }
             }
           }
         }
-      }
 
-      .rating-scale-container {
-        width: 100%;
-        position: relative;
+        .rating-scale-container {
+          width: 100%;
+          position: relative;
 
-        @include media (">=md", "<=lg") {
-          width: 90%;
-          padding: 0 2rem;
-        }
-
-        .rating-icon {
-          font-size: 4.5rem;
-
-          @include media (">=sm", "<=md") {
-            font-size: 9rem;
+          @include media(">=md", "<=lg") {
+            width: 90%;
+            padding: 0 2rem;
           }
 
-          @include media (">=md") {
-            font-size: 12rem;
-          }
-        }
+          .rating-icon {
+            font-size: 4.5rem;
 
-        .ant-rate {
-          .ant-rate-star {
-            margin: 0;
-          }
+            @include media(">=sm", "<=md") {
+              font-size: 9rem;
+            }
 
-          .ant-rate-star:nth-child(1) {
-            color: $strong-red;
-          }
-
-          .ant-rate-star:nth-child(2) {
-            color: $muted-bold-red;
-          }
-
-          .ant-rate-star:nth-child(3) {
-            color: $yellow;
-          }
-
-          .ant-rate-star:nth-child(4) {
-            color: $green;
-          }
-
-          .ant-rate-star:last-child {
-            color: $vibrant-green;
-          }
-        }
-
-        .rating-desc-container {
-          @include justify-content-between;
-
-          .unsatisfy-text,
-          .satisy-text {
-            @include d-flex;
-            @include font-style($jet-black, 1.4rem, normal, 500);
-            width: 7rem;
-
-            @include media (">=md") {
-              font-size: 1.6rem;
+            @include media(">=md") {
+              font-size: 12rem;
             }
           }
 
-          .unsatisfy-text {
-            text-align: left;
+          .ant-rate {
+            .ant-rate-star {
+              margin: 0;
+            }
+
+            .ant-rate-star:nth-child(1) {
+              color: $strong-red;
+            }
+
+            .ant-rate-star:nth-child(2) {
+              color: $muted-bold-red;
+            }
+
+            .ant-rate-star:nth-child(3) {
+              color: $yellow;
+            }
+
+            .ant-rate-star:nth-child(4) {
+              color: $green;
+            }
+
+            .ant-rate-star:last-child {
+              color: $vibrant-green;
+            }
           }
 
-          .satisy-text {
-            text-align: right;
-          }
-        }
-      }
-
-      .rate {
-        width: 100%;
-
-        .ant-rate-star {
-          font-size: 4rem;
-
-          @include media (">=md") {
-            font-size: 6rem;
-          }
-
-        }
-      }
-
-      .smiles-container {
-        width: 100%;
-        gap: 0.4rem;
-
-        @include media (">=md") {
-          width: 80%;
-          gap: 0.7rem;
-        }
-
-        @include media ("<=md") {
-          @include d-flex;
-          flex-wrap: wrap;
-        }
-
-        .radio-img-container {
-          width: 100%;
-
-          @include media ("<=md") {
-            min-width: 8.4rem;
-            max-width: 8.4rem;
-            margin-bottom: 0.5rem;
-          }
-
-          .emoji-container {
-            min-width: 100%;
-            min-height: 9rem;
-            max-height: 9rem;
-            padding: 1rem 0;
+          .rating-desc-container {
             @include justify-content-between;
 
-            @include media ("<md") {
-              min-height: 6rem;
-              max-height: 6rem;
+            .unsatisfy-text,
+            .satisy-text {
+              @include d-flex;
+              @include font-style($jet-black, 1.4rem, normal, 500);
+              width: 7rem;
+
+              @include media(">=md") {
+                font-size: 1.6rem;
+              }
+            }
+
+            .unsatisfy-text {
+              text-align: left;
+            }
+
+            .satisy-text {
+              text-align: right;
+            }
+          }
+        }
+
+        .rate {
+          width: 100%;
+
+          .ant-rate-star {
+            font-size: 4rem;
+
+            @include media(">=md") {
+              font-size: 6rem;
+            }
+          }
+        }
+        .text-area{
+          width: 95%;
+        }
+        .smiles-container {
+          width: 100%;
+          gap: 0.4rem;
+
+          @include media(">=md") {
+            width: 90%;
+            @include justify-content-between;
+            margin: auto;
+            gap: 2rem;
+          }
+
+          @include media("<md") {
+            @include d-flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+          }
+
+          .radio-img-container {
+            width: 100%;
+
+            @include media("<=md") {
+              min-width: 8.4rem;
+              max-width: 8.4rem;
               margin-bottom: 0.5rem;
             }
 
-            @include media (">=md", "<lg") {
-              min-width: 10rem;
+            .emoji-container {
+              min-width: 100%;
+              min-height: 9rem;
+              max-height: 9rem;
+              padding: 1rem 0;
+              @include justify-content-between;
+
+              @include media("<md") {
+                min-height: 6rem;
+                max-height: 6rem;
+                margin-bottom: 0.5rem;
+              }
+
+              @include media(">=md", "<lg") {
+                min-width: 10rem;
+              }
+
+              img {
+                width: 3rem;
+
+                @include media(">=md") {
+                  width: 4.8rem;
+                }
+              }
+
+              .label {
+                @include font-style("", 1.2rem, 1.9rem, 700);
+
+                @include media(">=md") {
+                  font-size: 1.8rem;
+                }
+              }
+            }
+          }
+        }
+
+        .speedometer-group-images {
+          width: 100%;
+          @include flex-wrap;
+          gap: 1.5rem;
+          @include media(">=xl") {
+            margin-top: 3rem;
+          }
+
+          .speedometer {
+            min-width: 7.5rem;
+            max-width: 7.5rem;
+            margin-bottom: 1rem;
+
+            @include media(">=md") {
+              min-width: 11rem;
+              max-width: 11rem;
+            }
+
+            .speedometer-image {
+              width: 100%;
             }
 
             img {
-              width: 3rem;
+              width: 10%;
+            }
 
-              @include media (">=md") {
-                width: 4.8rem;
+            .very-low-scale {
+              @include placement(absolute, -90deg, 2.3rem, 2.3rem);
+
+              @include media(">=md") {
+                top: 3.4rem;
+                left: 3.4rem;
+              }
+            }
+
+            .low-scale {
+              @include placement(absolute, -45deg, 2.5rem, 1.8rem);
+
+              @include media(">=md") {
+                top: 2.6rem;
+                left: 3.8rem;
+              }
+            }
+
+            .avg-scale {
+              position: absolute;
+              top: 1.8rem;
+
+              @include media(">=md") {
+                top: 2.4rem;
+              }
+            }
+
+            .high-scale {
+              @include placement(absolute, 45deg, 3.6rem, 1.9rem);
+
+              @include media(">=md") {
+                top: 2.5rem;
+                left: 5.4rem;
+              }
+            }
+
+            .very-high-scale {
+              @include placement(absolute, 90deg, 3.6rem, 2.3rem);
+
+              @include media(">=md") {
+                top: 3.5rem;
+                left: 5.8rem;
               }
             }
 
             .label {
-              @include font-style('', 1.2rem, 1.9rem, 700);
+              font-size: 1.4rem;
 
-              @include media (">=md") {
-                font-size: 1.8rem;
+              @include media(">=md") {
+                font-size: 2rem;
               }
             }
           }
         }
       }
-
-      .speedometer-group-images {
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-
-        @include media (">=xl") {
-          margin-top: 3rem;
-        }
-
-        .speedometer {
-          min-width: 7.5rem;
-          max-width: 7.5rem;
-          margin-bottom: 1rem;
-
-          @include media (">=md") {
-            min-width: 11rem;
-            max-width: 11rem;
-          }
-
-          .speedometer-image {
-            width: 100%;
-          }
-
-          img {
-            width: 10%;
-          }
-
-          .very-low-scale {
-            @include placement(absolute, -90deg, 2.3rem, 2.3rem);
-
-            @include media (">=md") {
-              top: 3.4rem;
-              left: 3.4rem;
-            }
-          }
-
-          .low-scale {
-            @include placement(absolute, -45deg, 2.5rem, 1.8rem);
-
-            @include media (">=md") {
-              top: 2.6rem;
-              left: 3.8rem;
-            }
-          }
-
-          .avg-scale {
-            position: absolute;
-            top: 1.8rem;
-
-            @include media (">=md") {
-              top: 2.4rem;
-            }
-          }
-
-          .high-scale {
-            @include placement(absolute, 45deg, 3.6rem, 1.9rem);
-
-            @include media (">=md") {
-              top: 2.5rem;
-              left: 5.4rem;
-            }
-          }
-
-          .very-high-scale {
-            @include placement(absolute, 90deg, 3.6rem, 2.3rem);
-
-            @include media (">=md") {
-              top: 3.5rem;
-              left: 5.8rem;
-            }
-          }
-
-          .label {
-            font-size: 1.4rem;
-
-            @include media (">=md") {
-              font-size: 2rem;
-            }
-          }
-        }
-      }
-    }
-
-    .steps-action {
-      margin-top: 2rem;
-
       .btn-container {
+        width: 100%;
+        margin-top: 2rem;
+        padding: 0 2rem;
         @include justify-content-between;
-
+        display: flex;
+        align-self: flex-end;
         .prev-cancel-container {
           display: block;
 
-          @include media('<md') {
+          @include media("<md") {
             display: none;
           }
         }
@@ -437,11 +443,11 @@
           margin-left: auto;
           gap: 1rem;
 
-          @include media ("<=md") {
+          @include media("<=md") {
             margin-bottom: 0.7rem;
           }
 
-          @include media (">=xl") {
+          @include media(">=xl") {
             gap: 2rem;
           }
 
@@ -473,6 +479,11 @@
         }
       }
     }
+
+    // .steps-action {
+    //   margin-top: 2rem;
+
+    // }
   }
 
   .progress-bar-container {

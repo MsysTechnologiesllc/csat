@@ -14,7 +14,7 @@ const NotifyStatus = ({ status, message }) => {
   };
   const notifyStatus = (type) => {
     switch (type) {
-      case "draft":
+      case "success":
         setStatusAbout(
           notification["success"]({
             onClose: resetStates,

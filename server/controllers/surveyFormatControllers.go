@@ -161,7 +161,7 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 				userEmail := row.Cells[1].String()
 				userRole := row.Cells[2].String()
 
-				user, err := models.CreateUser(db, userName, userEmail, userRole)
+				user, err := models.CreateUser(db, userName, userEmail, userRole, account.ID)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
