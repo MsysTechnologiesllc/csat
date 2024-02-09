@@ -66,11 +66,21 @@ var CreateSurvey = func(w http.ResponseWriter, r *http.Request) {
 	name := data["name"].(string)
 	description := data["description"].(string)
 	status := data["status"].(string)
+	projectIDStr := data["project_id"].(float64)
+	surveyFormatIDStr := data["survey_format_id"].(float64)
+	frequescyDayStr := data["survey_frequency_days"].(float64)
+
+	projectID := uint(projectIDStr)
+	surveyFormatID := uint(surveyFormatIDStr)
+	frequescyDays := uint(frequescyDayStr)
 
 	survey := schema.Survey{
-		Name:        name,
-		Description: description,
-		Status:      status,
+		Name:                name,
+		Description:         description,
+		Status:              status,
+		ProjectID:           projectID,
+		SurveyFormatID:      surveyFormatID,
+		SurveyFrequencyDays: frequescyDays,
 	}
 
 	surveyID, err := models.CreateSurvey(&survey)
@@ -157,37 +167,37 @@ var CreateSurvey = func(w http.ResponseWriter, r *http.Request) {
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/survey-format [get]
 var GetSurveyFormatByID = func(w http.ResponseWriter, r *http.Request) {
-    logger.Log.Println("Logging from Controller")
+	logger.Log.Println("Logging from Controller")
 
-    surveyFormatIDStr := r.URL.Query().Get("surveyFormatID")
-    projectIDStr := r.URL.Query().Get("project_id")
+	surveyFormatIDStr := r.URL.Query().Get("surveyFormatID")
+	projectIDStr := r.URL.Query().Get("project_id")
 
-    if surveyFormatIDStr != "" {
-        // If surveyFormatID is provided, get survey format by ID
-        surveyFormatID, err := strconv.ParseUint(surveyFormatIDStr, 10, 64)
-        if err != nil {
-            http.Error(w, "Invalid surveyFormatID", http.StatusBadRequest)
-            return
-        }
-        data, _ := models.GetSurveyFormatFromDB(uint(surveyFormatID), 0) // 0 as projectID
-        resp := u.Message(true, constants.SUCCESS)
-        resp[constants.DATA] = data
-        u.Respond(w, resp)
-    } else if projectIDStr != "" {
-        // If projectID is provided, get survey format by projectID
-        projectID, err := strconv.ParseUint(projectIDStr, 10, 64)
-        if err != nil {
-            http.Error(w, "Invalid Project ID", http.StatusBadRequest)
-            return
-        }
-        data, _ := models.GetSurveyFormatFromDB(0, uint(projectID)) // 0 as surveyFormatID
-        resp := u.Message(true, constants.SUCCESS)
-        resp[constants.DATA] = data
-        u.Respond(w, resp)
-    } else {
-        http.Error(w, "Either surveyFormatID or projectID must be provided", http.StatusBadRequest)
-        return
-    }
+	if surveyFormatIDStr != "" {
+		// If surveyFormatID is provided, get survey format by ID
+		surveyFormatID, err := strconv.ParseUint(surveyFormatIDStr, 10, 64)
+		if err != nil {
+			http.Error(w, "Invalid surveyFormatID", http.StatusBadRequest)
+			return
+		}
+		data, _ := models.GetSurveyFormatFromDB(uint(surveyFormatID), 0) // 0 as projectID
+		resp := u.Message(true, constants.SUCCESS)
+		resp[constants.DATA] = data
+		u.Respond(w, resp)
+	} else if projectIDStr != "" {
+		// If projectID is provided, get survey format by projectID
+		projectID, err := strconv.ParseUint(projectIDStr, 10, 64)
+		if err != nil {
+			http.Error(w, "Invalid Project ID", http.StatusBadRequest)
+			return
+		}
+		data, _ := models.GetSurveyFormatFromDB(0, uint(projectID)) // 0 as surveyFormatID
+		resp := u.Message(true, constants.SUCCESS)
+		resp[constants.DATA] = data
+		u.Respond(w, resp)
+	} else {
+		http.Error(w, "Either surveyFormatID or projectID must be provided", http.StatusBadRequest)
+		return
+	}
 }
 
 // @Summary Create Survey

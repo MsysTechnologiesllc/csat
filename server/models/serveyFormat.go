@@ -41,6 +41,15 @@ func GetOrCreateProject(db *gorm.DB, projectName string, accountID uint) (schema
 }
 
 func CreateUser(db *gorm.DB, name, email, role string) (schema.User, error) {
+	var existingUser schema.User
+
+	// Check if user with the given email already exists
+	if err := db.Where("email = ?", email).First(&existingUser).Error; err == nil {
+		// User already exists, return the existing user
+		return existingUser, nil
+	}
+
+	// User doesn't exist, create a new one
 	user := schema.User{
 		Name:  name,
 		Email: email,
@@ -50,6 +59,7 @@ func CreateUser(db *gorm.DB, name, email, role string) (schema.User, error) {
 	if err := db.Create(&user).Error; err != nil {
 		return user, fmt.Errorf("Error creating user '%s'", name)
 	}
+
 	return user, nil
 }
 
