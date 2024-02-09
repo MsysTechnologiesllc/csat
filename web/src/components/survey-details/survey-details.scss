@@ -4,6 +4,16 @@
   padding: 3rem 2rem 2rem 2rem;
   min-height: 100vh;
   background-color: $white;
+  .ant-breadcrumb,
+  .ant-breadcrumb a {
+    @include font-style(#00000099, 1.6rem, 2.4rem, 400);
+  }
+  .ant-breadcrumb li:first-child {
+    cursor: pointer;
+  }
+  .ant-breadcrumb li:last-child {
+    @include font-style(#ff4081, 1.6rem, 2.4rem, 400);
+  }
   .survey-details-title {
     @include font-style($black, 3.4rem, 4.12rem, 400);
     text-align: left;
