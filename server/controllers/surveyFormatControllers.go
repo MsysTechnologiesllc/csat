@@ -93,11 +93,7 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 				projectName := row.Cells[2].String()
 				title = row.Cells[3].String()
 				message = row.Cells[4].String()
-				pmName = row.Cells[5].String()
-				pmEmail = row.Cells[6].String()
-				dhName = row.Cells[7].String()
-				dhEmail = row.Cells[8].String()
-				surveyFrequencyStr := row.Cells[9].String()
+				surveyFrequencyStr := row.Cells[5].String()
 
 				surveyFrequency, err := strconv.ParseUint(surveyFrequencyStr, 10, 0)
 				if err != nil {
@@ -118,30 +114,6 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 				}
 
 				project, err = models.GetOrCreateProject(db, projectName, account.ID)
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusInternalServerError)
-					return
-				}
-
-				userPM, err := models.CreateUser(db, pmName, pmEmail, "Project Manager")
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusInternalServerError)
-					return
-				}
-
-				userDH, err := models.CreateUser(db, dhName, dhEmail, "Delivery Head")
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusInternalServerError)
-					return
-				}
-
-				err = models.CreateUsersProject(db, userPM.ID, project.ID, userPM.Role)
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusInternalServerError)
-					return
-				}
-
-				err = models.CreateUsersProject(db, userDH.ID, project.ID, userDH.Role)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
@@ -189,7 +161,7 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 				userEmail := row.Cells[1].String()
 				userRole := row.Cells[2].String()
 
-				user, err := models.CreateUser(db, userName, userEmail, userRole)
+				user, err := models.CreateUser(db, userName, userEmail, userRole, account.ID)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
@@ -200,6 +172,22 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
+				}
+
+				// Update SurveyFormat table based on userRole
+				switch userRole {
+				case constants.PROJECT_MANAGER:
+					err = models.UpdateSurveyFormatPMInfo(db, surveyFormat.ID, user.Name, user.Email)
+					if err != nil {
+						http.Error(w, err.Error(), http.StatusInternalServerError)
+						return
+					}
+				case constants.DELIVERY_HEAD:
+					err = models.UpdateSurveyFormatDHInfo(db, surveyFormat.ID, user.Name, user.Email)
+					if err != nil {
+						http.Error(w, err.Error(), http.StatusInternalServerError)
+						return
+					}
 				}
 			}
 		}

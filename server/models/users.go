@@ -298,6 +298,7 @@ type SurveyPage struct {
 // @Accept json
 // @Produce json
 // @Param tenant_id query int true "Tenant ID (required)" default(101)
+// @Param survey_format_id query int false "Survey Format ID (optional)"
 // @Param page query int true "Page (required)" default(1)
 // @Param limit query int true "Limit (required)" default(5)
 // @Param status query string false "Status (optional)"
@@ -308,13 +309,19 @@ type SurveyPage struct {
 // @Failure 404 {object} map[string]interface{} "No user found"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/surveys [get]
-func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter string) (SurveyPage, error) {
+func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter string, userID uint64, surveyFormatIDFilter uint) (SurveyPage, error) {
 	var result SurveyPage
 
 	query := db.
 		Preload("Project").
+		Preload("UserFeedback").
+		Preload("UserFeedback.User").
+		Preload("SurveyAnswers").
+		Preload("SurveyAnswers.McqQuestions").
 		Joins("JOIN projects ON surveys.project_id = projects.id").
 		Joins("JOIN accounts ON projects.account_id = accounts.id").
+		Joins("JOIN user_projects ON projects.id = user_projects.project_id").
+		Where("user_projects.user_id = ?", userID).
 		Where("accounts.tenant_id = ?", tenantID)
 
 	// Apply search filters
@@ -323,7 +330,11 @@ func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter strin
 	}
 
 	if accountNameFilter != "" {
-		query = query.Where("accounts.name = ?", accountNameFilter)
+		query = query.Where("projects.name = ?", accountNameFilter)
+	}
+
+	if surveyFormatIDFilter != 0 {
+		query = query.Where("surveys.survey_format_id = ?", surveyFormatIDFilter)
 	}
 
 	// Get the count with applied filters
@@ -379,4 +390,23 @@ func GetUserProjectsDetailsByID(userID uint) map[string]interface{} {
         "projects": projects, // Include project details in the response
     }
 	return response
+}
+
+func GetUsersListByProjectID(projectID uint) ([]schema.User, error) {
+	var users []schema.User
+
+	if projectID != 0 {
+		db := GetDB().Joins("JOIN user_projects ON users.id = user_projects.user_id").
+			Joins("JOIN projects ON projects.id = user_projects.project_id").
+			Where("projects.id = ?", projectID)
+
+		// Fetch users from the database
+		if err := db.Find(&users).Error; err != nil {
+			return nil, fmt.Errorf("Error fetching users: %v", err)
+		}
+	} else {
+		return nil, fmt.Errorf("Project ID is required")
+	}
+
+	return users, nil
 }
