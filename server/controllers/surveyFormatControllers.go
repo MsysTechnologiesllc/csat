@@ -123,13 +123,13 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 
-				userPM, err := models.CreateUser(db, pmName, pmEmail, "Project Manager")
+				userPM, err := models.CreateUser(db, pmName, pmEmail, "Project Manager", account.ID)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
 
-				userDH, err := models.CreateUser(db, dhName, dhEmail, "Delivery Head")
+				userDH, err := models.CreateUser(db, dhName, dhEmail, "Delivery Head", account.ID)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
@@ -189,7 +189,7 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 				userEmail := row.Cells[1].String()
 				userRole := row.Cells[2].String()
 
-				user, err := models.CreateUser(db, userName, userEmail, userRole)
+				user, err := models.CreateUser(db, userName, userEmail, userRole, account.ID)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return

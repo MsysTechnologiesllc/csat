@@ -215,6 +215,10 @@ paths:
         name: tenant_id
         required: true
         type: integer
+      - description: Survey Format ID (optional)
+        in: query
+        name: survey_format_id
+        type: integer
       - default: 1
         description: Page (required)
         in: query

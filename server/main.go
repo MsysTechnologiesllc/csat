@@ -37,6 +37,7 @@ func main() {
 
 	// Use routes.SetupRoutes function to set up routes
 	routes.SetupRoutes(r)
+	routes.SetupGoogleRoutes(r)
 
 	// Swagger documentation
 	r.PathPrefix("/swagger/").Handler(httpSwagger.Handler(
@@ -57,6 +58,7 @@ func main() {
 	}
 
 	logger.Log.Printf(port)
+	fmt.Println(port)
 
 	logger.Log.Printf("Server listening on :%s...\n", port)
 	http.ListenAndServe(fmt.Sprintf(":%s", port), handlers.CORS(allowedOrigins, allowedMethods, headersOk)(logging))
