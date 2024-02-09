@@ -3,18 +3,15 @@ import "./Survey-home-styles.scss";
 import SurveyHeader from "../survey-header/Survey-header";
 import SurveyList from "../survey-list/Survey-list";
 import { GetService } from "../../../services/get";
-import { useDetectMobileOrDesktop } from "../../../hooks/useDetectMobileOrDesktop";
 
 const SurveyHome = () => {
-  const { isMobile } = useDetectMobileOrDesktop();
   const [data, setData] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
-  const [dataPerPage, setDataPerPage] = useState(isMobile ? 10 : 5);
+  const [dataPerPage, setDataPerPage] = useState(10);
   const [totalData, setTotlaData] = useState(0);
   const [filterStatus, setFilterStatus] = useState("");
   const [filterAccounts, setFilterAccounts] = useState("");
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-
   let id = 1001;
   let page = pageNumber;
   let limit = dataPerPage;
@@ -37,15 +34,38 @@ const SurveyHome = () => {
             setData(result.data.data.Surveys);
             setTotlaData(result.data.data.TotalCount);
           }
+          if (filterStatus === "overdue" || "pending") {
+            filterActionsData(result?.data?.data.Surveys);
+          }
         },
       );
     }
   }, [pageNumber, dataPerPage, filterStatus, filterAccounts]);
+  function filterActionsData(data) {
+    if (state === "overdue") {
+      let datas = data.filter((item) => item.status === "overdue");
+      setData(datas);
+      setTotlaData(datas.length);
+    } else if (state === "pending") {
+      let datas = data.filter((item) => item.status === "pending");
+      setData(datas);
+      setTotlaData(datas.length);
+    }
+  }
+  const [state, setState] = useState("");
   function getStatusFilterUpdates(value) {
     if (value === "all") {
       setFilterStatus("");
+      setState("");
+    } else if (value === "overdue") {
+      setFilterStatus("pending");
+      setState("overdue");
+    } else if (value === "pending") {
+      setFilterStatus("pending");
+      setState("pending");
     } else {
-      setFilterStatus(value);
+      setFilterStatus("publish");
+      setState("publish");
     }
   }
 
