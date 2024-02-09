@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Progress, Row } from "antd";
+import { Button, Col, Progress, Row, Breadcrumb } from "antd";
 import { plLibComponents } from "../../context-provider/component-provider";
 import { GetService } from "../../services/get";
 import { MdTimer } from "react-icons/md";
@@ -7,20 +7,29 @@ import moment from "moment";
 import { SurveyQuestionList } from "../survey-questions-list/survey-questions-list";
 import { TeamMembersFeedBack } from "../team-members-feedback/team-members-feedback";
 import i18n from "../../locales/i18next";
-import "./survey-details.scss";
 import { useLocation, useNavigate } from "react-router";
+import "./survey-details.scss";
 
 export const SurveyDetails = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { NavTabs } = plLibComponents.components;
   const [surveyDetails, setSurveyDetails] = useState({});
+  const [list, setList] = useState([]);
   useEffect(() => {
+    const breadItems = [{ title: "Surveys", onClick: handleBreadCrumb }];
     new GetService().getSurveyDetails(state?.survey_id, (result) => {
       if (result?.data?.data) {
         setSurveyDetails(result?.data?.data);
+        breadItems.push({
+          title: result?.data?.data?.Survey?.project?.name,
+        });
+        breadItems.push({
+          title: result?.data?.data?.Survey?.name,
+        });
       }
     });
+    setList(breadItems);
   }, []);
   const items = [
     {
@@ -37,8 +46,12 @@ export const SurveyDetails = () => {
   const handleBack = () => {
     navigate("/surveys");
   };
+  const handleBreadCrumb = () => {
+    navigate("/surveys");
+  };
   return (
     <div className="survey-details-container">
+      <Breadcrumb items={list} onClick={handleBreadCrumb} />
       <h1 className="survey-details-title">
         {i18n.t("surveyDetails.surveyDetails")}
       </h1>
