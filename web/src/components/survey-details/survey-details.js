@@ -8,15 +8,16 @@ import { SurveyQuestionList } from "../survey-questions-list/survey-questions-li
 import { TeamMembersFeedBack } from "../team-members-feedback/team-members-feedback";
 import i18n from "../../locales/i18next";
 import "./survey-details.scss";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 export const SurveyDetails = () => {
-  const { state } = useLocation();
+  // const { state } = useLocation();
+  const { survey_id } = useParams();
   const navigate = useNavigate();
   const { NavTabs } = plLibComponents.components;
   const [surveyDetails, setSurveyDetails] = useState({});
   useEffect(() => {
-    new GetService().getSurveyDetails(state?.survey_id, (result) => {
+    new GetService().getSurveyDetails(survey_id, (result) => {
       if (result?.data?.data) {
         setSurveyDetails(result?.data?.data);
       }
@@ -31,7 +32,7 @@ export const SurveyDetails = () => {
     {
       key: "2",
       label: i18n.t("surveyDetails.feedback"),
-      children: <TeamMembersFeedBack surveyId={state?.survey_id} />,
+      children: <TeamMembersFeedBack surveyId={survey_id} />,
     },
   ];
   const handleBack = () => {

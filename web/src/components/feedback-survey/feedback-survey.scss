@@ -249,6 +249,9 @@
               @include d-flex;
               @include font-style($jet-black, 1.4rem, normal, 500);
               width: 7rem;
+              @include media(">md") {
+                width: inherit;
+              }
 
               @include media(">=md") {
                 font-size: 1.6rem;
@@ -276,9 +279,16 @@
             }
           }
         }
-        .text-area{
+        .comment-text-area {
+          width: 95%;
+          margin-top: 1rem;
+          animation: slideInLeft 0.2s linear;
+        }
+
+        .text-area {
           width: 95%;
         }
+
         .smiles-container {
           width: 100%;
           gap: 0.4rem;
@@ -478,11 +488,6 @@
         }
       }
     }
-
-    // .steps-action {
-    //   margin-top: 2rem;
-
-    // }
   }
 
   .progress-bar-container {
@@ -505,5 +510,18 @@
         @include font-style($black, 1.4rem, normal, 700);
       }
     }
+  }
+}
+// .comment-text-area {
+//   animation: slideInLeft 0.2s linear ;
+// }
+@keyframes slideInLeft {
+  from {
+    transform: translate3d(-100%, 0, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
   }
 }

@@ -134,30 +134,33 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
           onChange={handleSearch}
         />
         <div className="cards-container">
-          {usersList.map((member) => (
-            <Card
-              key={member?.user?.ID}
-              onClick={() => setSelectedMember(member)}
-              className={
-                selectedMember?.user?.name === member?.user?.name
-                  ? "member-card bg"
-                  : "member-card"
-              }
-            >
-              <div className="text-image-container">
-                {member?.user?.name}
-                {member?.positives !== "" &&
-                  member?.negatives !== "" &&
-                  member?.rating !== 0 && (
-                    <img
-                      src="/images/feedback_updated.svg"
-                      alt={i18n.t("imageAlt.gauge")}
-                      className="feedback-updated-image"
-                    />
-                  )}
-              </div>
-            </Card>
-          ))}
+          {usersList.map(
+            (member) =>
+              member.user.role === "user" && (
+                <Card
+                  key={member?.user?.ID}
+                  onClick={() => setSelectedMember(member)}
+                  className={
+                    selectedMember?.user?.name === member?.user?.name
+                      ? "member-card bg"
+                      : "member-card"
+                  }
+                >
+                  <div className="text-image-container">
+                    {member?.user?.name}
+                    {member?.positives !== "" &&
+                      member?.negatives !== "" &&
+                      member?.rating !== 0 && (
+                        <img
+                          src="/images/feedback_updated.svg"
+                          alt={i18n.t("imageAlt.gauge")}
+                          className="feedback-updated-image"
+                        />
+                      )}
+                  </div>
+                </Card>
+              ),
+          )}
         </div>
       </Col>
       <Col xs={24} md={16} xl={16}>

@@ -68,7 +68,7 @@ const AppRoutes = () => {
           />
           <Route
             key="/surveys"
-            path="/surveys/surveyDetails"
+            path="/surveys/surveyDetails/:survey_id"
             element={<SurveyDetails />}
             exact
           />

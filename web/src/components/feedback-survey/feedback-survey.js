@@ -143,6 +143,9 @@ export const FeedBackSurvey = () => {
     setText(event.target.value);
     setIsAnsweraSelected(true);
   };
+
+  console.log(selectedValue);
+
   const dynamicSteps = (dynamicStepsData) => {
     const isLastStep = currentStep === dynamicStepsData?.length - 1;
     return dynamicStepsData?.map((each, index) => {
@@ -208,94 +211,151 @@ export const FeedBackSurvey = () => {
                       {i18n.t("surveyQuestions.satisfied")}
                     </span>
                   </div>
+                  {selectedValue <= 2 &&
+                    selectedValue !== "" &&
+                    selectedValue > 0 && (
+                      <TextArea
+                        rows={1}
+                        placeholder={i18n.t("placeholder.message")}
+                        onBlur={() => handleChange(text)}
+                        onChange={(event) => handleTextArea(event)}
+                        className="comment-text-area"
+                        // defaultValue={each?.answer && JSON.parse(each?.answer)}
+                      />
+                    )}
                 </div>
               )}
               {each.question.type === "star-rating" && (
-                <Rate
-                  character={({ index = 0 }) => customStarIcons[index]}
-                  allowHalf
-                  className="rate"
-                  onChange={(value) => handleChange(value)}
-                  defaultValue={
-                    each?.answer && JSON.parse(each?.answer).length / 2
-                  }
-                />
+                <>
+                  <Rate
+                    character={({ index = 0 }) => customStarIcons[index]}
+                    allowHalf
+                    className="rate"
+                    onChange={(value) => handleChange(value)}
+                    defaultValue={
+                      each?.answer && JSON.parse(each?.answer).length / 2
+                    }
+                  />
+                  {selectedValue <= 2 &&
+                    selectedValue !== "" &&
+                    selectedValue > 0 && (
+                      <TextArea
+                        rows={2}
+                        placeholder={i18n.t("placeholder.message")}
+                        onBlur={() => handleChange(text)}
+                        onChange={(event) => handleTextArea(event)}
+                        className="comment-text-area"
+                        // defaultValue={each?.answer && JSON.parse(each?.answer)}
+                      />
+                    )}
+                </>
               )}
               {each.question.type === "emoji-options" && (
-                <Radio.Group
-                  name="radiogroup"
-                  className="radio-group-images smiles-container"
-                  defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
-                >
-                  {JSON.parse(each.question.options).map((option) => (
-                    <RadioWithEmoji
-                      imageSrc={
-                        Object.values(option)[0] === "Very Low"
-                          ? "/images/very-low.svg"
-                          : Object.values(option)[0] === "Low"
-                            ? "/images/low.svg"
-                            : Object.values(option)[0] === "Average"
-                              ? "/images/avg.svg"
-                              : Object.values(option)[0] === "High"
-                                ? "/images/high.svg"
-                                : "/images/very-high.svg"
-                      }
-                      label={Object.values(option)[0]}
-                      value={
-                        Object.values(option)[0] === "Very Low"
-                          ? "very-low"
-                          : Object.values(option)[0] === "Low"
-                            ? "low"
-                            : Object.values(option)[0] === "Average"
-                              ? "avg"
-                              : Object.values(option)[0] === "High"
-                                ? "high"
-                                : "very-high"
-                      }
-                      textColor={
-                        Object.values(option)[0] === "Very Low"
-                          ? "very-low-color"
-                          : Object.values(option)[0] === "Low"
-                            ? "low-color"
-                            : Object.values(option)[0] === "Average"
-                              ? "avg-color"
-                              : Object.values(option)[0] === "High"
-                                ? "high-color"
-                                : "very-high-color"
-                      }
-                      key={Object.values(option)[0]}
-                      handleChange={(event) => handleChange(event.target.value)}
+                <>
+                  <Radio.Group
+                    name="radiogroup"
+                    className="radio-group-images smiles-container"
+                    defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
+                  >
+                    {JSON.parse(each.question.options).map((option) => (
+                      <RadioWithEmoji
+                        imageSrc={
+                          Object.values(option)[0] === "Very Low"
+                            ? "/images/very-low.svg"
+                            : Object.values(option)[0] === "Low"
+                              ? "/images/low.svg"
+                              : Object.values(option)[0] === "Average"
+                                ? "/images/avg.svg"
+                                : Object.values(option)[0] === "High"
+                                  ? "/images/high.svg"
+                                  : "/images/very-high.svg"
+                        }
+                        label={Object.values(option)[0]}
+                        value={
+                          Object.values(option)[0] === "Very Low"
+                            ? "very-low"
+                            : Object.values(option)[0] === "Low"
+                              ? "low"
+                              : Object.values(option)[0] === "Average"
+                                ? "avg"
+                                : Object.values(option)[0] === "High"
+                                  ? "high"
+                                  : "very-high"
+                        }
+                        textColor={
+                          Object.values(option)[0] === "Very Low"
+                            ? "very-low-color"
+                            : Object.values(option)[0] === "Low"
+                              ? "low-color"
+                              : Object.values(option)[0] === "Average"
+                                ? "avg-color"
+                                : Object.values(option)[0] === "High"
+                                  ? "high-color"
+                                  : "very-high-color"
+                        }
+                        key={Object.values(option)[0]}
+                        handleChange={(event) =>
+                          handleChange(event.target.value)
+                        }
+                      />
+                    ))}
+                  </Radio.Group>
+                  {(selectedValue === "low" ||
+                    selectedValue === "very-low") && (
+                    <TextArea
+                      rows={2}
+                      placeholder={i18n.t("placeholder.message")}
+                      onBlur={() => handleChange(text)}
+                      onChange={(event) => handleTextArea(event)}
+                      className="comment-text-area"
+                      // defaultValue={each?.answer && JSON.parse(each?.answer)}
                     />
-                  ))}
-                </Radio.Group>
+                  )}
+                </>
               )}
               {each.question.type === "gauge-options" && (
-                <Radio.Group
-                  name="radiogroup"
-                  className="radio-group-images speedometer-group-images"
-                  defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
-                >
-                  {JSON.parse(each.question.options).map((option, index) => (
-                    <RadioWithSpeedometer
-                      key={index}
-                      speedometerImage="/images/gauge.svg"
-                      needleImage="/images/needle.svg"
-                      label={Object.values(option)[0]}
-                      value={
-                        Object.values(option)[0] === "Very Low"
-                          ? "very-low-scale"
-                          : Object.values(option)[0] === "Low"
-                            ? "low-scale"
-                            : Object.values(option)[0] === "Average"
-                              ? "avg-scale"
-                              : Object.values(option)[0] === "High"
-                                ? "high-scale"
-                                : "very-high-scale"
-                      }
-                      handleChange={(event) => handleChange(event.target.value)}
+                <>
+                  {" "}
+                  <Radio.Group
+                    name="radiogroup"
+                    className="radio-group-images speedometer-group-images"
+                    defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
+                  >
+                    {JSON.parse(each.question.options).map((option, index) => (
+                      <RadioWithSpeedometer
+                        key={index}
+                        speedometerImage="/images/gauge.svg"
+                        needleImage="/images/needle.svg"
+                        label={Object.values(option)[0]}
+                        value={
+                          Object.values(option)[0] === "Very Low"
+                            ? "very-low-scale"
+                            : Object.values(option)[0] === "Low"
+                              ? "low-scale"
+                              : Object.values(option)[0] === "Average"
+                                ? "avg-scale"
+                                : Object.values(option)[0] === "High"
+                                  ? "high-scale"
+                                  : "very-high-scale"
+                        }
+                        handleChange={(event) =>
+                          handleChange(event.target.value)
+                        }
+                      />
+                    ))}
+                  </Radio.Group>
+                  {(selectedValue === "low-scale" ||
+                    selectedValue === "very-low-scale") && (
+                    <TextArea
+                      rows={2}
+                      placeholder={i18n.t("placeholder.message")}
+                      onBlur={() => handleChange(text)}
+                      onChange={(event) => handleTextArea(event)}
+                      className="comment-text-area"
+                      // defaultValue={each?.answer && JSON.parse(each?.answer)}
                     />
-                  ))}
-                </Radio.Group>
+                  )}
+                </>
               )}
               {each.question.type === "textarea-feedback" && (
                 <TextArea

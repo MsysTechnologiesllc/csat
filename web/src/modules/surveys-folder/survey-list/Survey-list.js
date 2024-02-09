@@ -42,7 +42,9 @@ const SurveyList = ({
   }
   function handleActionOnClick(status, record) {
     if (status === "publish" || "pending") {
-      navigate("/surveys/surveyDetails", { state: { survey_id: record.ID } });
+      navigate(`/surveys/surveyDetails/${record.ID}`, {
+        state: { survey_id: record.ID },
+      });
     }
   }
   const capitalizeFirstLetter = (str) => {
