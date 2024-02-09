@@ -54,7 +54,6 @@ func GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GoogleAuthCallbackHandler(w http.ResponseWriter, r *http.Request) {
-	db := models.GetDB()
 	var userDetails schema.User
 
 	// Exchange code for token
@@ -95,12 +94,9 @@ func GoogleAuthCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		userDetails = *existingUser
 	} else {
 		// User does not exist, create a new user in the database
-		userData, err := models.CreateSSOUser(db, userInfo.Name, userInfo.Email, "user", 0)
-		if err != nil {
-			http.Error(w, "Failed to create user", http.StatusInternalServerError)
-			return
-		}
-		userDetails = *userData
+		response := u.Message(false, "User does not exist. Please check with your administrator.")
+        u.Respond(w, response)
+        return
 	}
 	response := u.Message(true, "Loggin successful")
 	response["data"] = userDetails
