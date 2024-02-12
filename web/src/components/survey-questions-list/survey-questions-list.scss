@@ -1,0 +1,85 @@
+@use "../../assets/style/" as *;
+
+.icon-holder {
+  @include font-style($wild-red, 1.6rem, 2.4rem, 500);
+  .min-and-max {
+    @include d-flex;
+  }
+}
+.survey-questions-container {
+  background-color: $white;
+  .each-panel {
+    border: none;
+    border-radius: 0.8rem;
+    margin-bottom: 2rem;
+    text-align: left;
+    padding: 2.4rem;
+    background-color: rgba(189, 189, 189, 0.15);
+    .details-desc-type {
+      width: 90%;
+      .details-description {
+        @include font-style($jet-black, 1.9rem, 2.4rem, 700);
+      }
+      .details-type {
+        @include font-style($steel-grey, 1.4rem, 2.4rem, 400);
+        font-style: italic;
+        span {
+          @include font-style($jet-black, 1.4rem, 2.4rem, 500);
+          font-style: italic;
+        }
+      }
+    }
+
+    .ant-collapse-expand-icon {
+      @include font-style($wild-red, 1.6rem, 2.4rem, 500);
+    }
+    .ant-collapse {
+      background-color: $white;
+    }
+    .ant-collapse-borderless > .ant-collapse-item {
+      border-bottom: 0;
+    }
+    .ant-collapse > .ant-collapse-item {
+      border-bottom: 0;
+    }
+    .radio-group {
+      @include flex-column;
+    }
+    .ant-rate {
+      font-size: 4rem;
+    }
+    .rating-scale-container {
+      .ant-rate {
+        font-size: 7rem;
+        @include media("<md") {
+          font-size: 6rem;
+        }
+        @include media("<=sm") {
+          font-size: 5rem;
+        }
+        @include media("<xs") {
+          font-size: 3rem;
+        }
+        .ant-rate-star:nth-child(1) {
+          color: $strong-red;
+        }
+
+        .ant-rate-star:nth-child(2) {
+          color: $muted-bold-red;
+        }
+
+        .ant-rate-star:nth-child(3) {
+          color: $yellow;
+        }
+
+        .ant-rate-star:nth-child(4) {
+          color: $green;
+        }
+
+        .ant-rate-star:last-child {
+          color: $vibrant-green;
+        }
+      }
+    }
+  }
+}
