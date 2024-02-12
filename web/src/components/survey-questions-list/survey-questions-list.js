@@ -102,6 +102,7 @@ export const SurveyQuestionList = ({ surveyQuestionDetails }) => {
                     <Radio
                       key={index}
                       value={getValueForType(option, question.type)}
+                      disabled
                     >
                       {Object.values(option)[0]}
                     </Radio>
@@ -113,6 +114,7 @@ export const SurveyQuestionList = ({ surveyQuestionDetails }) => {
                   <Rate
                     character={({ index = 0 }) => customIcons[index]}
                     defaultValue={answer && JSON.parse(answer).length}
+                    disabled
                   />
                 </div>
               )}
@@ -121,10 +123,14 @@ export const SurveyQuestionList = ({ surveyQuestionDetails }) => {
                   character={({ index = 0 }) => customStarIcons[index]}
                   allowHalf
                   defaultValue={answer && JSON.parse(answer).length / 2}
+                  disabled
                 />
               )}
               {question.type === "textarea-feedback" && (
-                <TextArea defaultValue={answer && JSON.parse(answer)} />
+                <TextArea
+                  defaultValue={answer && JSON.parse(answer)}
+                  disabled
+                />
               )}
             </Panel>
           ),
