@@ -10,12 +10,12 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-
+	"time"
 )
 
 // @Summary Get user list
 // @Description Retrieve a list of users based on name and project ID
-// @Tags users
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param name query string false "User name (optional)"
@@ -41,7 +41,7 @@ var GetUserList = func(w http.ResponseWriter, r *http.Request) {
 
 // @Summary Get user Details
 // @Description Retrieve user details based on User ID
-// @Tags users
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param user_id query int true "User ID (required)" default(2)
@@ -76,15 +76,15 @@ var GetUserDetails = func(w http.ResponseWriter, r *http.Request) {
 
 // Struct for userFeedback API request body sample
 type UpdateUserRequest struct {
-    UserFeedbackId int    `json:"userFeedbackId"`
-    Positives      string `json:"positives"`
-    Negatives      string `json:"negatives"`
-    Rating         float64 `json:"rating"`
+	UserFeedbackId int     `json:"userFeedbackId"`
+	Positives      string  `json:"positives"`
+	Negatives      string  `json:"negatives"`
+	Rating         float64 `json:"rating"`
 }
 
 // @Summary Update user feedback
 // @Description Update user feedback details
-// @Tags users
+// @Tags Users
 // @Accept json
 // @Produce json
 // @Param request body UpdateUserRequest false "Update User Feedback Request"
@@ -136,10 +136,11 @@ var UpdateUserFeedback = func(w http.ResponseWriter, r *http.Request) {
 
 // @Summary All surveys
 // @Description Retrieve All surveys based on tenant ID
-// @Tags users
+// @Tags Survey
 // @Accept json
 // @Produce json
 // @Param tenant_id query int true "Tenant ID (required)" default(101)
+// @Param survey_format_id query int false "Survey Format ID (optional)"
 // @Param page query int true "Page (required)" default(1)
 // @Param limit query int true "Limit (required)" default(5)
 // @Param status query string "Status (optional)" default(completed)
@@ -156,21 +157,56 @@ var GetAllSurveysByTenant = func(w http.ResponseWriter, r *http.Request) {
 	// Parse query parameters
 	queryValues := r.URL.Query()
 	tenantIDStr := queryValues.Get("tenant_id")
+	userIDStr := queryValues.Get("user_id")
 	pageStr := queryValues.Get("page")
 	pageSizeStr := queryValues.Get("limit")
 	statusFilter := r.URL.Query().Get("status")
-    accountNameFilter := r.URL.Query().Get("accountName")
+	accountNameFilter := r.URL.Query().Get("accountName")
+	surveyFormatIDStr := r.URL.Query().Get("survey_format_id")
 
 	tenantID, _ := strconv.ParseUint(tenantIDStr, 10, 64)
+	userID, _ := strconv.ParseUint(userIDStr, 10, 64)
 	page, _ := strconv.Atoi(pageStr)
-    pageSize, _ := strconv.Atoi(pageSizeStr)
+	pageSize, _ := strconv.Atoi(pageSizeStr)
+	surveyFormatIDFilter, _ := strconv.ParseUint(surveyFormatIDStr, 10, 64)
 
-	data, err := models.GetAllSurveysFromDB(tenantID, page, pageSize, statusFilter, accountNameFilter)
+	data, err := models.GetAllSurveysFromDB(tenantID, page, pageSize, statusFilter, accountNameFilter, userID, uint(surveyFormatIDFilter))
 	if err != nil {
 		http.Error(w, constants.UPDATED_FAILED, http.StatusInternalServerError)
+		return
+	}
+	for i := range data.Surveys {
+		survey := &data.Surveys[i]
+		currentDateTime := time.Now()
+		deadline := survey.CreatedAt.Add(time.Duration(survey.SurveyFrequencyDays) * 24 * time.Hour)
+		if survey.Status == "pending" && deadline.Before(currentDateTime) {
+			survey.Status = "overdue"
+		}
+		data.Surveys[i].DeadLine = deadline
+	}
+	resp := u.Message(true, constants.SUCCESS)
+	resp[constants.DATA] = data
+	u.Respond(w, resp)
+}
+
+var GetUserProjectDetails = func(w http.ResponseWriter, r *http.Request) {
+	logger.Log.Println("Get User Projects Details - Controller")
+
+	user_id := r.URL.Query().Get(constants.USER_ID)
+	userID64, err := strconv.ParseUint(user_id, 10, 32)
+	userID := uint(userID64)
+	if err != nil {
+		u.Respond(w, u.Message(false, constants.INVALID_USERID))
+		return
+	}
+	data := models.GetUserProjectsDetailsByID(userID)
+	if data["status"] == false {
+		errorMessage := u.Message(false, data["message"].(string))
+		u.Respond(w, errorMessage)
 		return
 	}
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = data
 	u.Respond(w, resp)
 }
+

@@ -1,8 +1,10 @@
 package models
 
 import (
+	constants "csat/helpers"
 	"csat/schema"
 	"fmt"
+	"time"
 
 	"github.com/jinzhu/gorm"
 )
@@ -40,16 +42,27 @@ func GetOrCreateProject(db *gorm.DB, projectName string, accountID uint) (schema
 	return project, nil
 }
 
-func CreateUser(db *gorm.DB, name, email, role string) (schema.User, error) {
+func CreateUser(db *gorm.DB, name string, email string, role string, accountId uint) (schema.User, error) {
+	var existingUser schema.User
+
+	// Check if user with the given email already exists
+	if err := db.Where("email = ?", email).First(&existingUser).Error; err == nil {
+		// User already exists, return the existing user
+		return existingUser, nil
+	}
+
+	// User doesn't exist, create a new one
 	user := schema.User{
-		Name:  name,
-		Email: email,
-		Role:  role,
+		Name:      name,
+		Email:     email,
+		Role:      role,
+		AccountID: accountId,
 	}
 
 	if err := db.Create(&user).Error; err != nil {
 		return user, fmt.Errorf("Error creating user '%s'", name)
 	}
+
 	return user, nil
 }
 
@@ -104,6 +117,8 @@ func CreateUsersProject(db *gorm.DB, userID uint, projectID uint, role string) e
 }
 
 func CreateSurveyWithUserFeedback(db *gorm.DB, surveyFormat schema.SurveyFormat, users []schema.User, mcqQuestions []schema.McqQuestions) ([]*schema.UserFeedback, []*schema.SurveyAnswers, uint, error) {
+	currentDate := time.Now()
+	deadline := currentDate.Add(time.Duration(constants.SURVEY_DEADLINE) * 24 * time.Hour)
 	survey := schema.Survey{
 		SurveyFormatID:      surveyFormat.ID,
 		Name:                surveyFormat.Title,
@@ -111,6 +126,7 @@ func CreateSurveyWithUserFeedback(db *gorm.DB, surveyFormat schema.SurveyFormat,
 		ProjectID:           surveyFormat.ProjectID,
 		SurveyFrequencyDays: surveyFormat.SurveyFrequencyDays,
 		Status:              "pending",
+		DeadLine:            deadline,
 	}
 
 	var userFeedbacksData []*schema.UserFeedback
@@ -147,4 +163,16 @@ func CreateSurveyWithUserFeedback(db *gorm.DB, surveyFormat schema.SurveyFormat,
 	}
 
 	return userFeedbacksData, surveyQuestionsData, surveyID, nil
+}
+
+func UpdateSurveyFormatPMInfo(db *gorm.DB, surveyFormatID uint, pmName, pmEmail string) error {
+	return db.Model(&schema.SurveyFormat{}).
+		Where("ID = ?", surveyFormatID).
+		Updates(map[string]interface{}{"PM_name": pmName, "PM_email": pmEmail}).Error
+}
+
+func UpdateSurveyFormatDHInfo(db *gorm.DB, surveyFormatID uint, dhName, dhEmail string) error {
+	return db.Model(&schema.SurveyFormat{}).
+		Where("ID = ?", surveyFormatID).
+		Updates(map[string]interface{}{"DH_name": dhName, "DH_email": dhEmail}).Error
 }

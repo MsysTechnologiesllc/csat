@@ -3,8 +3,12 @@ package models
 import (
 	"csat/logger"
 	"csat/schema"
+	"csat/utils"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"math"
+	"os"
 
 	"github.com/lib/pq"
 )
@@ -22,13 +26,18 @@ type UserFeedback struct {
 }
 
 type SurveyDetails struct {
-	Survey       schema.Survey
-	SurveyFormat schema.SurveyFormat
+	Survey        schema.Survey
+	SurveyFormat  schema.SurveyFormat
+	AverageRating float64
+}
+
+type UpdateAnswerRequest struct {
+	Survey schema.Survey
 }
 
 // @Summary Get Survey Details
 // @Description Retrieve survey details based on Survey ID
-// @Tags survey
+// @Tags Survey
 // @Accept json
 // @Produce json
 // @Param id query int true "Survey ID (required)" default(2)
@@ -51,6 +60,35 @@ func GetSurvey(id string) (*SurveyDetails, error) {
 		return nil, err
 	}
 
+	var totalRatings, totalOptionsLength float64
+	for _, answer := range surveyDetails.Survey.SurveyAnswers {
+		if answer.McqQuestions.Type == "star-rating" || answer.McqQuestions.Type == "scale-rating" {
+			if answer.McqQuestions.Options == "" || answer.Answer == nil {
+				logger.Log.Println("Warning: Options or Answer is nil for question ID:", answer.McqQuestions.ID)
+				continue
+			}
+			var options, answerData []map[string]interface{}
+			if err := json.Unmarshal([]byte(answer.McqQuestions.Options), &options); err != nil {
+				logger.Log.Println("Error decoding question options:", err)
+				continue
+			}
+			if err := json.Unmarshal([]byte(answer.Answer[0]), &answerData); err != nil {
+				logger.Log.Println("Error decoding survey answer:", err)
+				continue
+			}
+			ratingPercent := (float64(len(answerData)) / float64(len(options))) * 100
+			totalRatings += (ratingPercent / 100) * 5
+			totalOptionsLength++
+		}
+	}
+
+	var finalRating float64
+	if totalOptionsLength > 0 {
+		finalRating = totalRatings / totalOptionsLength
+		finalRating = math.Round(finalRating*100) / 100
+	}
+
+	surveyDetails.AverageRating = finalRating
 	return &surveyDetails, nil
 }
 
@@ -91,22 +129,29 @@ func UserFeedbackCreate(userFeedback *schema.UserFeedback) (*schema.UserFeedback
 
 // @Summary Get Survey format
 // @Description Retrieve survey format based on ID
-// @Tags survey
+// @Tags Survey
 // @Accept json
 // @Produce json
-// @Param surveyFormatID query int true "survey Format ID (required)" default(2)
+// @Param surveyFormatID query int false "Survey Format ID (optional)" default(56)
+// @Param project_id query int false "Project ID (optional)" default(1)
 // @Success 200 {object} map[string]interface{} "Survey format retrieved successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid request"
 // @Failure 401 {object} map[string]interface{} "Unauthorized: Token is missing or invalid"
 // @Failure 404 {object} map[string]interface{} "No user found"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/survey-format [get]
-func GetSurveyFormatFromDB(id uint) (*schema.SurveyFormat, error) {
-	var surveyFormat schema.SurveyFormat
+func GetSurveyFormatFromDB(id uint, projectID uint) (*[]schema.SurveyFormat, error) {
+	var surveyFormat []schema.SurveyFormat
+	db := GetDB().Preload("Surveys.UserFeedback.User").Preload("Surveys.SurveyAnswers.McqQuestions").Preload("Surveys.Project").Preload("McqQuestions")
 
-	if err := GetDB().Where("id = ?", id).Preload("Surveys.UserFeedback").Preload("Surveys.SurveyAnswers").Preload("Surveys.Project").Preload("McqQuestions").First(&surveyFormat).Error; err != nil {
-		logger.Log.Println("Error", err)
-		return nil, err
+	// Combine conditions based on provided parameters
+	if id != 0 || projectID != 0 {
+		if err := db.Where("id = ? OR project_id = ?", id, projectID).Find(&surveyFormat).Error; err != nil {
+			logger.Log.Println("Error", err)
+			return nil, err
+		}
+	} else {
+		return nil, errors.New("Either id or projectID must be provided")
 	}
 
 	return &surveyFormat, nil
@@ -123,55 +168,111 @@ func GetSurveyFormatFromDB(id uint) (*schema.SurveyFormat, error) {
 // @Failure 401 {object} map[string]interface{} "Unauthorized: Token is missing or invalid" example:"{'error': 'Unauthorized'}"
 // @Failure 500 {object} map[string]interface{} "Internal server error" example:"{'error': 'Internal server error'}"
 // @Router /api/survey-answers [put]
-func BulkUpdateSurveyAnswers(requestData []map[string]interface{}) ([]SurveyAnswers, error) {
-    var updatedSurveyAnswers []SurveyAnswers
+func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswers, error) {
+	var updatedSurveyAnswers []SurveyAnswers
 
-    db := GetDB()
+	db := GetDB()
 
-    tx := db.Begin()
-    defer func() {
-        if r := recover(); r != nil {
-            tx.Rollback()
-        }
-    }()
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
 
-    for _, data := range requestData {
-        // Perform validation if needed
+	for _, data := range requestData["survey_answers"].([]map[string]interface{}) {
+		// Perform validation if needed
 
-        // Extract data
-        answers, ok := data["answer"].([]interface{})
-        if !ok {
-            return nil, fmt.Errorf("invalid 'answer' format")
-        }
+		// Extract data
+		answer, ok := data["answer"]
+		if !ok {
+			return nil, fmt.Errorf("missing 'answer' field")
+		}
 
-        // Convert the answer slice to a pq.StringArray
-        answerArray := make(pq.StringArray, len(answers))
-        for i, ans := range answers {
-            ansMap, ok := ans.(map[string]interface{})
-            if !ok {
-                return nil, fmt.Errorf("invalid 'answer' format")
-            }
+		// Check if the answer is a number, string, or an array
+		switch answer := answer.(type) {
+		case float64, int, int64:
+			// Convert the number to a string
+			data["answer"] = fmt.Sprintf("%v", answer)
+		case string:
+			// Answer is already a string, no conversion needed
+			data["answer"] = fmt.Sprintf("\"%v\"", answer)
+		case []interface{}:
+			// Convert the array to a JSON string
+			answerJSON, err := json.Marshal(answer)
+			if err != nil {
+				tx.Rollback()
+				fmt.Println(err)
+				return nil, err
+			}
+			data["answer"] = string(answerJSON)
+		default:
+			// Handle other cases, such as a string
+			data["answer"] = fmt.Sprintf("%v", answer)
+		}
 
-            // Convert each map to a JSON string
-            ansJSON, err := json.Marshal(ansMap)
-            if err != nil {
-                return nil, err
-            }
+		// Convert the answer to a pq.StringArray
+		answerArray := pq.StringArray{fmt.Sprintf("%v", data["answer"])}
 
-            answerArray[i] = string(ansJSON)
-        }
+		// Update the survey answer
+		var surveyAnswer SurveyAnswers
+		if err := tx.Model(&surveyAnswer).Where("ID = ?", data["ID"]).Updates(map[string]interface{}{"answer": answerArray}).Scan(&surveyAnswer).Error; err != nil {
+			tx.Rollback()
+			fmt.Println(err)
+			return nil, err
+		}
 
-        // Update the survey answer
-        var surveyAnswer SurveyAnswers
-        if err := tx.Model(&surveyAnswer).Where("id = ?", data["ID"]).Updates(map[string]interface{}{"answer": answerArray}).Scan(&surveyAnswer).Error; err != nil {
-            tx.Rollback()
-            return nil, err
-        }
+		updatedSurveyAnswers = append(updatedSurveyAnswers, surveyAnswer)
+	}
+	surveyID, ok := requestData["survey_id"].(uint)
+	if ok {
+		projectID, ok := requestData["project_id"].(uint)
+		surveyStatus, ok := requestData["survey_status"].(string)
+		if !ok {
+			return nil, fmt.Errorf("invalid 'survey_status' format")
+		}
 
-        updatedSurveyAnswers = append(updatedSurveyAnswers, surveyAnswer)
-    }
+		if err := tx.Model(&Survey{}).Where("ID = ?", surveyID).Update("status", surveyStatus).Error; err != nil {
+			tx.Rollback()
+			return nil, err
+		}
+		if surveyStatus == "publish" {
+			linkURL := os.Getenv("SURVEY_COMPLETED_BASE_URL")
+			users, err := GetUsersListByProjectID(projectID)
+			if err != nil {
+				return nil, fmt.Errorf("invalid 'survey_status' format")
+			}
+		
+			for _, user := range users {
+				// Check if user role is not "user" and not "client"
+				if user.Role != "user" && user.Role != "client" {
+					fmt.Println(user.Role)
+					fmt.Println(user.Email)
+					surveyIDString := fmt.Sprintf("%d", surveyID)
+					emailData := utils.EmailData{
+						Name:        user.Name,
+						ProjectName: "Completed survey",
+						SurveyID:    linkURL + surveyIDString,
+					}
+					emailRecipient := utils.EmailRecipient{
+						To:      []string{user.Email},
+						Subject: "Survey Completed Mail",
+					}
+		
+					templateName := "email_template"
+		
+					// Send mail using the populated emailData and emailRecipient
+					if err := utils.SendMail(templateName, emailData, emailRecipient); err != nil {
+						tx.Rollback()
+						return nil, fmt.Errorf("Failed to send email for user with ID %d: %v", user.ID, err)
+					}
+					fmt.Println("Mailsent")
+				}
+			}
+		}
+	}
 
-    tx.Commit()
+	tx.Commit()
 
-    return updatedSurveyAnswers, nil
+	return updatedSurveyAnswers, nil
 }

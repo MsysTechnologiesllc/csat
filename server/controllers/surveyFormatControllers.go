@@ -10,6 +10,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/tealeg/xlsx"
 )
@@ -92,10 +93,13 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 				projectName := row.Cells[2].String()
 				title = row.Cells[3].String()
 				message = row.Cells[4].String()
-				pmName = row.Cells[5].String()
-				pmEmail = row.Cells[6].String()
-				dhName = row.Cells[7].String()
-				dhEmail = row.Cells[8].String()
+				surveyFrequencyStr := row.Cells[5].String()
+
+				surveyFrequency, err := strconv.ParseUint(surveyFrequencyStr, 10, 0)
+				if err != nil {
+					fmt.Printf("Error converting surveyFrequencyStr to uint: %v\n", err)
+					surveyFrequency = 0
+				}
 
 				tenant, err = models.GetOrCreateTenant(db, tenantName)
 				if err != nil {
@@ -115,35 +119,11 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 
-				userPM, err := models.CreateUser(db, pmName, pmEmail, "Project Manager")
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusInternalServerError)
-					return
-				}
-
-				userDH, err := models.CreateUser(db, dhName, dhEmail, "Delivery Head")
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusInternalServerError)
-					return
-				}
-
-				err = models.CreateUsersProject(db, userPM.ID, project.ID, userPM.Role)
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusInternalServerError)
-					return
-				}
-
-				err = models.CreateUsersProject(db, userDH.ID, project.ID, userDH.Role)
-				if err != nil {
-					http.Error(w, err.Error(), http.StatusInternalServerError)
-					return
-				}
-
 				tenantFound = true
 				accountFound = true
 
 				if !surveyFormatCreated {
-					surveyFormat, err = models.CreateSurveyFormat(db, tenant.ID, account.ID, project.ID, title, message, pmName, pmEmail, dhName, dhEmail, 7)
+					surveyFormat, err = models.CreateSurveyFormat(db, tenant.ID, account.ID, project.ID, title, message, pmName, pmEmail, dhName, dhEmail, uint(surveyFrequency))
 					if err != nil {
 						http.Error(w, err.Error(), http.StatusInternalServerError)
 						return
@@ -181,7 +161,7 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 				userEmail := row.Cells[1].String()
 				userRole := row.Cells[2].String()
 
-				user, err := models.CreateUser(db, userName, userEmail, userRole)
+				user, err := models.CreateUser(db, userName, userEmail, userRole, account.ID)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
@@ -192,6 +172,22 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
+				}
+
+				// Update SurveyFormat table based on userRole
+				switch userRole {
+				case constants.PROJECT_MANAGER:
+					err = models.UpdateSurveyFormatPMInfo(db, surveyFormat.ID, user.Name, user.Email)
+					if err != nil {
+						http.Error(w, err.Error(), http.StatusInternalServerError)
+						return
+					}
+				case constants.DELIVERY_HEAD:
+					err = models.UpdateSurveyFormatDHInfo(db, surveyFormat.ID, user.Name, user.Email)
+					if err != nil {
+						http.Error(w, err.Error(), http.StatusInternalServerError)
+						return
+					}
 				}
 			}
 		}
@@ -210,6 +206,7 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 	var userFeedbacksData []*schema.UserFeedback
 	var surveyQuestionsData []*schema.SurveyAnswers
 	var surveyID uint
+	linkURL := os.Getenv("EMAIL_BASE_URL")
 	//Sending mail
 	for _, user := range users {
 		if user.Role == "client" {
@@ -220,12 +217,12 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 			}
 			userFeedbacksData = userFeedbacks
 			surveyQuestionsData = surveyQuestions
-			surveyID = surveyId
+			surveyID := strconv.Itoa(int(surveyId))
 
 			emailData := u.EmailData{
 				Name:        user.Name,
 				ProjectName: project.Name,
-				SurveyID:    fmt.Sprintf("http://test.com/csat?surveyid=%d", surveyID),
+				SurveyID:    linkURL + surveyID,
 			}
 			emailRecipient := u.EmailRecipient{
 				To:      []string{user.Email},
