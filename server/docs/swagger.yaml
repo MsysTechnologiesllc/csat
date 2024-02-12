@@ -309,6 +309,43 @@ paths:
       summary: Get user list
       tags:
       - Users
+  /api/user-projects:
+    get:
+      consumes:
+      - application/json
+      description: Retrieving Project Details based on user ID
+      - default: 328
+        description: User ID (required)
+        in: query
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Project list retrieved successfully
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: No users found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get user list
+      tags:
+      - Users
   /api/template-details:
     get:
       consumes:
