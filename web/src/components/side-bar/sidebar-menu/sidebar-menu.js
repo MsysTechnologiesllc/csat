@@ -1,7 +1,7 @@
 import { Menu } from "antd";
 import React from "react";
 import PropTypes from "prop-types";
-import "./sidebar-menu";
+import "./siderbar-menu.scss";
 
 export const SiderBarMenu = ({
   menuItems,
@@ -10,18 +10,14 @@ export const SiderBarMenu = ({
   selectedKeys,
 }) => {
   return (
-    <div>
-      <Menu
-        style={{
-          background: "none",
-        }}
-        defaultSelectedKeys={defaultSelectedItem}
-        selectedKeys={selectedKeys}
-        items={menuItems}
-        onClick={onClickCallback}
-        mode="inline"
-      />
-    </div>
+    <Menu
+      defaultSelectedKeys={defaultSelectedItem}
+      selectedKeys={selectedKeys}
+      items={menuItems}
+      onClick={onClickCallback}
+      mode="inline"
+      className="menu-container"
+    />
   );
 };
 

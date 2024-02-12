@@ -86,7 +86,7 @@
       padding: 1.6rem 1.2rem;
       .time-icon {
         font-size: 4.5rem;
-        color: #3f51b5;
+        color: $indigo;
       }
       .hrs {
         @include font-style($jet-black, 2.6rem, 4.32rem, 700);
@@ -139,7 +139,7 @@
   .back-btn-container {
     text-align: right;
     .back-btn {
-      background-color: #3f51b5;
+      background-color: $indigo;
       color: $white;
       border-radius: 0.4rem;
     }

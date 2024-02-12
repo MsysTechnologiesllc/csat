@@ -83,6 +83,9 @@ export const translationEN = {
     optionType: "Option Type",
     hide: "Hide",
     show: "Show",
+    score: "Score",
+    hrs: "Hrs",
+    avgTime: "Average Response Time",
   },
   surveyList: {
     all: "All",

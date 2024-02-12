@@ -33,7 +33,6 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
           setUsersList(result?.data?.data?.Survey?.user_feedbacks);
           setSelectedMember(result?.data?.data?.Survey?.user_feedbacks[0]);
           setSurveyStatus(result?.data?.data?.Survey?.status);
-          // setSurveyStatus()
           setSave(false);
           if (searchInput !== "") {
             const searchedUser =

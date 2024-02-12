@@ -1,7 +1,7 @@
 @use "../../../assets/style/" as *;
 
 .filter-sider {
-    max-width: 60vw;
+  max-width: 60vw;
   .ant-drawer-header {
     border: none;
   }
@@ -207,7 +207,7 @@
           text-overflow: ellipsis;
 
           @include media("<=md") {
-            padding: 0rem 0;
+            padding: 0;
           }
         }
 

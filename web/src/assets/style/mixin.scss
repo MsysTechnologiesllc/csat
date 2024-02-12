@@ -128,12 +128,6 @@
   justify-content: center;
 }
 
-@mixin d-none {
-  display: none;
-}
-@mixin d-block {
-  display: block;
-}
 @mixin font-style($icolor, $size, $lHeight, $fweight) {
   font-weight: $fweight;
   font-size: $size;
