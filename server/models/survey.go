@@ -47,7 +47,7 @@ type UpdateAnswerRequest struct {
 // @Failure 404 {object} map[string]interface{} "No user found"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/survey-details [get]
-func GetSurvey(id string) (*SurveyDetails, error) {
+func GetSurvey(id uint) (*SurveyDetails, error) {
 	var surveyDetails SurveyDetails
 
 	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("ID = ?", id).Find(&surveyDetails.Survey).Error; err != nil {
@@ -275,4 +275,26 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 	tx.Commit()
 
 	return updatedSurveyAnswers, nil
+}
+
+func (surveyDetails *SurveyDetails) GetAllQuestionAndUserIDs() (questionIDs, userIDs []uint) {
+	// Iterate through UserFeedbacks
+	for _, feedback := range surveyDetails.Survey.UserFeedback {
+		userIDs = append(userIDs, feedback.User.ID)
+	}
+
+	// Iterate through SurveyAnswers
+	for _, answer := range surveyDetails.Survey.SurveyAnswers {
+		questionIDs = append(questionIDs, answer.McqQuestions.ID)
+	}
+
+	return questionIDs, userIDs
+}
+
+func GetUserByEmail(email string) (*schema.User, error) {
+    var user schema.User
+    if err := GetDB().Preload("Projects").Where("email = ?", email).First(&user).Error; err != nil {
+        return nil, err
+    }
+    return &user, nil
 }
