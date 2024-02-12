@@ -13,7 +13,7 @@ export const Header = ({ prjTitle, displayPrjTitle }) => {
           {i18n.t("header.title")} <span>{i18n.t("header.proto")}</span>
         </p>
       </div>
-      {displayPrjTitle !== "/" && (
+      {displayPrjTitle === false && (
         <p className="prj-name">
           {i18n.t("greetings.project")}: <span> {prjTitle}</span>
         </p>
@@ -24,5 +24,5 @@ export const Header = ({ prjTitle, displayPrjTitle }) => {
 
 Header.propTypes = {
   prjTitle: PropTypes.string.isRequired,
-  displayPrjTitle: PropTypes.string.isRequired,
+  displayPrjTitle: PropTypes.bool.isRequired,
 };

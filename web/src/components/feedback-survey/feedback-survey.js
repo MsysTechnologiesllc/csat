@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Wizard from "./wizard";
 import { WizardProgressBar } from "./wizard-progress-bar";
 import { Button, Col, Input, Radio, Rate, Row } from "antd";
-import PropTypes from "prop-types";
 import { useLocation, useNavigate } from "react-router";
 import { LineOutlined } from "@ant-design/icons";
 import { IoStarSharp } from "react-icons/io5";
@@ -12,7 +11,7 @@ import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import { PutService } from "../../services/put";
 import "./feedback-survey.scss";
 
-export const FeedBackSurvey = ({ getUrlPath }) => {
+export const FeedBackSurvey = () => {
   const { RadioWithEmoji, RadioWithSpeedometer } = plLibComponents.components;
   const { TextArea } = Input;
   const navigate = useNavigate();
@@ -33,6 +32,7 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
         survey_id: surveyDetails.Survey.ID,
         survey_answers: questionsData,
         survey_status: "draft",
+        project_id: surveyDetails.Survey.project_id,
       };
       new PutService().updateSurveyDetails(payload, (result) => {
         if (result?.status === 200) {
@@ -93,18 +93,31 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
     }
   };
   const handleTeamMemberFeedback = () => {
-    const payload = {
-      survey_id: surveyDetails.Survey.ID,
-      survey_status: "pending",
-      survey_answers: questionsData,
-    };
-    new PutService().updateSurveyDetails(payload, (result) => {
-      if (result?.status === 200) {
-        navigate("/teamFeedback", {
-          state: { surveyDetails: surveyDetails, questionsData: questionsData },
-        });
-      }
-    });
+    if (surveyDetails?.Survey?.status !== "publish") {
+      const payload = {
+        survey_id: surveyDetails.Survey.ID,
+        survey_status: "pending",
+        survey_answers: questionsData,
+        project_id: surveyDetails.Survey.project_id,
+      };
+      new PutService().updateSurveyDetails(payload, (result) => {
+        if (result?.status === 200) {
+          navigate("/teamFeedback", {
+            state: {
+              surveyDetails: surveyDetails,
+              questionsData: questionsData,
+            },
+          });
+        }
+      });
+    } else {
+      navigate("/teamFeedback", {
+        state: {
+          surveyDetails: surveyDetails,
+          questionsData: questionsData,
+        },
+      });
+    }
   };
   const handleSaveAsDraft = (ques) => {
     answersSetting(ques);
@@ -115,6 +128,7 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
       survey_id: surveyDetails.Survey.ID,
       survey_answers: questionsData,
       survey_status: "publish",
+      project_id: surveyDetails.Survey.project_id,
     };
     new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
@@ -144,6 +158,7 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
     setText(event.target.value);
     setIsAnsweraSelected(true);
   };
+
   const dynamicSteps = (dynamicStepsData) => {
     const isLastStep = currentStep === dynamicStepsData?.length - 1;
     return dynamicStepsData?.map((each, index) => {
@@ -209,94 +224,150 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
                       {i18n.t("surveyQuestions.satisfied")}
                     </span>
                   </div>
+                  {selectedValue <= 2 &&
+                    selectedValue !== "" &&
+                    selectedValue > 0 && (
+                      <TextArea
+                        rows={1}
+                        placeholder={i18n.t("placeholder.message")}
+                        onBlur={() => handleChange(text)}
+                        onChange={(event) => handleTextArea(event)}
+                        className="comment-text-area"
+                        // defaultValue={each?.answer && JSON.parse(each?.answer)}
+                      />
+                    )}
                 </div>
               )}
               {each.question.type === "star-rating" && (
-                <Rate
-                  character={({ index = 0 }) => customStarIcons[index]}
-                  allowHalf
-                  className="rate"
-                  onChange={(value) => handleChange(value)}
-                  defaultValue={
-                    each?.answer && JSON.parse(each?.answer).length / 2
-                  }
-                />
+                <>
+                  <Rate
+                    character={({ index = 0 }) => customStarIcons[index]}
+                    allowHalf
+                    className="rate"
+                    onChange={(value) => handleChange(value)}
+                    defaultValue={
+                      each?.answer && JSON.parse(each?.answer).length / 2
+                    }
+                  />
+                  {selectedValue <= 2 &&
+                    selectedValue !== "" &&
+                    selectedValue > 0 && (
+                      <TextArea
+                        rows={2}
+                        placeholder={i18n.t("placeholder.message")}
+                        onBlur={() => handleChange(text)}
+                        onChange={(event) => handleTextArea(event)}
+                        className="comment-text-area"
+                        // defaultValue={each?.answer && JSON.parse(each?.answer)}
+                      />
+                    )}
+                </>
               )}
               {each.question.type === "emoji-options" && (
-                <Radio.Group
-                  name="radiogroup"
-                  className="radio-group-images smiles-container"
-                  defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
-                >
-                  {JSON.parse(each.question.options).map((option) => (
-                    <RadioWithEmoji
-                      imageSrc={
-                        Object.values(option)[0] === "Very Low"
-                          ? "/images/very-low.svg"
-                          : Object.values(option)[0] === "Low"
-                            ? "/images/low.svg"
-                            : Object.values(option)[0] === "Average"
-                              ? "/images/avg.svg"
-                              : Object.values(option)[0] === "High"
-                                ? "/images/high.svg"
-                                : "/images/very-high.svg"
-                      }
-                      label={Object.values(option)[0]}
-                      value={
-                        Object.values(option)[0] === "Very Low"
-                          ? "very-low"
-                          : Object.values(option)[0] === "Low"
-                            ? "low"
-                            : Object.values(option)[0] === "Average"
-                              ? "avg"
-                              : Object.values(option)[0] === "High"
-                                ? "high"
-                                : "very-high"
-                      }
-                      textColor={
-                        Object.values(option)[0] === "Very Low"
-                          ? "very-low-color"
-                          : Object.values(option)[0] === "Low"
-                            ? "low-color"
-                            : Object.values(option)[0] === "Average"
-                              ? "avg-color"
-                              : Object.values(option)[0] === "High"
-                                ? "high-color"
-                                : "very-high-color"
-                      }
-                      key={Object.values(option)[0]}
-                      handleChange={(event) => handleChange(event.target.value)}
+                <>
+                  <Radio.Group
+                    name="radiogroup"
+                    className="radio-group-images smiles-container"
+                    defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
+                  >
+                    {JSON.parse(each.question.options).map((option) => (
+                      <RadioWithEmoji
+                        imageSrc={
+                          Object.values(option)[0] === "Very Low"
+                            ? "/images/very-low.svg"
+                            : Object.values(option)[0] === "Low"
+                              ? "/images/low.svg"
+                              : Object.values(option)[0] === "Average"
+                                ? "/images/avg.svg"
+                                : Object.values(option)[0] === "High"
+                                  ? "/images/high.svg"
+                                  : "/images/very-high.svg"
+                        }
+                        label={Object.values(option)[0]}
+                        value={
+                          Object.values(option)[0] === "Very Low"
+                            ? "very-low"
+                            : Object.values(option)[0] === "Low"
+                              ? "low"
+                              : Object.values(option)[0] === "Average"
+                                ? "avg"
+                                : Object.values(option)[0] === "High"
+                                  ? "high"
+                                  : "very-high"
+                        }
+                        textColor={
+                          Object.values(option)[0] === "Very Low"
+                            ? "very-low-color"
+                            : Object.values(option)[0] === "Low"
+                              ? "low-color"
+                              : Object.values(option)[0] === "Average"
+                                ? "avg-color"
+                                : Object.values(option)[0] === "High"
+                                  ? "high-color"
+                                  : "very-high-color"
+                        }
+                        key={Object.values(option)[0]}
+                        handleChange={(event) =>
+                          handleChange(event.target.value)
+                        }
+                      />
+                    ))}
+                  </Radio.Group>
+                  {(selectedValue === "low" ||
+                    selectedValue === "very-low") && (
+                    <TextArea
+                      rows={2}
+                      placeholder={i18n.t("placeholder.message")}
+                      onBlur={() => handleChange(text)}
+                      onChange={(event) => handleTextArea(event)}
+                      className="comment-text-area"
+                      // defaultValue={each?.answer && JSON.parse(each?.answer)}
                     />
-                  ))}
-                </Radio.Group>
+                  )}
+                </>
               )}
               {each.question.type === "gauge-options" && (
-                <Radio.Group
-                  name="radiogroup"
-                  className="radio-group-images speedometer-group-images"
-                  defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
-                >
-                  {JSON.parse(each.question.options).map((option, index) => (
-                    <RadioWithSpeedometer
-                      key={index}
-                      speedometerImage="/images/gauge.svg"
-                      needleImage="/images/needle.svg"
-                      label={Object.values(option)[0]}
-                      value={
-                        Object.values(option)[0] === "Very Low"
-                          ? "very-low-scale"
-                          : Object.values(option)[0] === "Low"
-                            ? "low-scale"
-                            : Object.values(option)[0] === "Average"
-                              ? "avg-scale"
-                              : Object.values(option)[0] === "High"
-                                ? "high-scale"
-                                : "very-high-scale"
-                      }
-                      handleChange={(event) => handleChange(event.target.value)}
+                <>
+                  <Radio.Group
+                    name="radiogroup"
+                    className="radio-group-images speedometer-group-images"
+                    defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
+                  >
+                    {JSON.parse(each.question.options).map((option, index) => (
+                      <RadioWithSpeedometer
+                        key={index}
+                        speedometerImage="/images/Gauge.svg"
+                        needleImage="/images/needle.svg"
+                        label={Object.values(option)[0]}
+                        value={
+                          Object.values(option)[0] === "Very Low"
+                            ? "very-low-scale"
+                            : Object.values(option)[0] === "Low"
+                              ? "low-scale"
+                              : Object.values(option)[0] === "Average"
+                                ? "avg-scale"
+                                : Object.values(option)[0] === "High"
+                                  ? "high-scale"
+                                  : "very-high-scale"
+                        }
+                        handleChange={(event) =>
+                          handleChange(event.target.value)
+                        }
+                      />
+                    ))}
+                  </Radio.Group>
+                  {(selectedValue === "low-scale" ||
+                    selectedValue === "very-low-scale") && (
+                    <TextArea
+                      rows={2}
+                      placeholder={i18n.t("placeholder.message")}
+                      onBlur={() => handleChange(text)}
+                      onChange={(event) => handleTextArea(event)}
+                      className="comment-text-area"
+                      // defaultValue={each?.answer && JSON.parse(each?.answer)}
                     />
-                  ))}
-                </Radio.Group>
+                  )}
+                </>
               )}
               {each.question.type === "textarea-feedback" && (
                 <TextArea
@@ -332,47 +403,54 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
               </Col>
               {isLastStep ? (
                 <div className="draft-submit-btns">
-                  <Button
-                    className="draft-button hide-on-tablet"
-                    onClick={handleSaveAsDraft}
-                    disabled={
-                      (each?.answer?.length !== 0 ? false : true) &&
-                      !isAnswerSelected
-                    }
-                  >
-                    {i18n.t("button.saveAsDraft")}
-                  </Button>
+                  {surveyDetails?.Survey?.status !== "publish" && (
+                    <Button
+                      className="draft-button hide-on-tablet"
+                      onClick={handleSaveAsDraft}
+                      disabled={
+                        (each?.answer?.length !== 0 ? false : true) &&
+                        !isAnswerSelected
+                      }
+                    >
+                      {i18n.t("button.saveAsDraft")}
+                    </Button>
+                  )}
                   <Button
                     onClick={handleTeamMemberFeedback}
                     className="draft-button"
                   >
                     {i18n.t("button.yesProceed")}
                   </Button>
-                  <Button
-                    type="primary"
-                    onClick={handleSubmit}
-                    className="active-button"
-                  >
-                    {i18n.t("button.noSubmit")}
-                  </Button>
+                  {surveyDetails?.Survey?.status !== "publish" && (
+                    <Button
+                      type="primary"
+                      onClick={handleSubmit}
+                      className="active-button"
+                    >
+                      {i18n.t("button.noSubmit")}
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <div className="draft-submit-btns">
-                  <Button
-                    className={
-                      (each?.answer?.length && each?.answer?.length) ||
-                      isAnswerSelected
-                        ? "draft-button"
-                        : "draft-button disabled-button"
-                    }
-                    disabled={
-                      (each?.answer?.length !== 0 ? false : true) &&
-                      !isAnswerSelected
-                    }
-                    onClick={() => handleSaveAsDraft(each)}
-                  >
-                    {i18n.t("button.saveAsDraft")}
-                  </Button>
+                  {surveyDetails?.Survey?.status !== "publish" && (
+                    <Button
+                      className={
+                        (each?.answer?.length && each?.answer?.length) ||
+                        isAnswerSelected
+                          ? "draft-button"
+                          : "draft-button disabled-button"
+                      }
+                      disabled={
+                        (each?.answer?.length !== 0 ? false : true) &&
+                        !isAnswerSelected
+                      }
+                      onClick={() => handleSaveAsDraft(each)}
+                    >
+                      {i18n.t("button.saveAsDraft")}
+                    </Button>
+                  )}
+
                   <Button
                     type="primary"
                     onClick={() => nextStep(each)}
@@ -398,9 +476,6 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
       };
     });
   };
-  useEffect(() => {
-    getUrlPath(window.location.pathname);
-  }, []);
   const steps = dynamicSteps(
     surveyDetails?.Survey?.survey_answers.sort((a, b) => {
       return a.ID - b.ID;
@@ -420,8 +495,4 @@ export const FeedBackSurvey = ({ getUrlPath }) => {
       <WizardProgressBar currentStep={currentStep} steps={steps} />
     </div>
   );
-};
-
-FeedBackSurvey.propTypes = {
-  getUrlPath: PropTypes.func.isRequired,
 };

@@ -34,7 +34,6 @@
       @include justify-content-between;
       @include custom-btn($white, 0.4rem, 1);
       @include font-style($ash-grey, 1.4rem, 2.4rem, 700);
-      letter-spacing: 0.4px;
       border: none;
       padding: 0;
 
@@ -81,7 +80,7 @@
 
     @include media(">=xl") {
       padding: 4rem;
-      width: 50%;
+      width: 60%;
       min-height: 53vh;
       @include flex-column;
       @include justify-content-between;
@@ -250,6 +249,9 @@
               @include d-flex;
               @include font-style($jet-black, 1.4rem, normal, 500);
               width: 7rem;
+              @include media(">md") {
+                width: inherit;
+              }
 
               @include media(">=md") {
                 font-size: 1.6rem;
@@ -277,9 +279,16 @@
             }
           }
         }
-        .text-area{
+        .comment-text-area {
+          width: 95%;
+          margin-top: 1rem;
+          animation: slideInDown 0.2s linear;
+        }
+
+        .text-area {
           width: 95%;
         }
+
         .smiles-container {
           width: 100%;
           gap: 0.4rem;
@@ -479,11 +488,6 @@
         }
       }
     }
-
-    // .steps-action {
-    //   margin-top: 2rem;
-
-    // }
   }
 
   .progress-bar-container {
@@ -506,5 +510,15 @@
         @include font-style($black, 1.4rem, normal, 700);
       }
     }
+  }
+}
+@keyframes slideInDown {
+  from {
+    transform: translate3d(0, -100%, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
   }
 }

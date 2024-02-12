@@ -128,12 +128,6 @@
   justify-content: center;
 }
 
-@mixin d-none {
-  display: none;
-}
-@mixin d-block {
-  display: block;
-}
 @mixin font-style($icolor, $size, $lHeight, $fweight) {
   font-weight: $fweight;
   font-size: $size;
@@ -185,4 +179,12 @@
   rotate: $rotate;
   left: $left;
   top: $top;
+}
+
+@mixin rotate($deg) {
+  transform: rotate($deg);
+  -webkit-transform: rotate($deg);
+  -moz-transform: rotate($deg);
+  display: inline-block;
+  transition: transform 0.2s;
 }

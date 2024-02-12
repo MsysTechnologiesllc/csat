@@ -7,10 +7,11 @@ import i18n from "../../locales/i18next";
 import { plLibComponents } from "../../context-provider/component-provider";
 import { PutService } from "../../services/put";
 import NotifyStatus from "../notify-status/notify-status";
-import "./team-members-feedback.scss";
 import { GetService } from "../../services/get";
+import PropTypes from "prop-types";
+import "./team-members-feedback.scss";
 
-export const TeamMembersFeedBack = () => {
+export const TeamMembersFeedBack = ({ surveyId }) => {
   const { TextArea } = Input;
   const { InputField } = plLibComponents.components;
   const navigate = useNavigate();
@@ -23,28 +24,32 @@ export const TeamMembersFeedBack = () => {
   const [searchInput, setSearchInput] = useState("");
   const [save, setSave] = useState(false);
   const { state } = useLocation();
-  const { surveyDetails, questionsData } = state;
+  const [surveyStatus, setSurveyStatus] = useState("");
   useEffect(() => {
-    new GetService().getSurveyDetails(surveyDetails?.Survey.ID, (result) => {
-      if (result?.data?.data) {
-        setUsersList(result?.data?.data?.Survey?.user_feedbacks);
-        setSelectedMember(result?.data?.data?.Survey?.user_feedbacks[0]);
-        setSave(false);
-        if (searchInput !== "") {
-          const searchedUser =
-            result?.data?.data?.Survey?.user_feedbacks.filter((member) => {
-              if (
-                member.user.name
-                  .toLowerCase()
-                  .includes(searchInput.toLowerCase())
-              ) {
-                return member;
-              }
-            });
-          setUsersList(searchedUser);
+    new GetService().getSurveyDetails(
+      surveyId ? surveyId : state?.surveyDetails?.Survey?.ID,
+      (result) => {
+        if (result?.data?.data) {
+          setUsersList(result?.data?.data?.Survey?.user_feedbacks);
+          setSelectedMember(result?.data?.data?.Survey?.user_feedbacks[0]);
+          setSurveyStatus(result?.data?.data?.Survey?.status);
+          setSave(false);
+          if (searchInput !== "") {
+            const searchedUser =
+              result?.data?.data?.Survey?.user_feedbacks.filter((member) => {
+                if (
+                  member.user.name
+                    .toLowerCase()
+                    .includes(searchInput.toLowerCase())
+                ) {
+                  return member;
+                }
+              });
+            setUsersList(searchedUser);
+          }
         }
-      }
-    });
+      },
+    );
   }, [save, searchInput]);
   useEffect(() => {
     form.setFieldsValue({
@@ -60,8 +65,8 @@ export const TeamMembersFeedBack = () => {
   };
   const handleBack = () => {
     setNotify("");
-    navigate(`/survey/${surveyDetails?.Survey.ID}`, {
-      state: { surveyDetails: surveyDetails },
+    navigate(`/survey/${state?.surveyDetails?.Survey.ID}`, {
+      state: { surveyDetails: state?.surveyDetails },
     });
   };
   const onFinish = (values) => {
@@ -84,9 +89,10 @@ export const TeamMembersFeedBack = () => {
   };
   const handleFeedbackasDraft = () => {
     const payload = {
-      survey_id: surveyDetails.Survey.ID,
-      survey_answers: questionsData,
+      survey_id: state?.surveyDetails?.Survey?.ID,
+      survey_answers: state?.questionsData,
       survey_status: "draft",
+      project_id: state?.surveyDetails?.Survey?.project_id,
     };
     new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
@@ -100,9 +106,10 @@ export const TeamMembersFeedBack = () => {
   };
   const handleSubmit = () => {
     const payload = {
-      survey_id: surveyDetails.Survey.ID,
-      survey_answers: questionsData,
+      survey_id: state?.surveyDetails?.Survey?.ID,
+      survey_answers: state?.questionsData,
       survey_status: "publish",
+      project_id: state?.surveyDetails?.Survey?.project_id,
     };
     new PutService().updateSurveyDetails(payload, (result) => {
       if (result?.status === 200) {
@@ -131,30 +138,33 @@ export const TeamMembersFeedBack = () => {
           onChange={handleSearch}
         />
         <div className="cards-container">
-          {usersList.map((member) => (
-            <Card
-              key={member.user.ID}
-              onClick={() => setSelectedMember(member)}
-              className={
-                selectedMember?.user?.name === member?.user?.name
-                  ? "member-card bg"
-                  : "member-card"
-              }
-            >
-              <div className="text-image-container">
-                {member?.user?.name}
-                {member?.positives !== "" &&
-                  member?.negatives !== "" &&
-                  member?.rating !== 0 && (
-                    <img
-                      src="./images/feedback_updated.svg"
-                      alt={i18n.t("imageAlt.gauge")}
-                      className="feedback-updated-image"
-                    />
-                  )}
-              </div>
-            </Card>
-          ))}
+          {usersList.map(
+            (member) =>
+              member.user.role === "user" && (
+                <Card
+                  key={member?.user?.ID}
+                  onClick={() => setSelectedMember(member)}
+                  className={
+                    selectedMember?.user?.name === member?.user?.name
+                      ? "member-card bg"
+                      : "member-card"
+                  }
+                >
+                  <div className="text-image-container">
+                    {member?.user?.name}
+                    {member?.positives !== "" &&
+                      member?.negatives !== "" &&
+                      member?.rating !== 0 && (
+                        <img
+                          src="/images/feedback_updated.svg"
+                          alt={i18n.t("imageAlt.gauge")}
+                          className="feedback-updated-image"
+                        />
+                      )}
+                  </div>
+                </Card>
+              ),
+          )}
         </div>
       </Col>
       <Col xs={24} md={16} xl={16}>
@@ -196,26 +206,28 @@ export const TeamMembersFeedBack = () => {
                 character={({ index = 0 }) => customStarIcons[index]}
               />
             </Form.Item>
-            <div className="rating-btn">
-              <Button
-                classNames="draft-button"
-                disabled={!isAnyFieldFilled}
-                onClick={handleReset}
-              >
-                {i18n.t("button.reset")}
-              </Button>
-              <Button
-                className={
-                  isAnyFieldFilled
-                    ? "active-button"
-                    : "active-button disabled-button"
-                }
-                htmlType="submit"
-                disabled={!isAnyFieldFilled}
-              >
-                {i18n.t("button.save")}
-              </Button>
-            </div>
+            {surveyStatus !== "publish" && (
+              <div className="rating-btn">
+                <Button
+                  classNames="draft-button"
+                  disabled={!isAnyFieldFilled}
+                  onClick={handleReset}
+                >
+                  {i18n.t("button.reset")}
+                </Button>
+                <Button
+                  className={
+                    isAnyFieldFilled
+                      ? "active-button"
+                      : "active-button disabled-button"
+                  }
+                  htmlType="submit"
+                  disabled={!isAnyFieldFilled}
+                >
+                  {i18n.t("button.save")}
+                </Button>
+              </div>
+            )}
           </Col>
         </Form>
       </Col>
@@ -224,20 +236,25 @@ export const TeamMembersFeedBack = () => {
           <GoArrowLeft className="arrow-icon" />{" "}
           <span> {i18n.t("button.back")}</span>
         </Button>
-        <div className="draft-submit-btns">
-          <Button className="draft-button" onClick={handleFeedbackasDraft}>
-            {i18n.t("button.saveAsDraft")}
-          </Button>
-          <Button
-            type="primary"
-            onClick={handleSubmit}
-            className="active-button"
-          >
-            {i18n.t("button.submit")}
-          </Button>
-        </div>
+        {surveyStatus !== "publish" && (
+          <div className="draft-submit-btns">
+            <Button className="draft-button" onClick={handleFeedbackasDraft}>
+              {i18n.t("button.saveAsDraft")}
+            </Button>
+            <Button
+              type="primary"
+              onClick={handleSubmit}
+              className="active-button"
+            >
+              {i18n.t("button.submit")}
+            </Button>
+          </div>
+        )}
       </div>
       {notify && <NotifyStatus status={notify} message={message} />}
     </Row>
   );
+};
+TeamMembersFeedBack.propTypes = {
+  surveyId: PropTypes.number.isRequired,
 };
