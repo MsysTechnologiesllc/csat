@@ -10,6 +10,7 @@ export const translationEN = {
     logo: "Logo",
     draftMessage: "Draft saved successfully",
     userFeedbackSubmitted: "User feedback saved succesfully",
+    publish: "Publish",
   },
   header: {
     title: "CSAT",
@@ -83,9 +84,6 @@ export const translationEN = {
     optionType: "Option Type",
     hide: "Hide",
     show: "Show",
-    score: "Score",
-    hrs: "Hrs",
-    avgTime: "Average Response Time",
   },
   surveyList: {
     all: "All",
@@ -113,5 +111,8 @@ export const translationEN = {
     notifications: "Notifications",
     manager: "Manager",
     footerText: "© 2022 MSys Technologies",
+  },
+  projects: {
+    daysLeft: "Only {{days}} Days left",
   },
 };

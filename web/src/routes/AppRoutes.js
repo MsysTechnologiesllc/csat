@@ -16,6 +16,7 @@ import { Accounts } from "../modules/accounts/accounts";
 import { Notifications } from "../modules/notifications/notifications";
 import { SurveyDetails } from "../components/survey-details/survey-details";
 import SurveyHome from "../modules/surveys-folder/survey-home/Survey-home";
+import { PreviewSurvey } from "../modules/accounts/preview-survey/preview-survey";
 
 const AppRoutes = () => {
   const routes = [
@@ -58,6 +59,12 @@ const AppRoutes = () => {
             key="/accounts"
             path="/accounts"
             element={<Accounts />}
+            exact
+          />
+          <Route
+            key="/accounts/previewSurvey/:projectId"
+            path="/accounts/previewSurvey/:projectId"
+            element={<PreviewSurvey />}
             exact
           />
           <Route

@@ -83,12 +83,12 @@ export const SurveyDetails = () => {
             percent={(4.2 / 5) * 100}
             format={() => 4.2}
           />
-          <p className="score">{i18n.t("surveyDetails.score")}</p>
+          <p className="score">Score</p>
         </Col>
         <Col xs={11} md={14} xl={5} className="avg-time-container">
           <MdTimer className="time-icon" />
-          <p className="hrs">4.2 {i18n.t("surveyDetails.hrs")}</p>
-          <p className="avg-time">{i18n.t("surveyDetails.avgTime")}</p>
+          <p className="hrs">4.2 Hrs</p>
+          <p className="avg-time">Average Response Time</p>
         </Col>
       </Row>
       <NavTabs tabItems={items} defaultOpenTabKey="" />
