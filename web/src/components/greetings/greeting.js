@@ -11,12 +11,14 @@ function GreetingsPage() {
   const { survey_id } = useParams();
   const [surveyDetails, setSurveyDetails] = useState({});
   useEffect(() => {
-    new GetService().getSurveyDetails(survey_id, (result) => {
-      if (result?.data?.data) {
-        setSurveyDetails(result?.data?.data);
-      }
-    });
-  }, []);
+    if (survey_id) {
+      new GetService().getSurveyDetails(survey_id, (result) => {
+        if (result?.data?.data) {
+          setSurveyDetails(result?.data?.data);
+        }
+      });
+    }
+  }, [survey_id]);
   const getStarted = (id) => {
     navigate(`/survey/${id}`, {
       state: { surveyDetails: surveyDetails },
@@ -67,7 +69,9 @@ function GreetingsPage() {
           className="active-button"
           onClick={() => getStarted(surveyDetails?.Survey?.ID)}
         >
-          {i18n.t("greetings.getStarted")}
+          {surveyDetails?.Survey?.status === "publish"
+            ? i18n.t("greetings.reviewFeedback")
+            : i18n.t("greetings.getStarted")}
         </Button>
       </div>
     </div>

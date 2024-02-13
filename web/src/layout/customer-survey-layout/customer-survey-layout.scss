@@ -1,0 +1,11 @@
+@use "../../assets/style" as *;
+
+.customer-survey-layout {
+  .ant-layout-header {
+    height: 6rem;
+    padding: 0;
+    color: $black;
+    line-height: 6.4rem;
+    background: $white;
+  }
+}

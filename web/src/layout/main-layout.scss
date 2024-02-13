@@ -1,0 +1,180 @@
+@use "../assets/style" as *;
+
+.header-layout {
+  display: none;
+  @include media("<=lg") {
+    display: block;
+  }
+  .ant-layout-header {
+    height: 6rem;
+    padding: 0;
+    color: $black;
+    line-height: 6.4rem;
+    background: $white;
+  }
+  .header-container {
+    z-index: 1;
+  }
+  .header-arrow {
+    display: none;
+    @include media("<=lg") {
+      display: block;
+      @include justify-content-center;
+      @include align-items-center;
+      background: $white;
+      position: fixed;
+      width: 3.5rem;
+      height: 3.3rem;
+      z-index: 1000;
+      top: 1.7rem;
+      border-radius: 0.5rem;
+      box-shadow: 0.4rem 0.4rem 0.5rem 0 $border-black-40;
+      transition: 0.5s;
+    }
+  }
+  .show-right-arrow {
+    @include media("<=lg") {
+      right: 2rem;
+      top: 1.5rem;
+      z-index: 50;
+    }
+  }
+  .hide-right-arrow {
+    display: none;
+    @include media("<=lg") {
+      left: -36rem;
+      z-index: 10;
+      transition: 0.5s;
+    }
+  }
+}
+.main-layout-content-container {
+  min-height: calc(100vh - 6.5rem);
+  margin-left: 21.9rem;
+  z-index: 10;
+  .header-container {
+    width: 22rem;
+    position: relative;
+    margin-bottom: 3.2rem;
+    background-color: $ghost-white;
+    box-shadow: none;
+  }
+  .ant-layout {
+    overflow-x: hidden;
+  }
+  .nav-arrow {
+    display: none;
+    @include media("<=lg") {
+      @include justify-content-center;
+      @include align-items-center;
+      background: $ghost-white;
+      position: fixed;
+      width: 3.5rem;
+      height: 3.3rem;
+      z-index: 50;
+      top: 1.7rem;
+      border-radius: 0.5rem;
+    }
+  }
+
+  .show-arrow {
+    @include media("<=lg") {
+      left: 18rem;
+      top: 1.5rem;
+      z-index: 1000;
+      transition: 0.5s;
+    }
+    .arrow-icon {
+      font-size: 2.5rem;
+      color: $black;
+    }
+  }
+  .hide-arrow {
+    display: none;
+    @include media("<=lg") {
+      left: -36rem;
+      z-index: 10;
+      transition: 0.5s;
+    }
+  }
+
+  @include media("<=lg") {
+    margin-left: 0;
+  }
+
+  @include media("<=lg") {
+    .show-sidebar aside {
+      top: 0;
+      left: 0;
+      transition: 0.5s;
+      z-index: 100;
+    }
+    .hide-sidebar aside {
+      left: -36rem;
+      z-index: 10;
+      transition: 0.5s;
+    }
+  }
+
+  .ant-layout-sider {
+    overflow: hidden;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 10;
+    background: #f5f7ff;
+
+    .ant-layout-sider-children {
+      .ant-menu-item-selected {
+        background: none !important;
+        box-shadow: inset 0 10rem 0 0 $indigo;
+        color: $white;
+        border-radius: 0;
+      }
+      .ant-menu-inline.ant-menu-root .ant-menu-item > .ant-menu-title-content {
+        @include font-style($jet-black, 1.6rem, 2.4rem, 400);
+        text-align: left;
+      }
+      .ant-menu-inline.ant-menu-root
+        .ant-menu-item-selected
+        > .ant-menu-title-content {
+        @include font-style($white, 1.6rem, 2.4rem, 400);
+        text-align: left;
+      }
+    }
+  }
+  .sidebar-container {
+    @include flex-column;
+    @include justify-content-between;
+    border-radius: 0;
+    padding: 0;
+    .sidebar-footer-container {
+      @include justify-content-between;
+      padding: 0 2rem 2rem;
+      border-bottom: 0.1rem solid $lavender-gray;
+      .side0bar-footer-text-container {
+        @include d-flex;
+        .sidebar-footer-text {
+          margin-left: 1rem;
+          @include font-style($jet-black, 1.6rem, 2.4rem, 400);
+          text-align: left;
+        }
+      }
+      .footer-icon {
+        font-size: 2.4rem;
+      }
+    }
+    .footer-copyright-text {
+      @include font-style($black, 1.2rem, 2rem, 400);
+      padding: 1rem 0;
+    }
+  }
+}
+
+.main-layout-mobile {
+  margin-left: 8.5rem;
+  @include media("<=lg") {
+    margin-left: 0;
+  }
+}

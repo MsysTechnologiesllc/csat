@@ -5,13 +5,19 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import PropTypes from "prop-types";
 import GreetingsPage from "../components/greetings/greeting";
 import { FeedBackSurvey } from "../components/feedback-survey/feedback-survey";
 import { TeamMembersFeedBack } from "../components/team-members-feedback/team-members-feedback";
 import { Successfull } from "../components/successfull/successfull";
+import { MainLayout } from "../layout/main-layout";
+import { Dashboard } from "../modules/dashboard/dashboard";
+import { CustomerSurveyLayout } from "../layout/customer-survey-layout/customer-survey-layout";
+import { Accounts } from "../modules/accounts/accounts";
+import { Notifications } from "../modules/notifications/notifications";
+import { SurveyDetails } from "../components/survey-details/survey-details";
+import SurveyHome from "../modules/surveys-folder/survey-home/Survey-home";
 
-const AppRoutes = ({ getUrlPath }) => {
+const AppRoutes = () => {
   const routes = [
     { path: "/survey/submitted" },
     { path: "/teamFeedback/submitted" },
@@ -20,36 +26,62 @@ const AppRoutes = ({ getUrlPath }) => {
   return (
     <Router>
       <Routes>
-        <Route
-          path="/"
-          element={<Navigate to={`/customer-survey/:survey_id`} replace />}
-        />
-        <Route
-          path={`/customer-survey/:survey_id`}
-          element={<GreetingsPage />}
-          exact
-        />
-        <Route
-          path="/survey/:surveyId"
-          element={<FeedBackSurvey getUrlPath={getUrlPath} />}
-          exact
-        />
-        <Route path="/teamFeedBack" element={<TeamMembersFeedBack />} exact />
-        {routes.map((route, index) => (
+        <Route element={<CustomerSurveyLayout />} exact>
           <Route
-            key={index}
-            path={route.path}
-            element={<Successfull />}
+            path="/"
+            element={<Navigate to={`/customer-survey/:survey_id`} replace />}
+          />
+          <Route
+            path={`/customer-survey/:survey_id`}
+            element={<GreetingsPage />}
             exact
           />
-        ))}
+          <Route path="/survey/:surveyId" element={<FeedBackSurvey />} exact />
+          <Route path="/teamFeedBack" element={<TeamMembersFeedBack />} exact />
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={<Successfull />}
+              exact
+            />
+          ))}
+        </Route>
+        <Route element={<MainLayout />} exact>
+          <Route
+            key="/dashboard"
+            path="/dashboard"
+            element={<Dashboard />}
+            exact
+          />
+          <Route
+            key="/accounts"
+            path="/accounts"
+            element={<Accounts />}
+            exact
+          />
+          <Route
+            key="/surveys"
+            path="/surveys"
+            element={<SurveyHome />}
+            exact
+          />
+          <Route
+            key="/surveys"
+            path="/surveys/surveyDetails/:survey_id"
+            element={<SurveyDetails />}
+            exact
+          />
+          <Route
+            key="notifications"
+            path="notifications"
+            element={<Notifications />}
+            exact
+          />
+        </Route>
       </Routes>
     </Router>
   );
 };
 
 export default AppRoutes;
-
-AppRoutes.propTypes = {
-  getUrlPath: PropTypes.func.isRequired,
-};
