@@ -30,8 +30,13 @@ var GetSurveyDetails = func(w http.ResponseWriter, r *http.Request) {
 
 	// Parse query parameters
 	queryValues := r.URL.Query()
-	id := queryValues.Get(constants.ID)
-	data, _ := models.GetSurvey(id)
+	idStr := queryValues.Get(constants.ID)
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid 'id' format", http.StatusBadRequest)
+		return
+	}
+	data, _ := models.GetSurvey(uint(id))
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = data
 	u.Respond(w, resp)
@@ -277,4 +282,71 @@ func BulkUpdateSurveyAnswers(w http.ResponseWriter, r *http.Request) {
 	response := u.Message(true, "Bulk update successful")
 	response["data"] = updatedSurveyAnswers
 	u.Respond(w, response)
+}
+
+func CloneSurvey(w http.ResponseWriter, r *http.Request) {
+	var requestData map[string]interface{}
+	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	surveyId, ok1 := requestData["survey_id"].(float64)
+	surveyDates, ok2 := requestData["survey_dates"].([]interface{})
+	clientEmail, ok3 := requestData["client_email"].(string)
+
+	if !ok1 || !ok2 || !ok3 {
+		http.Error(w, "Invalid request parameters", http.StatusBadRequest)
+		return
+	}
+	var surveyDatesStr []string
+	for _, date := range surveyDates {
+		surveyDatesStr = append(surveyDatesStr, date.(string))
+	}
+
+	userDetails, err := models.GetUserByEmail(clientEmail)
+	if err != nil {
+		http.Error(w, "User details", http.StatusBadRequest)
+		return
+	}
+	existingSurvey, _ := models.GetSurvey(uint(surveyId))
+	deadline := time.Now().Add(time.Duration(constants.SURVEY_DEADLINE) * 24 * time.Hour)
+	survey := schema.Survey{
+		Name:           existingSurvey.Survey.Name,
+		Description:    existingSurvey.Survey.Description,
+		Status:         existingSurvey.Survey.Status,
+		ProjectID:      existingSurvey.Survey.ProjectID,
+		SurveyFormatID: existingSurvey.Survey.SurveyFormatID,
+		DeadLine:       deadline,
+		SurveyDates:    surveyDatesStr,
+		CustomerEmail:  clientEmail,
+	}
+
+	surveyID, err := models.CreateSurvey(&survey)
+	if err != nil {
+		http.Error(w, "Failed to store survey in the database", http.StatusInternalServerError)
+		return
+	}
+	questionIDs, userIDs := existingSurvey.GetAllQuestionAndUserIDs()
+	// var userFeedbacksData []*schema.UserFeedback
+	// var surveyAnswersData []*schema.SurveyAnswers
+	userFeedbacksData, err := models.CreateAndStoreUserFeedback(userIDs, surveyID)
+	if err != nil {
+		http.Error(w, "Failed to store User feedback in the database", http.StatusInternalServerError)
+		return
+	}
+
+	surveyAnswersData, err := models.CreateAndStoreSurveyAnswers(questionIDs, surveyID)
+	if err != nil {
+		http.Error(w, "Failed to survey answers in the database", http.StatusInternalServerError)
+		return
+	}
+	if err := models.SendSurveyMail(userDetails, surveyID); err != nil {
+		logger.Log.Printf("Failed to send email for user with ID %d: %v\n", userDetails.ID, err)
+	}
+	resp := u.Message(true, constants.SUCCESS)
+	resp["SurveyID"] = surveyID
+	resp["userFeedback"] = userFeedbacksData
+	resp["surveyAnswers"] = surveyAnswersData
+	u.Respond(w, resp)
 }

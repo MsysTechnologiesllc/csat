@@ -25,6 +25,7 @@ func SetupRoutes(router *mux.Router) {
 	apiRouter.HandleFunc("/api/survey-answers", controllers.BulkUpdateSurveyAnswers).Methods("PUT")
 	apiRouter.HandleFunc("/api/user-projects", controllers.GetUserProjectDetails).Methods("GET")
 	apiRouter.HandleFunc("/api/account", controllers.GetAccountDetails).Methods("GET")
+	apiRouter.HandleFunc("/api/survey-clone", controllers.CloneSurvey).Methods("POST")
 
 
 
