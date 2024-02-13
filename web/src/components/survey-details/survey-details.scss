@@ -142,6 +142,10 @@
       background-color: $indigo;
       color: $white;
       border-radius: 0.4rem;
+      &:hover {
+        color: $white;
+        background-color: $indigo;
+      }
     }
   }
 }

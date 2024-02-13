@@ -1,85 +1,104 @@
-import { Breadcrumb, Button, Card, Col, Row } from "antd";
+import { Button, Card, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import i18n from "../../locales/i18next";
 import { GetService } from "../../services/get";
-import { IoMdInformationCircleOutline } from "react-icons/io";
-import { GoDotFill } from "react-icons/go";
-import "./accounts.scss";
-import { projectsData } from "../../stub-data/project-list";
-import { useNavigate } from "react-router";
+import "./projects-list/projects-list.scss";
 
 export const Accounts = () => {
   const navigate = useNavigate();
-  const [breadrumbList, setBreadcrumbList] = useState([]);
-  const survey_id = 57;
-
-  const handleView = () => {
-    navigate("/accounts/previewSurvey/:surveyId");
+  const [accountsList, setAccountsList] = useState([]);
+  const handleView = (account) => {
+    navigate(`/accounts/projects/${account.ID}`, {
+      state: {
+        projectsList: account?.account_projects,
+        accountName: account?.name,
+      },
+    });
   };
 
-  let breadcrumbItems = [{ title: "Accounts" }];
+  const tenant_id = 1001;
 
   useEffect(() => {
-    new GetService().getSurveyDetails(survey_id, (result) => {
-      if (result?.data?.data) {
-        breadcrumbItems.push({
-          title: result?.data?.data?.Survey?.project?.name,
-        });
-      }
-    });
-    setBreadcrumbList(breadcrumbItems);
-  }, [survey_id]);
+    if (tenant_id) {
+      new GetService().getAccountsList(tenant_id, (result) => {
+        setAccountsList(result?.data?.data?.tenant?.tenant_accounts);
+      });
+    }
+  }, [tenant_id]);
   return (
-    <div className="accounts-wrapper">
-      <Breadcrumb items={breadrumbList} />
-      <h1 className="project-title">{i18n.t("greetings.project")}</h1>
-      <div className="context-wrapper">
-        <IoMdInformationCircleOutline className="info-icon" />
-        <p className="context">
-          Only projects for which the surveys are pending for this month are
-          displayed. To view all surveys, please go to
-          <a href="/surveys" target="_self" className="survey-anchor">
-            Surveys.
-          </a>
-        </p>
-      </div>
+    <div className="projects-list-wrapper">
+      <h1 className="project-title">{i18n.t("greetings.account")}</h1>
       <Row gutter={[20, 20]} className="project-list-wrapper">
-        {projectsData.map((project) => (
-          <Col span={8} key={project.id}>
-            <Card className="project-wrapper">
-              <div className="project-client-context-day-container">
-                <div className="avatar-project-client-context-container">
-                  <p className="avatar">
-                    {`${project.prjName[0]}${project.prjName.slice(-1)}`}
-                  </p>
-                  <div className="project-client-container">
-                    <h4 className="project-name">{project.prjName}</h4>
-                    <p className="client-name">{project.clientName}</p>
+        {accountsList.map((account) => {
+          const deliveryHead =
+            account.account_projects[0].Users.length > 0
+              ? account.account_projects[0].Users
+              : account.account_projects[1].Users.filter(
+                  (each) => each.role === "deliveryHead",
+                );
+          return (
+            <Col xs={24} md={12} lg={8} xxl={6} key={account.ID}>
+              <Card className="project-wrapper">
+                <div className="project-client-context-day-container">
+                  <div className="avatar-project-client-context-container">
+                    <p className="avatar">
+                      {`${account.name
+                        .split(" ")
+                        .map((word) => word.charAt(0).toUpperCase())
+                        .join("")}`}
+                    </p>
+                    <div className="project-client-container">
+                      <h4 className="project-name">{account.name}</h4>
+                      <p className="client-name">{deliveryHead[0]?.name}</p>
+                    </div>
                   </div>
                 </div>
-                <div className="day-left-container">
-                  <GoDotFill className="dot-icon" />
-                  <p className="days-left-context">
-                    {i18n.t("projects.daysLeft", {
-                      days: project.survey_frequency_days,
-                    })}
-                  </p>
+                <div className="team-view-container">
+                  <p className="team-members-context">{`${account?.account_projects?.length} project(s)`}</p>
+                  <Button
+                    className="view-button"
+                    type="text"
+                    onClick={() => handleView(account)}
+                  >
+                    {i18n.t("accounts.view")}
+                  </Button>
                 </div>
-              </div>
-              <div className="team-view-container">
-                <p className="team-members-context">{`${project.teamMembers} Members(s)`}</p>
-                <Button
-                  className="view-button"
-                  type="text"
-                  onClick={handleView}
-                >
-                  VIEW
-                </Button>
-              </div>
-            </Card>
-          </Col>
-        ))}
+              </Card>
+            </Col>
+          );
+        })}
       </Row>
     </div>
   );
 };
+
+// const AbbreviationConverter = () => {
+//   const convertToAbbreviation = (inputString) => {
+//     // Split the input string by spaces and map each word to its first letter
+//     const abbreviation = inputString
+//       .split(" ")
+//       .map((word) => word.charAt(0).toLowerCase())
+//       .join("");
+//     return abbreviation;
+//   };
+
+//   // Example input strings
+//   const data = ["fullstack", "panlearn", "fullstack panlearn"];
+
+//   // Convert each input string to abbreviation using map
+//   const output = data.map(convertToAbbreviation);
+
+//   // Render the output array
+//   return (
+//     <div>
+//       {output.map((abbr, index) => (
+//         <p key={index}>
+//           Abbreviation for {data[index]} is: {abbr}
+//         </p>
+//       ))}
+//     </div>
+//   );
+// };
+
+// export default AbbreviationConverter;

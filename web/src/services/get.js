@@ -33,4 +33,10 @@ export class GetService extends BaseService {
       callback,
     );
   }
+  getAccountsList(tenant_id, callback) {
+    return this.get(
+      `http://172.30.44.77:8000/csat/rest/api/account?tenant_id=${tenant_id}`,
+      callback,
+    );
+  }
 }

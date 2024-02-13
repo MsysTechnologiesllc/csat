@@ -30,6 +30,7 @@ export const translationEN = {
   },
   greetings: {
     greetings: "Greetings",
+    account: "Accounts",
     project: "Project",
     projectManager: "Project Manager",
     deliveryHead: "Delivery Head",
@@ -84,6 +85,7 @@ export const translationEN = {
     optionType: "Option Type",
     hide: "Hide",
     show: "Show",
+    settings: "Settings",
   },
   surveyList: {
     all: "All",
@@ -114,5 +116,12 @@ export const translationEN = {
   },
   projects: {
     daysLeft: "Only {{days}} Days left",
+  },
+  accounts: {
+    view: "VIEW",
+    sendClient: "Send to Client",
+    surveys: "Surveys.",
+    description:
+      "Only projects for which the surveys are pending for this month are displayed. To view all surveys, please go to",
   },
 };
