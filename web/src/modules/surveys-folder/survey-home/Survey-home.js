@@ -7,7 +7,7 @@ import { GetService } from "../../../services/get";
 const SurveyHome = () => {
   const [data, setData] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
-  const [dataPerPage, setDataPerPage] = useState(10);
+  const [dataPerPage, setDataPerPage] = useState(5);
   const [totalData, setTotlaData] = useState(0);
   const [filterStatus, setFilterStatus] = useState("");
   const [filterAccounts, setFilterAccounts] = useState([]);
