@@ -19,7 +19,6 @@ export const SurveyDetails = () => {
 
   useEffect(() => {
     const breadItems = [{ title: "Surveys", onClick: handleBreadCrumb }];
-
     new GetService().getSurveyDetails(survey_id, (result) => {
       if (result?.data?.data) {
         setSurveyDetails(result?.data?.data);

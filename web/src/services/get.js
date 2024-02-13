@@ -27,4 +27,10 @@ export class GetService extends BaseService {
       callback,
     );
   }
+  getPreviewSurvey(project_id, callback) {
+    return this.get(
+      `http://172.30.44.77:8000/csat/rest/api/survey-format?project_id=${project_id}`,
+      callback,
+    );
+  }
 }
