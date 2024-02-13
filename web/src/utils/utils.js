@@ -10,3 +10,16 @@ export const DaysAdded = (days) => {
   let formattedDate = futureDate.format("D MMM, YYYY");
   return formattedDate;
 };
+
+export const NoOfDays = (givenDate) => {
+  // Current date
+  const currentDate = moment();
+
+  // Target date
+  const targetDate = moment(givenDate);
+
+  // Calculate the difference in days
+  const numberOfDays = targetDate.diff(currentDate, "days");
+
+  return numberOfDays;
+};

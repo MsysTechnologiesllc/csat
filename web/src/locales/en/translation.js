@@ -30,6 +30,7 @@ export const translationEN = {
   },
   greetings: {
     greetings: "Greetings",
+    account: "Accounts",
     project: "Project",
     projectManager: "Project Manager",
     deliveryHead: "Delivery Head",
