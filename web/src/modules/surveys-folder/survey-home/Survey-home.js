@@ -7,17 +7,25 @@ import { GetService } from "../../../services/get";
 const SurveyHome = () => {
   const [data, setData] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
-  const [dataPerPage, setDataPerPage] = useState(10);
+  const [dataPerPage, setDataPerPage] = useState(5);
   const [totalData, setTotlaData] = useState(0);
   const [filterStatus, setFilterStatus] = useState("");
-  const [filterAccounts, setFilterAccounts] = useState("");
+  const [filterAccounts, setFilterAccounts] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [prjData, setPrjData] = useState([]);
   let id = 1001;
   let page = pageNumber;
   let limit = dataPerPage;
-  let accName = "";
+  let accName = JSON.stringify(filterAccounts);
   let status = filterStatus;
   let user_id = 328;
+  useEffect(() => {
+    new GetService().getSurveyProjectsFilter(user_id, (result) => {
+      if (result) {
+        setPrjData(result?.data?.data.projects);
+      }
+    });
+  }, []);
   useEffect(() => {
     if (id) {
       setIsDataLoaded(false);
@@ -43,30 +51,40 @@ const SurveyHome = () => {
   }, [pageNumber, dataPerPage, filterStatus, filterAccounts]);
   function filterActionsData(data) {
     if (state === "overdue") {
-      let datas = data.filter((item) => item.status === "overdue");
+      let datas = data?.filter((item) => item.status === "overdue");
       setData(datas);
-      setTotlaData(datas.length);
+      setTotlaData(datas?.length);
     } else if (state === "pending") {
-      let datas = data.filter((item) => item.status === "pending");
+      let datas = data?.filter((item) => item.status === "pending");
       setData(datas);
-      setTotlaData(datas.length);
+      setTotlaData(datas?.length);
     }
   }
   const [state, setState] = useState("");
   function getStatusFilterUpdates(value) {
-    if (value === "all") {
-      setFilterStatus("");
-      setState("");
-    } else if (value === "overdue") {
-      setFilterStatus("pending");
-      setState("overdue");
-    } else if (value === "pending") {
-      setFilterStatus("pending");
-      setState("pending");
-    } else {
-      setFilterStatus("publish");
-      setState("publish");
+    let newFilterStatus = "";
+    let newState = "";
+
+    switch (value) {
+      case "all":
+        newFilterStatus = "";
+        newState = "";
+        break;
+      case "overdue":
+        newFilterStatus = "pending";
+        newState = "overdue";
+        break;
+      case "pending":
+        newFilterStatus = "pending";
+        newState = "pending";
+        break;
+      default:
+        newFilterStatus = "publish";
+        newState = "publish";
     }
+
+    setFilterStatus(newFilterStatus);
+    setState(newState);
   }
 
   function getAccountFilterUpdates(value) {
@@ -88,6 +106,7 @@ const SurveyHome = () => {
       <SurveyHeader
         getStatusFilterUpdates={getStatusFilterUpdates}
         getAccountFilterUpdates={getAccountFilterUpdates}
+        prjData={prjData}
       />
       <SurveyList
         isDataLoaded={isDataLoaded}

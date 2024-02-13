@@ -4,7 +4,11 @@ import { CloseOutlined } from "@ant-design/icons";
 import i18n from "../../../locales/i18next";
 
 import { Drawer, Button, Radio, Checkbox, Row, Col } from "antd";
-const SurveyHeader = ({ getStatusFilterUpdates, getAccountFilterUpdates }) => {
+const SurveyHeader = ({
+  getStatusFilterUpdates,
+  getAccountFilterUpdates,
+  prjData,
+}) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("all");
   const [checkedList, setCheckedList] = useState([]);
@@ -18,11 +22,12 @@ const SurveyHeader = ({ getStatusFilterUpdates, getAccountFilterUpdates }) => {
   const onChange = (event) => {
     setValue(event.target.value);
     getStatusFilterUpdates(event.target.value);
-    setOpen(false);
+    onClose();
   };
   const onChangeCheckbox = (checkedValues) => {
     setCheckedList(checkedValues);
     getAccountFilterUpdates(checkedValues);
+    onClose();
   };
   const radioOptions = [
     { label: i18n.t("surveyList.all"), value: "all" },
@@ -30,10 +35,9 @@ const SurveyHeader = ({ getStatusFilterUpdates, getAccountFilterUpdates }) => {
     { label: i18n.t("surveyList.publish"), value: "publish" },
     { label: i18n.t("surveyList.overdue"), value: "overdue" },
   ];
-  const checkboxOptions = [
-    { label: "Rubic", value: "rubic" },
-    { label: "Liquidware", value: "liquidware" },
-  ];
+  const checkboxOptions = prjData.map((item) => {
+    return { label: item?.name, value: item?.name };
+  });
   return (
     <div className="survey-header-container">
       <h3 className="survey-heading">{i18n.t("surveyList.surveys")}</h3>
@@ -108,4 +112,5 @@ export default SurveyHeader;
 SurveyHeader.propTypes = {
   getStatusFilterUpdates: PropTypes.func.isRequired,
   getAccountFilterUpdates: PropTypes.func.isRequired,
+  prjData: PropTypes.array.isRequired,
 };
