@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 	"time"
 )
@@ -320,6 +319,7 @@ func CloneSurvey(w http.ResponseWriter, r *http.Request) {
 		SurveyFormatID: existingSurvey.Survey.SurveyFormatID,
 		DeadLine:       deadline,
 		SurveyDates:    surveyDatesStr,
+		CustomerEmail:  clientEmail,
 	}
 
 	surveyID, err := models.CreateSurvey(&survey)
@@ -328,46 +328,20 @@ func CloneSurvey(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	questionIDs, userIDs := existingSurvey.GetAllQuestionAndUserIDs()
-	var userFeedbacksData []*schema.UserFeedback
-	var surveyAnswersData []*schema.SurveyAnswers
-	for _, userID := range userIDs {
-		userFeedback := &schema.UserFeedback{
-			UserID:   userID,
-			SurveyID: surveyID,
-		}
-		userFeedbacks, err := models.UserFeedbackCreate(userFeedback)
-		if err != nil {
-			http.Error(w, "Failed to store User feedback in the database", http.StatusInternalServerError)
-			return
-		}
-		userFeedbacksData = append(userFeedbacksData, userFeedbacks)
-	}
-
-	for _, questionID := range questionIDs {
-		surveyAnswer := &schema.SurveyAnswers{
-			QuestionID: questionID,
-			SurveyID:   surveyID,
-		}
-		surveyAnswers, err := models.SurveyAnswersCreate(surveyAnswer)
-		if err != nil {
-			http.Error(w, "Failed to survey answers in the database", http.StatusInternalServerError)
-			return
-		}
-		surveyAnswersData = append(surveyAnswersData, surveyAnswers)
-	}
-	surveyIDString := fmt.Sprintf("%d", surveyID)
-	emailData := u.EmailData{
-		Name:     userDetails.Name,
-		SurveyID: os.Getenv("EMAIL_BASE_URL") + surveyIDString,
-	}
-	emailRecipient := u.EmailRecipient{
-		To:      []string{userDetails.Email},
-		Subject: "Survey Mail",
-	}
-	templateName := "email_template"
-
-	err = u.SendMail(templateName, emailData, emailRecipient)
+	// var userFeedbacksData []*schema.UserFeedback
+	// var surveyAnswersData []*schema.SurveyAnswers
+	userFeedbacksData, err := models.CreateAndStoreUserFeedback(userIDs, surveyID)
 	if err != nil {
+		http.Error(w, "Failed to store User feedback in the database", http.StatusInternalServerError)
+		return
+	}
+
+	surveyAnswersData, err := models.CreateAndStoreSurveyAnswers(questionIDs, surveyID)
+	if err != nil {
+		http.Error(w, "Failed to survey answers in the database", http.StatusInternalServerError)
+		return
+	}
+	if err := models.SendSurveyMail(userDetails, surveyID); err != nil {
 		logger.Log.Printf("Failed to send email for user with ID %d: %v\n", userDetails.ID, err)
 	}
 	resp := u.Message(true, constants.SUCCESS)

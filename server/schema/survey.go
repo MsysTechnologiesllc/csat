@@ -23,4 +23,6 @@ type Survey struct {
 	SurveyFrequencyDays uint            `gorm:"null" json:"survey_frequency_days"`
 	DeadLine            time.Time       `gorm:"type:timestamptz" json:"dead_line"`
 	SurveyDates         pq.StringArray  `gorm:"type:timestampz[]" json:"survey_dates"`
+	CompletedDates      pq.StringArray  `gorm:"type:timestampz[]" json:"completed_dates"`
+	CustomerEmail       string          `gorm:"null" json:"costomer_email"`
 }
