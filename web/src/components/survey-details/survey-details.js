@@ -18,7 +18,9 @@ export const SurveyDetails = () => {
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    const breadItems = [{ title: "Surveys", onClick: handleBreadCrumb }];
+    const breadItems = [
+      { title: i18n.t("surveyList.surveys"), onClick: handleBreadCrumb },
+    ];
     new GetService().getSurveyDetails(survey_id, (result) => {
       if (result?.data?.data) {
         setSurveyDetails(result?.data?.data);
@@ -82,12 +84,12 @@ export const SurveyDetails = () => {
             percent={(4.2 / 5) * 100}
             format={() => 4.2}
           />
-          <p className="score">Score</p>
+          <p className="score">{i18n.t("surveyDetails.score")}</p>
         </Col>
         <Col xs={11} md={14} xl={5} className="avg-time-container">
           <MdTimer className="time-icon" />
-          <p className="hrs">4.2 Hrs</p>
-          <p className="avg-time">Average Response Time</p>
+          <p className="hrs">4.2 {i18n.t("surveyDetails.hrs")}</p>
+          <p className="avg-time">{i18n.t("surveyDetails.avgTime")}</p>
         </Col>
       </Row>
       <NavTabs tabItems={items} defaultOpenTabKey="" />

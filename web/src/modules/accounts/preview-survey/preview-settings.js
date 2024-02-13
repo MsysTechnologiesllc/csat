@@ -71,7 +71,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
             onChange={handleChange}
             maxTagCount="responsive"
             size="medium"
-            style={{ width: "100%" }}
+            className="date-picker"
             showTime
           />
         </Form.Item>

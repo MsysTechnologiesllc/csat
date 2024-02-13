@@ -27,7 +27,9 @@ export const PreviewSurvey = () => {
     });
   };
   useEffect(() => {
-    let breadcrumbItems = [{ title: "Accounts", onClick: handleBreadcrumb }];
+    let breadcrumbItems = [
+      { title: i18n.t("sidebar.accounts"), onClick: handleBreadcrumb },
+    ];
     new GetService().getPreviewSurvey(1, (result) => {
       if (result?.data?.data) {
         setSurveyDetails(result?.data?.data);
