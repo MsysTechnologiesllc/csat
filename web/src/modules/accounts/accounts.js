@@ -52,7 +52,7 @@ export const Accounts = () => {
               account.account_projects[0].Users.length > 0
                 ? account.account_projects[0].Users
                 : account.account_projects[1].Users.filter(
-                    (each) => each.role === "deliveryHead"
+                    (each) => each.role === "deliveryHead",
                   );
             return (
               <Col xs={24} md={12} lg={8} xxl={6} key={account.ID}>
