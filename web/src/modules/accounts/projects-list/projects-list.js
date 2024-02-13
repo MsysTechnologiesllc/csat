@@ -27,7 +27,9 @@ export const ProjectsList = () => {
   };
 
   useEffect(() => {
-    let breadcrumbItems = [{ title: "Accounts", onClick: handleBreadCrumb }];
+    let breadcrumbItems = [
+      { title: i18n.t("sidebar.accounts"), onClick: handleBreadCrumb },
+    ];
     if (state?.accountName) {
       breadcrumbItems.push({
         title: state?.accountName,

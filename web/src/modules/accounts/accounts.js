@@ -72,33 +72,3 @@ export const Accounts = () => {
     </div>
   );
 };
-
-// const AbbreviationConverter = () => {
-//   const convertToAbbreviation = (inputString) => {
-//     // Split the input string by spaces and map each word to its first letter
-//     const abbreviation = inputString
-//       .split(" ")
-//       .map((word) => word.charAt(0).toLowerCase())
-//       .join("");
-//     return abbreviation;
-//   };
-
-//   // Example input strings
-//   const data = ["fullstack", "panlearn", "fullstack panlearn"];
-
-//   // Convert each input string to abbreviation using map
-//   const output = data.map(convertToAbbreviation);
-
-//   // Render the output array
-//   return (
-//     <div>
-//       {output.map((abbr, index) => (
-//         <p key={index}>
-//           Abbreviation for {data[index]} is: {abbr}
-//         </p>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default AbbreviationConverter;
