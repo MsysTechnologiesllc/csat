@@ -161,13 +161,16 @@ var GetAllSurveysByTenant = func(w http.ResponseWriter, r *http.Request) {
 	pageStr := queryValues.Get("page")
 	pageSizeStr := queryValues.Get("limit")
 	statusFilter := r.URL.Query().Get("status")
-	accountName := r.URL.Query()["accountName"]
 	surveyFormatIDStr := r.URL.Query().Get("survey_format_id")
 
+	accountNameParam := r.URL.Query().Get("accountName")
 	var accountNameFilter []string
-	if err := json.Unmarshal([]byte(accountName[0]), &accountNameFilter); err != nil {
-		http.Error(w, "Failed to decode 'items'", http.StatusBadRequest)
-		return
+
+	if accountNameParam != "" {
+		if err := json.Unmarshal([]byte(accountNameParam), &accountNameFilter); err != nil {
+			http.Error(w, "Failed to decode 'accountName'", http.StatusBadRequest)
+			return
+		}
 	}
 	tenantID, _ := strconv.ParseUint(tenantIDStr, 10, 64)
 	userID, _ := strconv.ParseUint(userIDStr, 10, 64)
