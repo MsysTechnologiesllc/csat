@@ -31,15 +31,28 @@ const SurveyList = ({
       publish: "/images/eye-privacy.svg",
       draft: "/images/pending.svg",
     };
-    const isOverdue = moment(record.project.end_date).isBefore(moment());
+    const isOverdue = moment(record.dead_line).isBefore(moment());
     const result =
       status !== "publish"
         ? isOverdue
           ? imageMap.overdue
           : imageMap[status]
         : imageMap.publish;
-
     return result;
+  }
+  const capitalizeFirstLetter = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+  function checkOverdue(status, record) {
+    if (record.dead_line) {
+      const isOverdue = moment(record.dead_line).isBefore(moment());
+      if (status === "pending") {
+        const result = isOverdue ? "overdue" : "pending";
+        return capitalizeFirstLetter(result);
+      } else {
+        return capitalizeFirstLetter(status);
+      }
+    }
   }
   function handleActionOnClick(status, record) {
     if (status === "publish" || "pending") {
@@ -48,9 +61,6 @@ const SurveyList = ({
       });
     }
   }
-  const capitalizeFirstLetter = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
 
   const columnsData = [
     {
@@ -65,7 +75,7 @@ const SurveyList = ({
       key: "prjName",
       ellipsis: true,
       render: (_, record) => {
-        return <p>{record.project.name}</p>;
+        return <p>{record?.project?.name}</p>;
       },
     },
     {
@@ -74,14 +84,14 @@ const SurveyList = ({
       key: "responce",
       ellipsis: true,
       render: (_, record) => {
-        return <p>{dateFormatter(record.project.end_date)}</p>;
+        return <p>{dateFormatter(record?.dead_line)}</p>;
       },
     },
     {
       title: i18n.t("surveyList.status"),
       dataIndex: "status",
       key: "status",
-      render: (text) => <>{capitalizeFirstLetter(text)}</>,
+      render: (status, record) => <>{checkOverdue(status, record)}</>,
     },
     {
       title: i18n.t("surveyList.action"),
@@ -97,7 +107,9 @@ const SurveyList = ({
               onClick={() => handleActionOnClick(status, record)}
               alt={i18n.t("surveyList.action")}
               className={
-                status === "overdue" ? "action-avatar blur" : "action-avatar"
+                checkOverdue(status, record) === "Overdue"
+                  ? "action-avatar blur"
+                  : "action-avatar"
               }
             />
           </Tooltip>
@@ -134,11 +146,15 @@ const SurveyList = ({
     setPage(value);
     getPagelimit(value);
   };
+  const modifiedTableData = data?.map((item) => ({
+    ...item,
+    key: item.ID,
+  }));
   return (
     <div className="survey-list-container">
       <Table
         size="small"
-        dataSource={data}
+        dataSource={modifiedTableData}
         locale={
           !isDataLoaded ? (
             <TableShimmer row={5} col={5} />
@@ -189,6 +205,4 @@ SurveyList.propTypes = {
   getPagelimit: PropTypes.func.isRequired,
   isDataLoaded: PropTypes.bool.isRequired,
   dataPerPage: PropTypes.number.isRequired,
-  row: PropTypes.number.isRequired,
-  col: PropTypes.number.isRequired,
 };
