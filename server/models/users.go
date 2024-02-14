@@ -322,16 +322,23 @@ func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter strin
 		Joins("JOIN accounts ON projects.account_id = accounts.id").
 		Joins("JOIN user_projects ON projects.id = user_projects.project_id").
 		Where("user_projects.user_id = ?", userID).
-		Where("accounts.tenant_id = ?", tenantID)
+		Where("accounts.tenant_id = ?", tenantID).
+		Not("surveys.status = ?", "template")
 
 	// Apply search filters
 	if statusFilter != "" {
-		query = query.Where("surveys.status = ?", statusFilter)
+		if statusFilter == "overdue" {
+			query = query.Where("surveys.status = 'pending' AND surveys.dead_line < NOW()")
+		} else if statusFilter == "pending" {
+			query = query.Where("surveys.status = 'pending' AND surveys.dead_line >= NOW()")
+		} else {
+			query = query.Where("surveys.status = ?", statusFilter)
+		}
 	}
 
 	if len(accountNameFilter) > 0 {
-        query = query.Where("projects.name IN (?)", accountNameFilter)
-    }
+		query = query.Where("projects.name IN (?)", accountNameFilter)
+	}
 
 	if surveyFormatIDFilter != 0 {
 		query = query.Where("surveys.survey_format_id = ?", surveyFormatIDFilter)
@@ -377,18 +384,18 @@ func GetUsersByProjectID(projectID uint) ([]schema.User, error) {
 func GetUserProjectsDetailsByID(userID uint) map[string]interface{} {
 	var user schema.User
 
-    if err := GetDB().Preload("Projects").Where("id = ?", userID).First(&user).Error; err != nil {
-        logger.Log.Println("Error", err)
-        return u.Message(false, constants.USER_NOT_FOUND)
+	if err := GetDB().Preload("Projects").Where("id = ?", userID).First(&user).Error; err != nil {
+		logger.Log.Println("Error", err)
+		return u.Message(false, constants.USER_NOT_FOUND)
 	}
 
-    // Extract project details
-    var projects []schema.Project
+	// Extract project details
+	var projects []schema.Project
 	projects = user.Projects
 
-    response := map[string]interface{}{
-        "projects": projects, // Include project details in the response
-    }
+	response := map[string]interface{}{
+		"projects": projects, // Include project details in the response
+	}
 	return response
 }
 

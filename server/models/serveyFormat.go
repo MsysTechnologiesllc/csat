@@ -110,10 +110,59 @@ func CreateUsersProject(db *gorm.DB, userID uint, projectID uint, role string) e
 	}
 
 	if err := db.Create(userProject).Error; err != nil {
-		return err
+		fmt.Println(err)
 	}
 
 	return nil
+}
+
+func CreateSurveyWithUserFeedbackTemplate(db *gorm.DB, surveyFormat schema.SurveyFormat, users []schema.User, mcqQuestions []schema.McqQuestions) ([]*schema.UserFeedback, []*schema.SurveyAnswers, uint, error) {
+	currentDate := time.Now()
+	deadline := currentDate.Add(time.Duration(constants.SURVEY_DEADLINE) * 24 * time.Hour)
+	survey := schema.Survey{
+		SurveyFormatID:      surveyFormat.ID,
+		Name:                surveyFormat.Title,
+		Description:         surveyFormat.Message,
+		ProjectID:           surveyFormat.ProjectID,
+		SurveyFrequencyDays: surveyFormat.SurveyFrequencyDays,
+		Status:              "template",
+		DeadLine:            deadline,
+	}
+
+	var userFeedbacksData []*schema.UserFeedback
+	var surveyQuestionsData []*schema.SurveyAnswers
+	surveyID, err := CreateSurvey(&survey)
+	if err != nil {
+		return nil, nil, 0, fmt.Errorf("failed to store survey in the database: %v", err)
+	}
+
+	// Create user feedbacks
+	for _, userDetails := range users {
+		userFeedback := &schema.UserFeedback{
+			UserID:   uint(userDetails.ID),
+			SurveyID: surveyID,
+		}
+		userFeedbacks, err := UserFeedbackCreate(userFeedback)
+		if err != nil {
+			return nil, nil, 0, fmt.Errorf("failed to store user feedback in the database: %v", err)
+		}
+		userFeedbacksData = append(userFeedbacksData, userFeedbacks)
+	}
+
+	// Create survey questions
+	for _, questionDetail := range mcqQuestions {
+		surveyQuestion := &schema.SurveyAnswers{
+			QuestionID: uint(questionDetail.ID),
+			SurveyID:   surveyID,
+		}
+		surveyQuestions, err := SurveyAnswersCreate(surveyQuestion)
+		if err != nil {
+			return nil, nil, 0, fmt.Errorf("failed to store survey question in the database: %v", err)
+		}
+		surveyQuestionsData = append(surveyQuestionsData, surveyQuestions)
+	}
+
+	return userFeedbacksData, surveyQuestionsData, surveyID, nil
 }
 
 func CreateSurveyWithUserFeedback(db *gorm.DB, surveyFormat schema.SurveyFormat, users []schema.User, mcqQuestions []schema.McqQuestions) ([]*schema.UserFeedback, []*schema.SurveyAnswers, uint, error) {
