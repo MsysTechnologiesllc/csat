@@ -186,11 +186,11 @@ var GetAllSurveysByTenant = func(w http.ResponseWriter, r *http.Request) {
 	for i := range data.Surveys {
 		survey := &data.Surveys[i]
 		currentDateTime := time.Now()
-		deadline := survey.CreatedAt.Add(time.Duration(survey.SurveyFrequencyDays) * 24 * time.Hour)
-		if survey.Status == "pending" && deadline.Before(currentDateTime) {
+		// deadline := survey.CreatedAt.Add(time.Duration(survey.SurveyFrequencyDays) * 24 * time.Hour)
+		if survey.Status == "pending" && survey.DeadLine.Before(currentDateTime) {
 			survey.Status = "overdue"
 		}
-		data.Surveys[i].DeadLine = deadline
+		// data.Surveys[i].DeadLine = deadline
 	}
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = data
