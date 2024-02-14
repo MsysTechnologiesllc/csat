@@ -10,6 +10,7 @@ export const translationEN = {
     logo: "Logo",
     draftMessage: "Draft saved successfully",
     userFeedbackSubmitted: "User feedback saved succesfully",
+    publish: "Publish",
   },
   header: {
     title: "CSAT",
@@ -29,6 +30,7 @@ export const translationEN = {
   },
   greetings: {
     greetings: "Greetings",
+    account: "Accounts",
     project: "Project",
     projectManager: "Project Manager",
     deliveryHead: "Delivery Head",
@@ -83,6 +85,7 @@ export const translationEN = {
     optionType: "Option Type",
     hide: "Hide",
     show: "Show",
+    settings: "Settings",
     score: "Score",
     hrs: "Hrs",
     avgTime: "Average Response Time",
@@ -113,5 +116,15 @@ export const translationEN = {
     notifications: "Notifications",
     manager: "Manager",
     footerText: "© 2022 MSys Technologies",
+  },
+  projects: {
+    daysLeft: "Only {{days}} Days left",
+  },
+  accounts: {
+    view: "VIEW",
+    sendClient: "Send to Client",
+    surveys: "Surveys.",
+    description:
+      "Only projects for which the surveys are pending for this month are displayed. To view all surveys, please go to",
   },
 };

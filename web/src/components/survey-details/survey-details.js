@@ -18,8 +18,9 @@ export const SurveyDetails = () => {
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    const breadItems = [{ title: "Surveys", onClick: handleBreadCrumb }];
-
+    const breadItems = [
+      { title: i18n.t("surveyList.surveys"), onClick: handleBreadCrumb },
+    ];
     new GetService().getSurveyDetails(survey_id, (result) => {
       if (result?.data?.data) {
         setSurveyDetails(result?.data?.data);
