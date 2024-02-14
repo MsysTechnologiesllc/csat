@@ -39,4 +39,10 @@ export class GetService extends BaseService {
       callback,
     );
   }
+  getSurveyProjectsFilter(userid, callback) {
+    return this.get(
+      `http://172.30.44.77:8000/csat/rest/api/user-projects?user_id=${userid}`,
+      callback,
+    );
+  }
 }
