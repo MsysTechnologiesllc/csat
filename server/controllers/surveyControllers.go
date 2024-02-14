@@ -293,7 +293,7 @@ func CloneSurvey(w http.ResponseWriter, r *http.Request) {
 
 	surveyId, ok1 := requestData["survey_id"].(float64)
 	surveyDates, ok2 := requestData["survey_dates"].([]interface{})
-	clientEmailStrngs, ok3 := requestData["client_emails"].([]interface{})
+	clientEmailStrngs, ok3 := requestData["client_email"].([]interface{})
 
 	if !ok1 || !ok2 || !ok3 || len(clientEmailStrngs) == 0 {
 		http.Error(w, "Invalid request parameters", http.StatusBadRequest)
