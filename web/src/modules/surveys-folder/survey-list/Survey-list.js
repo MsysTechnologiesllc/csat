@@ -135,12 +135,12 @@ const SurveyList = ({
       <Table
         locale={
           !isDataLoaded ? (
-            <TableShimmer row={3} col={3} />
+            <TableShimmer row={5} col={5} />
           ) : (
             isDataLoaded && totalData === 0 && customLocale
           )
         }
-        loading={!isDataLoaded ? <TableShimmer row={3} col={3} /> : false}
+        loading={!isDataLoaded ? <TableShimmer row={5} col={5} /> : false}
         size="small"
         dataSource={modifiedTableData}
         columns={columnsData}
