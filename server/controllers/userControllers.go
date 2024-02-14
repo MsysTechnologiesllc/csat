@@ -218,3 +218,39 @@ var GetUserProjectDetails = func(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
+var CreateClient = func(w http.ResponseWriter, r *http.Request) {
+	logger.Log.Println("Create client - Controller")
+	var requestData struct {
+		SurveyID uint   `json:"survey_id"`
+		Name     string `json:"name"`
+		Email    string `json:"email"`
+	}
+	db := models.GetDB()
+	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+	if requestData.SurveyID == 0 || requestData.Name == "" || requestData.Email == "" {
+        http.Error(w, "Survey ID, Name, and Email are required fields", http.StatusBadRequest)
+        return
+    }
+	surveyData, err := models.GetSurvey(uint(requestData.SurveyID))
+	if err != nil {
+		u.Respond(w, u.Message(false, constants.INVALID_SURVEYID))
+		return
+	}
+	user, err := models.CreateUser(db, requestData.Name, requestData.Email, "client", surveyData.SurveyFormat.AccountID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = models.CreateUsersProject(db, user.ID, surveyData.Survey.ID, user.Role)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	resp := u.Message(true, constants.SUCCESS)
+	resp[constants.DATA] = user
+	u.Respond(w, resp)
+}

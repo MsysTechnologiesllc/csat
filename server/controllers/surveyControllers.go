@@ -350,3 +350,23 @@ func CloneSurvey(w http.ResponseWriter, r *http.Request) {
 	resp["surveyAnswers"] = surveyAnswersData
 	u.Respond(w, resp)
 }
+
+var GetSurveyFormatList = func(w http.ResponseWriter, r *http.Request) {
+	logger.Log.Println("Logging from Controller")
+
+	projectIDStr := r.URL.Query().Get("project_id")
+	if projectIDStr == "" {
+		http.Error(w, "Project ID is required", http.StatusBadRequest)
+		return
+	}
+	projectID, err := strconv.ParseUint(projectIDStr, 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid Project ID", http.StatusBadRequest)
+		return
+	}
+
+	data, _ := models.GetSurveyFormatListFromDB(uint(projectID))
+	resp := u.Message(true, constants.SUCCESS)
+	resp[constants.DATA] = data
+	u.Respond(w, resp)
+}
