@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"sort"
 
 	"github.com/lib/pq"
 )
@@ -49,7 +50,7 @@ type UpdateAnswerRequest struct {
 func GetSurvey(id uint) (*SurveyDetails, error) {
 	var surveyDetails SurveyDetails
 
-	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("ID = ?", id).Find(&surveyDetails.Survey).Error; err != nil {
+	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("ID = ?", id).Not("surveys.status = ?", "template").Find(&surveyDetails.Survey).Error; err != nil {
 		logger.Log.Println("Error fetching survey details:", err)
 		return nil, err
 	}
@@ -344,6 +345,7 @@ func CreateAndStoreUserFeedback(userIDs []uint, surveyID uint) ([]*schema.UserFe
 func CreateAndStoreSurveyAnswers(questionIDs []uint, surveyID uint) ([]*schema.SurveyAnswers, error) {
 	var surveyAnswersData []*schema.SurveyAnswers
 
+	sort.Slice(questionIDs, func(i, j int) bool { return questionIDs[i] < questionIDs[j] })
 	for _, questionID := range questionIDs {
 		surveyAnswer := &schema.SurveyAnswers{
 			QuestionID: questionID,
@@ -362,7 +364,12 @@ func CreateAndStoreSurveyAnswers(questionIDs []uint, surveyID uint) ([]*schema.S
 func GetSurveyFormatListFromDB(projectID uint) (*[]schema.SurveyFormat, error) {
 	var surveyFormats []schema.SurveyFormat
 
-	if err := GetDB().Preload("Surveys").Preload("McqQuestions").Where("project_id = ?", projectID).Find(&surveyFormats).Error; err != nil {
+	if err := GetDB().Preload("Surveys", "Status = ?", "template").Preload("Surveys.UserFeedback").
+		Preload("Surveys.UserFeedback.User").
+		Preload("Surveys.SurveyAnswers").
+		Preload("Surveys.SurveyAnswers.McqQuestions").
+		Preload("McqQuestions").
+		Where("project_id = ?", projectID).Find(&surveyFormats).Error; err != nil {
 		logger.Log.Println("Error fetching survey format list:", err)
 		return nil, err
 	}
