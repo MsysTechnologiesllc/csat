@@ -17,13 +17,13 @@ const SurveyList = ({
   const navigate = useNavigate();
   const [page, setPage] = useState(dataPerPage);
   const [current, setCurrent] = useState(1);
-  const getRowClassName = (record, index) => {
+  const getRowClassName = (index) => {
     return index % 2 === 0 ? "even-row" : "odd-row";
   };
   function dateFormatter(value) {
     return moment(value).format("DD MMM YYYY, hh:mm A");
   }
-  function actionSvgChanger(status, record) {
+  function actionSvgChanger(status) {
     const imageMap = {
       completed: "/images/eye-privacy.svg",
       pending: "/images/pending.svg",
@@ -31,29 +31,11 @@ const SurveyList = ({
       publish: "/images/eye-privacy.svg",
       draft: "/images/pending.svg",
     };
-    const isOverdue = moment(record.dead_line).isBefore(moment());
-    const result =
-      status !== "publish"
-        ? isOverdue
-          ? imageMap.overdue
-          : imageMap[status]
-        : imageMap.publish;
-    return result;
+    return imageMap[status];
   }
   const capitalizeFirstLetter = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
-  function checkOverdue(status, record) {
-    if (record.dead_line) {
-      const isOverdue = moment(record.dead_line).isBefore(moment());
-      if (status === "pending") {
-        const result = isOverdue ? "overdue" : "pending";
-        return capitalizeFirstLetter(result);
-      } else {
-        return capitalizeFirstLetter(status);
-      }
-    }
-  }
   function handleActionOnClick(status, record) {
     if (status === "publish" || "pending") {
       navigate(`/surveys/surveyDetails/${record.ID}`, {
@@ -91,7 +73,7 @@ const SurveyList = ({
       title: i18n.t("surveyList.status"),
       dataIndex: "status",
       key: "status",
-      render: (status, record) => <>{checkOverdue(status, record)}</>,
+      render: (status) => <>{capitalizeFirstLetter(status)}</>,
     },
     {
       title: i18n.t("surveyList.action"),
@@ -107,9 +89,7 @@ const SurveyList = ({
               onClick={() => handleActionOnClick(status, record)}
               alt={i18n.t("surveyList.action")}
               className={
-                checkOverdue(status, record) === "Overdue"
-                  ? "action-avatar blur"
-                  : "action-avatar"
+                status === "overdue" ? "action-avatar blur" : "action-avatar"
               }
             />
           </Tooltip>
@@ -153,15 +133,16 @@ const SurveyList = ({
   return (
     <div className="survey-list-container">
       <Table
-        size="small"
-        dataSource={modifiedTableData}
         locale={
           !isDataLoaded ? (
-            <TableShimmer row={5} col={5} />
+            <TableShimmer row={3} col={3} />
           ) : (
-            totalData === 0 && customLocale
+            isDataLoaded && totalData === 0 && customLocale
           )
         }
+        loading={!isDataLoaded ? <TableShimmer row={3} col={3} /> : false}
+        size="small"
+        dataSource={modifiedTableData}
         columns={columnsData}
         pagination={false}
         rowKey="key"
@@ -182,7 +163,7 @@ const SurveyList = ({
           pageSize={page}
           current={current}
           total={totalData}
-          pageSizeOptions={pageSizeOptions.map((size) => `${size.value}`)}
+          pageSizeOptions={pageSizeOptions?.map((size) => `${size.value}`)}
           showTotal={(total, range) => `${range[0]}-${range[1]} of ${total}`}
           simple={true}
           showLessItems={true}

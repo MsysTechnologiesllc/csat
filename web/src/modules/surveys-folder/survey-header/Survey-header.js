@@ -35,7 +35,7 @@ const SurveyHeader = ({
     { label: i18n.t("surveyList.publish"), value: "publish" },
     { label: i18n.t("surveyList.overdue"), value: "overdue" },
   ];
-  const checkboxOptions = prjData.map((item) => {
+  const checkboxOptions = prjData?.map((item) => {
     return { label: item?.name, value: item?.name };
   });
   return (
@@ -75,7 +75,7 @@ const SurveyHeader = ({
             </h5>
             <Radio.Group onChange={onChange} value={value}>
               <Row>
-                {radioOptions.map((option) => (
+                {radioOptions?.map((option) => (
                   <Col span={24} key={option.value}>
                     <Radio className="radio-text" value={option.value}>
                       {option.label}
@@ -91,7 +91,7 @@ const SurveyHeader = ({
             </h5>
             <Checkbox.Group onChange={onChangeCheckbox} value={checkedList}>
               <Row>
-                {checkboxOptions.map((option) => (
+                {checkboxOptions?.map((option) => (
                   <Col span={24} key={option.value}>
                     <Checkbox className="checkbox-text" value={option.value}>
                       {option.label}
