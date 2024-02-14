@@ -21,7 +21,10 @@ function GreetingsPage() {
   }, [survey_id]);
   const getStarted = (id) => {
     navigate(`/survey/${id}`, {
-      state: { surveyDetails: surveyDetails },
+      state: {
+        surveyDetails: surveyDetails,
+        status: surveyDetails?.Survey?.status === "publish" ? true : false,
+      },
     });
   };
   return (

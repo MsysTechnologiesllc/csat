@@ -37,6 +37,13 @@ export const MainLayout = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const navigate = useNavigate();
 
+  const handlesidebar = (evt) => {
+    if (evt.key === "/surveys" || evt.key === "/accounts") {
+      navigate(evt.key);
+      setShowSidebar(false);
+    }
+  };
+
   useEffect(() => {
     if (!showSidebar) {
       document.body.style.overflow = "auto";
@@ -60,10 +67,7 @@ export const MainLayout = () => {
           <SideBar
             defaultSelectedItem={["/dashboard"]}
             menuItems={menuItems}
-            onClickCallback={(evt) => {
-              navigate(evt.key);
-              setShowSidebar(false);
-            }}
+            onClickCallback={(evt) => handlesidebar(evt)}
             showFooter
             showLogo
             selectedKeys={[location.pathname]}

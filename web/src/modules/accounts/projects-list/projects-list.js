@@ -19,6 +19,7 @@ export const ProjectsList = () => {
         accountName: state?.accountName,
         accountId: accountId,
         projectsList: state?.projectsList,
+        status: true,
       },
     });
   };

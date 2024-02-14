@@ -39,7 +39,7 @@ const SurveyList = ({
   function handleActionOnClick(status, record) {
     if (status === "publish" || "pending") {
       navigate(`/surveys/surveyDetails/${record.ID}`, {
-        state: { survey_id: record.ID },
+        state: { survey_id: record.ID, status: true },
       });
     }
   }
@@ -133,14 +133,8 @@ const SurveyList = ({
   return (
     <div className="survey-list-container">
       <Table
-        locale={
-          !isDataLoaded ? (
-            <TableShimmer row={5} col={5} />
-          ) : (
-            isDataLoaded && totalData === 0 && customLocale
-          )
-        }
-        loading={!isDataLoaded ? <TableShimmer row={5} col={5} /> : false}
+        locale={isDataLoaded && data.lenght > 0 ? null : customLocale}
+        loading={isDataLoaded === false && <TableShimmer row={5} col={5} />}
         size="small"
         dataSource={modifiedTableData}
         columns={columnsData}

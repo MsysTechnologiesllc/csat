@@ -46,7 +46,6 @@ const SurveyHome = () => {
           }
         },
       );
-      setIsDataLoaded(false);
     }
   }, [pageNumber, dataPerPage, filterStatus, filterAccounts]);
 

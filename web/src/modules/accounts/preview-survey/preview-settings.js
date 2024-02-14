@@ -76,7 +76,14 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
           />
         </Form.Item>
         <div>
-          <Button htmlType="submit">{i18n.t("accounts.sendClient")}</Button>
+          <Button
+            htmlType="submit"
+            disabled={
+              selectedClient === "" || !selectedDates.length ? true : false
+            }
+          >
+            {i18n.t("accounts.sendClient")}
+          </Button>
         </div>
       </Form>
       {notify && (
