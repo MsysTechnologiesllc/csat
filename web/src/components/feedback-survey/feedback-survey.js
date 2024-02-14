@@ -106,6 +106,7 @@ export const FeedBackSurvey = () => {
             state: {
               surveyDetails: surveyDetails,
               questionsData: questionsData,
+              status: state?.status,
             },
           });
         }
@@ -115,6 +116,7 @@ export const FeedBackSurvey = () => {
         state: {
           surveyDetails: surveyDetails,
           questionsData: questionsData,
+          status: state?.status,
         },
       });
     }

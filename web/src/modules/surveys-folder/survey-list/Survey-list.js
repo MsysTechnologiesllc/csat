@@ -57,7 +57,7 @@ const SurveyList = ({
   function handleActionOnClick(status, record) {
     if (status === "publish" || "pending") {
       navigate(`/surveys/surveyDetails/${record.ID}`, {
-        state: { survey_id: record.ID },
+        state: { survey_id: record.ID, status: true },
       });
     }
   }

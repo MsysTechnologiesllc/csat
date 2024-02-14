@@ -25,6 +25,7 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
   const [save, setSave] = useState(false);
   const { state } = useLocation();
   const [surveyStatus, setSurveyStatus] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
   useEffect(() => {
     new GetService().getSurveyDetails(
       surveyId ? surveyId : state?.surveyDetails?.Survey?.ID,
@@ -66,7 +67,7 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
   const handleBack = () => {
     setNotify("");
     navigate(`/survey/${state?.surveyDetails?.Survey.ID}`, {
-      state: { surveyDetails: state?.surveyDetails },
+      state: { surveyDetails: state?.surveyDetails, status: state?.status },
     });
   };
   const onFinish = (values) => {
@@ -104,7 +105,13 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
       }
     });
   };
+
+  const handleDisable = () => {
+    setIsDisabled(true);
+  };
+
   const handleSubmit = () => {
+    handleDisable();
     const payload = {
       survey_id: state?.surveyDetails?.Survey?.ID,
       survey_answers: state?.questionsData,
@@ -181,6 +188,7 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
                   rows={4}
                   className="text-area"
                   placeholder={i18n.t("placeholder.message")}
+                  disabled={state?.status}
                 />
               </Form.Item>
             </Col>
@@ -191,6 +199,7 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
                   rows={4}
                   className="text-area"
                   placeholder={i18n.t("placeholder.message")}
+                  disabled={state?.status}
                 />
               </Form.Item>
             </Col>
@@ -233,7 +242,7 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
       </Col>
       <div className="btn-container">
         <Button type="text" className="cancel-button" onClick={handleBack}>
-          <GoArrowLeft className="arrow-icon" />{" "}
+          <GoArrowLeft className="arrow-icon" />
           <span> {i18n.t("button.back")}</span>
         </Button>
         {surveyStatus !== "publish" && (
@@ -244,7 +253,10 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
             <Button
               type="primary"
               onClick={handleSubmit}
-              className="active-button"
+              className={
+                isDisabled ? "active-button disabled-button" : "active-button"
+              }
+              disabled={isDisabled}
             >
               {i18n.t("button.submit")}
             </Button>
