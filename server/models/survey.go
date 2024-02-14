@@ -196,6 +196,10 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 		if !ok {
 			return nil, fmt.Errorf("missing 'answer' field")
 		}
+		comment, ok := data["comment"].(string)
+		if !ok {
+			comment = ""
+		}
 
 		// Check if the answer is a number, string, or an array
 		switch answer := answer.(type) {
@@ -224,7 +228,7 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 
 		// Update the survey answer
 		var surveyAnswer SurveyAnswers
-		if err := tx.Model(&surveyAnswer).Where("ID = ?", data["ID"]).Updates(map[string]interface{}{"answer": answerArray}).Scan(&surveyAnswer).Error; err != nil {
+		if err := tx.Model(&surveyAnswer).Where("ID = ?", data["ID"]).Updates(map[string]interface{}{"answer": answerArray, "comment": comment}).Scan(&surveyAnswer).Error; err != nil {
 			tx.Rollback()
 			fmt.Println(err)
 			return nil, err
@@ -254,8 +258,6 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 			for _, user := range users {
 				// Check if user role is not "user" and not "client"
 				if user.Role != "user" && user.Role != "client" {
-					fmt.Println(user.Role)
-					fmt.Println(user.Email)
 					surveyIDString := fmt.Sprintf("%d", surveyID)
 					emailData := utils.EmailData{
 						Name:        user.Name,
@@ -274,7 +276,6 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 						tx.Rollback()
 						return nil, fmt.Errorf("Failed to send email for user with ID %d: %v", user.ID, err)
 					}
-					fmt.Println("Mailsent")
 				}
 			}
 		}

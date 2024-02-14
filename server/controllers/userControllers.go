@@ -231,9 +231,9 @@ var CreateClient = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if requestData.SurveyID == 0 || requestData.Name == "" || requestData.Email == "" {
-        http.Error(w, "Survey ID, Name, and Email are required fields", http.StatusBadRequest)
-        return
-    }
+		http.Error(w, "Survey ID, Name, and Email are required fields", http.StatusBadRequest)
+		return
+	}
 	surveyData, err := models.GetSurvey(uint(requestData.SurveyID))
 	if err != nil {
 		u.Respond(w, u.Message(false, constants.INVALID_SURVEYID))
@@ -245,9 +245,18 @@ var CreateClient = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = models.CreateUsersProject(db, user.ID, surveyData.Survey.ID, user.Role)
+	err = models.CreateUsersProject(db, user.ID, surveyData.Survey.ProjectID, user.Role)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	userFeedback := &schema.UserFeedback{
+		UserID:   user.ID,
+		SurveyID: requestData.SurveyID,
+	}
+	_, err = models.UserFeedbackCreate(userFeedback)
+	if err != nil {
+		http.Error(w, "Failed to store survey in the database", http.StatusInternalServerError)
 		return
 	}
 	resp := u.Message(true, constants.SUCCESS)
