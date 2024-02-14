@@ -12,6 +12,7 @@ const (
 	EMAIL_NOT_FOUND     = "Email address not found"
 	INVALID_CREDENTIALS = "Invalid login credentials. Please try again"
 	INVALID_USERID      = "Invalid UserID"
+	INVALID_SURVEYID      = "Invalid SurveyID"
 	USER_NOT_FOUND      = "User not found or unable to fetch details"
 	ACCOUNT_NOT_FOUND   = "Account not found for this user"
 	TENANT_NOT_FOUND    = "Tenant not found for this user"
