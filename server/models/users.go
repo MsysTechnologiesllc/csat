@@ -328,6 +328,8 @@ func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter strin
 	if statusFilter != "" {
 		if statusFilter == "overdue" {
 			query = query.Where("surveys.status = 'pending' AND surveys.dead_line < NOW()")
+		}else if statusFilter == "pending" {
+			query = query.Where("surveys.status = 'pending' AND surveys.dead_line >= NOW()")
 		} else {
 			query = query.Where("surveys.status = ?", statusFilter)
 		}
