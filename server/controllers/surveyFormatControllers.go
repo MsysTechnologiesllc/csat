@@ -206,40 +206,52 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 	var userFeedbacksData []*schema.UserFeedback
 	var surveyQuestionsData []*schema.SurveyAnswers
 	var surveyID uint
-	linkURL := os.Getenv("EMAIL_BASE_URL")
-	//Sending mail
-	for _, user := range users {
-		if user.Role == "client" {
-			userFeedbacks, surveyQuestions, surveyId, err := models.CreateSurveyWithUserFeedback(db, surveyFormat, users, mcqQuestions)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			userFeedbacksData = userFeedbacks
-			surveyQuestionsData = surveyQuestions
-			surveyID := strconv.Itoa(int(surveyId))
 
-			emailData := u.EmailData{
-				Name:        user.Name,
-				ProjectName: project.Name,
-				SurveyID:    linkURL + surveyID,
-			}
-			emailRecipient := u.EmailRecipient{
-				To:      []string{user.Email},
-				Subject: "Survey Mail",
-			}
-
-			templateName := "email_template"
-
-			// Send mail using the populated emailData and emailRecipient
-			err = u.SendMail(templateName, emailData, emailRecipient)
-			if err != nil {
-				logger.Log.Printf("Failed to send email for user with ID %d: %v\n", user.ID, err)
-			}
-		}
+	userFeedbacks, surveyQuestions, surveyId, err := models.CreateSurveyWithUserFeedback(db, surveyFormat, users, mcqQuestions)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
+	userFeedbacksData = userFeedbacks
+	surveyQuestionsData = surveyQuestions
+	surveyID = surveyId
+
+	// linkURL := os.Getenv("EMAIL_BASE_URL")
+	// //Sending mail
+	// for _, user := range users {
+	// 	if user.Role == "client" {
+	// 		userFeedbacks, surveyQuestions, surveyId, err := models.CreateSurveyWithUserFeedback(db, surveyFormat, users, mcqQuestions)
+	// 		if err != nil {
+	// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 			return
+	// 		}
+	// 		userFeedbacksData = userFeedbacks
+	// 		surveyQuestionsData = surveyQuestions
+	// 		surveyID := strconv.Itoa(int(surveyId))
+
+	// 		emailData := u.EmailData{
+	// 			Name:        user.Name,
+	// 			ProjectName: project.Name,
+	// 			SurveyID:    linkURL + surveyID,
+	// 		}
+	// 		emailRecipient := u.EmailRecipient{
+	// 			To:      []string{user.Email},
+	// 			Subject: "Survey Mail",
+	// 		}
+
+	// 		templateName := "email_template"
+
+	// 		// Send mail using the populated emailData and emailRecipient
+	// 		err = u.SendMail(templateName, emailData, emailRecipient)
+	// 		if err != nil {
+	// 			logger.Log.Printf("Failed to send email for user with ID %d: %v\n", user.ID, err)
+	// 		}
+	// 	}
+	// }
+	previewURLString := fmt.Sprintf("%d", surveyID)
+	previewURL := os.Getenv("PREVIEW_URL") + previewURLString
 
 	resp := u.Message(true, constants.SUCCESS)
-	resp[constants.DATA] = map[string]interface{}{"tenant": tenant, "account": account, "project": project, "surveyFormat": surveyFormat, "surveyID": surveyID, "userFeedbacksData": userFeedbacksData, "surveyAnswersData": surveyQuestionsData}
+	resp[constants.DATA] = map[string]interface{}{"preview_url": previewURL, "tenant": tenant, "account": account, "project": project, "surveyFormat": surveyFormat, "surveyID": surveyID, "userFeedbacksData": userFeedbacksData, "surveyAnswersData": surveyQuestionsData}
 	u.Respond(w, resp)
 }

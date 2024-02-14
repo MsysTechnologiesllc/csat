@@ -5,7 +5,6 @@ import (
 	"csat/schema"
 	"csat/utils"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"math"
 	"os"
@@ -47,7 +46,7 @@ type UpdateAnswerRequest struct {
 // @Failure 404 {object} map[string]interface{} "No user found"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/survey-details [get]
-func GetSurvey(id string) (*SurveyDetails, error) {
+func GetSurvey(id uint) (*SurveyDetails, error) {
 	var surveyDetails SurveyDetails
 
 	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("ID = ?", id).Find(&surveyDetails.Survey).Error; err != nil {
@@ -140,21 +139,30 @@ func UserFeedbackCreate(userFeedback *schema.UserFeedback) (*schema.UserFeedback
 // @Failure 404 {object} map[string]interface{} "No user found"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/survey-format [get]
-func GetSurveyFormatFromDB(id uint, projectID uint) (*[]schema.SurveyFormat, error) {
-	var surveyFormat []schema.SurveyFormat
-	db := GetDB().Preload("Surveys.UserFeedback.User").Preload("Surveys.SurveyAnswers.McqQuestions").Preload("Surveys.Project").Preload("McqQuestions")
+func GetSurveyFormatFromDB(id uint, projectID uint) (*SurveyDetails, error) {
+	var surveyDetails SurveyDetails
 
-	// Combine conditions based on provided parameters
-	if id != 0 || projectID != 0 {
-		if err := db.Where("id = ? OR project_id = ?", id, projectID).Find(&surveyFormat).Error; err != nil {
-			logger.Log.Println("Error", err)
-			return nil, err
-		}
-	} else {
-		return nil, errors.New("Either id or projectID must be provided")
+	if err := GetDB().Preload("UserFeedback").
+		Preload("UserFeedback.User").
+		Preload("SurveyAnswers").
+		Preload("SurveyAnswers.McqQuestions").
+		Preload("Project").
+		Where("survey_format_id = ? OR project_id = ?", id, projectID).
+		Order("created_at ASC"). // Order by creation time in ascending order
+		First(&surveyDetails.Survey).
+		Error; err != nil {
+
+		logger.Log.Println("Error fetching survey details:", err)
+		return nil, err
 	}
 
-	return &surveyFormat, nil
+	surveyFormatID := surveyDetails.Survey.SurveyFormatID
+	if err := GetDB().Where("ID = ?", surveyFormatID).First(&surveyDetails.SurveyFormat).Error; err != nil {
+		logger.Log.Println("Error fetching survey format details:", err)
+		return nil, err
+	}
+
+	return &surveyDetails, nil
 }
 
 // @Summary Create Survey
@@ -242,7 +250,7 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 			if err != nil {
 				return nil, fmt.Errorf("invalid 'survey_status' format")
 			}
-		
+
 			for _, user := range users {
 				// Check if user role is not "user" and not "client"
 				if user.Role != "user" && user.Role != "client" {
@@ -258,9 +266,9 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 						To:      []string{user.Email},
 						Subject: "Survey Completed Mail",
 					}
-		
+
 					templateName := "email_template"
-		
+
 					// Send mail using the populated emailData and emailRecipient
 					if err := utils.SendMail(templateName, emailData, emailRecipient); err != nil {
 						tx.Rollback()
@@ -275,4 +283,77 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 	tx.Commit()
 
 	return updatedSurveyAnswers, nil
+}
+
+func (surveyDetails *SurveyDetails) GetAllQuestionAndUserIDs() (questionIDs, userIDs []uint) {
+	// Iterate through UserFeedbacks
+	for _, feedback := range surveyDetails.Survey.UserFeedback {
+		userIDs = append(userIDs, feedback.User.ID)
+	}
+
+	// Iterate through SurveyAnswers
+	for _, answer := range surveyDetails.Survey.SurveyAnswers {
+		questionIDs = append(questionIDs, answer.McqQuestions.ID)
+	}
+
+	return questionIDs, userIDs
+}
+
+func GetUserByEmail(email string) (*schema.User, error) {
+	var user schema.User
+	if err := GetDB().Preload("Projects").Where("email = ?", email).First(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func SendSurveyMail(userDetails *schema.User, surveyID uint) error {
+	surveyIDString := fmt.Sprintf("%d", surveyID)
+	emailData := utils.EmailData{
+		Name:     userDetails.Name,
+		SurveyID: os.Getenv("EMAIL_BASE_URL") + surveyIDString,
+	}
+	emailRecipient := utils.EmailRecipient{
+		To:      []string{userDetails.Email},
+		Subject: "Survey Mail",
+	}
+	templateName := "email_template"
+
+	return utils.SendMail(templateName, emailData, emailRecipient)
+}
+
+func CreateAndStoreUserFeedback(userIDs []uint, surveyID uint) ([]*schema.UserFeedback, error) {
+	var userFeedbacksData []*schema.UserFeedback
+
+	for _, userID := range userIDs {
+		userFeedback := &schema.UserFeedback{
+			UserID:   userID,
+			SurveyID: surveyID,
+		}
+		userFeedbacks, err := UserFeedbackCreate(userFeedback)
+		if err != nil {
+			return nil, err
+		}
+		userFeedbacksData = append(userFeedbacksData, userFeedbacks)
+	}
+
+	return userFeedbacksData, nil
+}
+
+func CreateAndStoreSurveyAnswers(questionIDs []uint, surveyID uint) ([]*schema.SurveyAnswers, error) {
+	var surveyAnswersData []*schema.SurveyAnswers
+
+	for _, questionID := range questionIDs {
+		surveyAnswer := &schema.SurveyAnswers{
+			QuestionID: questionID,
+			SurveyID:   surveyID,
+		}
+		surveyAnswers, err := SurveyAnswersCreate(surveyAnswer)
+		if err != nil {
+			return nil, err
+		}
+		surveyAnswersData = append(surveyAnswersData, surveyAnswers)
+	}
+
+	return surveyAnswersData, nil
 }

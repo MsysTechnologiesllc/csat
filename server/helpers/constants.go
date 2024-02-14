@@ -35,6 +35,7 @@ const (
 	PROJECT_ID = "project_id"
 	ID         = "id"
 	USER_ID    = "user_id"
+	TENANT_ID  = "tenant_id"
 
 	// Others
 	DATA   = "data"
@@ -49,7 +50,7 @@ const (
 
 	// user roles
 	PROJECT_MANAGER = "projectManager"
-	DELIVERY_HEAD = "deliveryHead"
+	DELIVERY_HEAD   = "deliveryHead"
 
 	SURVEY_DEADLINE = 5
 )

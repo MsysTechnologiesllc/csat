@@ -18,14 +18,18 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
+var cronJob *cron.Cron
+
 // @title CSAT Swagger documentation
 // @version 1.0
 // @CSAT APIs
 // @host localhost:8000
 // @BasePath /csat/rest
 func main() {
-	cronJob := cron.New()
-	_, err := cronJob.AddFunc("0 1 * * *", models.CronJob)
+	cronJob = cron.New()
+	_, err := cronJob.AddFunc("*/30 * * * *", func() {
+		models.SurveyCronJob(cronJob)
+	})
 	if err != nil {
 		fmt.Println("Error adding cron job:", err)
 		return

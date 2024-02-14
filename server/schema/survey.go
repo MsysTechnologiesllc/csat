@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
+	"github.com/lib/pq"
 )
 
 // Struct to rep Project
@@ -21,4 +22,7 @@ type Survey struct {
 	Project             *Project        `gorm:"ForeignKey:ProjectID" json:"project"`
 	SurveyFrequencyDays uint            `gorm:"null" json:"survey_frequency_days"`
 	DeadLine            time.Time       `gorm:"type:timestamptz" json:"dead_line"`
+	SurveyDates         pq.StringArray  `gorm:"type:timestampz[]" json:"survey_dates"`
+	CompletedDates      pq.StringArray  `gorm:"type:timestampz[]" json:"completed_dates"`
+	CustomerEmail       string          `gorm:"null" json:"costomer_email"`
 }
