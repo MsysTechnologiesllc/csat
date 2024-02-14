@@ -14,8 +14,18 @@ export const ProjectsList = () => {
   const [breadcrumbList, setBreadcrumbList] = useState([]);
 
   const handleView = (project) => {
-    navigate(`/accounts/previewSurvey/${project.ID}`, {
+    // navigate(`/accounts/previewSurvey/${project.ID}`, {
+    //   state: {
+    //     accountName: state?.accountName,
+    //     accountId: accountId,
+    //     projectsList: state?.projectsList,
+    //     status: true,
+    //   },
+    // });
+    // navigate(`/formatlist`);
+    navigate(`/formatlist`, {
       state: {
+        prjId: project?.ID,
         accountName: state?.accountName,
         accountId: accountId,
         projectsList: state?.projectsList,

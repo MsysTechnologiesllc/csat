@@ -18,6 +18,7 @@ import { SurveyDetails } from "../components/survey-details/survey-details";
 import SurveyHome from "../modules/surveys-folder/survey-home/Survey-home";
 import { PreviewSurvey } from "../modules/accounts/preview-survey/preview-survey";
 import { ProjectsList } from "../modules/accounts/projects-list/projects-list";
+import FormatList from "../modules/accounts/format-list/format-list";
 
 const AppRoutes = () => {
   const routes = [
@@ -72,6 +73,12 @@ const AppRoutes = () => {
             key="/accounts/previewSurvey/:projectId"
             path="/accounts/previewSurvey/:projectId"
             element={<PreviewSurvey />}
+            exact
+          />
+          <Route
+            key="/formatlist"
+            path="/formatlist"
+            element={<FormatList />}
             exact
           />
           <Route
