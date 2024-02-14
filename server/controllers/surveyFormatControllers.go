@@ -207,7 +207,7 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 	var surveyQuestionsData []*schema.SurveyAnswers
 	var surveyID uint
 
-	userFeedbacks, surveyQuestions, surveyId, err := models.CreateSurveyWithUserFeedback(db, surveyFormat, users, mcqQuestions)
+	userFeedbacks, surveyQuestions, surveyId, err := models.CreateSurveyWithUserFeedbackTemplate(db, surveyFormat, users, mcqQuestions)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
