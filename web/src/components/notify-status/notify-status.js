@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import "./notify-status-style.scss";
 import { STATUS_KEY, NOTIFICATION_DURATION } from "../../common/constants";
 import { CheckCircleOutlined } from "@ant-design/icons";
+import { PiWarningCircleLight } from "react-icons/pi";
 
 const NotifyStatus = ({ status, message }) => {
   const [info, setInfo] = useState(status && status);
@@ -21,6 +22,22 @@ const NotifyStatus = ({ status, message }) => {
             icon: (
               <div className="tick-container">
                 <CheckCircleOutlined className="tick" />
+              </div>
+            ),
+            className: "notify-status-container",
+            key: STATUS_KEY,
+            message: <h2 className="message-title">{message}</h2>,
+            duration: NOTIFICATION_DURATION,
+          }),
+        );
+        break;
+      case "warning":
+        setStatusAbout(
+          notification["warning"]({
+            onClose: resetStates,
+            icon: (
+              <div className="warning-container">
+                <PiWarningCircleLight className="warning" />
               </div>
             ),
             className: "notify-status-container",
