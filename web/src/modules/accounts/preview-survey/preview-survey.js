@@ -83,6 +83,12 @@ export const PreviewSurvey = () => {
         <PreviewSettings
           userFeedback={state?.surveyDetails?.Survey?.user_feedbacks}
           surveyDetails={state?.surveyDetails}
+          accountName={state?.accountName}
+          projectsList={state?.projectsList}
+          projectName={state?.projectName}
+          status={state?.status}
+          prjId={state?.prjId}
+          account_id={state?.account_id}
         />
       ),
     },

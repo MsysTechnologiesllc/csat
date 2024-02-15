@@ -1,20 +1,63 @@
 import React, { useEffect, useState } from "react";
-import { Button, DatePicker, Form } from "antd";
+import { Button, DatePicker, Form, Input, Modal, TreeSelect } from "antd";
 import PropTypes from "prop-types";
-import { plLibComponents } from "../../../context-provider/component-provider";
 import moment from "moment";
 import "./preview-survey.scss";
 import { PostService } from "../../../services/post";
 import NotifyStatus from "../../../components/notify-status/notify-status";
 import i18n from "../../../locales/i18next";
+import { useNavigate } from "react-router";
 
-export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
-  const { SelectionDropdown } = plLibComponents.components;
+export const PreviewSettings = ({
+  userFeedback,
+  surveyDetails,
+  accountName,
+  projectsList,
+  projectName,
+  status,
+  prjId,
+  account_id,
+}) => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const [dropdownOptions, setDropdownOptions] = useState([]);
   const [selectedDates, setSelectedDates] = useState([]);
-  const [selectedClient, setSelectedClient] = useState("");
+  const [selectedClient, setSelectedClient] = useState([]);
   const [notify, setNotify] = useState("");
+  const [message, setMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = (values) => {
+    const payload = {
+      survey_id: surveyDetails?.Survey?.ID,
+      name: values.newClientName,
+      email: values.email,
+    };
+    new PostService().createClient(payload, (result) => {
+      if (result?.status === 200) {
+        setIsModalOpen(false);
+        setNotify("success");
+        setMessage("Successfully added new client");
+        setTimeout(() => {
+          setNotify("");
+          navigate(`/accounts/${account_id}/projects/${prjId}/formatlist`, {
+            state: {
+              accountName: accountName,
+              projectsList: projectsList,
+              projectName: projectName,
+              status: status,
+              prjId: prjId,
+            },
+          });
+        }, 1000);
+      }
+    });
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   useEffect(() => {
     if (userFeedback.length > 0) {
       const dropdown = [];
@@ -22,7 +65,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
         if (each?.user?.role === "client") {
           dropdown.push({
             value: each?.user?.email,
-            label: each?.user?.name,
+            title: each?.user?.name,
           });
         }
         setDropdownOptions(dropdown);
@@ -38,11 +81,15 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
     new PostService().createSurvey(payload, (result) => {
       if (result?.status === 200) {
         setNotify("success");
+        setMessage("Successfully sent survey");
+        setTimeout(() => {
+          setNotify("");
+        }, 1000);
       }
     });
   };
-  const handleSelect = (value) => {
-    setSelectedClient(value);
+  const handleSelect = (values) => {
+    setSelectedClient(values);
   };
   const handleChange = (date) => {
     date.map((each) => {
@@ -57,15 +104,59 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
   return (
     <>
       <Form form={form} onFinish={handleFinish} className="settings-container">
-        <Form.Item name="clientName" className="select-dropdown">
-          <SelectionDropdown
-            dropdownPlaceholder="select client"
-            handleSelection={handleSelect}
-            dropdownOptions={dropdownOptions}
-            defaultValue={dropdownOptions[0]?.label}
+        <Form.Item className="select-dropdown">
+          <TreeSelect
+            treeData={dropdownOptions}
+            treeNodeFilterProp="title"
+            value={selectedClient}
+            allowClear="true"
+            onChange={handleSelect}
+            multiple
+            placeholder="Select clients"
           />
+          <Button type="primary" onClick={showModal}>
+            ADD
+          </Button>
+          <Modal
+            title="Add Client"
+            open={isModalOpen}
+            footer={null}
+            onCancel={handleCancel}
+          >
+            <Form
+              form={form}
+              className="add-client-container"
+              onFinish={handleOk}
+            >
+              <Form.Item
+                name="newClientName"
+                rules={[{ required: true, message: "Name field is required" }]}
+                label="Client Name"
+              >
+                <Input
+                  placeholder="Enter client name here"
+                  className="client-input"
+                />
+              </Form.Item>
+              <Form.Item
+                name="email"
+                rules={[{ required: true, message: "Email field is required" }]}
+                label="Client Email"
+              >
+                <Input
+                  placeholder="Enter client email id here"
+                  className="client-input"
+                />
+              </Form.Item>
+              <div className="btn-container">
+                <Button htmlType="submit" type="text" className="submit-btn">
+                  Submit
+                </Button>
+              </div>
+            </Form>
+          </Modal>
         </Form.Item>
-        <Form.Item name="frequencyDays" className="select-dropdown">
+        <Form.Item className="select-dropdown">
           <DatePicker
             multiple
             onChange={handleChange}
@@ -73,6 +164,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
             size="medium"
             className="date-picker"
             showTime
+            placeholder="Select dates"
           />
         </Form.Item>
         <div>
@@ -86,13 +178,17 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
           </Button>
         </div>
       </Form>
-      {notify && (
-        <NotifyStatus status={notify} message="Successfully sent survey" />
-      )}
+      {notify && <NotifyStatus status={notify} message={message} />}
     </>
   );
 };
 PreviewSettings.propTypes = {
   userFeedback: PropTypes.array.isRequired,
   surveyDetails: PropTypes.object.isRequired,
+  accountName: PropTypes.string,
+  projectsList: PropTypes.array,
+  projectName: PropTypes.string,
+  status: PropTypes.bool,
+  prjId: PropTypes.number,
+  account_id: PropTypes.number,
 };
