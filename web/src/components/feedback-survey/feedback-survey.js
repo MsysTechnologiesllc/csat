@@ -35,15 +35,14 @@ export const FeedBackSurvey = () => {
         survey_status: "draft",
         project_id: surveyDetails.Survey.project_id,
       };
-      console.log(payload, "payload");
-      // new PutService().updateSurveyDetails(payload, (result) => {
-      //   if (result?.status === 200) {
-      //     setQuestionsData([]);
-      //     setDraft("");
-      //     setNotify("success");
-      setMessage(i18n.t("common.draftMessage"));
-      //   }
-      // });
+      new PutService().updateSurveyDetails(payload, (result) => {
+        if (result?.status === 200) {
+          setQuestionsData([]);
+          setDraft("");
+          setNotify("success");
+          setMessage(i18n.t("common.draftMessage"));
+        }
+      });
     }
   }, [questionsData, draft]);
 
