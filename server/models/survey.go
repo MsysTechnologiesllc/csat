@@ -309,11 +309,12 @@ func GetUserByEmail(email string) (*schema.User, error) {
 	return &user, nil
 }
 
-func SendSurveyMail(userDetails *schema.User, surveyID uint) error {
+func SendSurveyMail(userDetails *schema.User, surveyID uint, surveyPasscode string) error {
 	surveyIDString := fmt.Sprintf("%d", surveyID)
 	emailData := utils.EmailData{
-		Name:     userDetails.Name,
-		SurveyID: os.Getenv("EMAIL_BASE_URL") + surveyIDString,
+		Name:        userDetails.Name,
+		SurveyID:    os.Getenv("EMAIL_BASE_URL") + surveyIDString,
+		ProjectName: surveyPasscode,
 	}
 	emailRecipient := utils.EmailRecipient{
 		To:      []string{userDetails.Email},

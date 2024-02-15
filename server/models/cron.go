@@ -1,9 +1,11 @@
 package models
 
 import (
+	"crypto/rand"
 	"csat/logger"
 	"csat/schema"
 	"csat/utils"
+	"encoding/hex"
 	"fmt"
 	"time"
 
@@ -116,6 +118,12 @@ func CheckAndCreateSurveys(db *gorm.DB) (uint, error) {
 				logger.Log.Println("Error parsing survey date:", err)
 				continue
 			}
+			password := make([]byte, 6)
+			_, err = rand.Read(password)
+			if err != nil {
+				panic(err.Error())
+			}
+			surveyPasscode := hex.EncodeToString(password[:])
 			if surveyDate.After(time.Now().Add(-1*time.Minute)) && surveyDate.Before(time.Now().Add(1*time.Minute)) {
 				logger.Log.Println("second cron condition done")
 				newSurvey := schema.Survey{
@@ -127,6 +135,7 @@ func CheckAndCreateSurveys(db *gorm.DB) (uint, error) {
 					SurveyFrequencyDays: survey.SurveyFrequencyDays,
 					DeadLine:            survey.DeadLine,
 					CustomerEmail:       survey.CustomerEmail,
+					Passcode:            surveyPasscode,
 				}
 				newSurveyID, err := CreateSurvey(&newSurvey)
 				if err != nil {
@@ -137,7 +146,7 @@ func CheckAndCreateSurveys(db *gorm.DB) (uint, error) {
 				if err != nil {
 					logger.Log.Println("Failed to Fetch user details", err)
 				}
-				if err := SendSurveyMail(userDetails, surveyID); err != nil {
+				if err := SendSurveyMail(userDetails, surveyID, surveyPasscode); err != nil {
 					logger.Log.Printf("Failed to send email for user with ID %d: %v\n", userDetails.ID, err)
 				}
 				surveyID = newSurveyID

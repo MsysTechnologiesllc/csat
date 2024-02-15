@@ -12,7 +12,7 @@ const (
 	EMAIL_NOT_FOUND     = "Email address not found"
 	INVALID_CREDENTIALS = "Invalid login credentials. Please try again"
 	INVALID_USERID      = "Invalid UserID"
-	INVALID_SURVEYID      = "Invalid SurveyID"
+	INVALID_SURVEYID    = "Invalid SurveyID"
 	USER_NOT_FOUND      = "User not found or unable to fetch details"
 	ACCOUNT_NOT_FOUND   = "Account not found for this user"
 	TENANT_NOT_FOUND    = "Tenant not found for this user"
@@ -20,9 +20,11 @@ const (
 	TOKEN_INVALID       = "Invalid/Malformed authentication token"
 	REQ_BODY_FAILED     = "Failed to decode JSON request body"
 	PROJECT_ID_REQUIRED = "Project Id required"
+	PASSCODE_MISMATCH   = "Passcode mismatch"
 
 	// Success Response Message
 	SUCCESS            = "Success"
+	FAILED            = "Failed"
 	REQUIREMENT_PASSED = "Requirement passed"
 	USER_CREATED       = "User account has been created"
 	LOGGED_IN          = "Logged In Successfully"
