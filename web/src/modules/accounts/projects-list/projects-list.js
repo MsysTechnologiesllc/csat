@@ -4,34 +4,28 @@ import i18n from "../../../locales/i18next";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 import "./projects-list.scss";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { NoOfDays } from "../../../utils/utils";
 
 export const ProjectsList = () => {
-  const { accountId } = useParams();
   const navigate = useNavigate();
   const { state } = useLocation();
   const [breadcrumbList, setBreadcrumbList] = useState([]);
 
   const handleView = (project) => {
-    // navigate(`/accounts/previewSurvey/${project.ID}`, {
-    //   state: {
-    //     accountName: state?.accountName,
-    //     accountId: accountId,
-    //     projectsList: state?.projectsList,
-    //     status: true,
-    //   },
-    // });
-    // navigate(`/formatlist`);
-    navigate(`/formatlist`, {
-      state: {
-        prjId: project?.ID,
-        accountName: state?.accountName,
-        accountId: accountId,
-        projectsList: state?.projectsList,
-        status: true,
+    navigate(
+      `/accounts/${state?.accountId}/projects/${project?.ID}/formatlist`,
+      {
+        state: {
+          prjId: project?.ID,
+          accountName: state?.accountName,
+          accountId: state?.accountId,
+          projectsList: state?.projectsList,
+          projectName: project?.name,
+          status: true,
+        },
       },
-    });
+    );
   };
   const handleBreadCrumb = () => {
     navigate("/accounts");

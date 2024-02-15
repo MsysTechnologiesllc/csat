@@ -5,7 +5,27 @@
     background-color: $white;
     height: 99.4vh;
     overflow: hidden;
-
+    .ant-breadcrumb,
+    .ant-breadcrumb a {
+      @include font-style($dark-black, 1.6rem, 2.4rem, 400);
+      @include media("<md") {
+        font-size: 1.2rem;
+        line-height: 1.8rem;
+      }
+    }
+    .ant-breadcrumb li {
+      cursor: pointer;
+    }
+    .ant-breadcrumb li:last-child {
+      cursor: auto;
+    }
+    .ant-breadcrumb li:last-child {
+      @include font-style($wild-red, 1.6rem, 2.4rem, 400);
+      @include media("<md") {
+        font-size: 1.2rem;
+        line-height: 1.8rem;
+      }
+    }
     .survey-heading {
         @include font-style($black, 2rem, 2.5rem, 400);
         text-align: start;

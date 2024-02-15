@@ -64,21 +64,21 @@ const AppRoutes = () => {
             exact
           />
           <Route
-            key="/accounts/projects/:accountId"
-            path="/accounts/projects/:accountId"
+            key="/accounts/:accountId/projects"
+            path="/accounts/:accountId/projects"
             element={<ProjectsList />}
             exact
           />
           <Route
-            key="/accounts/previewSurvey/:projectId"
-            path="/accounts/previewSurvey/:projectId"
-            element={<PreviewSurvey />}
+            key="/accounts/:accountId/projects/:projectId/formatlist"
+            path="/accounts/:accountId/projects/:projectId/formatlist"
+            element={<FormatList />}
             exact
           />
           <Route
-            key="/formatlist"
-            path="/formatlist"
-            element={<FormatList />}
+            key="/accounts/:accountId/projects/:projectId/formatlist/previewSurvey"
+            path="/accounts/:accountId/projects/:projectId/formatlist/previewSurvey"
+            element={<PreviewSurvey />}
             exact
           />
           <Route
