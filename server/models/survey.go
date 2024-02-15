@@ -376,3 +376,18 @@ func GetSurveyFormatListFromDB(projectID uint) (*[]schema.SurveyFormat, error) {
 
 	return &surveyFormats, nil
 }
+
+func GetSurveyForClient(id uint) (*SurveyDetails, error) {
+	var surveyDetails SurveyDetails
+
+	if err := GetDB().Where("ID = ?", id).Find(&surveyDetails.Survey).Error; err != nil {
+		logger.Log.Println("Error fetching survey details:", err)
+		return nil, err
+	}
+	surveyFormatID := surveyDetails.Survey.SurveyFormatID
+	if err := GetDB().Where("ID = ?", surveyFormatID).First(&surveyDetails.SurveyFormat).Error; err != nil {
+		logger.Log.Println("Error fetching survey format details:", err)
+		return nil, err
+	}
+	return &surveyDetails, nil
+}
