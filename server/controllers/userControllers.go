@@ -234,7 +234,7 @@ var CreateClient = func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Survey ID, Name, and Email are required fields", http.StatusBadRequest)
 		return
 	}
-	surveyData, err := models.GetSurvey(uint(requestData.SurveyID))
+	surveyData, err := models.GetSurveyForClient(uint(requestData.SurveyID))
 	if err != nil {
 		u.Respond(w, u.Message(false, constants.INVALID_SURVEYID))
 		return

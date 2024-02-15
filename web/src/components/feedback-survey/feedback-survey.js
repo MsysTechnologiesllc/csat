@@ -25,6 +25,7 @@ export const FeedBackSurvey = () => {
   const [selectedValue, setSelectedValue] = useState("");
   const [isAnswerSelected, setIsAnsweraSelected] = useState(false);
   const [draft, setDraft] = useState("");
+  const [comment, setComment] = useState("");
   useEffect(() => {
     if (draft === "draft") {
       setIsAnsweraSelected(false);
@@ -34,20 +35,18 @@ export const FeedBackSurvey = () => {
         survey_status: "draft",
         project_id: surveyDetails.Survey.project_id,
       };
-      new PutService().updateSurveyDetails(payload, (result) => {
-        if (result?.status === 200) {
-          setQuestionsData([]);
-          setDraft("");
-          setNotify("success");
-          setMessage(i18n.t("common.draftMessage"));
-        }
-      });
+      console.log(payload, "payload");
+      // new PutService().updateSurveyDetails(payload, (result) => {
+      //   if (result?.status === 200) {
+      //     setQuestionsData([]);
+      //     setDraft("");
+      //     setNotify("success");
+      setMessage(i18n.t("common.draftMessage"));
+      //   }
+      // });
     }
   }, [questionsData, draft]);
-  const handleChange = (value) => {
-    setSelectedValue(value);
-    setIsAnsweraSelected(true);
-  };
+
   const customIcons = Array.from({ length: 5 }, (_, index) => (
     <LineOutlined key={index} className="rating-icon" />
   ));
@@ -70,6 +69,7 @@ export const FeedBackSurvey = () => {
         }
         surveyAnswers.ID = ques.ID;
         surveyAnswers.answer = scaleRes;
+        surveyAnswers.comment = comment;
         setQuestionsData((prevData) => [...prevData, surveyAnswers]);
       } else if (ques.question.type === "star-rating") {
         let length = selectedValue * 2;
@@ -79,15 +79,18 @@ export const FeedBackSurvey = () => {
         }
         surveyAnswers.ID = ques.ID;
         surveyAnswers.answer = scaleRes;
+        surveyAnswers.comment = comment;
         setQuestionsData((prevData) => [...prevData, surveyAnswers]);
       } else if (ques.question.type === "textarea-feedback") {
         surveyAnswers.ID = ques.ID;
         surveyAnswers.answer = selectedValue;
+        surveyAnswers.comment = comment;
         setQuestionsData((prevData) => [...prevData, surveyAnswers]);
       } else {
         scaleRes.push({ [String.fromCharCode(97)]: selectedValue });
         surveyAnswers.ID = ques.ID;
         surveyAnswers.answer = scaleRes;
+        surveyAnswers.comment = comment;
         setQuestionsData((prevData) => [...prevData, surveyAnswers]);
       }
     }
@@ -125,6 +128,13 @@ export const FeedBackSurvey = () => {
     answersSetting(ques);
     setDraft("draft");
   };
+  const handleChange = (value) => {
+    setSelectedValue(value);
+    setIsAnsweraSelected(true);
+  };
+  const handleOnBlur = (value) => {
+    setComment(value);
+  };
   const handleSubmit = () => {
     const payload = {
       survey_id: surveyDetails.Survey.ID,
@@ -144,23 +154,28 @@ export const FeedBackSurvey = () => {
     setIsAnsweraSelected(false);
     answersSetting(ques);
     setSelectedValue("");
+    setComment("");
   };
   const prevStep = () => {
     setCurrentStep(currentStep - 1);
     setQuestionsData(questionsData.slice(0, -1));
     setSelectedValue("");
     setIsAnsweraSelected(false);
+    setComment("");
   };
   const handleCancel = () => {
     navigate(`/customer-survey/${surveyDetails?.Survey?.ID}`);
     setSelectedValue("");
+    setComment("");
     setIsAnsweraSelected(false);
   };
   const handleTextArea = (event) => {
     setText(event.target.value);
     setIsAnsweraSelected(true);
   };
-
+  const handleComment = (values) => {
+    setText(values);
+  };
   const dynamicSteps = (dynamicStepsData) => {
     const isLastStep = currentStep === dynamicStepsData?.length - 1;
     return dynamicStepsData?.map((each, index) => {
@@ -226,18 +241,19 @@ export const FeedBackSurvey = () => {
                       {i18n.t("surveyQuestions.satisfied")}
                     </span>
                   </div>
-                  {selectedValue <= 2 &&
+                  {(selectedValue <= 2 &&
                     selectedValue !== "" &&
-                    selectedValue > 0 && (
+                    selectedValue > 0) ||
+                    (each?.comment && (
                       <TextArea
                         rows={1}
                         placeholder={i18n.t("placeholder.message")}
-                        onBlur={() => handleChange(text)}
-                        onChange={(event) => handleTextArea(event)}
+                        onBlur={() => handleOnBlur(text)}
+                        onChange={(event) => handleComment(event.target.value)}
                         className="comment-text-area"
-                        // defaultValue={each?.answer && JSON.parse(each?.answer)}
+                        defaultValue={each?.comment !== "" ? each?.comment : ""}
                       />
-                    )}
+                    ))}
                 </div>
               )}
               {each.question.type === "star-rating" && (
@@ -251,18 +267,19 @@ export const FeedBackSurvey = () => {
                       each?.answer && JSON.parse(each?.answer).length / 2
                     }
                   />
-                  {selectedValue <= 2 &&
+                  {(selectedValue <= 2 &&
                     selectedValue !== "" &&
-                    selectedValue > 0 && (
+                    selectedValue > 0) ||
+                    (each?.comment && (
                       <TextArea
-                        rows={2}
+                        rows={1}
                         placeholder={i18n.t("placeholder.message")}
-                        onBlur={() => handleChange(text)}
-                        onChange={(event) => handleTextArea(event)}
+                        onBlur={() => handleOnBlur(text)}
+                        onChange={(event) => handleComment(event.target.value)}
                         className="comment-text-area"
-                        // defaultValue={each?.answer && JSON.parse(each?.answer)}
+                        defaultValue={each?.comment !== "" ? each?.comment : ""}
                       />
-                    )}
+                    ))}
                 </>
               )}
               {each.question.type === "emoji-options" && (
@@ -315,17 +332,18 @@ export const FeedBackSurvey = () => {
                       />
                     ))}
                   </Radio.Group>
-                  {(selectedValue === "low" ||
-                    selectedValue === "very-low") && (
-                    <TextArea
-                      rows={2}
-                      placeholder={i18n.t("placeholder.message")}
-                      onBlur={() => handleChange(text)}
-                      onChange={(event) => handleTextArea(event)}
-                      className="comment-text-area"
-                      // defaultValue={each?.answer && JSON.parse(each?.answer)}
-                    />
-                  )}
+                  {selectedValue === "low" ||
+                    selectedValue === "very-low" ||
+                    (each?.comment && (
+                      <TextArea
+                        rows={1}
+                        placeholder={i18n.t("placeholder.message")}
+                        onBlur={() => handleOnBlur(text)}
+                        onChange={(event) => handleComment(event.target.value)}
+                        className="comment-text-area"
+                        defaultValue={each?.comment?.length && each?.comment}
+                      />
+                    ))}
                 </>
               )}
               {each.question.type === "gauge-options" && (
@@ -358,17 +376,18 @@ export const FeedBackSurvey = () => {
                       />
                     ))}
                   </Radio.Group>
-                  {(selectedValue === "low-scale" ||
-                    selectedValue === "very-low-scale") && (
-                    <TextArea
-                      rows={2}
-                      placeholder={i18n.t("placeholder.message")}
-                      onBlur={() => handleChange(text)}
-                      onChange={(event) => handleTextArea(event)}
-                      className="comment-text-area"
-                      // defaultValue={each?.answer && JSON.parse(each?.answer)}
-                    />
-                  )}
+                  {selectedValue === "low-scale" ||
+                    selectedValue === "very-low-scale" ||
+                    (each?.comment && (
+                      <TextArea
+                        rows={1}
+                        placeholder={i18n.t("placeholder.message")}
+                        onBlur={() => handleOnBlur(text)}
+                        onChange={(event) => handleComment(event.target.value)}
+                        className="comment-text-area"
+                        defaultValue={each?.comment?.length && each?.comment}
+                      />
+                    ))}
                 </>
               )}
               {each.question.type === "textarea-feedback" && (
@@ -444,15 +463,18 @@ export const FeedBackSurvey = () => {
                           : "draft-button disabled-button"
                       }
                       disabled={
-                        (each?.answer?.length !== 0 ? false : true) &&
-                        !isAnswerSelected
+                        (each?.answer?.length === 0 ||
+                        each?.answer?.length === undefined
+                          ? true
+                          : false) && isAnswerSelected === false
+                          ? true
+                          : false
                       }
                       onClick={() => handleSaveAsDraft(each)}
                     >
                       {i18n.t("button.saveAsDraft")}
                     </Button>
                   )}
-
                   <Button
                     type="primary"
                     onClick={() => nextStep(each)}
@@ -463,8 +485,12 @@ export const FeedBackSurvey = () => {
                         : "active-button disabled-button"
                     }
                     disabled={
-                      (each?.answer?.length !== 0 ? false : true) &&
-                      !isAnswerSelected
+                      (each?.answer?.length === 0 ||
+                      each?.answer?.length === undefined
+                        ? true
+                        : false) && isAnswerSelected === false
+                        ? true
+                        : false
                     }
                   >
                     <span> {i18n.t("button.next")}</span>

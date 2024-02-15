@@ -3,47 +3,57 @@ import { plLibComponents } from "../../../context-provider/component-provider";
 import { SurveyQuestionList } from "../../../components/survey-questions-list/survey-questions-list";
 import { TeamMembersFeedBack } from "../../../components/team-members-feedback/team-members-feedback";
 import { PreviewSettings } from "./preview-settings";
-import { GetService } from "../../../services/get";
 import i18n from "../../../locales/i18next";
-import "./preview-survey.scss";
 import { useLocation, useNavigate } from "react-router";
 import { Breadcrumb } from "antd";
+import "./preview-survey.scss";
 
 export const PreviewSurvey = () => {
   const navigate = useNavigate();
   const { NavTabs } = plLibComponents.components;
-  const [surveyDetails, setSurveyDetails] = useState({});
   const [breadcrumbList, setBreadcrumbList] = useState([]);
   const { state } = useLocation();
   const handleBreadcrumb = () => {
     navigate("/accounts");
   };
   const handleProjectBreadCrumb = () => {
-    navigate(`/accounts/projects/${state?.accountId}`, {
+    navigate(`/accounts/${state?.account_id}/projects`, {
       state: {
         projectsList: state?.projectsList,
         accountName: state?.accountName,
       },
     });
   };
-  console.log(state);
+  const handleSurveyFormat = () => {
+    navigate(
+      `/accounts/${state?.account_id}/projects/${state?.prjId}/formatlist`,
+      {
+        state: {
+          accountName: state?.accountName,
+          projectsList: state?.projectsList,
+          projectName: state?.projectName,
+          status: state?.status,
+          prjId: state?.prjId,
+        },
+      },
+    );
+  };
   useEffect(() => {
     let breadcrumbItems = [
       { title: i18n.t("sidebar.accounts"), onClick: handleBreadcrumb },
     ];
-    new GetService().getPreviewSurvey(1, (result) => {
-      if (result?.data?.data) {
-        setSurveyDetails(result?.data?.data);
-        breadcrumbItems.push({
-          title: state?.accountName,
-          onClick: handleProjectBreadCrumb,
-        });
-        breadcrumbItems.push({
-          title: result?.data?.data?.Survey?.project?.name,
-        });
-      }
-      setBreadcrumbList(breadcrumbItems);
+    breadcrumbItems.push({
+      title: state?.accountName,
+      onClick: handleProjectBreadCrumb,
     });
+    breadcrumbItems.push({
+      title: state?.projectName,
+      onClick: handleSurveyFormat,
+    });
+    breadcrumbItems.push({
+      title: state?.surveyDetails?.Survey?.name,
+    });
+    setBreadcrumbList(breadcrumbItems);
   }, []);
   const items = [
     {
@@ -51,7 +61,7 @@ export const PreviewSurvey = () => {
       label: i18n.t("surveyDetails.survey"),
       children: (
         <SurveyQuestionList
-          surveyQuestionDetails={surveyDetails}
+          surveyQuestionDetails={state?.surveyDetails}
           isDisabled={false}
         />
       ),
@@ -59,15 +69,26 @@ export const PreviewSurvey = () => {
     {
       key: "2",
       label: i18n.t("surveyDetails.feedback"),
-      children: <TeamMembersFeedBack surveyId={surveyDetails?.Survey?.ID} />,
+      children: (
+        <TeamMembersFeedBack
+          surveyDetails={state?.surveyDetails}
+          status={state?.status}
+        />
+      ),
     },
     {
       key: "3",
       label: i18n.t("surveyDetails.settings"),
       children: (
         <PreviewSettings
-          userFeedback={surveyDetails?.Survey?.user_feedbacks}
-          surveyDetails={surveyDetails}
+          userFeedback={state?.surveyDetails?.Survey?.user_feedbacks}
+          surveyDetails={state?.surveyDetails}
+          accountName={state?.accountName}
+          projectsList={state?.projectsList}
+          projectName={state?.projectName}
+          status={state?.status}
+          prjId={state?.prjId}
+          account_id={state?.account_id}
         />
       ),
     },

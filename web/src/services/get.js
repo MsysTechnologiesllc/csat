@@ -45,4 +45,10 @@ export class GetService extends BaseService {
       callback,
     );
   }
+  getSurveyFormatList(project_id, callback) {
+    return this.get(
+      `http://172.30.44.77:8000/csat/rest/api/survey-format/list?project_id=${project_id}`,
+      callback,
+    );
+  }
 }

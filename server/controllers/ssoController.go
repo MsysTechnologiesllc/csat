@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"crypto/rand"
+	constants "csat/helpers"
+	"csat/logger"
 	"csat/models"
 	"csat/schema"
 	u "csat/utils"
@@ -95,8 +97,8 @@ func GoogleAuthCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// User does not exist, create a new user in the database
 		response := u.Message(false, "User does not exist. Please check with your administrator.")
-        u.Respond(w, response)
-        return
+		u.Respond(w, response)
+		return
 	}
 	response := u.Message(true, "Loggin successful")
 	response["data"] = userDetails
@@ -105,4 +107,34 @@ func GoogleAuthCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 func decodeJSON(r io.Reader, v interface{}) error {
 	return json.NewDecoder(r).Decode(v)
+}
+
+var CustomerLogin = func(w http.ResponseWriter, r *http.Request) {
+	logger.Log.Println("Customer login - Controller")
+	var requestData struct {
+		SurveyID uint   `json:"survey_id"`
+		Passcode string `json:"passcode"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+	if requestData.SurveyID == 0 || requestData.Passcode == "" {
+		http.Error(w, "Survey ID and Passcode are required fields", http.StatusBadRequest)
+		return
+	}
+	surveyData, err := models.GetSurveyForClient(uint(requestData.SurveyID))
+	if err != nil {
+		u.Respond(w, u.Message(false, constants.INVALID_SURVEYID))
+		return
+	}
+	if requestData.Passcode != surveyData.Survey.Passcode {
+		resp := u.Message(false, constants.FAILED)
+		resp[constants.DATA] = constants.PASSCODE_MISMATCH
+		u.Respond(w, resp)
+		return
+	}
+	resp := u.Message(true, constants.SUCCESS)
+	resp[constants.DATA] = constants.SUCCESS
+	u.Respond(w, resp)
 }

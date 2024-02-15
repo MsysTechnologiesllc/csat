@@ -133,7 +133,7 @@ const SurveyList = ({
   return (
     <div className="survey-list-container">
       <Table
-        locale={isDataLoaded && data.lenght > 0 ? null : customLocale}
+        locale={isDataLoaded && data.length > 0 ? null : customLocale}
         loading={isDataLoaded === false && <TableShimmer row={5} col={5} />}
         size="small"
         dataSource={modifiedTableData}

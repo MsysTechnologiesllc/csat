@@ -13,10 +13,11 @@ export const Accounts = () => {
   const [accountsList, setAccountsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const handleView = (account) => {
-    navigate(`/accounts/projects/${account.ID}`, {
+    navigate(`/accounts/${account.ID}/projects`, {
       state: {
         projectsList: account?.account_projects,
         accountName: account?.name,
+        accountId: account.ID,
       },
     });
   };

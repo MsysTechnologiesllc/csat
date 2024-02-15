@@ -309,11 +309,12 @@ func GetUserByEmail(email string) (*schema.User, error) {
 	return &user, nil
 }
 
-func SendSurveyMail(userDetails *schema.User, surveyID uint) error {
+func SendSurveyMail(userDetails *schema.User, surveyID uint, surveyPasscode string) error {
 	surveyIDString := fmt.Sprintf("%d", surveyID)
 	emailData := utils.EmailData{
-		Name:     userDetails.Name,
-		SurveyID: os.Getenv("EMAIL_BASE_URL") + surveyIDString,
+		Name:        userDetails.Name,
+		SurveyID:    os.Getenv("EMAIL_BASE_URL") + surveyIDString,
+		ProjectName: surveyPasscode,
 	}
 	emailRecipient := utils.EmailRecipient{
 		To:      []string{userDetails.Email},
@@ -375,4 +376,19 @@ func GetSurveyFormatListFromDB(projectID uint) (*[]schema.SurveyFormat, error) {
 	}
 
 	return &surveyFormats, nil
+}
+
+func GetSurveyForClient(id uint) (*SurveyDetails, error) {
+	var surveyDetails SurveyDetails
+
+	if err := GetDB().Where("ID = ?", id).Find(&surveyDetails.Survey).Error; err != nil {
+		logger.Log.Println("Error fetching survey details:", err)
+		return nil, err
+	}
+	surveyFormatID := surveyDetails.Survey.SurveyFormatID
+	if err := GetDB().Where("ID = ?", surveyFormatID).First(&surveyDetails.SurveyFormat).Error; err != nil {
+		logger.Log.Println("Error fetching survey format details:", err)
+		return nil, err
+	}
+	return &surveyDetails, nil
 }
