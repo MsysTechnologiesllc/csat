@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Breadcrumb, Table } from "antd";
+import { Breadcrumb, Table, Tooltip } from "antd";
 import { TableShimmer } from "../../../components/table-shimmer/table-shimmer";
 import i18n from "../../../locales/i18next";
 import "./format-list.scss";
@@ -53,21 +53,38 @@ const FormatList = ({}) => {
       ellipsis: true,
     },
     {
-      title: "Project Manager",
+      title: i18n.t("greetings.projectManager"),
       dataIndex: "PM_name",
       key: "PM_name",
       ellipsis: true,
     },
     {
-      title: "Deliery Head Name",
+      title: i18n.t("greetings.deliveryHeadName"),
       dataIndex: "DH_name",
       key: "DH_name",
       ellipsis: true,
     },
     {
-      title: "Survey Frequency",
+      title: i18n.t("greetings.frequency"),
       dataIndex: "survey_frequency_days",
       key: "survey_frequency_days",
+    },
+    {
+      title: i18n.t("surveyList.action"),
+      dataIndex: "status",
+      key: "status",
+      render: (status, record) => (
+        <div className="action-svg">
+          <Tooltip title={i18n.t("surveyList.viewSurvey")}>
+            <img
+              src="/images/eye-privacy.svg"
+              onClick={() => handleRowClick(record)}
+              alt={i18n.t("surveyList.action")}
+              className={"action-avatar"}
+            />
+          </Tooltip>
+        </div>
+      ),
     },
   ];
   const customLocale = {
@@ -121,9 +138,9 @@ const FormatList = ({}) => {
           scroll={{ y: 300, x: true }}
           rowClassName={getRowClassName}
           className="custom-scrollbar-table"
-          onRow={(record) => ({
-            onClick: () => handleRowClick(record),
-          })}
+          // onRow={(record) => ({
+          //   onClick: () => handleRowClick(record),
+          // })}
         />
       </div>
     </div>

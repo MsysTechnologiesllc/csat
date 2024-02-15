@@ -6,20 +6,20 @@ import "./preview-survey.scss";
 import { PostService } from "../../../services/post";
 import NotifyStatus from "../../../components/notify-status/notify-status";
 import i18n from "../../../locales/i18next";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 
 export const PreviewSettings = ({
   userFeedback,
   surveyDetails,
-  accountName,
-  projectsList,
-  projectName,
-  status,
-  prjId,
-  account_id,
+  // accountName,
+  // projectsList,
+  // projectName,
+  // status,
+  // prjId,
+  // account_id,
 }) => {
   const [form] = Form.useForm();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [dropdownOptions, setDropdownOptions] = useState([]);
   const [selectedDates, setSelectedDates] = useState([]);
   const [selectedClient, setSelectedClient] = useState([]);
@@ -37,20 +37,26 @@ export const PreviewSettings = ({
     };
     new PostService().createClient(payload, (result) => {
       if (result?.status === 200) {
+        form.resetFields();
         setIsModalOpen(false);
         setNotify("success");
         setMessage("Successfully added new client");
+        const option = {};
+        option.value = values.email;
+        option.title = values.newClientName;
+        setDropdownOptions((options) => [...options, option]);
         setTimeout(() => {
           setNotify("");
-          navigate(`/accounts/${account_id}/projects/${prjId}/formatlist`, {
-            state: {
-              accountName: accountName,
-              projectsList: projectsList,
-              projectName: projectName,
-              status: status,
-              prjId: prjId,
-            },
-          });
+
+          // navigate(`/accounts/${account_id}/projects/${prjId}/formatlist`, {
+          //   state: {
+          //     accountName: accountName,
+          //     projectsList: projectsList,
+          //     projectName: projectName,
+          //     status: status,
+          //     prjId: prjId,
+          //   },
+          // });
         }, 1000);
       }
     });
@@ -64,7 +70,6 @@ export const PreviewSettings = ({
       userFeedback?.filter((each) => {
         if (each?.user?.role === "client") {
           dropdown.push({
-            key: each?.user?.ID,
             value: each?.user?.email,
             title: each?.user?.name,
           });
@@ -81,10 +86,13 @@ export const PreviewSettings = ({
     };
     new PostService().createSurvey(payload, (result) => {
       if (result?.status === 200) {
+        setSelectedClient([]);
+        setSelectedDates([]);
         setNotify("success");
         setMessage("Successfully sent survey");
         setTimeout(() => {
           setNotify("");
+          window.location.reload();
         }, 1000);
       }
     });
@@ -113,13 +121,13 @@ export const PreviewSettings = ({
             allowClear="true"
             onChange={handleSelect}
             multiple
-            placeholder="Select clients"
+            placeholder={i18n.t("settings.selectClients")}
           />
           <Button type="primary" onClick={showModal}>
-            ADD
+            {i18n.t("settings.add")}
           </Button>
           <Modal
-            title="Add Client"
+            title={i18n.t("settings.addClient")}
             open={isModalOpen}
             footer={null}
             onCancel={handleCancel}
@@ -132,26 +140,26 @@ export const PreviewSettings = ({
               <Form.Item
                 name="newClientName"
                 rules={[{ required: true, message: "Name field is required" }]}
-                label="Client Name"
+                label={i18n.t("settings.clientName")}
               >
                 <Input
-                  placeholder="Enter client name here"
+                  placeholder={i18n.t("settings.namePlaceholder")}
                   className="client-input"
                 />
               </Form.Item>
               <Form.Item
                 name="email"
                 rules={[{ required: true, message: "Email field is required" }]}
-                label="Client Email"
+                label={i18n.t("settings.clientEmail")}
               >
                 <Input
-                  placeholder="Enter client email id here"
+                  placeholder={i18n.t("settings.emailPlaceholder")}
                   className="client-input"
                 />
               </Form.Item>
               <div className="btn-container">
                 <Button htmlType="submit" type="text" className="submit-btn">
-                  Submit
+                  {i18n.t("button.submit")}
                 </Button>
               </div>
             </Form>
@@ -165,7 +173,7 @@ export const PreviewSettings = ({
             size="medium"
             className="date-picker"
             showTime
-            placeholder="Select dates"
+            placeholder={i18n.t("settings.selectDate")}
           />
         </Form.Item>
         <div>
@@ -186,10 +194,10 @@ export const PreviewSettings = ({
 PreviewSettings.propTypes = {
   userFeedback: PropTypes.array.isRequired,
   surveyDetails: PropTypes.object.isRequired,
-  accountName: PropTypes.string,
-  projectsList: PropTypes.array,
-  projectName: PropTypes.string,
-  status: PropTypes.bool,
-  prjId: PropTypes.number,
-  account_id: PropTypes.number,
+  // accountName: PropTypes.string,
+  // projectsList: PropTypes.array,
+  // projectName: PropTypes.string,
+  // status: PropTypes.bool,
+  // prjId: PropTypes.number,
+  // account_id: PropTypes.number,
 };

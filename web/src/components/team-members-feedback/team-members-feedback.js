@@ -62,7 +62,7 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
       setUsersList(surveyDetails?.Survey?.user_feedbacks);
       if (surveyDetails?.Survey?.user_feedbacks?.length > 0) {
         const users = surveyDetails?.Survey?.user_feedbacks?.filter(
-          (user) => user.user.role === "user",
+          (user) => user.user.role === "member",
         );
         setSelectedMember(users[0]);
       }
@@ -75,7 +75,7 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
             setUsersList(result?.data?.data?.Survey?.user_feedbacks);
             if (result?.data?.data?.Survey?.user_feedbacks?.length > 0) {
               const users = result?.data?.data?.Survey?.user_feedbacks?.filter(
-                (user) => user.user.role === "user",
+                (user) => user.user.role === "member",
               );
               setSelectedMember(users[0]);
             }
@@ -239,7 +239,7 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
         <div className="cards-container">
           {usersList.map(
             (member) =>
-              member.user.role === "user" && (
+              member.user.role === "member" && (
                 <Card
                   key={member?.user?.ID}
                   onClick={() => handleMember(member)}
