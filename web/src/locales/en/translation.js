@@ -115,7 +115,7 @@ export const translationEN = {
     surveys: "Surveys",
     notifications: "Notifications",
     manager: "Manager",
-    footerText: "© 2022 MSys Technologies",
+    footerText: "© 2024 MSys Technologies",
   },
   projects: {
     daysLeft: "Only {{days}} Days left",

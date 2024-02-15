@@ -32,6 +32,7 @@
   .btn-container {
     display: none;
   }
+
   .feedback-container {
     min-height: 50vh;
     margin: auto;
@@ -55,9 +56,50 @@
     @include align-items-center;
     .select-dropdown {
       width: 70%;
+      &:nth-child(1) {
+        .ant-row {
+          min-width: 100%;
+          @include d-flex;
+          padding: auto;
+          .ant-select {
+            width: 86%;
+            @include media("<=md") {
+              width: 100%;
+            }
+          }
+          .ant-btn {
+            text-align: center;
+            background-color: $indigo;
+            @include media("<=md") {
+              width: 30%;
+              margin-top: 3rem;
+            }
+            width: 12%;
+            margin-left: 2%;
+          }
+        }
+        .ant-select-multiple .ant-select-selection-placeholder {
+          text-align: start;
+        }
+      }
       .date-picker {
         width: 100%;
       }
+    }
+  }
+}
+.btn-container {
+  .submit-btn {
+    background-color: $indigo;
+    @include font-style($white, 1.5rem, 2.6rem, 500);
+    border-radius: 0.4rem;
+    padding: 0.8rem 2.2rem;
+    @include align-items-center;
+    margin-left: auto;
+    &:hover {
+      background-color: $indigo !important;
+      color: $white !important;
+      border: 0;
     }
   }
 }

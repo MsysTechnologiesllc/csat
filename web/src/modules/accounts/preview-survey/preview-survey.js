@@ -26,6 +26,7 @@ export const PreviewSurvey = () => {
       },
     });
   };
+  console.log(state);
   useEffect(() => {
     let breadcrumbItems = [
       { title: i18n.t("sidebar.accounts"), onClick: handleBreadcrumb },
