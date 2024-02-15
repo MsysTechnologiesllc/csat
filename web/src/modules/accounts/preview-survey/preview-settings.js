@@ -64,6 +64,7 @@ export const PreviewSettings = ({
       userFeedback?.filter((each) => {
         if (each?.user?.role === "client") {
           dropdown.push({
+            key: each?.user?.ID,
             value: each?.user?.email,
             title: each?.user?.name,
           });
