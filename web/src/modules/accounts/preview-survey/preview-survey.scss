@@ -55,6 +55,31 @@
     @include align-items-center;
     .select-dropdown {
       width: 70%;
+      &:nth-child(1) {
+        .ant-row {
+          min-width: 100%;
+          @include d-flex;
+          padding: auto;
+          .ant-select {
+            width: 86%;
+            @include media("<=md") {
+              width: 100%;
+            }
+          }
+          .ant-btn {
+            text-align: center;
+            @include media("<=md") {
+              width: 30%;
+              margin-top: 3rem;
+            }
+            width: 12%;
+            margin-left: 2%;
+          }
+        }
+        .ant-select-multiple .ant-select-selection-placeholder {
+          text-align: start;
+        }
+      }
       .date-picker {
         width: 100%;
       }

@@ -94,7 +94,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
             placeholder="Select clients"
           />
           <Button type="primary" onClick={showModal}>
-            Add
+            ADD
           </Button>
           <Modal
             title="Add Client"
