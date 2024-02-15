@@ -146,7 +146,7 @@
       width: 20rem;
       height: 4rem;
       margin-top: 2rem;
-
+      margin-left: auto;
       @include media("<=md") {
         margin-bottom: 2rem;
       }

@@ -27,7 +27,7 @@ function GreetingsPage() {
     new PostService().postCredentials(payload, (result) => {
       if (result?.status === 200) {
         setNotify("success");
-        setMessage("Successfully Entered Correct Passcode");
+        setMessage("Success");
         setIsModal(false);
         setPasscode(false);
         setTimeout(() => {
@@ -35,13 +35,12 @@ function GreetingsPage() {
         });
       } else {
         setNotify("warning");
-        setMessage("Incorrect Passcode of the Survey");
+        setMessage("Incorrect Passcode to access the Survey");
         setTimeout(() => {
           setNotify("");
         });
       }
     });
-    console.log(payload);
   };
   const checkPasswordStrength = (rule, value, callback) => {
     if (value.length !== 12) {
