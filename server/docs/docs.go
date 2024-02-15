@@ -726,7 +726,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Users"
+                    "Survey"
                 ],
                 "summary": "Survey ID Data",
                 "parameters": [
