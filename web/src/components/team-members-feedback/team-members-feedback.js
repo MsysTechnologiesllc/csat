@@ -298,6 +298,7 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
                 allowHalf
                 className="rating"
                 character={({ index = 0 }) => customStarIcons[index]}
+                disabled={state?.status}
               />
             </Form.Item>
             {/* {surveyStatus !== "publish" && (
