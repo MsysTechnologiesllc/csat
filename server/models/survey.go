@@ -258,7 +258,7 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 
 			for _, user := range users {
 				// Check if user role is not "user" and not "client"
-				if user.Role != "user" && user.Role != "client" {
+				if user.Role != "member" && user.Role != "client" {
 					surveyIDString := fmt.Sprintf("%d", surveyID)
 					emailData := utils.EmailData{
 						Name:        user.Name,
