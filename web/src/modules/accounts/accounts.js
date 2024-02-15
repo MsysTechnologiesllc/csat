@@ -22,7 +22,6 @@ export const Accounts = () => {
     });
   };
   const tenant_id = 1001;
-  console.log(process.env.GO_SERVICE_URL);
   useEffect(() => {
     setIsLoading(true);
     if (tenant_id) {

@@ -6,20 +6,9 @@ import "./preview-survey.scss";
 import { PostService } from "../../../services/post";
 import NotifyStatus from "../../../components/notify-status/notify-status";
 import i18n from "../../../locales/i18next";
-// import { useNavigate } from "react-router";
 
-export const PreviewSettings = ({
-  userFeedback,
-  surveyDetails,
-  // accountName,
-  // projectsList,
-  // projectName,
-  // status,
-  // prjId,
-  // account_id,
-}) => {
+export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
   const [form] = Form.useForm();
-  // const navigate = useNavigate();
   const [dropdownOptions, setDropdownOptions] = useState([]);
   const [selectedDates, setSelectedDates] = useState([]);
   const [selectedClient, setSelectedClient] = useState([]);
@@ -47,16 +36,6 @@ export const PreviewSettings = ({
         setDropdownOptions((options) => [...options, option]);
         setTimeout(() => {
           setNotify("");
-
-          // navigate(`/accounts/${account_id}/projects/${prjId}/formatlist`, {
-          //   state: {
-          //     accountName: accountName,
-          //     projectsList: projectsList,
-          //     projectName: projectName,
-          //     status: status,
-          //     prjId: prjId,
-          //   },
-          // });
         }, 1000);
       }
     });
@@ -195,10 +174,4 @@ export const PreviewSettings = ({
 PreviewSettings.propTypes = {
   userFeedback: PropTypes.array.isRequired,
   surveyDetails: PropTypes.object.isRequired,
-  // accountName: PropTypes.string,
-  // projectsList: PropTypes.array,
-  // projectName: PropTypes.string,
-  // status: PropTypes.bool,
-  // prjId: PropTypes.number,
-  // account_id: PropTypes.number,
 };
