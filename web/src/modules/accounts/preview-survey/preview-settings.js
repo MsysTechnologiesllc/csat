@@ -27,9 +27,9 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
       if (result?.status === 200) {
         setIsModalOpen(false);
         setNotify("success");
-        window.location.reload();
         setTimeout(() => {
           setNotify("");
+          window.location.reload();
         }, 1000);
       }
     });
@@ -128,7 +128,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
                 />
               </Form.Item>
               <div className="btn-container">
-                <Button htmlType="submit" type="primary">
+                <Button htmlType="submit" type="text" className="submit-btn">
                   Submit
                 </Button>
               </div>
