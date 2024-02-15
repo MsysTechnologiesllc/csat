@@ -6,13 +6,25 @@ import "./preview-survey.scss";
 import { PostService } from "../../../services/post";
 import NotifyStatus from "../../../components/notify-status/notify-status";
 import i18n from "../../../locales/i18next";
+import { useNavigate } from "react-router";
 
-export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
+export const PreviewSettings = ({
+  userFeedback,
+  surveyDetails,
+  accountName,
+  projectsList,
+  projectName,
+  status,
+  prjId,
+  account_id,
+}) => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const [dropdownOptions, setDropdownOptions] = useState([]);
   const [selectedDates, setSelectedDates] = useState([]);
   const [selectedClient, setSelectedClient] = useState([]);
   const [notify, setNotify] = useState("");
+  const [message, setMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -27,9 +39,18 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
       if (result?.status === 200) {
         setIsModalOpen(false);
         setNotify("success");
+        setMessage("Successfully added new client");
         setTimeout(() => {
           setNotify("");
-          window.location.reload();
+          navigate(`/accounts/${account_id}/projects/${prjId}/formatlist`, {
+            state: {
+              accountName: accountName,
+              projectsList: projectsList,
+              projectName: projectName,
+              status: status,
+              prjId: prjId,
+            },
+          });
         }, 1000);
       }
     });
@@ -61,6 +82,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
     new PostService().createSurvey(payload, (result) => {
       if (result?.status === 200) {
         setNotify("success");
+        setMessage("Successfully sent survey");
         setTimeout(() => {
           setNotify("");
         }, 1000);
@@ -157,13 +179,17 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
           </Button>
         </div>
       </Form>
-      {notify && (
-        <NotifyStatus status={notify} message="Successfully sent survey" />
-      )}
+      {notify && <NotifyStatus status={notify} message={message} />}
     </>
   );
 };
 PreviewSettings.propTypes = {
   userFeedback: PropTypes.array.isRequired,
   surveyDetails: PropTypes.object.isRequired,
+  accountName: PropTypes.string,
+  projectsList: PropTypes.array,
+  projectName: PropTypes.string,
+  status: PropTypes.bool,
+  prjId: PropTypes.number,
+  account_id: PropTypes.number,
 };

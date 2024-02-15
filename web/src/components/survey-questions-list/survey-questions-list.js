@@ -10,7 +10,7 @@ import i18n from "../../locales/i18next";
 export const SurveyQuestionList = ({ surveyQuestionDetails }) => {
   const { TextArea } = Input;
   const { Panel } = Collapse;
-  const questionsList = surveyQuestionDetails?.Survey?.survey_answers.sort(
+  const questionsList = surveyQuestionDetails?.Survey?.survey_answers?.sort(
     (a, b) => {
       return a.ID - b.ID;
     },

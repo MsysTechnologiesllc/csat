@@ -1,11 +1,13 @@
 package controllers
 
 import (
+	"crypto/rand"
 	constants "csat/helpers"
 	"csat/logger"
 	"csat/models"
 	"csat/schema"
 	u "csat/utils"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -325,6 +327,13 @@ func CloneSurvey(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		password := make([]byte, 6)
+		_, err = rand.Read(password)
+		if err != nil {
+			panic(err.Error())
+		}
+		surveyPasscode := hex.EncodeToString(password[:])
+
 		deadline := time.Now().Add(time.Duration(constants.SURVEY_DEADLINE) * 24 * time.Hour)
 		survey := schema.Survey{
 			Name:           existingSurvey.Survey.Name,
@@ -335,6 +344,7 @@ func CloneSurvey(w http.ResponseWriter, r *http.Request) {
 			DeadLine:       deadline,
 			SurveyDates:    surveyDatesStr,
 			CustomerEmail:  clientEmailStr,
+			Passcode:       surveyPasscode,
 		}
 
 		newSurveyID, err := models.CreateSurvey(&survey)
@@ -359,7 +369,7 @@ func CloneSurvey(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if err := models.SendSurveyMail(userDetails, newSurveyID); err != nil {
+		if err := models.SendSurveyMail(userDetails, newSurveyID, surveyPasscode); err != nil {
 			logger.Log.Printf("Failed to send email for user with ID %d: %v\n", userDetails.ID, err)
 		}
 	}

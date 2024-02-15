@@ -11,7 +11,7 @@ import { GetService } from "../../services/get";
 import PropTypes from "prop-types";
 import "./team-members-feedback.scss";
 
-export const TeamMembersFeedBack = ({ surveyId }) => {
+export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
   const { TextArea } = Input;
   const { InputField } = plLibComponents.components;
   const navigate = useNavigate();
@@ -58,35 +58,46 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
   };
 
   useEffect(() => {
-    new GetService().getSurveyDetails(
-      surveyId ? surveyId : state?.surveyDetails?.Survey?.ID,
-      (result) => {
-        if (result?.data?.data) {
-          setUsersList(result?.data?.data?.Survey?.user_feedbacks);
-          if (result?.data?.data?.Survey?.user_feedbacks?.length > 0) {
-            const users = result?.data?.data?.Survey?.user_feedbacks?.filter(
-              (user) => user.user.role === "user",
-            );
-            setSelectedMember(users[0]);
+    if (surveyDetails) {
+      setUsersList(surveyDetails?.Survey?.user_feedbacks);
+      if (surveyDetails?.Survey?.user_feedbacks?.length > 0) {
+        const users = surveyDetails?.Survey?.user_feedbacks?.filter(
+          (user) => user.user.role === "user",
+        );
+        setSelectedMember(users[0]);
+      }
+      setSurveyStatus(status);
+    } else {
+      new GetService().getSurveyDetails(
+        surveyId ? surveyId : state?.surveyDetails?.Survey?.ID,
+        (result) => {
+          if (result?.data?.data) {
+            setUsersList(result?.data?.data?.Survey?.user_feedbacks);
+            if (result?.data?.data?.Survey?.user_feedbacks?.length > 0) {
+              const users = result?.data?.data?.Survey?.user_feedbacks?.filter(
+                (user) => user.user.role === "user",
+              );
+              setSelectedMember(users[0]);
+            }
+            setSurveyStatus(result?.data?.data?.Survey?.status);
+            setSave(false);
+            if (searchInput !== "") {
+              const searchedUser =
+                result?.data?.data?.Survey?.user_feedbacks.filter((member) => {
+                  if (
+                    member.user.name
+                      .toLowerCase()
+                      .includes(searchInput.toLowerCase())
+                  ) {
+                    return member;
+                  }
+                });
+              setUsersList(searchedUser);
+            }
           }
-          setSurveyStatus(result?.data?.data?.Survey?.status);
-          setSave(false);
-          if (searchInput !== "") {
-            const searchedUser =
-              result?.data?.data?.Survey?.user_feedbacks.filter((member) => {
-                if (
-                  member.user.name
-                    .toLowerCase()
-                    .includes(searchInput.toLowerCase())
-                ) {
-                  return member;
-                }
-              });
-            setUsersList(searchedUser);
-          }
-        }
-      },
-    );
+        },
+      );
+    }
   }, [save, searchInput]);
   useEffect(() => {
     if (
@@ -362,5 +373,7 @@ export const TeamMembersFeedBack = ({ surveyId }) => {
   );
 };
 TeamMembersFeedBack.propTypes = {
-  surveyId: PropTypes.number.isRequired,
+  surveyId: PropTypes.number,
+  surveyDetails: PropTypes.object,
+  status: PropTypes.bool,
 };
