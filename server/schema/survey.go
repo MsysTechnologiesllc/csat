@@ -25,4 +25,5 @@ type Survey struct {
 	SurveyDates         pq.StringArray  `gorm:"type:timestamptz[]" json:"survey_dates"`
 	CompletedDates      pq.StringArray  `gorm:"type:timestamptz[]" json:"completed_dates"`
 	CustomerEmail       string          `gorm:"null" json:"customer_email"`
+	Passcode            string          `gorm:"null" json:"passcode"`
 }
