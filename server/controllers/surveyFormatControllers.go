@@ -248,8 +248,9 @@ var UpdateDataFromExcel = func(w http.ResponseWriter, r *http.Request) {
 	// 		}
 	// 	}
 	// }
-	previewURLString := fmt.Sprintf("%d", surveyID)
-	previewURL := os.Getenv("PREVIEW_URL") + previewURLString
+	AccountIDString := fmt.Sprintf("%d", account.ID)
+	projectIDString := fmt.Sprintf("%d", project.ID)
+	previewURL := os.Getenv("TEMPLATE_PREVIEW_URL") + AccountIDString + "/projects/" + projectIDString + "/formatlist/previewSurvey"
 
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = map[string]interface{}{"preview_url": previewURL, "tenant": tenant, "account": account, "project": project, "surveyFormat": surveyFormat, "surveyID": surveyID, "userFeedbacksData": userFeedbacksData, "surveyAnswersData": surveyQuestionsData}
