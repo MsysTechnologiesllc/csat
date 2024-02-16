@@ -314,7 +314,7 @@ func CloneSurvey(w http.ResponseWriter, r *http.Request) {
 	for _, date := range surveyDates {
 		surveyDatesStr = append(surveyDatesStr, date.(string))
 	}
-	existingSurvey, err := models.GetSurvey(uint(surveyId))
+	existingSurvey, err := models.GetSurveyForClient(uint(surveyId))
 	if err != nil {
 		http.Error(w, "Failed to get existing survey details", http.StatusInternalServerError)
 		return

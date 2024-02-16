@@ -34,6 +34,8 @@ export const translationEN = {
     project: "Project",
     projectManager: "Project Manager",
     deliveryHead: "Delivery Head",
+    deliveryHeadName: "Delivery Head Name",
+    frequency: "Survey Frequency",
     shareBefore: "Share Before",
     getStarted: "Get Started",
     reviewFeedback: "Review Feedback",
@@ -127,5 +129,15 @@ export const translationEN = {
     surveys: "Surveys.",
     description:
       "Only projects for which the surveys are pending for this month are displayed. To view all surveys, please go to",
+  },
+  settings: {
+    add: "ADD",
+    selectClients: "Select Clients",
+    addClient: "Add Client",
+    clientName: "Client Name",
+    clientEmail: "Client Email",
+    namePlaceholder: "Enter client name",
+    emailPlaceholder: "Enter client emailId",
+    selectDate: "Select Date",
   },
 };

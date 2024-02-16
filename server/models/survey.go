@@ -258,7 +258,7 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 
 			for _, user := range users {
 				// Check if user role is not "user" and not "client"
-				if user.Role != "user" && user.Role != "client" {
+				if user.Role != "member" && user.Role != "client" {
 					surveyIDString := fmt.Sprintf("%d", surveyID)
 					emailData := utils.EmailData{
 						Name:        user.Name,
@@ -381,7 +381,7 @@ func GetSurveyFormatListFromDB(projectID uint) (*[]schema.SurveyFormat, error) {
 func GetSurveyForClient(id uint) (*SurveyDetails, error) {
 	var surveyDetails SurveyDetails
 
-	if err := GetDB().Where("ID = ?", id).Find(&surveyDetails.Survey).Error; err != nil {
+	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("ID = ?", id).Find(&surveyDetails.Survey).Error; err != nil {
 		logger.Log.Println("Error fetching survey details:", err)
 		return nil, err
 	}
