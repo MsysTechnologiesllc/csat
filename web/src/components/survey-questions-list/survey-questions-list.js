@@ -77,7 +77,7 @@ export const SurveyQuestionList = ({ surveyQuestionDetails }) => {
       className="survey-questions-container"
     >
       {questionsList?.map(
-        ({ question, answer }, index) =>
+        ({ question, answer, comment }, index) =>
           index !== questionsList.length - 1 && (
             <Panel
               header={
@@ -93,21 +93,24 @@ export const SurveyQuestionList = ({ surveyQuestionDetails }) => {
               {question?.type === "boolean" ||
               question?.type === "emoji-options" ||
               question?.type === "gauge-options" ? (
-                <Radio.Group
-                  name="radiogroup"
-                  className="radio-group"
-                  defaultValue={answer && JSON.parse(answer)[0].a}
-                >
-                  {JSON.parse(question.options).map((option, index) => (
-                    <Radio
-                      key={index}
-                      value={getValueForType(option, question.type)}
-                      disabled
-                    >
-                      {Object.values(option)[0]}
-                    </Radio>
-                  ))}
-                </Radio.Group>
+                <>
+                  <Radio.Group
+                    name="radiogroup"
+                    className="radio-group"
+                    defaultValue={answer && JSON.parse(answer)[0].a}
+                  >
+                    {JSON.parse(question.options).map((option, index) => (
+                      <Radio
+                        key={index}
+                        value={getValueForType(option, question.type)}
+                        disabled
+                      >
+                        {Object.values(option)[0]}
+                      </Radio>
+                    ))}
+                  </Radio.Group>
+                  {comment && <p className="comment">comment: {comment}</p>}
+                </>
               ) : null}
               {question.type === "scale-rating" && (
                 <div className="rating-scale-container">

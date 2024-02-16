@@ -198,6 +198,7 @@ export const FeedBackSurvey = () => {
                   name="radiogroup"
                   className="radio-group-images"
                   defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
+                  disabled={each?.answer && true}
                 >
                   {JSON.parse(each.question.options).map((option) => (
                     <RadioWithEmoji
@@ -231,6 +232,7 @@ export const FeedBackSurvey = () => {
                     defaultValue={
                       each?.answer && JSON.parse(each?.answer).length
                     }
+                    disabled={each?.answer && true}
                   />
                   <div className="rating-desc-container">
                     <span className="unsatisfy-text">
@@ -243,16 +245,17 @@ export const FeedBackSurvey = () => {
                   {(selectedValue <= 2 &&
                     selectedValue !== "" &&
                     selectedValue > 0) ||
-                    (each?.comment && (
-                      <TextArea
-                        rows={1}
-                        placeholder={i18n.t("placeholder.message")}
-                        onBlur={() => handleOnBlur(text)}
-                        onChange={(event) => handleComment(event.target.value)}
-                        className="comment-text-area"
-                        defaultValue={each?.comment !== "" ? each?.comment : ""}
-                      />
-                    ))}
+                  each?.comment ? (
+                    <TextArea
+                      rows={1}
+                      placeholder={i18n.t("placeholder.message")}
+                      onBlur={() => handleOnBlur(text)}
+                      onChange={(event) => handleComment(event.target.value)}
+                      className="comment-text-area"
+                      defaultValue={each?.comment !== "" ? each?.comment : ""}
+                      disabled={each?.comment && true}
+                    />
+                  ) : null}
                 </div>
               )}
               {each.question.type === "star-rating" && (
@@ -265,20 +268,22 @@ export const FeedBackSurvey = () => {
                     defaultValue={
                       each?.answer && JSON.parse(each?.answer).length / 2
                     }
+                    disabled={each?.answer && true}
                   />
                   {(selectedValue <= 2 &&
                     selectedValue !== "" &&
                     selectedValue > 0) ||
-                    (each?.comment && (
-                      <TextArea
-                        rows={1}
-                        placeholder={i18n.t("placeholder.message")}
-                        onBlur={() => handleOnBlur(text)}
-                        onChange={(event) => handleComment(event.target.value)}
-                        className="comment-text-area"
-                        defaultValue={each?.comment !== "" ? each?.comment : ""}
-                      />
-                    ))}
+                  each?.comment ? (
+                    <TextArea
+                      rows={1}
+                      placeholder={i18n.t("placeholder.message")}
+                      onBlur={() => handleOnBlur(text)}
+                      onChange={(event) => handleComment(event.target.value)}
+                      className="comment-text-area"
+                      defaultValue={each?.comment !== "" ? each?.comment : ""}
+                      disabled={each?.comment && true}
+                    />
+                  ) : null}
                 </>
               )}
               {each.question.type === "emoji-options" && (
@@ -287,6 +292,7 @@ export const FeedBackSurvey = () => {
                     name="radiogroup"
                     className="radio-group-images smiles-container"
                     defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
+                    disabled={each?.answer && true}
                   >
                     {JSON.parse(each.question.options).map((option) => (
                       <RadioWithEmoji
@@ -332,17 +338,18 @@ export const FeedBackSurvey = () => {
                     ))}
                   </Radio.Group>
                   {selectedValue === "low" ||
-                    selectedValue === "very-low" ||
-                    (each?.comment && (
-                      <TextArea
-                        rows={1}
-                        placeholder={i18n.t("placeholder.message")}
-                        onBlur={() => handleOnBlur(text)}
-                        onChange={(event) => handleComment(event.target.value)}
-                        className="comment-text-area"
-                        defaultValue={each?.comment?.length && each?.comment}
-                      />
-                    ))}
+                  selectedValue === "very-low" ||
+                  each?.comment ? (
+                    <TextArea
+                      rows={1}
+                      placeholder={i18n.t("placeholder.message")}
+                      onBlur={() => handleOnBlur(text)}
+                      onChange={(event) => handleComment(event.target.value)}
+                      className="comment-text-area"
+                      defaultValue={each?.comment?.length && each?.comment}
+                      disabled={each?.comment && true}
+                    />
+                  ) : null}
                 </>
               )}
               {each.question.type === "gauge-options" && (
@@ -351,6 +358,7 @@ export const FeedBackSurvey = () => {
                     name="radiogroup"
                     className="radio-group-images speedometer-group-images"
                     defaultValue={each?.answer && JSON.parse(each?.answer)[0].a}
+                    disabled={each?.answer && true}
                   >
                     {JSON.parse(each.question.options).map((option, index) => (
                       <RadioWithSpeedometer
@@ -376,17 +384,18 @@ export const FeedBackSurvey = () => {
                     ))}
                   </Radio.Group>
                   {selectedValue === "low-scale" ||
-                    selectedValue === "very-low-scale" ||
-                    (each?.comment && (
-                      <TextArea
-                        rows={1}
-                        placeholder={i18n.t("placeholder.message")}
-                        onBlur={() => handleOnBlur(text)}
-                        onChange={(event) => handleComment(event.target.value)}
-                        className="comment-text-area"
-                        defaultValue={each?.comment?.length && each?.comment}
-                      />
-                    ))}
+                  selectedValue === "very-low-scale" ||
+                  each?.comment ? (
+                    <TextArea
+                      rows={1}
+                      placeholder={i18n.t("placeholder.message")}
+                      onBlur={() => handleOnBlur(text)}
+                      onChange={(event) => handleComment(event.target.value)}
+                      className="comment-text-area"
+                      defaultValue={each?.comment?.length && each?.comment}
+                      disabled={each?.comment && true}
+                    />
+                  ) : null}
                 </>
               )}
               {each.question.type === "textarea-feedback" && (
@@ -397,6 +406,7 @@ export const FeedBackSurvey = () => {
                   onChange={(event) => handleTextArea(event)}
                   className="text-area"
                   defaultValue={each?.answer && JSON.parse(each?.answer)}
+                  disabled={each?.answer && true}
                 />
               )}
             </div>
