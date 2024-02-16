@@ -26,9 +26,10 @@ export const FeedBackSurvey = () => {
   const [isAnswerSelected, setIsAnsweraSelected] = useState(false);
   const [draft, setDraft] = useState("");
   const [comment, setComment] = useState("");
+  const [submitLoader, setSubmitLoader] = useState(false);
+  const [draftLoader, setDraftLoader] = useState(false);
   useEffect(() => {
     if (draft === "draft") {
-      setIsAnsweraSelected(false);
       const payload = {
         survey_id: surveyDetails.Survey.ID,
         survey_answers: questionsData,
@@ -37,6 +38,7 @@ export const FeedBackSurvey = () => {
       };
       new PutService().updateSurveyDetails(payload, (result) => {
         if (result?.status === 200) {
+          setDraftLoader(false);
           setQuestionsData([]);
           setDraft("");
           setNotify("success");
@@ -61,7 +63,7 @@ export const FeedBackSurvey = () => {
     } else {
       const surveyAnswers = {};
       const scaleRes = [];
-      if (ques.question.type === "scale-rating") {
+      if (ques?.question?.type === "scale-rating") {
         for (let i = 1; i <= selectedValue; i++) {
           const key = String.fromCharCode(96 + i);
           scaleRes.push({ [key]: i });
@@ -70,7 +72,7 @@ export const FeedBackSurvey = () => {
         surveyAnswers.answer = scaleRes;
         surveyAnswers.comment = comment;
         setQuestionsData((prevData) => [...prevData, surveyAnswers]);
-      } else if (ques.question.type === "star-rating") {
+      } else if (ques?.question?.type === "star-rating") {
         let length = selectedValue * 2;
         for (let i = 1; i <= length; i++) {
           const key = String.fromCharCode(96 + i);
@@ -80,7 +82,7 @@ export const FeedBackSurvey = () => {
         surveyAnswers.answer = scaleRes;
         surveyAnswers.comment = comment;
         setQuestionsData((prevData) => [...prevData, surveyAnswers]);
-      } else if (ques.question.type === "textarea-feedback") {
+      } else if (ques?.question?.type === "textarea-feedback") {
         surveyAnswers.ID = ques.ID;
         surveyAnswers.answer = selectedValue;
         surveyAnswers.comment = comment;
@@ -94,7 +96,9 @@ export const FeedBackSurvey = () => {
       }
     }
   };
+  const [proceedLoader, setProceedLoader] = useState(false);
   const handleTeamMemberFeedback = () => {
+    setProceedLoader(true);
     if (surveyDetails?.Survey?.status !== "publish") {
       const payload = {
         survey_id: surveyDetails.Survey.ID,
@@ -104,6 +108,7 @@ export const FeedBackSurvey = () => {
       };
       new PutService().updateSurveyDetails(payload, (result) => {
         if (result?.status === 200) {
+          setProceedLoader(false);
           navigate("/teamFeedback", {
             state: {
               surveyDetails: surveyDetails,
@@ -114,6 +119,7 @@ export const FeedBackSurvey = () => {
         }
       });
     } else {
+      setProceedLoader(false);
       navigate("/teamFeedback", {
         state: {
           surveyDetails: surveyDetails,
@@ -124,6 +130,7 @@ export const FeedBackSurvey = () => {
     }
   };
   const handleSaveAsDraft = (ques) => {
+    setDraftLoader(true);
     answersSetting(ques);
     setDraft("draft");
   };
@@ -135,6 +142,7 @@ export const FeedBackSurvey = () => {
     setComment(value);
   };
   const handleSubmit = () => {
+    setSubmitLoader(true);
     const payload = {
       survey_id: surveyDetails.Survey.ID,
       survey_answers: questionsData,
@@ -426,11 +434,12 @@ export const FeedBackSurvey = () => {
                   {surveyDetails?.Survey?.status !== "publish" && (
                     <Button
                       className="draft-button hide-on-tablet"
-                      onClick={handleSaveAsDraft}
+                      onClick={() => handleSaveAsDraft(each)}
                       disabled={
                         (each?.answer?.length !== 0 ? false : true) &&
                         !isAnswerSelected
                       }
+                      loading={draftLoader}
                     >
                       {i18n.t("button.saveAsDraft")}
                     </Button>
@@ -438,6 +447,7 @@ export const FeedBackSurvey = () => {
                   <Button
                     onClick={handleTeamMemberFeedback}
                     className="draft-button"
+                    loading={proceedLoader}
                   >
                     {i18n.t("button.yesProceed")}
                   </Button>
@@ -445,6 +455,7 @@ export const FeedBackSurvey = () => {
                     <Button
                       type="primary"
                       onClick={handleSubmit}
+                      loading={submitLoader}
                       className="active-button"
                     >
                       {i18n.t("button.noSubmit")}

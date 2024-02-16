@@ -147,13 +147,13 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
       };
       new PutService().updateSurveyDetails(payload, (result) => {
         if (result?.status === 200) {
+          setSubmitLoader(false);
           setNotify("");
           navigate("/survey/submitted");
         }
       });
     }
   }, [getApi]);
-
   useEffect(() => {
     if (disabled) {
       usersFeedback.map((payload) => {
@@ -171,7 +171,6 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
       setGetApi(true);
     }
   }, [disabled]);
-  console.log(publicStatus);
   useEffect(() => {
     if (draftApi) {
       const payload = {
@@ -182,6 +181,7 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
       };
       new PutService().updateSurveyDetails(payload, (result) => {
         if (result?.status === 200) {
+          setDraftLoader(false);
           setNotify("success");
           setMessage(i18n.t("common.draftMessage"));
           setTimeout(() => {
@@ -215,23 +215,26 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
     }
   }, [draftDisabled]);
   const handleFeedbackasDraft = () => {
+    setDraftLoader(true);
     setUsersFeedback((item) => [...item, feedback]);
     setDraftDisabled(true);
   };
   const handleSubmit = async () => {
+    setSubmitLoader(true);
     setUsersFeedback((item) => [...item, feedback]);
     setDisabled(true);
   };
   // const handleReset = () => {
   //   form.resetFields();
   // };
-  console.log(state?.status);
   const handleSearch = (value) => {
     setSearchInput(value.value);
   };
   const customStarIcons = Array.from({ length: 5 }, (_, index) => (
     <IoStarSharp key={index} className="rating-icon" />
   ));
+  const [draftLoader, setDraftLoader] = useState(false);
+  const [submitLoader, setSubmitLoader] = useState(false);
   return (
     <Row className="feedback-container">
       <Col xs={24} md={7} xl={7} className="card-search-container">
@@ -362,6 +365,7 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
                 draftDisabled === true ? "disabled-button" : "draft-button"
               }
               onClick={handleFeedbackasDraft}
+              loading={draftLoader}
             >
               {i18n.t("button.saveAsDraft")}
             </Button>
@@ -374,6 +378,7 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
                   : "active-button"
               }
               disabled={disabled}
+              loading={submitLoader}
             >
               {i18n.t("button.submit")}
             </Button>
