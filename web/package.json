@@ -10,6 +10,8 @@
     "antd": "^5.14.0",
     "axios": "^1.6.7",
     "buffer": "^6.0.3",
+    "dotenv": "^16.4.4",
+    "dotenv-webpack": "^8.0.1",
     "i18next": "^23.7.11",
     "i18next-browser-languagedetector": "^7.2.0",
     "i18next-http-backend": "^2.4.2",
@@ -31,8 +33,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "start": "react-app-rewired start .env",
+    "build": "react-app-rewired build .env",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
