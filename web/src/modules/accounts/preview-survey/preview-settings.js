@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, DatePicker, Form, Input, Modal, TreeSelect } from "antd";
+import { Button, DatePicker, Form, TreeSelect } from "antd";
 import PropTypes from "prop-types";
 import moment from "moment";
 import "./preview-survey.scss";
 import { PostService } from "../../../services/post";
 import NotifyStatus from "../../../components/notify-status/notify-status";
 import i18n from "../../../locales/i18next";
+import { AddClient } from "./add-client";
 
 export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
   const [form] = Form.useForm();
@@ -14,35 +15,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
   const [selectedClient, setSelectedClient] = useState([]);
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = (values) => {
-    const payload = {
-      survey_id: surveyDetails?.Survey?.ID,
-      name: values.newClientName,
-      email: values.email,
-    };
-    new PostService().createClient(payload, (result) => {
-      if (result?.status === 200) {
-        form.resetFields();
-        setIsModalOpen(false);
-        setNotify("success");
-        setMessage("Successfully added new client");
-        const option = {};
-        option.value = values.email;
-        option.title = values.newClientName;
-        setDropdownOptions((options) => [...options, option]);
-        setTimeout(() => {
-          setNotify("");
-        }, 1000);
-      }
-    });
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+
   useEffect(() => {
     if (userFeedback.length > 0) {
       const dropdown = [];
@@ -92,6 +65,13 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
   };
   return (
     <>
+      <AddClient
+        surveyDetails={surveyDetails}
+        setMessage={setMessage}
+        setNotify={setNotify}
+        setDropdownOptions={setDropdownOptions}
+        setSelectedClient={setSelectedClient}
+      />
       <Form form={form} onFinish={handleFinish} className="settings-container">
         <Form.Item className="select-dropdown">
           <TreeSelect
@@ -103,47 +83,6 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
             multiple
             placeholder={i18n.t("settings.selectClients")}
           />
-          <Button type="primary" onClick={showModal}>
-            {i18n.t("settings.add")}
-          </Button>
-          <Modal
-            title={i18n.t("settings.addClient")}
-            open={isModalOpen}
-            footer={null}
-            onCancel={handleCancel}
-          >
-            <Form
-              form={form}
-              className="add-client-container"
-              onFinish={handleOk}
-            >
-              <Form.Item
-                name="newClientName"
-                rules={[{ required: true, message: "Name field is required" }]}
-                label={i18n.t("settings.clientName")}
-              >
-                <Input
-                  placeholder={i18n.t("settings.namePlaceholder")}
-                  className="client-input"
-                />
-              </Form.Item>
-              <Form.Item
-                name="email"
-                rules={[{ required: true, message: "Email field is required" }]}
-                label={i18n.t("settings.clientEmail")}
-              >
-                <Input
-                  placeholder={i18n.t("settings.emailPlaceholder")}
-                  className="client-input"
-                />
-              </Form.Item>
-              <div className="btn-container">
-                <Button htmlType="submit" type="text" className="submit-btn">
-                  {i18n.t("button.submit")}
-                </Button>
-              </div>
-            </Form>
-          </Modal>
         </Form.Item>
         <Form.Item className="select-dropdown">
           <DatePicker
@@ -156,7 +95,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
             placeholder={i18n.t("settings.selectDate")}
           />
         </Form.Item>
-        <div>
+        <Form.Item>
           <Button
             htmlType="submit"
             disabled={
@@ -165,7 +104,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
           >
             {i18n.t("accounts.sendClient")}
           </Button>
-        </div>
+        </Form.Item>
       </Form>
       {notify && <NotifyStatus status={notify} message={message} />}
     </>
