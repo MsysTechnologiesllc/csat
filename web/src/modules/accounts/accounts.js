@@ -21,9 +21,7 @@ export const Accounts = () => {
       },
     });
   };
-
   const tenant_id = 1001;
-
   useEffect(() => {
     setIsLoading(true);
     if (tenant_id) {
