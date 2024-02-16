@@ -57,7 +57,7 @@
     .progress-container {
       border: 0.1rem solid $light-grey;
       border-radius: 0.4rem;
-      padding: 0 1.6rem 1.6rem 1.6rem;
+      padding: 1.6rem;
       @include flex-column;
       .ant-progress-circle {
         width: 7.5rem;

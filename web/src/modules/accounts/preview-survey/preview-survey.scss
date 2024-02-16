@@ -50,37 +50,18 @@
       }
     }
   }
+  .add-client-btn-container{
+    text-align: right;
+    margin-bottom: 1rem;
+  }
   .settings-container {
     @include flex-column;
     @include justify-content-center;
     @include align-items-center;
     .select-dropdown {
       width: 70%;
-      &:nth-child(1) {
-        .ant-row {
-          min-width: 100%;
-          @include d-flex;
-          padding: auto;
-          .ant-select {
-            width: 86%;
-            @include media("<=md") {
-              width: 100%;
-            }
-          }
-          .ant-btn {
-            text-align: center;
-            background-color: $indigo;
-            @include media("<=md") {
-              width: 30%;
-              margin-top: 3rem;
-            }
-            width: 12%;
-            margin-left: 2%;
-          }
-        }
-        .ant-select-multiple .ant-select-selection-placeholder {
-          text-align: start;
-        }
+      @include media ("<md"){
+        width: 100%;
       }
       .date-picker {
         width: 100%;

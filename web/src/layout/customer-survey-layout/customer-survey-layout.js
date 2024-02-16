@@ -12,12 +12,15 @@ export const CustomerSurveyLayout = () => {
     .includes("customer-survey");
   const { survey_id } = useParams();
   useEffect(() => {
-    new GetService().getSurveyDetails(survey_id, (result) => {
-      if (result?.data?.data) {
-        setProjectName(result?.data?.data?.Survey?.project?.name);
-      }
-    });
-  }, [survey_id]);
+    if (isCustomerSurvey === false) {
+      console.log("done");
+      new GetService().getSurveyDetails(survey_id, (result) => {
+        if (result?.data?.data) {
+          setProjectName(result?.data?.data?.Survey?.project?.name);
+        }
+      });
+    }
+  }, [survey_id, isCustomerSurvey]);
   return (
     <>
       <Layout className="customer-survey-layout">

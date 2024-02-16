@@ -62,7 +62,7 @@ export const ProjectsList = () => {
             (user) => user.role === "projectManager",
           );
           const teamMembers = project?.Users?.filter(
-            (user) => user.role === "user",
+            (user) => user.role === "member",
           );
           return (
             <Col xs={24} md={12} lg={8} xxl={6} key={project.ID}>
@@ -93,7 +93,7 @@ export const ProjectsList = () => {
                   </div>
                 </div>
                 <div className="team-view-container">
-                  <p className="team-members-context">{`${teamMembers?.length} Members(s)`}</p>
+                  <p className="team-members-context">{`${teamMembers?.length} Member(s)`}</p>
                   <Button
                     className="view-button"
                     type="text"

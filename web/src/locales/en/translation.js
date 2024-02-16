@@ -131,7 +131,7 @@ export const translationEN = {
       "Only projects for which the surveys are pending for this month are displayed. To view all surveys, please go to",
   },
   settings: {
-    add: "ADD",
+    add: "ADD CLIENT",
     selectClients: "Select Clients",
     addClient: "Add Client",
     clientName: "Client Name",
