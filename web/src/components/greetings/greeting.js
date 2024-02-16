@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Form, Input, Modal } from "antd";
 import { useNavigate, useParams } from "react-router";
 import i18n from "../../locales/i18next";
@@ -24,12 +24,22 @@ function GreetingsPage() {
       survey_id: JSON.parse(survey_id),
       passcode: values.passcode,
     };
+    const getSurveyDetailsApi = (getId) => {
+      if (getId) {
+        new GetService().getSurveyDetails(getId, (result) => {
+          if (result?.data?.data) {
+            setSurveyDetails(result?.data?.data);
+          }
+        });
+      }
+    };
     new PostService().postCredentials(payload, (result) => {
       if (result?.status === 200) {
         setNotify("success");
         setMessage("Success");
         setIsModal(false);
         setPasscode(false);
+        getSurveyDetailsApi(survey_id);
         setTimeout(() => {
           setNotify("");
         });
@@ -49,15 +59,6 @@ function GreetingsPage() {
       callback();
     }
   };
-  useEffect(() => {
-    if (survey_id) {
-      new GetService().getSurveyDetails(survey_id, (result) => {
-        if (result?.data?.data) {
-          setSurveyDetails(result?.data?.data);
-        }
-      });
-    }
-  }, [survey_id]);
   const getStarted = (id) => {
     navigate(`/survey/${id}`, {
       state: {
