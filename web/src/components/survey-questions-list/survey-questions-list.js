@@ -119,15 +119,19 @@ export const SurveyQuestionList = ({ surveyQuestionDetails }) => {
                     defaultValue={answer && JSON.parse(answer).length}
                     disabled
                   />
+                  {comment && <p className="comment">comment: {comment}</p>}
                 </div>
               )}
               {question.type === "star-rating" && (
-                <Rate
-                  character={({ index = 0 }) => customStarIcons[index]}
-                  allowHalf
-                  defaultValue={answer && JSON.parse(answer).length / 2}
-                  disabled
-                />
+                <>
+                  <Rate
+                    character={({ index = 0 }) => customStarIcons[index]}
+                    allowHalf
+                    defaultValue={answer && JSON.parse(answer).length / 2}
+                    disabled
+                  />
+                  {comment && <p className="comment">comment: {comment}</p>}
+                </>
               )}
               {question.type === "textarea-feedback" && (
                 <TextArea

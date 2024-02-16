@@ -15,6 +15,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
   const [selectedClient, setSelectedClient] = useState([]);
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (userFeedback.length > 0) {
@@ -32,6 +33,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
     }
   }, [userFeedback]);
   const handleFinish = () => {
+    setLoading(true);
     const payload = {
       survey_id: surveyDetails?.Survey?.ID,
       survey_dates: selectedDates,
@@ -39,13 +41,13 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
     };
     new PostService().createSurvey(payload, (result) => {
       if (result?.status === 200) {
+        setLoading(false);
         setSelectedClient([]);
         setSelectedDates([]);
         setNotify("success");
         setMessage("Successfully sent survey");
         setTimeout(() => {
           setNotify("");
-          window.location.reload();
         }, 1000);
       }
     });
@@ -93,6 +95,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
             className="date-picker"
             showTime
             placeholder={i18n.t("settings.selectDate")}
+            value={selectedDates}
           />
         </Form.Item>
         <Form.Item>
@@ -101,6 +104,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
             disabled={
               selectedClient === "" || !selectedDates.length ? true : false
             }
+            loading={loading}
           >
             {i18n.t("accounts.sendClient")}
           </Button>
