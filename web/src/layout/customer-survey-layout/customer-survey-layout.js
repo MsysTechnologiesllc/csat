@@ -13,13 +13,14 @@ export const CustomerSurveyLayout = () => {
   const { survey_id } = useParams();
   useEffect(() => {
     if (isCustomerSurvey === false) {
+      console.log("done");
       new GetService().getSurveyDetails(survey_id, (result) => {
         if (result?.data?.data) {
           setProjectName(result?.data?.data?.Survey?.project?.name);
         }
       });
     }
-  }, [survey_id]);
+  }, [survey_id, isCustomerSurvey]);
   return (
     <>
       <Layout className="customer-survey-layout">
