@@ -354,7 +354,7 @@ export const FeedBackSurvey = () => {
                       onBlur={() => handleOnBlur(text)}
                       onChange={(event) => handleComment(event.target.value)}
                       className="comment-text-area"
-                      defaultValue={each?.comment?.length && each?.comment}
+                      defaultValue={each?.comment?.length ? each?.comment : ""}
                       disabled={each?.comment && true}
                     />
                   ) : null}
@@ -400,7 +400,7 @@ export const FeedBackSurvey = () => {
                       onBlur={() => handleOnBlur(text)}
                       onChange={(event) => handleComment(event.target.value)}
                       className="comment-text-area"
-                      defaultValue={each?.comment?.length && each?.comment}
+                      defaultValue={each?.comment?.length ? each?.comment : ""}
                       disabled={each?.comment && true}
                     />
                   ) : null}
