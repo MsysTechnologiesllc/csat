@@ -113,7 +113,7 @@ const FormatList = ({}) => {
           projectName: state?.projectName,
           status: state?.status,
           prjId: state?.prjId,
-          surveyDetails: { Survey: data[0].surveys[0] },
+          surveyDetails: { Survey: record.surveys[0] },
         },
       },
     );
