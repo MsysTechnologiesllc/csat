@@ -3,8 +3,8 @@ package models
 import (
 	"csat/logger"
 	"csat/schema"
-	"os"
 	"errors"
+	"os"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
@@ -12,7 +12,7 @@ import (
 
 func FindUserByEmail(email string) (*schema.User, error) {
 	var user schema.User
-	err := db.Where("email = ?", email).First(&user).Error
+	err := db.Where("email = ?", email).Preload("Account").First(&user).Error
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

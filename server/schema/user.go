@@ -19,7 +19,8 @@ type User struct {
 }
 
 type Token struct {
-	UserId uint
-	Email  string
+	UserId   uint
+	Email    string
+	TenantId uint
 	jwt.StandardClaims
 }

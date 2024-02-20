@@ -56,18 +56,28 @@ func GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GoogleAuthCallbackHandler(w http.ResponseWriter, r *http.Request) {
+	var accessToken struct {
+		AccessToken string `json:"access_token"`
+	}
 	var userDetails schema.User
 
-	// Exchange code for token
-	token, err := googleOauthConfig.Exchange(r.Context(), r.FormValue("code"))
-	if err != nil {
-		http.Error(w, "Failed to exchange code for token", http.StatusInternalServerError)
+	if err := json.NewDecoder(r.Body).Decode(&accessToken); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "Invalid request body: %v", err)
 		return
 	}
 
 	// Get user information from Google
-	client := googleOauthConfig.Client(r.Context(), token)
-	resp, err := client.Get(os.Getenv("GOOGLE_USER_INFO"))
+	client := googleOauthConfig.Client(r.Context(), &oauth2.Token{AccessToken: accessToken.AccessToken})
+	req, err := http.NewRequest("GET", os.Getenv("GOOGLE_USER_INFO"), nil)
+	if err != nil {
+		http.Error(w, "Error creating request", http.StatusInternalServerError)
+		return
+	}
+
+	req.Header.Set("Authorization", "Bearer "+accessToken.AccessToken)
+
+	resp, err := client.Do(req)
 	if err != nil {
 		http.Error(w, "Failed to fetch user data", http.StatusInternalServerError)
 		return
@@ -89,10 +99,16 @@ func GoogleAuthCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	if existingUser != nil {
 		existingUser.Password = ""
-		tk := schema.Token{UserId: existingUser.ID, Email: existingUser.Email}
+		tk := schema.Token{UserId: existingUser.ID, Email: existingUser.Email, TenantId: existingUser.Account.TenantID}
 		token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 		tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
 		existingUser.Token = tokenString
+
+		_, err := models.UpdateUserLoginToken(uint(existingUser.ID), existingUser)
+		if err != nil {
+			u.Respond(w, u.Message(false, "Error in updating user token"))
+			return
+		}
 		userDetails = *existingUser
 	} else {
 		// User does not exist, create a new user in the database
@@ -131,6 +147,7 @@ var CustomerLogin = func(w http.ResponseWriter, r *http.Request) {
 	if requestData.Passcode != surveyData.Survey.Passcode {
 		resp := u.Message(false, constants.FAILED)
 		resp[constants.DATA] = constants.PASSCODE_MISMATCH
+		w.WriteHeader(http.StatusUnauthorized)
 		u.Respond(w, resp)
 		return
 	}
