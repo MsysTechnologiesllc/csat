@@ -38,7 +38,12 @@ var GetSurveyDetails = func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid 'id' format", http.StatusBadRequest)
 		return
 	}
-	data, _ := models.GetSurvey(uint(id))
+	passcode := queryValues.Get("passcode")
+	if passcode == "" {
+		http.Error(w, "Invalid 'passcode' format", http.StatusBadRequest)
+		return
+	}
+	data, _ := models.GetSurvey(uint(id), passcode)
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = data
 	u.Respond(w, resp)
