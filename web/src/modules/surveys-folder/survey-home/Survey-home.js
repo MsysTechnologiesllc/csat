@@ -17,7 +17,6 @@ const SurveyHome = () => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [prjData, setPrjData] = useState([]);
   const [tenantId] = useOutletContext();
-  let id = 1001;
   let page = pageNumber;
   let limit = dataPerPage;
   let accName = JSON.stringify(filterAccounts);
@@ -31,10 +30,10 @@ const SurveyHome = () => {
     });
   }, []);
   useEffect(() => {
-    if (id) {
+    if (tenantId) {
       setIsDataLoaded(false);
       new GetService().getSurveyList(
-        id,
+        tenantId,
         page,
         limit,
         accName,
@@ -49,7 +48,7 @@ const SurveyHome = () => {
         },
       );
     }
-  }, [pageNumber, dataPerPage, filterStatus, filterAccounts]);
+  }, [pageNumber, dataPerPage, filterStatus, filterAccounts, tenantId]);
 
   function getStatusFilterUpdates(value) {
     setPageNumber(1);
