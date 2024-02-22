@@ -47,10 +47,10 @@ type UpdateAnswerRequest struct {
 // @Failure 404 {object} map[string]interface{} "No user found"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/survey-details [get]
-func GetSurvey(id uint) (*SurveyDetails, error) {
+func GetSurvey(id uint, passcode string) (*SurveyDetails, error) {
 	var surveyDetails SurveyDetails
 
-	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("ID = ?", id).Not("surveys.status = ?", "template").Find(&surveyDetails.Survey).Error; err != nil {
+	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("ID = ? AND passcode = ?", id, passcode).Not("surveys.status = ?", "template").Find(&surveyDetails.Survey).Error; err != nil {
 		logger.Log.Println("Error fetching survey details:", err)
 		return nil, err
 	}
