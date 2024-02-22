@@ -310,10 +310,11 @@ func GetUserByEmail(email string) (*schema.User, error) {
 }
 
 func SendSurveyMail(userDetails *schema.User, surveyID uint, surveyPasscode string) error {
-	surveyIDString := fmt.Sprintf("%d", surveyID)
+	// surveyIDString := fmt.Sprintf("%d", surveyID)
+	surveyURL := fmt.Sprintf("%s?survey_id=%d&passcode=%s", os.Getenv("EMAIL_BASE_URL"), surveyID, surveyPasscode)
 	emailData := utils.EmailData{
 		Name:        userDetails.Name,
-		SurveyID:    os.Getenv("EMAIL_BASE_URL") + surveyIDString,
+		SurveyID:    surveyURL,
 		ProjectName: surveyPasscode,
 	}
 	emailRecipient := utils.EmailRecipient{
@@ -382,6 +383,21 @@ func GetSurveyForClient(id uint) (*SurveyDetails, error) {
 	var surveyDetails SurveyDetails
 
 	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("ID = ?", id).Find(&surveyDetails.Survey).Error; err != nil {
+		logger.Log.Println("Error fetching survey details:", err)
+		return nil, err
+	}
+	surveyFormatID := surveyDetails.Survey.SurveyFormatID
+	if err := GetDB().Where("ID = ?", surveyFormatID).First(&surveyDetails.SurveyFormat).Error; err != nil {
+		logger.Log.Println("Error fetching survey format details:", err)
+		return nil, err
+	}
+	return &surveyDetails, nil
+}
+
+func GetSurveyForLogin(passcode string) (*SurveyDetails, error) {
+	var surveyDetails SurveyDetails
+
+	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("passcode = ?", passcode).Find(&surveyDetails.Survey).Error; err != nil {
 		logger.Log.Println("Error fetching survey details:", err)
 		return nil, err
 	}

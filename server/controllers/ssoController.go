@@ -128,18 +128,17 @@ func decodeJSON(r io.Reader, v interface{}) error {
 var CustomerLogin = func(w http.ResponseWriter, r *http.Request) {
 	logger.Log.Println("Customer login - Controller")
 	var requestData struct {
-		SurveyID uint   `json:"survey_id"`
 		Passcode string `json:"passcode"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&requestData); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
-	if requestData.SurveyID == 0 || requestData.Passcode == "" {
+	if requestData.Passcode == "" {
 		http.Error(w, "Survey ID and Passcode are required fields", http.StatusBadRequest)
 		return
 	}
-	surveyData, err := models.GetSurveyForClient(uint(requestData.SurveyID))
+	surveyData, err := models.GetSurveyForLogin(requestData.Passcode)
 	if err != nil {
 		u.Respond(w, u.Message(false, constants.INVALID_SURVEYID))
 		return
@@ -152,6 +151,9 @@ var CustomerLogin = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	resp := u.Message(true, constants.SUCCESS)
-	resp[constants.DATA] = constants.SUCCESS
+	resp[constants.DATA] = map[string]interface{}{
+		"ID":      surveyData.Survey.ID,
+		"Passcode": surveyData.Survey.Passcode,
+	}
 	u.Respond(w, resp)
 }
