@@ -4,6 +4,7 @@ import SurveyHeader from "../survey-header/Survey-header";
 import SurveyList from "../survey-list/Survey-list";
 import { GetService } from "../../../services/get";
 import { useDetectMobileOrDesktop } from "../../../hooks/useDetectMobileOrDesktop";
+import { useOutletContext } from "react-router";
 
 const SurveyHome = () => {
   const { isMobile } = useDetectMobileOrDesktop();
@@ -15,6 +16,7 @@ const SurveyHome = () => {
   const [filterAccounts, setFilterAccounts] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [prjData, setPrjData] = useState([]);
+  const [tenantId] = useOutletContext();
   let id = 1001;
   let page = pageNumber;
   let limit = dataPerPage;

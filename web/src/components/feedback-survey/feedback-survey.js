@@ -109,24 +109,30 @@ export const FeedBackSurvey = () => {
       new PutService().updateSurveyDetails(payload, (result) => {
         if (result?.status === 200) {
           setProceedLoader(false);
-          navigate("/teamFeedback", {
-            state: {
-              surveyDetails: surveyDetails,
-              questionsData: questionsData,
-              status: state?.status,
+          navigate(
+            `/teamFeedback?survey_id=${surveyDetails?.Survey?.ID}&passcode=${surveyDetails?.Survey?.passcode}`,
+            {
+              state: {
+                surveyDetails: surveyDetails,
+                questionsData: questionsData,
+                status: state?.status,
+              },
             },
-          });
+          );
         }
       });
     } else {
       setProceedLoader(false);
-      navigate("/teamFeedback", {
-        state: {
-          surveyDetails: surveyDetails,
-          questionsData: questionsData,
-          status: state?.status,
+      navigate(
+        `/teamFeedback?survey_id=${surveyDetails?.Survey?.ID}&passcode=${surveyDetails?.Survey?.passcode}`,
+        {
+          state: {
+            surveyDetails: surveyDetails,
+            questionsData: questionsData,
+            status: state?.status,
+          },
         },
-      });
+      );
     }
   };
   const handleSaveAsDraft = (ques) => {
@@ -171,7 +177,9 @@ export const FeedBackSurvey = () => {
     setComment("");
   };
   const handleCancel = () => {
-    navigate(`/customer-survey/${surveyDetails?.Survey?.ID}`);
+    navigate(
+      `/customer-survey?survey_id=${surveyDetails?.Survey?.ID}&passcode=${surveyDetails?.Survey?.passcode}`,
+    );
     setSelectedValue("");
     setComment("");
     setIsAnsweraSelected(false);

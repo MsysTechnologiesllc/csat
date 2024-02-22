@@ -17,7 +17,6 @@ export const AddClient = ({
     setIsModalOpen(true);
   };
   const handleOk = (values) => {
-    console.log(values, "called");
     const payload = {
       survey_id: surveyDetails?.Survey?.ID,
       name: values.newClientName,

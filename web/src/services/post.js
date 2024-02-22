@@ -22,4 +22,11 @@ export class PostService extends BaseService {
       callback,
     );
   }
+  postSSOApi(response, callback) {
+    return this.post(
+      process.env.GO_SERVICE_URL + `/csat/rest/auth/google/update`,
+      response,
+      callback,
+    );
+  }
 }

@@ -1,0 +1,42 @@
+@use "../../assets/style" as *;
+
+.sso-login-wrapper {
+  height: 100vh;
+  background-color: $white;
+  @include flex-column;
+  @include justify-content-center;
+  @include align-items-center;
+  .login-context {
+    min-width: 20rem;
+    max-width: 30rem;
+    @include font-style($jet-black, 3.5rem, 4.1rem, 500);
+    margin-bottom: 1rem;
+    @include media("<md") {
+      font-size: 3rem;
+      line-height: 3.5rem;
+    }
+  }
+  .login-button {
+    background-color: $indigo;
+    @include font-style($white, 1.5rem, 2.6rem, 500);
+    border-radius: 0.4rem;
+    min-width: 30rem;
+    max-width: 30rem;
+    min-height: 4.5rem;
+    max-height: 4.5rem;
+    padding: 1rem 2.2rem;
+    @include justify-content-center;
+    @include align-items-center;
+    @include media("<md") {
+      min-width: 25rem;
+      max-width: 25rem;
+      min-height: 4rem;
+      max-height: 4rem;
+    }
+    &:hover {
+      background-color: $indigo;
+      color: $white;
+      border: 0;
+    }
+  }
+}

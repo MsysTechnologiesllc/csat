@@ -11,6 +11,7 @@ export const translationEN = {
     draftMessage: "Draft saved successfully",
     userFeedbackSubmitted: "User feedback saved succesfully",
     publish: "Publish",
+    googleLogin: "Continue with Google",
   },
   header: {
     title: "CSAT",

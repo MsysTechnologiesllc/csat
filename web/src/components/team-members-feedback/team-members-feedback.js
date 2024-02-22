@@ -71,6 +71,7 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
     } else {
       new GetService().getSurveyDetails(
         surveyId ? surveyId : state?.surveyDetails?.Survey?.ID,
+        state?.surveyDetails?.Survey?.passcode,
         (result) => {
           if (result?.data?.data) {
             setUsersList(result?.data?.data?.Survey?.user_feedbacks);
@@ -132,9 +133,12 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
   // };
   const handleBack = () => {
     setNotify("");
-    navigate(`/survey/${state?.surveyDetails?.Survey.ID}`, {
-      state: { surveyDetails: state?.surveyDetails, status: state?.status },
-    });
+    navigate(
+      `/survey?survey_id=${state?.surveyDetails?.Survey?.ID}&passcode=${state?.surveyDetails?.Survey?.passcode}`,
+      {
+        state: { surveyDetails: state?.surveyDetails, status: state?.status },
+      },
+    );
   };
 
   useEffect(() => {

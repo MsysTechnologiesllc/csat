@@ -1,6 +1,6 @@
 import { Button, Card, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import i18n from "../../locales/i18next";
 import { GetService } from "../../services/get";
 import { ShimmerSimpleGallery } from "react-shimmer-effects";
@@ -12,6 +12,7 @@ export const Accounts = () => {
   const navigate = useNavigate();
   const [accountsList, setAccountsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [tenantId] = useOutletContext();
   const handleView = (account) => {
     navigate(`/accounts/${account.ID}/projects`, {
       state: {
@@ -21,18 +22,17 @@ export const Accounts = () => {
       },
     });
   };
-  const tenant_id = 1001;
   useEffect(() => {
     setIsLoading(true);
-    if (tenant_id) {
-      new GetService().getAccountsList(tenant_id, (result) => {
+    if (tenantId) {
+      new GetService().getAccountsList(tenantId, (result) => {
         if (result?.status === 200) {
           setAccountsList(result?.data?.data?.tenant?.tenant_accounts);
           setIsLoading(false);
         }
       });
     }
-  }, [tenant_id]);
+  }, [tenantId]);
   return (
     <div className="projects-list-wrapper">
       <h1 className="project-title">{i18n.t("greetings.account")}</h1>

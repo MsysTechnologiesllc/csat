@@ -8,10 +8,10 @@ export class GetService extends BaseService {
       callback,
     );
   }
-  getSurveyDetails(surveyId, callback) {
+  getSurveyDetails(surveyId, passcode, callback) {
     return this.get(
       process.env.GO_SERVICE_URL +
-        `/csat/rest/api/survey-details?id=${surveyId}`,
+        `/csat/rest/api/survey-details?id=${surveyId}&passcode=${passcode}`,
       callback,
     );
   }
