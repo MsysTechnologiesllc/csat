@@ -239,7 +239,7 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 	}
 	surveyID, ok := requestData["survey_id"].(uint)
 	if ok {
-		projectID, ok := requestData["project_id"].(uint)
+		projectID, _ := requestData["project_id"].(uint)
 		surveyStatus, ok := requestData["survey_status"].(string)
 		if !ok {
 			return nil, fmt.Errorf("invalid 'survey_status' format")
@@ -250,7 +250,19 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 			return nil, err
 		}
 		if surveyStatus == "publish" {
-			linkURL := os.Getenv("SURVEY_COMPLETED_BASE_URL")
+			surveyDetails, err := GetSurveyForClient(surveyID)
+			if err != nil {
+				tx.Rollback()
+				return nil, fmt.Errorf("failed to get survey details: %v", err)
+			}
+
+			// Check if the retrieved surveyDetails contain the passcode
+			if surveyDetails.Survey.Passcode == "" {
+				tx.Rollback()
+				return nil, fmt.Errorf("passcode not found for survey ID: %d", surveyID)
+			}
+			// linkURL := os.Getenv("SURVEY_COMPLETED_BASE_URL")
+			
 			users, err := GetUsersListByProjectID(projectID)
 			if err != nil {
 				return nil, fmt.Errorf("invalid 'survey_status' format")
@@ -258,12 +270,13 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 
 			for _, user := range users {
 				// Check if user role is not "user" and not "client"
+				linkURL := fmt.Sprintf("%s?survey_id=%d&passcode=%s", os.Getenv("SURVEY_COMPLETED_BASE_URL"), surveyID, surveyDetails.Survey.Passcode)
 				if user.Role != "member" && user.Role != "client" {
-					surveyIDString := fmt.Sprintf("%d", surveyID)
+					// surveyIDString := fmt.Sprintf("%d", surveyID)
 					emailData := utils.EmailData{
 						Name:        user.Name,
-						ProjectName: "Completed survey",
-						SurveyID:    linkURL + surveyIDString,
+						ProjectName: surveyDetails.Survey.Passcode,
+						SurveyID:    linkURL,
 					}
 					emailRecipient := utils.EmailRecipient{
 						To:      []string{user.Email},
