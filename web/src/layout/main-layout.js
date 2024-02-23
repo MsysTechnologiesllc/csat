@@ -41,7 +41,7 @@ export const MainLayout = () => {
 
   useEffect(() => {
     let jwtDetails = TokenUtil.getTokenDetails();
-    if (jwtDetails.Email) {
+    if (jwtDetails?.Email) {
       setTenantId(jwtDetails?.TenantId);
     }
   }, []);

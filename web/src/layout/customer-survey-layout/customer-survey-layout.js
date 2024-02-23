@@ -7,6 +7,8 @@ import "./customer-survey-layout.scss";
 
 export const CustomerSurveyLayout = () => {
   const [projectName, setProjectName] = useState("");
+  const [visible, setVisible] = useState(true);
+
   let isCustomerSurvey = location.pathname
     .split("/")
     .includes("customer-survey");
@@ -15,20 +17,24 @@ export const CustomerSurveyLayout = () => {
   const survey_id = params.get("survey_id");
   const passcode = params.get("passcode");
   useEffect(() => {
-    if (isCustomerSurvey === false) {
+    if (isCustomerSurvey === false && survey_id && passcode) {
       new GetService().getSurveyDetails(survey_id, passcode, (result) => {
         if (result?.data?.data) {
           setProjectName(result?.data?.data?.Survey?.project?.name);
         }
       });
+    } else {
+      setVisible(false);
     }
   }, [survey_id, isCustomerSurvey]);
   return (
     <>
       <Layout className="customer-survey-layout">
-        <AntdHeader>
-          <Header prjTitle={projectName} displayPrjTitle={isCustomerSurvey} />
-        </AntdHeader>
+        {visible && (
+          <AntdHeader>
+            <Header prjTitle={projectName} displayPrjTitle={isCustomerSurvey} />
+          </AntdHeader>
+        )}
         <Layout hasSider={false}>
           <Content>
             <Outlet />

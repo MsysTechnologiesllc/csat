@@ -5,16 +5,19 @@ import i18n from "../../locales/i18next";
 import { DaysAdded } from "../../utils/utils";
 import { GetService } from "../../services/get";
 import "./greetings.scss";
+import { plLibComponents } from "../../context-provider/component-provider";
 // import { PostService } from "../../services/post";
 // import NotifyStatus from "../notify-status/notify-status";
 
 function GreetingsPage() {
+  const { NoData } = plLibComponents.components;
   const navigate = useNavigate();
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const survey_id = params.get("survey_id");
   const passCode = params.get("passcode");
   const [surveyDetails, setSurveyDetails] = useState({});
+  const [notFound, setNotFound] = useState(false);
   // const [passcode, setPasscode] = useState(true);
   // const [isModal, setIsModal] = useState(false);
   // const [notify, setNotify] = useState("");
@@ -23,12 +26,17 @@ function GreetingsPage() {
   //   setIsModal(true);
   // };
   useEffect(() => {
+    setSpinLoader(true);
     if (survey_id && passCode) {
       new GetService().getSurveyDetails(survey_id, passCode, (result) => {
-        if (result?.data?.data) {
+        if (result?.data?.data && result?.status === 200) {
           setSurveyDetails(result?.data?.data);
+          setSpinLoader(false);
         }
       });
+    } else {
+      setNotFound(true);
+      setSpinLoader(false);
     }
   }, [survey_id, passCode]);
   // const handleFinish = (values) => {
@@ -73,11 +81,11 @@ function GreetingsPage() {
       },
     });
   };
-  useEffect(() => {
-    if (survey_id) {
-      setSpinLoader(false);
-    }
-  }, [survey_id]);
+  // useEffect(() => {
+  //   if (survey_id) {
+  //     setSpinLoader(false);
+  //   }
+  // }, [survey_id]);
   const Loader = () => {
     return (
       <div>
@@ -98,6 +106,12 @@ function GreetingsPage() {
         <div className="report-loading-spinner">
           <Loader />
         </div>
+      ) : spinLoader == false && notFound ? (
+        <NoData
+          heading="No survey found"
+          descriptionLine1=""
+          descriptionLine2=""
+        />
       ) : (
         <>
           <div className="greetings-container">
@@ -146,48 +160,48 @@ function GreetingsPage() {
               </div>
               {/* )} */}
               {/* {passcode ? (
-                <>
-                  <Button className="active-button" onClick={handlePasscode}>
-                    {i18n.t("greetings.passCode")}
-                  </Button>
-                  {isModal && (
-                    <Modal
-                      open={isModal}
-                      footer={false}
-                      className="passcode-modal"
-                      closable={false}
-                    >
-                      <Form onFinish={handleFinish} className="passcode-form">
-                        <Form.Item
-                          name="passcode"
-                          rules={[
-                            {
-                              required: true,
-                              message: "Please input your passcode!",
-                            },
-                            {
-                              validator: checkPasswordStrength,
-                            },
-                          ]}
-                          label="Enter Passode:"
+              <>
+                <Button className="active-button" onClick={handlePasscode}>
+                  {i18n.t("greetings.passCode")}
+                </Button>
+                {isModal && (
+                  <Modal
+                    open={isModal}
+                    footer={false}
+                    className="passcode-modal"
+                    closable={false}
+                  >
+                    <Form onFinish={handleFinish} className="passcode-form">
+                      <Form.Item
+                        name="passcode"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please input your passcode!",
+                          },
+                          {
+                            validator: checkPasswordStrength,
+                          },
+                        ]}
+                        label="Enter Passode:"
+                      >
+                        <Input.Password />
+                      </Form.Item>
+                      <div>
+                        <Button
+                          loading={passcodeLoader}
+                          htmlType="submit"
+                          type="text"
+                          className="submit-button"
                         >
-                          <Input.Password />
-                        </Form.Item>
-                        <div>
-                          <Button
-                            loading={passcodeLoader}
-                            htmlType="submit"
-                            type="text"
-                            className="submit-button"
-                          >
-                            {i18n.t("button.submit")}
-                          </Button>
-                        </div>
-                      </Form>
-                    </Modal>
-                  )}
-                </>
-              ) : ( */}
+                          {i18n.t("button.submit")}
+                        </Button>
+                      </div>
+                    </Form>
+                  </Modal>
+                )}
+              </>
+            ) : ( */}
               <Button
                 className="active-button"
                 onClick={() =>
