@@ -47,10 +47,10 @@ type UpdateAnswerRequest struct {
 // @Failure 404 {object} map[string]interface{} "No user found"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/survey-details [get]
-func GetSurvey(id uint) (*SurveyDetails, error) {
+func GetSurvey(id uint, passcode string) (*SurveyDetails, error) {
 	var surveyDetails SurveyDetails
 
-	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("ID = ?", id).Not("surveys.status = ?", "template").Find(&surveyDetails.Survey).Error; err != nil {
+	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("ID = ? AND passcode = ?", id, passcode).Not("surveys.status = ?", "template").Find(&surveyDetails.Survey).Error; err != nil {
 		logger.Log.Println("Error fetching survey details:", err)
 		return nil, err
 	}
@@ -239,7 +239,7 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 	}
 	surveyID, ok := requestData["survey_id"].(uint)
 	if ok {
-		projectID, ok := requestData["project_id"].(uint)
+		projectID, _ := requestData["project_id"].(uint)
 		surveyStatus, ok := requestData["survey_status"].(string)
 		if !ok {
 			return nil, fmt.Errorf("invalid 'survey_status' format")
@@ -250,7 +250,19 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 			return nil, err
 		}
 		if surveyStatus == "publish" {
-			linkURL := os.Getenv("SURVEY_COMPLETED_BASE_URL")
+			surveyDetails, err := GetSurveyForClient(surveyID)
+			if err != nil {
+				tx.Rollback()
+				return nil, fmt.Errorf("failed to get survey details: %v", err)
+			}
+
+			// Check if the retrieved surveyDetails contain the passcode
+			if surveyDetails.Survey.Passcode == "" {
+				tx.Rollback()
+				return nil, fmt.Errorf("passcode not found for survey ID: %d", surveyID)
+			}
+			// linkURL := os.Getenv("SURVEY_COMPLETED_BASE_URL")
+			
 			users, err := GetUsersListByProjectID(projectID)
 			if err != nil {
 				return nil, fmt.Errorf("invalid 'survey_status' format")
@@ -258,12 +270,13 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 
 			for _, user := range users {
 				// Check if user role is not "user" and not "client"
+				linkURL := fmt.Sprintf("%s?survey_id=%d&passcode=%s", os.Getenv("SURVEY_COMPLETED_BASE_URL"), surveyID, surveyDetails.Survey.Passcode)
 				if user.Role != "member" && user.Role != "client" {
-					surveyIDString := fmt.Sprintf("%d", surveyID)
+					// surveyIDString := fmt.Sprintf("%d", surveyID)
 					emailData := utils.EmailData{
 						Name:        user.Name,
-						ProjectName: "Completed survey",
-						SurveyID:    linkURL + surveyIDString,
+						ProjectName: surveyDetails.Survey.Passcode,
+						SurveyID:    linkURL,
 					}
 					emailRecipient := utils.EmailRecipient{
 						To:      []string{user.Email},
@@ -310,10 +323,11 @@ func GetUserByEmail(email string) (*schema.User, error) {
 }
 
 func SendSurveyMail(userDetails *schema.User, surveyID uint, surveyPasscode string) error {
-	surveyIDString := fmt.Sprintf("%d", surveyID)
+	// surveyIDString := fmt.Sprintf("%d", surveyID)
+	surveyURL := fmt.Sprintf("%s?survey_id=%d&passcode=%s", os.Getenv("EMAIL_BASE_URL"), surveyID, surveyPasscode)
 	emailData := utils.EmailData{
 		Name:        userDetails.Name,
-		SurveyID:    os.Getenv("EMAIL_BASE_URL") + surveyIDString,
+		SurveyID:    surveyURL,
 		ProjectName: surveyPasscode,
 	}
 	emailRecipient := utils.EmailRecipient{
@@ -390,5 +404,65 @@ func GetSurveyForClient(id uint) (*SurveyDetails, error) {
 		logger.Log.Println("Error fetching survey format details:", err)
 		return nil, err
 	}
+	return &surveyDetails, nil
+}
+
+func GetSurveyForLogin(passcode string) (*SurveyDetails, error) {
+	var surveyDetails SurveyDetails
+
+	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("passcode = ?", passcode).Find(&surveyDetails.Survey).Error; err != nil {
+		logger.Log.Println("Error fetching survey details:", err)
+		return nil, err
+	}
+	surveyFormatID := surveyDetails.Survey.SurveyFormatID
+	if err := GetDB().Where("ID = ?", surveyFormatID).First(&surveyDetails.SurveyFormat).Error; err != nil {
+		logger.Log.Println("Error fetching survey format details:", err)
+		return nil, err
+	}
+	return &surveyDetails, nil
+}
+
+func GetManagerSurvey(id uint) (*SurveyDetails, error) {
+	var surveyDetails SurveyDetails
+
+	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("ID = ?", id).Not("surveys.status = ?", "template").Find(&surveyDetails.Survey).Error; err != nil {
+		logger.Log.Println("Error fetching survey details:", err)
+		return nil, err
+	}
+	surveyFormatID := surveyDetails.Survey.SurveyFormatID
+	if err := GetDB().Where("ID = ?", surveyFormatID).First(&surveyDetails.SurveyFormat).Error; err != nil {
+		logger.Log.Println("Error fetching survey format details:", err)
+		return nil, err
+	}
+
+	var totalRatings, totalOptionsLength float64
+	for _, answer := range surveyDetails.Survey.SurveyAnswers {
+		if answer.McqQuestions.Type == "star-rating" || answer.McqQuestions.Type == "scale-rating" {
+			if answer.McqQuestions.Options == "" || answer.Answer == nil {
+				logger.Log.Println("Warning: Options or Answer is nil for question ID:", answer.McqQuestions.ID)
+				continue
+			}
+			var options, answerData []map[string]interface{}
+			if err := json.Unmarshal([]byte(answer.McqQuestions.Options), &options); err != nil {
+				logger.Log.Println("Error decoding question options:", err)
+				continue
+			}
+			if err := json.Unmarshal([]byte(answer.Answer[0]), &answerData); err != nil {
+				logger.Log.Println("Error decoding survey answer:", err)
+				continue
+			}
+			ratingPercent := (float64(len(answerData)) / float64(len(options))) * 100
+			totalRatings += (ratingPercent / 100) * 5
+			totalOptionsLength++
+		}
+	}
+
+	var finalRating float64
+	if totalOptionsLength > 0 {
+		finalRating = totalRatings / totalOptionsLength
+		finalRating = math.Round(finalRating*100) / 100
+	}
+
+	surveyDetails.AverageRating = finalRating
 	return &surveyDetails, nil
 }

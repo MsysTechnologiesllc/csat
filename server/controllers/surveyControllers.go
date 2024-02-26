@@ -38,7 +38,12 @@ var GetSurveyDetails = func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid 'id' format", http.StatusBadRequest)
 		return
 	}
-	data, _ := models.GetSurvey(uint(id))
+	passcode := queryValues.Get("passcode")
+	if passcode == "" {
+		http.Error(w, "Invalid 'passcode' format", http.StatusBadRequest)
+		return
+	}
+	data, _ := models.GetSurvey(uint(id), passcode)
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = data
 	u.Respond(w, resp)
@@ -393,6 +398,23 @@ var GetSurveyFormatList = func(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data, _ := models.GetSurveyFormatListFromDB(uint(projectID))
+	resp := u.Message(true, constants.SUCCESS)
+	resp[constants.DATA] = data
+	u.Respond(w, resp)
+}
+
+var GetManagerSurveyDetails = func(w http.ResponseWriter, r *http.Request) {
+	logger.Log.Println("Logging from Controller")
+
+	// Parse query parameters
+	queryValues := r.URL.Query()
+	idStr := queryValues.Get(constants.ID)
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid 'id' format", http.StatusBadRequest)
+		return
+	}
+	data, _ := models.GetManagerSurvey(uint(id))
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = data
 	u.Respond(w, resp)

@@ -20,6 +20,7 @@ JWT claims struct
 type Token struct {
 	UserId uint
 	Email  string
+	Token  uint
 	jwt.StandardClaims
 }
 
@@ -416,4 +417,24 @@ func GetUsersListByProjectID(projectID uint) ([]schema.User, error) {
 	}
 
 	return users, nil
+}
+
+func UpdateUserLoginToken(id uint, user *schema.User) (*schema.User, error) {
+	var existingUser schema.User
+
+	// Find the existing user feedback by ID
+	result := GetDB().First(&existingUser, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	existingUser.Token = user.Token
+
+	// Save the updated user feedback to the database
+	result = GetDB().Save(&existingUser)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &existingUser, nil
 }
