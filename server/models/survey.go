@@ -421,3 +421,48 @@ func GetSurveyForLogin(passcode string) (*SurveyDetails, error) {
 	}
 	return &surveyDetails, nil
 }
+
+func GetManagerSurvey(id uint) (*SurveyDetails, error) {
+	var surveyDetails SurveyDetails
+
+	if err := GetDB().Preload("UserFeedback").Preload("UserFeedback.User").Preload("SurveyAnswers").Preload("SurveyAnswers.McqQuestions").Preload("Project").Where("ID = ?", id).Not("surveys.status = ?", "template").Find(&surveyDetails.Survey).Error; err != nil {
+		logger.Log.Println("Error fetching survey details:", err)
+		return nil, err
+	}
+	surveyFormatID := surveyDetails.Survey.SurveyFormatID
+	if err := GetDB().Where("ID = ?", surveyFormatID).First(&surveyDetails.SurveyFormat).Error; err != nil {
+		logger.Log.Println("Error fetching survey format details:", err)
+		return nil, err
+	}
+
+	var totalRatings, totalOptionsLength float64
+	for _, answer := range surveyDetails.Survey.SurveyAnswers {
+		if answer.McqQuestions.Type == "star-rating" || answer.McqQuestions.Type == "scale-rating" {
+			if answer.McqQuestions.Options == "" || answer.Answer == nil {
+				logger.Log.Println("Warning: Options or Answer is nil for question ID:", answer.McqQuestions.ID)
+				continue
+			}
+			var options, answerData []map[string]interface{}
+			if err := json.Unmarshal([]byte(answer.McqQuestions.Options), &options); err != nil {
+				logger.Log.Println("Error decoding question options:", err)
+				continue
+			}
+			if err := json.Unmarshal([]byte(answer.Answer[0]), &answerData); err != nil {
+				logger.Log.Println("Error decoding survey answer:", err)
+				continue
+			}
+			ratingPercent := (float64(len(answerData)) / float64(len(options))) * 100
+			totalRatings += (ratingPercent / 100) * 5
+			totalOptionsLength++
+		}
+	}
+
+	var finalRating float64
+	if totalOptionsLength > 0 {
+		finalRating = totalRatings / totalOptionsLength
+		finalRating = math.Round(finalRating*100) / 100
+	}
+
+	surveyDetails.AverageRating = finalRating
+	return &surveyDetails, nil
+}

@@ -402,3 +402,20 @@ var GetSurveyFormatList = func(w http.ResponseWriter, r *http.Request) {
 	resp[constants.DATA] = data
 	u.Respond(w, resp)
 }
+
+var GetManagerSurveyDetails = func(w http.ResponseWriter, r *http.Request) {
+	logger.Log.Println("Logging from Controller")
+
+	// Parse query parameters
+	queryValues := r.URL.Query()
+	idStr := queryValues.Get(constants.ID)
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid 'id' format", http.StatusBadRequest)
+		return
+	}
+	data, _ := models.GetManagerSurvey(uint(id))
+	resp := u.Message(true, constants.SUCCESS)
+	resp[constants.DATA] = data
+	u.Respond(w, resp)
+}
