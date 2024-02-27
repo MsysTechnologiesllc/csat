@@ -20,6 +20,7 @@ import { PreviewSurvey } from "../modules/accounts/preview-survey/preview-survey
 import { ProjectsList } from "../modules/accounts/projects-list/projects-list";
 import FormatList from "../modules/accounts/format-list/format-list";
 import { SSOIntegration } from "../components/sso-integration/sso-integration";
+import Error from "../components/error/error";
 
 const AppRoutes = () => {
   const routes = [
@@ -38,6 +39,7 @@ const AppRoutes = () => {
           <Route path={`/customer-survey`} element={<GreetingsPage />} exact />
           <Route path="/survey" element={<FeedBackSurvey />} exact />
           <Route path="/teamFeedBack" element={<TeamMembersFeedBack />} exact />
+          <Route key="/404" path="/404" element={<Error />} exact />
           {routes.map((route, index) => (
             <Route
               key={index}
@@ -87,7 +89,7 @@ const AppRoutes = () => {
           />
           <Route
             key="/surveys"
-            path="/surveys/surveyDetails/:survey_id"
+            path="/surveys/surveyDetails"
             element={<SurveyDetails />}
             exact
           />
@@ -97,6 +99,8 @@ const AppRoutes = () => {
             element={<Notifications />}
             exact
           />
+          {/* <Route path="*" element={<Navigate to="/ssoIntegration" replace />} /> */}
+          <Route path="*" element={<Navigate to="/404" replace />} />
         </Route>
       </Routes>
     </Router>

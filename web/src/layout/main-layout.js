@@ -38,14 +38,12 @@ export const MainLayout = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const navigate = useNavigate();
   const [tenantId, setTenantId] = useState(0);
-
   useEffect(() => {
     let jwtDetails = TokenUtil.getTokenDetails();
     if (jwtDetails?.Email) {
       setTenantId(jwtDetails?.TenantId);
     }
   }, []);
-
   const handlesidebar = (evt) => {
     if (evt.key === "/surveys" || evt.key === "/accounts") {
       navigate(evt.key);

@@ -11,7 +11,12 @@ import { GetService } from "../../services/get";
 import PropTypes from "prop-types";
 import "./team-members-feedback.scss";
 
-export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
+export const TeamMembersFeedBack = ({
+  surveyId,
+  surveyDetails,
+  status,
+  // passCode,
+}) => {
   const { TextArea } = Input;
   const { InputField } = plLibComponents.components;
   const navigate = useNavigate();
@@ -69,9 +74,9 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
       }
       setSurveyStatus(status);
     } else {
-      new GetService().getSurveyDetails(
+      new GetService().getManagerSurveyDetails(
         surveyId ? surveyId : state?.surveyDetails?.Survey?.ID,
-        state?.surveyDetails?.Survey?.passcode,
+        // state?.surveyDetails?.Survey?.passcode,
         (result) => {
           if (result?.data?.data) {
             setUsersList(result?.data?.data?.Survey?.user_feedbacks);
@@ -397,4 +402,5 @@ TeamMembersFeedBack.propTypes = {
   surveyId: PropTypes.number,
   surveyDetails: PropTypes.object,
   status: PropTypes.bool,
+  // passCode: PropTypes.string,
 };

@@ -15,6 +15,13 @@ export class GetService extends BaseService {
       callback,
     );
   }
+  getManagerSurveyDetails(surveyId, callback) {
+    return this.get(
+      process.env.GO_SERVICE_URL +
+        `/csat/rest/api/manager/survey-details?id=${surveyId}`,
+      callback,
+    );
+  }
   getSurveyList(
     tenant_id,
     page,
