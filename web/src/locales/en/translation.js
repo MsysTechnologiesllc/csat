@@ -141,4 +141,10 @@ export const translationEN = {
     emailPlaceholder: "Enter client emailId",
     selectDate: "Select Date",
   },
+  error: {
+    error: "Error 404",
+    desc1: "Oops nothing here",
+    desc2: "The content your are looking for can't be found",
+    noData: "No survey found",
+  },
 };

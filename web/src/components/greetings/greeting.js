@@ -108,7 +108,7 @@ function GreetingsPage() {
         </div>
       ) : spinLoader == false && notFound ? (
         <NoData
-          heading="No survey found"
+          heading={i18n.t("error.noData")}
           descriptionLine1=""
           descriptionLine2=""
         />
