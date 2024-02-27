@@ -141,7 +141,7 @@ const SurveyList = ({
         pagination={false}
         rowKey="key"
         scroll={{ y: 300, x: true }}
-        rowClassName={getRowClassName}
+        rowClassName={(record, index) => getRowClassName(index)}
         className="custom-scrollbar-table"
       />
       <div className="pagination-container">

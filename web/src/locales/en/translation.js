@@ -130,6 +130,7 @@ export const translationEN = {
     surveys: "Surveys.",
     description:
       "Only projects for which the surveys are pending for this month are displayed. To view all surveys, please go to",
+    surveyFormats: "Survey Formats",
   },
   settings: {
     add: "ADD CLIENT",

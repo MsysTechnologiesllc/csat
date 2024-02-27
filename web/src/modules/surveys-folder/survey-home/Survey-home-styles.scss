@@ -2,6 +2,7 @@
 
 .filter-sider {
   max-width: 60vw;
+
   .ant-drawer-header {
     border: none;
   }
@@ -117,6 +118,7 @@
     .action-svg {
       min-height: 3rem;
       @include align-items-center;
+
       .action-avatar {
         &:hover {
           cursor: pointer;
@@ -152,19 +154,34 @@
       background-color: $dark-grey;
     }
 
-    .ant-table-wrapper {
+    .custom-scrollbar-table {
       padding: 1.6rem;
-      min-height: 66vh;
-      max-height: 66vh;
+      min-height: 75vh;
+      max-height: 75vh;
       border: 0.1rem solid $light-grey;
       border-radius: 0.4rem;
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
       border-bottom: none;
 
-      @include media("<=md") {
-        min-height: 75vh;
-        max-height: 75vh;
+      @include media(">=md") {
+        min-height: 70vh;
+        max-height: 70vh;
+      }
+
+      @include media(">=lg") {
+        min-height: 72vh;
+        max-height: 72vh;
+      }
+
+      .ant-spin-container {
+        min-height: 50vh;
+        max-height: 50vh;
+
+        @include media(">=lg") {
+          min-height: 70vh;
+          max-height: 70vh;
+        }
       }
 
       .even-row {
@@ -172,25 +189,17 @@
       }
 
       .ant-table {
-        min-height: 60vh;
-        max-height: 60vh;
-
         .ant-table-body {
-          min-height: 59vh;
-          max-height: 59vh;
-
-          @include media(">=md") {
-            min-height: 61vh;
-            max-height: 61vh;
-          }
+          min-height: 52vh;
+          max-height: 52vh;
 
           @include media(">=lg") {
-            min-height: 55vh;
-            max-height: 55vh;
+            min-height: 65vh;
+            max-height: 65vh;
           }
         }
 
-        .ant-table-thead > tr > th {
+        .ant-table-thead>tr>th {
           @include font-style($indigo, 1.6rem, 2.4rem, 500);
           background-color: $white;
           border-bottom: none;
@@ -198,20 +207,30 @@
           white-space: nowrap;
         }
 
-        .ant-table-tbody > tr > td {
+        .ant-table-thead>tr>th:nth-child(5) {
+          text-align: center;
+        }
+
+        .ant-table-tbody>tr>td {
           white-space: nowrap;
           padding: 1.2rem 0;
           @include font-style($black, 1.4rem, 2rem, 400);
           min-width: 13rem;
           max-width: 13rem;
           text-overflow: ellipsis;
+          text-transform: capitalize;
 
           @include media("<=md") {
             padding: 0;
           }
         }
 
-        .ant-table-tbody > tr > td:nth-child(3) {
+        .ant-table-tbody>tr>td:nth-child(1) {
+          @include text-ellipsis;
+          padding-right: 2rem;
+        }
+
+        .ant-table-tbody>tr>td:nth-child(3) {
           min-width: 23rem;
           max-width: 23rem;
         }
