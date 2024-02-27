@@ -33,10 +33,10 @@
       min-height: 4rem;
       max-height: 4rem;
     }
-    &:hover {
-      background-color: $indigo;
-      color: $white;
-      border: 0;
-    }
+  }
+  .ant-btn-text:not(:disabled):not(.ant-btn-disabled):hover {
+    background-color: $indigo;
+    color: $white;
+    border: 0;
   }
 }

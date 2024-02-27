@@ -31,7 +31,7 @@ export const SSOIntegration = () => {
 
   return (
     <div className="sso-login-wrapper">
-      <h1 className="login-context">Login to MSys Technologies</h1>
+      <h1 className="login-context">{i18n.t("common.login")}</h1>
       <Button
         icon={<FaGoogle />}
         onClick={googleLogin}

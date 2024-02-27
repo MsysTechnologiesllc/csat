@@ -50,9 +50,17 @@
       }
     }
   }
-  .add-client-btn-container{
+  .add-client-btn-container {
     text-align: right;
     margin-bottom: 1rem;
+    .add-client-button {
+      background-color: $indigo;
+      @include font-style($white, 1.5rem, 2.6rem, 500);
+      &:hover {
+        background-color: $indigo;
+        color: $white;
+      }
+    }
   }
   .settings-container {
     @include flex-column;
@@ -60,7 +68,7 @@
     @include align-items-center;
     .select-dropdown {
       width: 70%;
-      @include media ("<md"){
+      @include media("<md") {
         width: 100%;
       }
       .date-picker {
