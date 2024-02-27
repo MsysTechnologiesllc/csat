@@ -56,7 +56,6 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
     setSelectedClient(values);
   };
   const handleChange = (date) => {
-    console.log(date);
     date?.map((each) => {
       const { $y, $M, $D, $H, $m, $s, $SSS, $Z } = each;
       const formattedDate = moment(
@@ -66,7 +65,6 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
       setSelectedDates((prev) => [...prev, formattedDate]);
     });
   };
-  console.log(selectedDates);
   return (
     <>
       <AddClient

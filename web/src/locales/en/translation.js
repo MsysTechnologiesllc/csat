@@ -12,6 +12,7 @@ export const translationEN = {
     userFeedbackSubmitted: "User feedback saved succesfully",
     publish: "Publish",
     googleLogin: "Continue with Google",
+    login: "Login to CSAT",
   },
   header: {
     title: "CSAT",
