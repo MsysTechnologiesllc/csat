@@ -7,8 +7,6 @@ import "./customer-survey-layout.scss";
 
 export const CustomerSurveyLayout = () => {
   const [projectName, setProjectName] = useState("");
-  const [visible, setVisible] = useState(true);
-
   let isCustomerSurvey = location.pathname
     .split("/")
     .includes("customer-survey");
@@ -23,18 +21,15 @@ export const CustomerSurveyLayout = () => {
           setProjectName(result?.data?.data?.Survey?.project?.name);
         }
       });
-    } else {
-      setVisible(false);
     }
   }, [survey_id, isCustomerSurvey]);
+
   return (
     <>
       <Layout className="customer-survey-layout">
-        {visible && (
-          <AntdHeader>
-            <Header prjTitle={projectName} displayPrjTitle={isCustomerSurvey} />
-          </AntdHeader>
-        )}
+        <AntdHeader>
+          <Header prjTitle={projectName} displayPrjTitle={isCustomerSurvey} />
+        </AntdHeader>
         <Layout hasSider={false}>
           <Content>
             <Outlet />

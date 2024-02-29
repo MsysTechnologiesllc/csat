@@ -4,10 +4,8 @@ import { useNavigate, useLocation } from "react-router";
 import i18n from "../../locales/i18next";
 import { DaysAdded } from "../../utils/utils";
 import { GetService } from "../../services/get";
-import "./greetings.scss";
 import { plLibComponents } from "../../context-provider/component-provider";
-// import { PostService } from "../../services/post";
-// import NotifyStatus from "../notify-status/notify-status";
+import "./greetings.scss";
 
 function GreetingsPage() {
   const { NoData } = plLibComponents.components;
@@ -18,13 +16,6 @@ function GreetingsPage() {
   const passCode = params.get("passcode");
   const [surveyDetails, setSurveyDetails] = useState({});
   const [notFound, setNotFound] = useState(false);
-  // const [passcode, setPasscode] = useState(true);
-  // const [isModal, setIsModal] = useState(false);
-  // const [notify, setNotify] = useState("");
-  // const [message, setMessage] = useState("");
-  // const handlePasscode = () => {
-  //   setIsModal(true);
-  // };
   useEffect(() => {
     setSpinLoader(true);
     if (survey_id && passCode) {
@@ -39,40 +30,6 @@ function GreetingsPage() {
       setSpinLoader(false);
     }
   }, [survey_id, passCode]);
-  // const handleFinish = (values) => {
-  //   setPasscodeloader(true);
-  //   const payload = {
-  //     survey_id: JSON.parse(survey_id),
-  //     passcode: values.passcode,
-  //   };
-  //   new PostService().postCredentials(payload, (result) => {
-  //     if (result?.status === 200) {
-  //       setPasscodeloader(false);
-  //       setNotify("success");
-  //       setMessage("Success");
-  //       setIsModal(false);
-  //       setPasscode(false);
-  //       getSurveyDetailsApi(survey_id);
-  //       setTimeout(() => {
-  //         setNotify("");
-  //       });
-  //     } else {
-  //       setPasscodeloader(false);
-  //       setNotify("warning");
-  //       setMessage("Incorrect Passcode to access the Survey");
-  //       setTimeout(() => {
-  //         setNotify("");
-  //       });
-  //     }
-  //   });
-  // };
-  // const checkPasswordStrength = (rule, value, callback) => {
-  //   if (value.length !== 12) {
-  //     callback("Passcode must be 12 characters long");
-  //   } else {
-  //     callback();
-  //   }
-  // };
   const getStarted = (id, code) => {
     navigate(`/survey?survey_id=${id}&passcode=${code}`, {
       state: {
@@ -81,11 +38,6 @@ function GreetingsPage() {
       },
     });
   };
-  // useEffect(() => {
-  //   if (survey_id) {
-  //     setSpinLoader(false);
-  //   }
-  // }, [survey_id]);
   const Loader = () => {
     return (
       <div>
@@ -99,7 +51,6 @@ function GreetingsPage() {
     );
   };
   const [spinLoader, setSpinLoader] = useState(true);
-  // const [passcodeLoader, setPasscodeloader] = useState(false);
   return (
     <>
       {spinLoader ? (
@@ -123,7 +74,6 @@ function GreetingsPage() {
                   className="greetings-image"
                 />
               </div>
-              {/* {passcode === false && ( */}
               <div className="greetings-description">
                 <h1 className="greetings-title">
                   {surveyDetails?.SurveyFormat?.title}
@@ -132,10 +82,8 @@ function GreetingsPage() {
                   {surveyDetails?.SurveyFormat?.message}
                 </p>
               </div>
-              {/* )} */}
             </div>
             <div className="details-container">
-              {/* {passcode === false && ( */}
               <div className="project-details-container">
                 <div span={4} className="details">
                   <p className="title">{i18n.t("greetings.project")}</p>
@@ -158,50 +106,6 @@ function GreetingsPage() {
                   </p>
                 </div>
               </div>
-              {/* )} */}
-              {/* {passcode ? (
-              <>
-                <Button className="active-button" onClick={handlePasscode}>
-                  {i18n.t("greetings.passCode")}
-                </Button>
-                {isModal && (
-                  <Modal
-                    open={isModal}
-                    footer={false}
-                    className="passcode-modal"
-                    closable={false}
-                  >
-                    <Form onFinish={handleFinish} className="passcode-form">
-                      <Form.Item
-                        name="passcode"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input your passcode!",
-                          },
-                          {
-                            validator: checkPasswordStrength,
-                          },
-                        ]}
-                        label="Enter Passode:"
-                      >
-                        <Input.Password />
-                      </Form.Item>
-                      <div>
-                        <Button
-                          loading={passcodeLoader}
-                          htmlType="submit"
-                          type="text"
-                          className="submit-button"
-                        >
-                          {i18n.t("button.submit")}
-                        </Button>
-                      </div>
-                    </Form>
-                  </Modal>
-                )}
-              </>
-            ) : ( */}
               <Button
                 className="active-button"
                 onClick={() =>
@@ -215,10 +119,8 @@ function GreetingsPage() {
                   ? i18n.t("greetings.reviewFeedback")
                   : i18n.t("greetings.getStarted")}
               </Button>
-              {/* )} */}
             </div>
           </div>
-          {/* {notify && <NotifyStatus status={notify} message={message} />} */}
         </>
       )}
     </>

@@ -99,8 +99,7 @@ const AppRoutes = () => {
             element={<Notifications />}
             exact
           />
-          {/* <Route path="*" element={<Navigate to="/ssoIntegration" replace />} /> */}
-          <Route path="*" element={<Navigate to="/404" replace />} />
+          <Route path="*" element={<Navigate to="/ssoIntegration" replace />} />
         </Route>
       </Routes>
     </Router>

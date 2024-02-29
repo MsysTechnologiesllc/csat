@@ -29,4 +29,11 @@ export class PostService extends BaseService {
       callback,
     );
   }
+  postLoginDetails(payload, callback) {
+    return this.post(
+      process.env.GO_SERVICE_URL + "/csat/rest/api/user/login",
+      payload,
+      callback,
+    );
+  }
 }
