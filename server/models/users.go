@@ -18,9 +18,9 @@ import (
 JWT claims struct
 */
 type Token struct {
-	UserId uint
-	Email  string
-	Token  uint
+	UserId   uint
+	Email    string
+	TenantId uint
 	jwt.StandardClaims
 }
 
@@ -120,7 +120,7 @@ func Login(email, password string) map[string]interface{} {
 	user.Password = ""
 
 	//Create JWT token
-	tk := &Token{UserId: user.ID, Email: user.Email}
+	tk := &Token{UserId: user.ID, Email: user.Email, TenantId: user.Account.TenantID}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
 	user.Token = tokenString //Store the token in the response
