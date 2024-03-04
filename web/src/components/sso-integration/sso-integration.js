@@ -85,7 +85,17 @@ export const SSOIntegration = () => {
     }
   };
   const handleFinishAdmin = (values) => {
-    console.log(values);
+    const payload = {
+      email: values.username,
+      password: values.password,
+    };
+    new PostService().postLoginDetails(payload, (result) => {
+      if (result?.status === 200) {
+        console.log(result?.data);
+        Cookies.set("jwt", result?.data?.user?.token);
+        navigate("/accounts");
+      }
+    });
   };
   function resendForgotMail(email, closePop = false) {
     setIsEmail(email);
