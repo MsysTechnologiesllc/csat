@@ -58,3 +58,11 @@
         }
     }
 }
+
+
+.ok-message {
+    @include flex-column;
+    text-align: center;
+    @include align-items-center;
+    @include justify-content-center;
+}

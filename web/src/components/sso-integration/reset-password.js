@@ -11,6 +11,8 @@ import {
   PASSWORD_VALIDATION,
   PASSWORD_VALIDATION_MESSAGE,
 } from "../../common/constants";
+import "./warnings.scss";
+
 function ResetPassword() {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
@@ -20,6 +22,7 @@ function ResetPassword() {
   const [isOkMessage, setIsOkMessage] = useState(false);
   const [resendLoader, setResendLoader] = useState(false);
   const [enableSuccessMessage, setEnableSuccessMessage] = useState(false);
+  const [updateLoader, setUpdateLoader] = useState(false);
   useEffect(() => {
     const decoded = jwtDecode(token);
     if (decoded.exp * 1000 > new Date().getTime()) {
@@ -29,9 +32,11 @@ function ResetPassword() {
 
   function openSignIn() {
     setIsOkMessage(false);
+    navigate("/login");
   }
 
   const onResetPassword = (values) => {
+    setUpdateLoader(true);
     let email = localStorage.getItem("email");
     const payload = {
       email: email,
@@ -41,8 +46,11 @@ function ResetPassword() {
     };
     new PutService().updatePassword(payload, (result) => {
       if (result?.status === 200) {
+        setUpdateLoader(false);
         setIsOkMessage(true);
-        navigate("/login");
+        setTimeout(() => {
+          navigate("/login");
+        }, 3000);
       }
     });
   };
@@ -130,6 +138,7 @@ function ResetPassword() {
                     type="primary"
                     htmlType="submit"
                     className="update-button"
+                    loading={updateLoader}
                   >
                     {i18n.t("login.updatePwd")}
                   </Button>
