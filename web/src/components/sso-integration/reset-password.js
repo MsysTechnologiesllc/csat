@@ -1,6 +1,6 @@
 import { Button, Col, Form, Input, Modal, Row } from "antd";
 // import "./login.scss";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 // import Banner from "./banner";
 import { PutService } from "../../services/put";
 // import Learniply from "../../assets/images/login/learniply-Logo.svg";
@@ -18,6 +18,10 @@ import {
 } from "../../common/constants";
 function ResetPassword() {
 //   const [form] = Form.useForm();
+const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const token = params.get("token");
+  console.log(token);
   const navigate = useNavigate();
   const [decodedEmail, setDecodedEmail] = useState("");
   //   const [isExpired, setIsExpired] = useState(true);
@@ -61,9 +65,22 @@ function ResetPassword() {
   //     // const link = `${process.env.REACT_APP_REDIRECT_URL}/learniply/resetPassword/${token}`;
   //     // new GetService().resetPasswordRequest(link, decodedEmail, (result) => {});
   //   }
-
+//   console.log(localStorage.getItem('email'));
   const onResetPassword = (values) => {
-    console.log(values);
+    let email = localStorage.getItem('email');
+    const payload= {
+        "email": email,
+        "new_password": values.password,
+        "confirm_password": values.confirmPassword,
+        "token": token
+    }
+    new PutService().updatePassword(payload, (result) => {
+        if (result?.status === 200) {
+         console.log("passwordUpdated");
+         navigate("/login");
+        }
+      });
+
   };
   return (
     <>

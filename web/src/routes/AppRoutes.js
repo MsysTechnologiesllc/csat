@@ -53,7 +53,7 @@ const AppRoutes = () => {
         <Route path="/ssoIntegration" element={<SSOIntegration />} exact />
         <Route
           key="/reset-password"
-          path="/reset-password/:user_Id/:token"
+          path="/reset-password"
           element={<ResetPassword />}
           exact
         />
