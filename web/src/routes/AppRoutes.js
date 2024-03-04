@@ -33,10 +33,7 @@ const AppRoutes = () => {
     <Router>
       <Routes>
         <Route element={<CustomerSurveyLayout />} exact>
-          <Route
-            path="/"
-            element={<Navigate to={`/customer-survey`} replace />}
-          />
+          <Route path="/" element={<Navigate to={`/login`} replace />} />
           <Route path={`/customer-survey`} element={<GreetingsPage />} exact />
           <Route path="/survey" element={<FeedBackSurvey />} exact />
           <Route path="/teamFeedBack" element={<TeamMembersFeedBack />} exact />
@@ -50,10 +47,10 @@ const AppRoutes = () => {
             />
           ))}
         </Route>
-        <Route path="/ssoIntegration" element={<SSOIntegration />} exact />
+        <Route path="/login" element={<SSOIntegration />} exact />
         <Route
           key="/reset-password"
-          path="/reset-password/:user_Id/:token"
+          path="/reset-password"
           element={<ResetPassword />}
           exact
         />
@@ -106,7 +103,7 @@ const AppRoutes = () => {
             element={<Notifications />}
             exact
           />
-          <Route path="*" element={<Navigate to="/ssoIntegration" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Route>
       </Routes>
     </Router>
