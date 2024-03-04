@@ -79,6 +79,15 @@
       }
     }
 
+    .sign-up-form {
+      max-width: 34rem;
+      min-width: 34rem;
+
+      @include media("<sm") {
+        padding: 1rem;
+      }
+    }
+
     .login-context {
       min-width: 20rem;
       max-width: 30rem;
@@ -103,6 +112,11 @@
       padding: 1rem 2.2rem;
       @include justify-content-center;
       @include align-items-center;
+
+      &:hover {
+        background-color: $indigo;
+        box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
+      }
     }
 
     .google-button {
@@ -258,7 +272,11 @@
   }
 }
 
-.success-mod{
+.success-mod {
   min-height: 16rem;
   max-height: 16rem;
+}
+
+.reset-text {
+  @include font-style($indigo, 1.4rem, 2.4rem, 500);
 }

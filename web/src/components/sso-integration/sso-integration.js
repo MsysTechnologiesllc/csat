@@ -13,7 +13,6 @@ import { plLibComponents } from "../../context-provider/component-provider";
 import NotifyStatus from "../notify-status/notify-status";
 
 export const SSOIntegration = () => {
-  // const [form] = Form.useForm();
   const { NavTabs, InputField } = plLibComponents.components;
   const navigate = useNavigate();
   const [notify, setNotify] = useState("");
@@ -23,9 +22,6 @@ export const SSOIntegration = () => {
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [passcodeLoader, setPasscodeloader] = useState(false);
   const [isEmail, setIsEmail] = useState("");
-  // const handleUpdatePassword = (values) => {
-  //   console.log(values);
-  // };
   function handleOk() {
     setIsForgotOpen(true);
   }
@@ -102,7 +98,7 @@ export const SSOIntegration = () => {
     setIsLoading(true);
     new GetService().getForgotPassword(email, (result) => {
       if (result.status === 200) {
-        localStorage.setItem('email',email);
+        localStorage.setItem("email", email);
         console.log(result);
         setIsLoading(false);
         setIsForgotOpen(false);
@@ -247,62 +243,6 @@ export const SSOIntegration = () => {
             </p>
           </div>
           <NavTabs tabItems={items} defaultOpenTabKey="" />
-          {/* <Form
-            form={form}
-            name="resetPassword"
-            onFinish={handleUpdatePassword}
-            scrollToFirstError
-          >
-            <Form.Item
-              name="password"
-              label="New Password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your new password!",
-                },
-              ]}
-              hasFeedback
-            >
-              <Input.Password />
-            </Form.Item>
-            <Form.Item
-              name="confirm"
-              label="Confirm Password"
-              dependencies={["password"]}
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "Please confirm your password!",
-                },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue("password") === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(
-                      new Error(
-                        "The new password that you entered do not match!",
-                      ),
-                    );
-                  },
-                }),
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="update-button"
-              >
-                Update Password
-              </Button>
-            </Form.Item>
-          </Form> */}
         </Col>
         {notify && <NotifyStatus status={notify} message={message} />}
       </Row>
