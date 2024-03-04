@@ -46,7 +46,7 @@ function ResetPassword() {
     let email = localStorage.getItem("email");
     new GetService().getForgotPassword(email, (result) => {
       if (result.status === 200) {
-        console.log("resend succes");
+        // TODO
       }
     });
   }
