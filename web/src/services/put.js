@@ -15,4 +15,11 @@ export class PutService extends BaseService {
       callback,
     );
   }
+  updatePassword(payload, callback) {
+    return this.put(
+      process.env.GO_SERVICE_URL + "/csat/rest/auth/reset-password",
+      payload,
+      callback,
+    );
+  }
 }

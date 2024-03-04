@@ -102,6 +102,7 @@ export const SSOIntegration = () => {
     setIsLoading(true);
     new GetService().getForgotPassword(email, (result) => {
       if (result.status === 200) {
+        localStorage.setItem('email',email);
         console.log(result);
         setIsLoading(false);
         setIsForgotOpen(false);
