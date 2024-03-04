@@ -87,7 +87,6 @@ export const SSOIntegration = () => {
     };
     new PostService().postLoginDetails(payload, (result) => {
       if (result?.status === 200) {
-        console.log(result?.data);
         Cookies.set("jwt", result?.data?.user?.token);
         navigate("/accounts");
       }
@@ -99,7 +98,6 @@ export const SSOIntegration = () => {
     new GetService().getForgotPassword(email, (result) => {
       if (result.status === 200) {
         localStorage.setItem("email", email);
-        console.log(result);
         setIsLoading(false);
         setIsForgotOpen(false);
         setIsSuccessOpen(!closePop);

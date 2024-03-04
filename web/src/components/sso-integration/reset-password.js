@@ -2,6 +2,7 @@ import { Button, Col, Form, Input, Modal, Row } from "antd";
 import { useLocation, useNavigate } from "react-router";
 import { PutService } from "../../services/put";
 import { useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 import OkMessage from "./ok-message";
 import ExpireMessage from "./expire-message";
 import { GetService } from "../../services/get";
@@ -15,11 +16,15 @@ function ResetPassword() {
   const params = new URLSearchParams(search);
   const token = params.get("token");
   const navigate = useNavigate();
-  const [isExpired, setIsExpired] = useState(false);
+  const [isExpired, setIsExpired] = useState(true);
   const [isOkMessage, setIsOkMessage] = useState(false);
-
+  const [resendLoader, setResendLoader] = useState(false);
+  const [enableSuccessMessage, setEnableSuccessMessage] = useState(false);
   useEffect(() => {
-    setIsExpired(false);
+    const decoded = jwtDecode(token);
+    if (decoded.exp * 1000 > new Date().getTime()) {
+      setIsExpired(false);
+    }
   }, []);
 
   function openSignIn() {
@@ -43,17 +48,24 @@ function ResetPassword() {
   };
 
   function resendRequest() {
+    setResendLoader(true);
     let email = localStorage.getItem("email");
     new GetService().getForgotPassword(email, (result) => {
       if (result.status === 200) {
-        // TODO
+        setResendLoader(false);
+        setEnableSuccessMessage(true);
       }
     });
   }
   return (
     <>
-      {isExpired ? (
-        <ExpireMessage resend={resendRequest} />
+      {isExpired === true ? (
+        <ExpireMessage
+          email={localStorage.getItem("email")}
+          resend={resendRequest}
+          resendLoader={resendLoader}
+          enableSuccessMessage={enableSuccessMessage}
+        />
       ) : (
         <>
           <Row className="sso-login-wrapper">

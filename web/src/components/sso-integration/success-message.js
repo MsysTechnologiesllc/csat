@@ -11,7 +11,7 @@ function SuccessMessage({ email, resend, isLoading }) {
         <p> {i18n.t("login.validFor")}</p>
         <div className="resend-link">
           <span> {i18n.t("login.emailNotReceive")} </span>
-          <Button disabled={isLoading} type="link" onClick={() => resend(true)}>
+          <Button loading={isLoading} type="link" onClick={() => resend(true)}>
             {i18n.t("login.resend")}
           </Button>
         </div>

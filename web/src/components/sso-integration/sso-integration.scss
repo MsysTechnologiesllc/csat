@@ -194,7 +194,7 @@
 
 .success-message-modal,
 .forgot-password-modal {
-  max-width: 33rem;
+  max-width: 38rem;
   min-height: 28rem;
 
   .ant-modal-close {
@@ -237,6 +237,7 @@
     .resend-link {
       padding-top: 2rem;
       @include align-items-center;
+      @include justify-content-center;
     }
 
     .ant-btn-primary {
