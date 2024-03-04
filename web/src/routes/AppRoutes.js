@@ -21,6 +21,7 @@ import { ProjectsList } from "../modules/accounts/projects-list/projects-list";
 import FormatList from "../modules/accounts/format-list/format-list";
 import { SSOIntegration } from "../components/sso-integration/sso-integration";
 import Error from "../components/error/error";
+import ResetPassword from "../components/sso-integration/reset-password";
 
 const AppRoutes = () => {
   const routes = [
@@ -50,6 +51,12 @@ const AppRoutes = () => {
           ))}
         </Route>
         <Route path="/ssoIntegration" element={<SSOIntegration />} exact />
+        <Route
+          key="/reset-password"
+          path="/reset-password/:user_Id/:token"
+          element={<ResetPassword />}
+          exact
+        />
         <Route element={<MainLayout />} exact>
           <Route
             key="/dashboard"

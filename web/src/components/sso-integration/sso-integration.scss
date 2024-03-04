@@ -6,54 +6,67 @@
   background-color: $white;
   @include justify-content-around;
   @include align-items-center;
+
   .sso-login-image-container {
     max-width: 58.5rem;
     margin: auto;
     padding-left: 2rem;
+
     .heading {
       @include font-style($jet-black, 3.8rem, 4.45rem, 500);
       text-align: left;
     }
+
     .description {
       @include font-style($steel-grey, 1.5rem, 2.6rem, 400);
       text-align: left;
     }
+
     .login-image {
       @include media("<lg") {
         width: 40rem;
       }
+
       @include media("<sm") {
         width: 35rem;
       }
+
       @include media("<xs") {
         width: 25rem;
       }
     }
   }
+
   .login-container {
     @include flex-column;
     @include justify-content-center;
     @include align-items-center;
     gap: 1rem;
+
     .input-container {
       height: 4rem;
       margin-bottom: 2rem;
+
       .label-text {
         bottom: 3.3rem;
       }
     }
+
     .user-description {
       @include font-style($royal-blue, 1.8rem, 2.16rem, 500);
       text-align: left;
       margin-bottom: 1rem;
     }
+
     .user-para {
       @include font-style(rgba(0, 0, 0, 0.38), 1.5rem, 2.6rem, 400);
       text-align: left;
       margin-bottom: 1rem;
     }
+
     .logo-container {
       @include align-items-center;
+
       .csat {
         @include font-style($jet-black, 2rem, normal, 600);
         @include align-items-center;
@@ -65,17 +78,21 @@
         }
       }
     }
+
     .login-context {
       min-width: 20rem;
       max-width: 30rem;
       @include font-style($jet-black, 3.5rem, 4.1rem, 500);
       margin-bottom: 1rem;
+
       @include media("<md") {
         font-size: 3rem;
         line-height: 3.5rem;
       }
     }
-    .login-button {
+
+    .login-button,
+    .update-button {
       text-transform: uppercase;
       background-color: $indigo;
       @include font-style($white, 1.5rem, 2.6rem, 500);
@@ -87,6 +104,7 @@
       @include justify-content-center;
       @include align-items-center;
     }
+
     .google-button {
       @extend .login-button;
       @include font-style($black, 1.5rem, 2.6rem, 500);
@@ -94,55 +112,153 @@
       text-transform: capitalize;
       border: 0.1rem solid $black;
       margin-top: 0.8rem;
+
       &:hover {
         background-color: $white !important;
         color: $black !important;
         border: 0.1rem solid $black !important;
       }
+
       img {
         width: 2.5rem;
         margin-right: 1rem;
       }
     }
+
     .sso-description {
       @include font-style($steel-grey, 1.5rem, 2.6rem, 400);
       margin-top: 1rem;
       text-align: left;
     }
+
     .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
       @include font-style($indigo, 1.4rem, 2.4rem, 500);
     }
+
     .ant-tabs-tab {
       width: 13.3rem;
       @include justify-content-center;
       text-transform: uppercase;
+
       @include media("<md") {
         width: 17.5rem;
       }
+
       @include media("<xs") {
         width: 14.1rem;
       }
     }
-    .ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar {
+
+    .ant-tabs-top>.ant-tabs-nav .ant-tabs-ink-bar {
       background-color: $indigo;
     }
+
     .ant-btn-text:not(:disabled):not(.ant-btn-disabled):hover {
       background-color: $indigo;
       color: $white;
       border: 0;
     }
+
     .ant-tabs .ant-tabs-content-holder {
       padding: 0 2rem;
+
       @include media(">lg") {
         padding: 0;
       }
     }
   }
+
   @include media("<lg") {
     gap: 2rem;
     padding: 2rem 0;
   }
+
   @include media("<sm") {
     padding: 2rem;
   }
+}
+
+.success-message-modal,
+.forgot-password-modal {
+  max-width: 33rem;
+  min-height: 28rem;
+
+  .ant-modal-close {
+    top: 0.7rem;
+    right: 0.7rem;
+  }
+
+  .ant-modal-content {
+    border-radius: 0.4rem;
+
+    .ant-modal-title {
+      font-size: 2.2rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    p {
+      color: $grey;
+      font-size: 1.2rem;
+      text-align: center;
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  .modal-form-container {
+    margin-top: 2rem;
+
+    input[type="text"] {
+      border-radius: 0.4rem;
+      border: 0.1rem solid $grey;
+      height: 3.4rem;
+
+      &:focus-visible {
+        border: solid 0.1rem $blue;
+        outline: none;
+      }
+    }
+
+    .resend-link {
+      padding-top: 2rem;
+      @include align-items-center;
+    }
+
+    .ant-btn-primary {
+      text-transform: uppercase;
+      background-color: $indigo;
+      @include font-style($white, 1.5rem, 2.6rem, 500);
+      border-radius: 0.4rem;
+      width: 100%;
+      min-height: 4rem;
+      max-height: 4rem;
+      padding: 1rem 2.2rem;
+      @include justify-content-center;
+      @include align-items-center;
+
+      &:hover {
+        background-color: $indigo;
+      }
+    }
+  }
+
+  .ant-modal-footer {
+    margin: 0;
+
+    .signIn-btn {
+      text-align: center;
+
+      .ant-btn-link {
+        padding-inline: 0;
+        font-weight: 500;
+        color: $blue;
+      }
+    }
+  }
+}
+
+.success-mod{
+  min-height: 16rem;
+  max-height: 16rem;
 }

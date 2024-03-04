@@ -65,4 +65,11 @@ export class GetService extends BaseService {
       callback,
     );
   }
+  getForgotPassword(email, callback) {
+    return this.get(
+      process.env.GO_SERVICE_URL +
+        `/csat/rest/auth/reset-password/link?email=${email}`,
+      callback,
+    );
+  }
 }

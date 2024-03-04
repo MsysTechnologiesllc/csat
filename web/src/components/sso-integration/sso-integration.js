@@ -1,20 +1,38 @@
 import React, { useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
-import { Button, Col, Form, Input, Row } from "antd";
+import { Button, Col, Form, Input, Row, Modal } from "antd";
 import "./sso-integration.scss";
+import ForgotPassword from "./forgot-password";
 import { PostService } from "../../services/post";
+import { GetService } from "../../services/get";
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie";
+import SuccessMessage from "./success-message";
 import i18n from "../../locales/i18next";
 import { plLibComponents } from "../../context-provider/component-provider";
 import NotifyStatus from "../notify-status/notify-status";
 
 export const SSOIntegration = () => {
+  // const [form] = Form.useForm();
   const { NavTabs, InputField } = plLibComponents.components;
   const navigate = useNavigate();
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
+  const [isForgotOpen, setIsForgotOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [passcodeLoader, setPasscodeloader] = useState(false);
+  const [isEmail, setIsEmail] = useState("");
+  // const handleUpdatePassword = (values) => {
+  //   console.log(values);
+  // };
+  function handleOk() {
+    setIsForgotOpen(true);
+  }
+  function handleCancel() {
+    setIsForgotOpen(false);
+    setIsSuccessOpen(false);
+  }
   const responseGoogle = async (response) => {
     const payload = {
       access_token: response.access_token,
@@ -69,6 +87,18 @@ export const SSOIntegration = () => {
   const handleFinishAdmin = (values) => {
     console.log(values);
   };
+  function resendForgotMail(email, closePop = false) {
+    setIsEmail(email);
+    setIsLoading(true);
+    new GetService().getForgotPassword(email, (result) => {
+      if (result.status === 200) {
+        console.log(result);
+        setIsLoading(false);
+        setIsForgotOpen(false);
+        setIsSuccessOpen(!closePop);
+      }
+    });
+  }
   const items = [
     {
       key: "1",
@@ -83,6 +113,7 @@ export const SSOIntegration = () => {
               autoClear
               isForm
               formFieldName="username"
+              onChange={(event) => setIsEmail(event.value)}
             />
             <InputField
               type="password"
@@ -91,6 +122,9 @@ export const SSOIntegration = () => {
               isForm
               formFieldName="password"
             />
+            <Button type="link" onClick={handleOk}>
+              {i18n.t("login.forgotPwd")}
+            </Button>
             <div>
               <Button htmlType="submit" type="text" className="login-button">
                 {i18n.t("common.login")}
@@ -141,26 +175,126 @@ export const SSOIntegration = () => {
     },
   ];
   return (
-    <Row className="sso-login-wrapper">
-      <Col xs={24} lg={13} className="sso-login-image-container">
-        <img
-          src="/images/login-image.svg"
-          alt={i18n.t("common.logo")}
-          className="login-image"
+    <>
+      <Modal
+        title="Forgot Password?"
+        centered
+        open={isForgotOpen}
+        onOk={handleCancel}
+        onCancel={handleCancel}
+        className="forgot-password-modal"
+        footer={[
+          <div key="forgot" className="signIn-btn">
+            <Button type="link" htmlType="submit" onClick={handleCancel}>
+              {i18n.t("login.BackTo")} {i18n.t("login.signIn")}
+            </Button>
+          </div>,
+        ]}
+      >
+        <ForgotPassword
+          isLoading={isLoading}
+          value={isEmail}
+          callBack={(values) => resendForgotMail(values.email)}
         />
-        <h1 className="heading">{i18n.t("login.heading")}</h1>
-        <p className="description">{i18n.t("login.desc")}</p>
-      </Col>
-      <Col xs={24} lg={11} className="login-container">
-        <div className="logo-container">
-          <img src="/images/msys-group.svg" alt={i18n.t("common.logo")} />
-          <p className="csat">
-            {i18n.t("header.title")} <span>{i18n.t("header.proto")}</span>
-          </p>
-        </div>
-        <NavTabs tabItems={items} defaultOpenTabKey="" />
-      </Col>
-      {notify && <NotifyStatus status={notify} message={message} />}
-    </Row>
+      </Modal>
+      <Modal
+        title="Check Your Email"
+        centered
+        open={isSuccessOpen}
+        onOk={handleCancel}
+        onCancel={handleCancel}
+        className="success-message-modal"
+        footer={[
+          <div key="success" className="signIn-btn">
+            <Button type="link" htmlType="submit" onClick={handleCancel}>
+              {i18n.t("login.BackTo")} {i18n.t("login.signIn")}
+            </Button>
+          </div>,
+        ]}
+      >
+        <SuccessMessage
+          isLoading={isLoading}
+          resend={(closePop) => resendForgotMail(isEmail, closePop)}
+          email={isEmail}
+        />
+      </Modal>
+      <Row className="sso-login-wrapper">
+        <Col xs={24} lg={13} className="sso-login-image-container">
+          <img
+            src="/images/login-image.svg"
+            alt={i18n.t("common.logo")}
+            className="login-image"
+          />
+          <h1 className="heading">{i18n.t("login.heading")}</h1>
+          <p className="description">{i18n.t("login.desc")}</p>
+        </Col>
+        <Col xs={24} lg={11} className="login-container">
+          <div className="logo-container">
+            <img src="/images/msys-group.svg" alt={i18n.t("common.logo")} />
+            <p className="csat">
+              {i18n.t("header.title")} <span>{i18n.t("header.proto")}</span>
+            </p>
+          </div>
+          <NavTabs tabItems={items} defaultOpenTabKey="" />
+          {/* <Form
+            form={form}
+            name="resetPassword"
+            onFinish={handleUpdatePassword}
+            scrollToFirstError
+          >
+            <Form.Item
+              name="password"
+              label="New Password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your new password!",
+                },
+              ]}
+              hasFeedback
+            >
+              <Input.Password />
+            </Form.Item>
+            <Form.Item
+              name="confirm"
+              label="Confirm Password"
+              dependencies={["password"]}
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: "Please confirm your password!",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error(
+                        "The new password that you entered do not match!",
+                      ),
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="update-button"
+              >
+                Update Password
+              </Button>
+            </Form.Item>
+          </Form> */}
+        </Col>
+        {notify && <NotifyStatus status={notify} message={message} />}
+      </Row>
+    </>
   );
 };
