@@ -103,8 +103,7 @@ type LoginRequest struct {
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/user/login [post]
 func Login(email, password string) map[string]interface{} {
-
-	user := &User{}
+    user := &User{}
 	err := GetDB().Table("users").Where("email = ?", email).First(user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -434,6 +433,39 @@ func UpdateUserLoginToken(id uint, user *schema.User) (*schema.User, error) {
 	result = GetDB().Save(&existingUser)
 	if result.Error != nil {
 		return nil, result.Error
+	}
+
+	return &existingUser, nil
+}
+
+func UpdateUserByID(userID uint, updatedUser *schema.User) (*schema.User, error) {
+	var existingUser schema.User
+
+	err := db.Where("id = ?", userID).First(&existingUser).Error
+	if err != nil {
+		return nil, err
+	}
+
+	if updatedUser.Name != "" {
+		existingUser.Name = updatedUser.Name
+	}
+	if updatedUser.Email != "" {
+		existingUser.Email = updatedUser.Email
+	}
+	if updatedUser.Password != "" {
+		// Hash the new password before saving it
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(updatedUser.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return nil, err
+		}
+		existingUser.Password = string(hashedPassword)
+	}
+	if updatedUser.Role != "" {
+		existingUser.Role = updatedUser.Role
+	}
+
+	if err := db.Save(&existingUser).Error; err != nil {
+		return nil, err
 	}
 
 	return &existingUser, nil
