@@ -47,7 +47,7 @@
     .actions-container {
       .add-account-button {
         background-color: $indigo;
-        @include font-style($white, 1.5rem, 2.6rem, 500);
+        @include font-style($white, 1.6rem, 2.4rem, 400);
         border-radius: 0.4rem;
         width: 100%;
         min-height: 4rem;
