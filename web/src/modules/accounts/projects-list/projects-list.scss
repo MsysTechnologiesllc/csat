@@ -45,6 +45,13 @@
     }
 
     .actions-container {
+      @include justify-content-between;
+      @include align-items-center;
+      min-height: 4rem;
+      max-height: 4rem;
+      .ant-segmented {
+        padding: 0;
+      }
       .add-account-button {
         background-color: $indigo;
         @include font-style($white, 1.5rem, 2.6rem, 500);
@@ -185,5 +192,20 @@
         }
       }
     }
+  }
+}
+.accounts-list-container {
+  .edit {
+    margin-right: 2rem;
+    color: $indigo;
+  }
+  .delete {
+    color: $wild-red;
+  }
+  .pagination {
+    text-align: right;
+    position: absolute;
+    bottom: 5rem;
+    right: 2rem;
   }
 }

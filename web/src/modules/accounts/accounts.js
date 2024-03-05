@@ -1,6 +1,21 @@
-import { Button, Card, Col, Row, Modal } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Modal,
+  Segmented,
+  Table,
+  Pagination,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
+import {
+  AppstoreOutlined,
+  BarsOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import i18n from "../../locales/i18next";
 import { GetService } from "../../services/get";
 import { ShimmerSimpleGallery } from "react-shimmer-effects";
@@ -10,9 +25,12 @@ import "./projects-list/projects-list.scss";
 export const Accounts = () => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
   const navigate = useNavigate();
+  const [tenantId] = useOutletContext();
   const [accountsList, setAccountsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [tenantId] = useOutletContext();
+  const [selectedSegment, setSelectedSegment] = useState("Grid");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log(selectedSegment);
   const handleView = (account) => {
     navigate(`/accounts/${account.ID}/projects`, {
       state: {
@@ -33,7 +51,6 @@ export const Accounts = () => {
       });
     }
   }, [tenantId]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const addNewAccount = () => {
     setIsModalOpen(true);
   };
@@ -43,6 +60,51 @@ export const Accounts = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  const columns = [
+    {
+      title: "Account",
+      dataIndex: "accountName",
+      key: "accountName",
+    },
+    {
+      title: "Account Owner",
+      dataIndex: "accountOwner",
+      key: "accountOwner",
+    },
+    {
+      title: "Projects",
+      dataIndex: "projects",
+      key: "projects",
+    },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      key: "actions",
+      render: () => (
+        <div>
+          <EditOutlined className="edit" />
+          <DeleteOutlined className="delete" />
+        </div>
+      ),
+    },
+  ];
+  const data = [];
+  accountsList.map((account, index) => {
+    const deliveryHead =
+      account?.account_projects?.length > 0 &&
+      account?.account_projects[0]?.Users?.length > 0
+        ? account?.account_projects[0]?.Users
+        : account?.account_projects[1]?.Users?.filter((each) => {
+            each?.role === "deliveryHead";
+          });
+    selectedSegment === "List" &&
+      data.push({
+        key: index + 1,
+        accountName: account?.name,
+        accountOwner: deliveryHead?.length > 0 && deliveryHead[0]?.name,
+        projects: `${account?.account_projects?.length} project(s)`,
+      });
+  });
   return (
     <div className="projects-list-wrapper">
       <Modal
@@ -54,6 +116,21 @@ export const Accounts = () => {
       <div className="account-header-container">
         <h1 className="project-title">{i18n.t("greetings.account")}</h1>
         <div className="actions-container">
+          <Segmented
+            options={[
+              {
+                value: "Grid",
+                icon: <AppstoreOutlined />,
+              },
+              {
+                value: "List",
+                icon: <BarsOutlined />,
+              },
+            ]}
+            onChange={(value) => {
+              setSelectedSegment(value); // string
+            }}
+          />
           <Button onClick={addNewAccount} className="add-account-button">
             {i18n.t("addAccount.addBtn")}
           </Button>
@@ -67,7 +144,7 @@ export const Accounts = () => {
         ) : (
           <ShimmerSimpleGallery card imageHeight={150} />
         )
-      ) : (
+      ) : selectedSegment === "Grid" ? (
         <Row gutter={[20, 20]} className="project-list-wrapper">
           {accountsList?.map((account) => {
             const deliveryHead =
@@ -111,6 +188,17 @@ export const Accounts = () => {
             );
           })}
         </Row>
+      ) : (
+        <div className="accounts-list-container">
+          <Table columns={columns} dataSource={data} pagination={false} />
+          <Pagination
+            total={data?.length}
+            showSizeChanger
+            showQuickJumper
+            showTotal={(total) => `Total ${total} items`}
+            className="pagination"
+          />
+        </div>
       )}
     </div>
   );
