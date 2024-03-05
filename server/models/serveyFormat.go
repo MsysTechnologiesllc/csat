@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func GetOrCreateTenant(db *gorm.DB, tenantName string) (schema.Tenant, error) {
@@ -55,6 +56,35 @@ func CreateUser(db *gorm.DB, name string, email string, role string, accountId u
 	user := schema.User{
 		Name:      name,
 		Email:     email,
+		Role:      role,
+		AccountID: accountId,
+	}
+
+	if err := db.Create(&user).Error; err != nil {
+		return user, fmt.Errorf("Error creating user '%s'", name)
+	}
+
+	return user, nil
+}
+func CreateUserData(db *gorm.DB, name string, email string, password string, role string, accountId uint) (schema.User, error) {
+	var existingUser schema.User
+
+	// Check if user with the given email already exists
+	if err := db.Where("email = ?", email).First(&existingUser).Error; err == nil {
+		// User already exists, return the existing user
+		return existingUser, nil
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+    if err != nil {
+        return schema.User{}, fmt.Errorf("Error hashing password: %v", err)
+    }
+
+	// User doesn't exist, create a new one
+	user := schema.User{
+		Name:      name,
+		Email:     email,
+		Password:  string(hashedPassword),		
 		Role:      role,
 		AccountID: accountId,
 	}
