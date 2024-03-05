@@ -1,5 +1,13 @@
 @use "../../../assets//style" as *;
 
+.form-modal {
+  top: 5rem;
+
+  .ant-modal-title {
+    @include font-style($black, 2rem, 2.8rem, 500);
+  }
+}
+
 .projects-list-wrapper {
   background-color: #fff;
   padding: 3rem 2rem 2rem 2rem;
@@ -34,16 +42,6 @@
 
   .account-header-container {
     @include justify-content-between;
-
-    .project-title {
-      @include font-style($jet-black, 3.4rem, 4.2rem, 400);
-      text-align: left;
-
-      @include media("<md") {
-        font-size: 2rem;
-      }
-    }
-
     .actions-container {
       @include justify-content-between;
       @include align-items-center;
@@ -54,7 +52,7 @@
       }
       .add-account-button {
         background-color: $indigo;
-        @include font-style($white, 1.5rem, 2.6rem, 500);
+        @include font-style($white, 1.6rem, 2.4rem, 400);
         border-radius: 0.4rem;
         width: 100%;
         min-height: 4rem;
@@ -70,7 +68,14 @@
       }
     }
   }
+  .project-title {
+    @include font-style($jet-black, 3.4rem, 4.2rem, 400);
+    text-align: left;
 
+    @include media("<md") {
+      font-size: 2rem;
+    }
+  }
   .context-wrapper {
     @include align-items-center;
     color: $steel-grey;
@@ -159,7 +164,10 @@
             }
           }
         }
-
+        .more-option-icon {
+          cursor: pointer;
+          height: 2rem;
+        }
         .day-left-container {
           @include align-items-start;
           gap: 0.5rem;
@@ -208,4 +216,63 @@
     bottom: 5rem;
     right: 2rem;
   }
+}
+.more-options {
+  @include flex-column;
+  span {
+    font-style: normal;
+    @include font-style($black, 1.4rem, 2.2rem, 400);
+    cursor: pointer;
+    padding: 0.5rem 1.5rem;
+    @include align-items-center;
+    &:hover {
+      color: $black;
+      background-color: $white-lilac;
+    }
+    .icon {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+    }
+  }
+}
+.ant-popover {
+  z-index: 1;
+  .ant-popover-inner {
+    padding: 0.5rem 0;
+    border-radius: 0;
+  }
+}
+.model-content-container {
+  @include d-flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  .excalamation-icon {
+    font-size: 3rem;
+    color: $sun;
+  }
+  .content-wrapper {
+    .title {
+      @include font-style($black, 1.6rem, 2.4rem, 500);
+    }
+    .context {
+      @include font-style($black, 1.4rem, 2.2rem, 400);
+    }
+  }
+}
+.ant-modal .ant-modal-content {
+  border-radius: 0.2rem;
+  padding: 3.2rem 3.2rem 2.4rem;
+  margin: auto;
+}
+.ant-modal .ant-modal-footer .ant-btn:first-child {
+  padding: 0.4rem 1.5rem;
+  border-radius: 0.4rem;
+  @include font-style($black, 1.4rem, 2.2rem, 400);
+  border: 0.1rem solid $mid-grey;
+}
+.ant-modal .ant-modal-footer .ant-btn:last-child {
+  background: $sunset-orange;
+  padding: 0.4rem 1.5rem;
+  border-radius: 0.4rem;
+  @include font-style($white, 1.4rem, 2.2rem, 400);
 }

@@ -7,6 +7,7 @@ import {
   Segmented,
   Table,
   Pagination,
+  Popover,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
@@ -19,8 +20,14 @@ import {
 import i18n from "../../locales/i18next";
 import { GetService } from "../../services/get";
 import { ShimmerSimpleGallery } from "react-shimmer-effects";
+import {
+  AiOutlineEdit,
+  AiOutlineDelete,
+  AiOutlineExclamationCircle,
+} from "react-icons/ai";
 import { useDetectMobileOrDesktop } from "../../hooks/useDetectMobileOrDesktop";
 import "./projects-list/projects-list.scss";
+import AddEditAccount from "./add-edit-account/add-edit-account";
 
 export const Accounts = () => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
@@ -30,7 +37,29 @@ export const Accounts = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedSegment, setSelectedSegment] = useState("Grid");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(selectedSegment);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [isPopover, setIsPopover] = useState(false);
+  const [popId, setPopId] = useState("");
+  const [isId, setIsId] = useState("");
+  const handleOnOpenChange = (id) => {
+    if (id !== popId) {
+      setPopId(id);
+      setIsPopover(true);
+    }
+  };
+  const handleonCancel = () => {
+    setDeleteModal(false);
+  };
+  const handleonOk = () => {
+    setDeleteModal(false);
+  };
+  const handleOnClickMore = (option, id) => {
+    if (option === "Delete" && isId !== id) {
+      setDeleteModal(true);
+      setIsId(id);
+      setIsPopover(false);
+    }
+  };
   const handleView = (account) => {
     navigate(`/accounts/${account.ID}/projects`, {
       state: {
@@ -51,6 +80,15 @@ export const Accounts = () => {
       });
     }
   }, [tenantId]);
+  const [formStatus, setFormStatus] = useState("add");
+  const [accountsFormData, setAccountsFormData] = useState();
+  useEffect(() => {
+    setAccountsFormData({
+      accName: "sandeep",
+      accOwner: "dharma",
+    });
+    setFormStatus("add");
+  }, []);
   const addNewAccount = () => {
     setIsModalOpen(true);
   };
@@ -108,11 +146,24 @@ export const Accounts = () => {
   return (
     <div className="projects-list-wrapper">
       <Modal
-        title="Basic Modal"
+        title={
+          formStatus === "add"
+            ? i18n.t("addAccount.addAccount")
+            : i18n.t("addAccount.editAccount")
+        }
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-      ></Modal>
+        footer={false}
+        className="form-modal"
+      >
+        <AddEditAccount
+          formStatus={formStatus}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          accountsFormData={accountsFormData}
+        />
+      </Modal>
       <div className="account-header-container">
         <h1 className="project-title">{i18n.t("greetings.account")}</h1>
         <div className="actions-container">
@@ -171,6 +222,71 @@ export const Accounts = () => {
                           {deliveryHead?.length > 0 && deliveryHead[0]?.name}
                         </p>
                       </div>
+                      <Popover
+                        content={
+                          <div className="more-options">
+                            <span
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleOnClickMore("Edit");
+                              }}
+                            >
+                              <AiOutlineEdit className="icon" />
+                              {i18n.t("common.edit")}
+                            </span>
+                            <span
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleOnClickMore("Delete", account.ID);
+                              }}
+                            >
+                              <AiOutlineDelete className="icon" />
+                              {i18n.t("common.delete")}
+                            </span>
+                          </div>
+                        }
+                        trigger="click"
+                        arrow={false}
+                        placement="bottomRight"
+                        overlayStyle={{ padding: 0 }}
+                        open={popId === account.ID && isPopover}
+                        onOpenChange={() => handleOnOpenChange(account.ID)}
+                      >
+                        <div
+                          onClick={(event) => {
+                            event.stopPropagation();
+                          }}
+                          className="more-option-icon"
+                        >
+                          <img
+                            src="/images/ellipse-vertical.svg"
+                            alt={i18n.t("common.moreOptions")}
+                          />
+                        </div>
+                      </Popover>
+                      {isId === account.ID && (
+                        <Modal
+                          open={deleteModal}
+                          closable={false}
+                          okText="Delete"
+                          onCancel={handleonCancel}
+                          onOk={handleonOk}
+                          className="modal"
+                          centered
+                        >
+                          <div className="model-content-container">
+                            <AiOutlineExclamationCircle className="excalamation-icon" />
+                            <div className="content-wrapper">
+                              <h3 className="title">
+                                {i18n.t("deleteModal.accountsTitle")}
+                              </h3>
+                              <p className="context">
+                                {i18n.t("deleteModal.context")}
+                              </p>
+                            </div>
+                          </div>
+                        </Modal>
+                      )}
                     </div>
                   </div>
                   <div className="team-view-container">

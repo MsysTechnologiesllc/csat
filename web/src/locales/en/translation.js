@@ -13,6 +13,9 @@ export const translationEN = {
     publish: "Publish",
     google: "Google",
     login: "Login",
+    edit: "Edit",
+    delete: "Delete",
+    moreOptions: "More Options",
   },
   header: {
     title: "CSAT",
@@ -210,7 +213,22 @@ export const translationEN = {
     resend: " Click to resend",
     learniply: "learniply",
   },
+  deleteModal: {
+    accountsTitle: "Are you sure delete this Account?",
+    projectsTitle: "Are you sure delete this {{projectName}}?",
+    context: "Active project surveys pending",
+  },
   addAccount: {
+    example: "example",
     addBtn: "+ Add Account",
+    addAccount: "Add Account",
+    editAccount: "Edit Account",
+    updateAccount: "Update Account",
+    accNameRule: "Please Enter Account Name",
+    accNameule: "Please Enter Account Owner Name",
+    dropdownText: "Click or drag file to this area to upload Logo",
+    dropConditions: "SVG, PNG, JPG or GIF (max. 3MB)",
+    fileImageWarning: "You can only upload image files!",
+    imageSizeWarning: "Image must be smaller than 1MB!",
   },
 };

@@ -5,6 +5,7 @@ import {
   Col,
   Modal,
   Pagination,
+  Popover,
   Row,
   Segmented,
   Table,
@@ -21,6 +22,11 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router";
+import {
+  AiOutlineEdit,
+  AiOutlineDelete,
+  AiOutlineExclamationCircle,
+} from "react-icons/ai";
 import { NoOfDays } from "../../../utils/utils";
 
 export const ProjectsList = () => {
@@ -29,7 +35,29 @@ export const ProjectsList = () => {
   const [breadcrumbList, setBreadcrumbList] = useState([]);
   const [selectedSegment, setSelectedSegment] = useState("Grid");
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [isId, setIsId] = useState("");
+  const [isPopover, setIsPopover] = useState(false);
+  const [popId, setPopId] = useState("");
+  const handleOnOpenChange = (id) => {
+    if (id !== popId) {
+      setPopId(id);
+      setIsPopover(true);
+    }
+  };
+  const handleonCancel = () => {
+    setDeleteModal(false);
+  };
+  const handleonOk = () => {
+    setDeleteModal(false);
+  };
+  const handleOnClickMore = (option, id) => {
+    if (option === "Delete" && isId !== id) {
+      setDeleteModal(true);
+      setIsId(id);
+      setIsPopover(false);
+    }
+  };
   const handleView = (project) => {
     navigate(
       `/accounts/${state?.accountId}/projects/${project?.ID}/formatlist`,
@@ -42,7 +70,7 @@ export const ProjectsList = () => {
           projectName: project?.name,
           status: true,
         },
-      }
+      },
     );
   };
   const handleBreadCrumb = () => {
@@ -100,10 +128,10 @@ export const ProjectsList = () => {
   const data = [];
   state?.projectsList?.map((project, index) => {
     const prjManager = project?.Users?.filter(
-      (user) => user.role === "projectManager"
+      (user) => user.role === "projectManager",
     );
     const teamMembers = project?.Users?.filter(
-      (user) => user.role === "member"
+      (user) => user.role === "member",
     );
     data.push({
       key: index + 1,
@@ -157,10 +185,10 @@ export const ProjectsList = () => {
         <Row gutter={[20, 20]} className="project-list-wrapper">
           {state?.projectsList?.map((project) => {
             const prjManager = project?.Users?.filter(
-              (user) => user.role === "projectManager"
+              (user) => user.role === "projectManager",
             );
             const teamMembers = project?.Users?.filter(
-              (user) => user.role === "member"
+              (user) => user.role === "member",
             );
             return (
               <Col xs={24} md={12} lg={8} xxl={6} key={project.ID}>
@@ -174,7 +202,7 @@ export const ProjectsList = () => {
                           .join("")}`}
                       </p>
                       <div className="project-client-container">
-                        <h4 className="project-name">{project?.name}</h4>
+                        <h4 className="project-name">{project.name}</h4>
                         <p className="client-name">{prjManager[0]?.name}</p>
                       </div>
                     </div>
@@ -189,6 +217,73 @@ export const ProjectsList = () => {
                         })}
                       </p>
                     </div>
+                    <Popover
+                      content={
+                        <div className="more-options">
+                          <span
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleOnClickMore("Edit");
+                            }}
+                          >
+                            <AiOutlineEdit className="icon" />
+                            {i18n.t("common.edit")}
+                          </span>
+                          <span
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleOnClickMore("Delete", project.ID);
+                            }}
+                          >
+                            <AiOutlineDelete className="icon" />
+                            {i18n.t("common.delete")}
+                          </span>
+                        </div>
+                      }
+                      trigger="click"
+                      arrow={false}
+                      placement="bottomRight"
+                      overlayStyle={{ padding: 0 }}
+                      open={popId === project.ID && isPopover}
+                      onOpenChange={() => handleOnOpenChange(project.ID)}
+                    >
+                      <div
+                        onClick={(event) => {
+                          event.stopPropagation();
+                        }}
+                        className="more-option-icon"
+                      >
+                        <img
+                          src="/images/ellipse-vertical.svg"
+                          alt={i18n.t("common.moreOptions")}
+                        />
+                      </div>
+                    </Popover>
+                    {isId === project.ID && (
+                      <Modal
+                        open={deleteModal}
+                        closable={false}
+                        okText="Delete"
+                        onCancel={handleonCancel}
+                        onOk={handleonOk}
+                        className="modal"
+                        centered
+                      >
+                        <div className="model-content-container">
+                          <AiOutlineExclamationCircle className="excalamation-icon" />
+                          <div className="content-wrapper">
+                            <h3 className="title">
+                              {i18n.t("deleteModal.projectsTitle", {
+                                projectName: project.name,
+                              })}
+                            </h3>
+                            <p className="context">
+                              {i18n.t("deleteModal.context")}
+                            </p>
+                          </div>
+                        </div>
+                      </Modal>
+                    )}
                   </div>
                   <div className="team-view-container">
                     <p className="team-members-context">{`${teamMembers?.length} Member(s)`}</p>
