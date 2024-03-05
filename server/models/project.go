@@ -1,6 +1,7 @@
 package models
 
 import (
+	"bytes"
 	"csat/schema"
 )
 
@@ -84,8 +85,9 @@ func UpdateAccountByID(projectID uint, updatedAccount *schema.Account) (*schema.
 		existingAccount.Description = updatedAccount.Description
 	}
 
-	if updatedAccount.Logo != "" {
+	if !bytes.Equal(updatedAccount.Logo, []byte{}) {
 		existingAccount.Logo = updatedAccount.Logo
+		existingAccount.MediaType = updatedAccount.MediaType
 	}
 
 	if updatedAccount.Location != "" {
