@@ -210,4 +210,7 @@ export const translationEN = {
     resend: " Click to resend",
     learniply: "learniply",
   },
+  addAccount: {
+    addBtn: "+ Add Account",
+  },
 };

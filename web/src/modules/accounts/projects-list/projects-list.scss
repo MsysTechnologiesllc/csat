@@ -4,86 +4,131 @@
   background-color: #fff;
   padding: 3rem 2rem 2rem 2rem;
   min-height: 100vh;
+
   @include media("<md") {
     padding: 2rem 1.5rem;
   }
+
   .ant-breadcrumb,
   .ant-breadcrumb a {
     @include font-style($dark-black, 1.6rem, 2.4rem, 400);
+
     @include media("<md") {
       font-size: 1.2rem;
       line-height: 1.8rem;
     }
   }
+
   .ant-breadcrumb li:first-child {
     cursor: pointer;
   }
+
   .ant-breadcrumb li:last-child {
     @include font-style($wild-red, 1.6rem, 2.4rem, 400);
+
     @include media("<md") {
       font-size: 1.2rem;
       line-height: 1.8rem;
     }
   }
-  .project-title {
-    @include font-style($jet-black, 3.4rem, 4.2rem, 400);
-    text-align: left;
-    @include media("<md") {
-      font-size: 2rem;
+
+  .account-header-container {
+    @include justify-content-between;
+
+    .project-title {
+      @include font-style($jet-black, 3.4rem, 4.2rem, 400);
+      text-align: left;
+
+      @include media("<md") {
+        font-size: 2rem;
+      }
+    }
+
+    .actions-container {
+      .add-account-button {
+        background-color: $indigo;
+        @include font-style($white, 1.5rem, 2.6rem, 500);
+        border-radius: 0.4rem;
+        width: 100%;
+        min-height: 4rem;
+        max-height: 4rem;
+        padding: 1rem 2.2rem;
+        @include justify-content-center;
+        @include align-items-center;
+
+        &:hover {
+          background-color: $indigo;
+          box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
+        }
+      }
     }
   }
+
   .context-wrapper {
     @include align-items-center;
     color: $steel-grey;
     margin-top: 2rem;
+
     @include media("<md") {
       @include align-items-start;
 
       margin-top: 1.5rem;
     }
+
     .info-icon {
       font-size: 2rem;
       margin-right: 1rem;
       max-width: 2rem;
       max-height: 2rem;
+
       @include media("<md") {
         font-size: 4rem;
         margin-right: 0.5rem;
       }
+
       @include media("<lg") {
         font-size: 3rem;
       }
     }
+
     .context {
       @include font-style($steel-grey, 1.5rem, 2.6rem, 400);
       text-align: left;
+
       @include media("<md") {
         font-size: 1.2rem;
         line-height: 2rem;
       }
+
       @include media("<lg") {
         font-size: 1.5rem;
       }
     }
+
     .survey-anchor {
       @include font-style($wild-red, 1.5rem, 2.6rem, 400);
       margin-left: 0.5rem;
       text-decoration: underline;
     }
   }
+
   .ant-card-body {
     padding: 1.6rem;
   }
+
   .project-list-wrapper {
     margin-top: 2rem;
+
     .project-wrapper {
       background-color: $silver;
 
       .project-client-context-day-container {
         @include justify-content-between;
+
         .avatar-project-client-context-container {
           @include d-flex;
           gap: 1rem;
+
           .avatar {
             min-width: 4rem;
             min-height: 4rem;
@@ -94,36 +139,46 @@
             @include font-style($cerulean, 2rem, 2rem, 400);
             border-radius: 6.4rem;
           }
+
           .project-client-container {
             text-align: left;
+
             .project-name {
               @include font-style($black, 1.6rem, 2.4rem, 400);
             }
+
             .client-name {
               @include font-style($steel-grey, 1.4rem, 2rem, 400);
             }
           }
         }
+
         .day-left-container {
           @include align-items-start;
           gap: 0.5rem;
+
           .dot-icon {
             color: $orange-peel;
             font-size: 1.5rem;
           }
+
           .days-left-context {
             @include font-style($jet-black, 1.2rem, 1.7rem, 400);
           }
         }
       }
+
       .team-view-container {
         @include justify-content-between;
         margin-top: 2.5rem;
+
         .team-members-context {
           @include font-style($steel-grey, 1.4rem, 2rem, 400);
         }
+
         .view-button {
           @include font-style($muted-bold-red, 1.3rem, 2.2rem, 500);
+
           &:hover {
             background-color: transparent;
           }

@@ -1,4 +1,4 @@
-import { Button, Card, Col, Row } from "antd";
+import { Button, Card, Col, Row, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
 import i18n from "../../locales/i18next";
@@ -33,9 +33,32 @@ export const Accounts = () => {
       });
     }
   }, [tenantId]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const addNewAccount = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className="projects-list-wrapper">
-      <h1 className="project-title">{i18n.t("greetings.account")}</h1>
+      <Modal
+        title="Basic Modal"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      ></Modal>
+      <div className="account-header-container">
+        <h1 className="project-title">{i18n.t("greetings.account")}</h1>
+        <div className="actions-container">
+          <Button onClick={addNewAccount} className="add-account-button">
+            {i18n.t("addAccount.addBtn")}
+          </Button>
+        </div>
+      </div>
       {isLoading ? (
         isMobile ? (
           <ShimmerSimpleGallery col={1} card imageHeight={150} />
