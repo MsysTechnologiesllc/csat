@@ -85,29 +85,53 @@ var CreateTemplate = func(w http.ResponseWriter, r *http.Request) {
 }
 
 var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
-
-	account := &models.User{}
-	err := json.NewDecoder(r.Body).Decode(account) //decode the request body into struct and failed if any error occur
+	type account struct { 
+		Name      string `json:"name"`
+		Email     string `json:"email"`
+		Password  string `json:"password"`
+		Role      string `json: "role"`
+		AccountID uint   `json:"account_id"`
+		ProjectID uint   `json:"project_id"`
+	}
+	accountData := account{}
+	err := json.NewDecoder(r.Body).Decode(&accountData) //decode the request body into struct and failed if any error occur
 	if err != nil {
 		u.Respond(w, u.Message(false, constants.INVALID_REQUEST))
 		return
 	}
-
-	if account.Email == ""  {
+	if accountData.Email == ""  {
         u.Respond(w, u.Message(false, "Email is required"))
         return
     }
-	if  account.Password == "" {
+	if  accountData.Password == "" {
         u.Respond(w, u.Message(false, "password is required"))
         return
     }
-	if  account.AccountID == 0 {
+	if  accountData.AccountID == 0 {
         u.Respond(w, u.Message(false, "account ID is required"))
         return
     }
-
-	resp := account.Create() //Create account
-	u.Respond(w, resp)
+	if  accountData.ProjectID == 0 {
+        u.Respond(w, u.Message(false, "Project ID is required"))
+        return
+    }
+	// resp := accountData.Create() //Create account
+	db := models.GetDB()
+	user, err := models.CreateUserData(db, accountData.Name, accountData.Email, accountData.Password,  accountData.Role, accountData.AccountID)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+	fmt.Println(user)
+	err = models.CreateUsersProject(db, user.ID, accountData.ProjectID, user.Role)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+	userMap := map[string]interface{}{
+        "user":    user,
+    }
+	u.Respond(w, userMap)
 }
 
 // @Summary Login API
