@@ -13,6 +13,9 @@ export const translationEN = {
     publish: "Publish",
     google: "Google",
     login: "Login",
+    edit: "Edit",
+    delete: "Delete",
+    moreOptions: "More Options",
   },
   header: {
     title: "CSAT",
@@ -209,5 +212,10 @@ export const translationEN = {
     emailNotReceive: "Didn't receive the email? ",
     resend: " Click to resend",
     learniply: "learniply",
+  },
+  deleteModal: {
+    accountsTitle: "Are you sure delete this Account?",
+    projectsTitle: "Are you sure delete this {{projectName}}?",
+    context: "Active project surveys pending",
   },
 };
