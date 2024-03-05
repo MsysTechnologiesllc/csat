@@ -77,7 +77,7 @@ const AddEditAccount = ({
             },
           ]}
         >
-          <Input placeholder="example" />
+          <Input placeholder={i18n.t("addAccount.example")} />
         </Form.Item>
         <p className="dummy-placeholder">{i18n.t("addAccount.accNameRule")}</p>
         <Form.Item
@@ -90,7 +90,7 @@ const AddEditAccount = ({
             },
           ]}
         >
-          <Input placeholder="example" />
+          <Input placeholder={i18n.t("addAccount.example")} />
         </Form.Item>
         <p className="dummy-placeholder">{i18n.t("addAccount.accNameRule")}</p>
         <Form.Item>

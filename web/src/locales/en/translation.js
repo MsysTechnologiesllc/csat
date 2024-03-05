@@ -211,6 +211,7 @@ export const translationEN = {
     learniply: "learniply",
   },
   addAccount: {
+    example: "example",
     addBtn: "+ Add Account",
     addAccount: "Add Account",
     editAccount: "Edit Account",

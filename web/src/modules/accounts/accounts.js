@@ -42,7 +42,7 @@ export const Accounts = () => {
       accName: "sandeep",
       accOwner: "dharma",
     });
-    setFormStatus("edit");
+    setFormStatus("add");
   }, []);
   const addNewAccount = () => {
     setIsModalOpen(true);
