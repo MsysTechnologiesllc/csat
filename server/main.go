@@ -42,6 +42,7 @@ func main() {
 	// Use routes.SetupRoutes function to set up routes
 	routes.SetupRoutes(r)
 	routes.SetupGoogleRoutes(r)
+	routes.ProjectRoutes(r)
 
 	// Swagger documentation
 	r.PathPrefix("/swagger/").Handler(httpSwagger.Handler(

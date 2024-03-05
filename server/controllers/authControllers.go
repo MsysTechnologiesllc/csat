@@ -3,6 +3,7 @@ package controllers
 import (
 	constants "csat/helpers"
 	"csat/models"
+	"csat/schema"
 	u "csat/utils"
 	"encoding/json"
 	"fmt"
@@ -92,6 +93,19 @@ var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if account.Email == ""  {
+        u.Respond(w, u.Message(false, "Email is required"))
+        return
+    }
+	if  account.Password == "" {
+        u.Respond(w, u.Message(false, "password is required"))
+        return
+    }
+	if  account.AccountID == 0 {
+        u.Respond(w, u.Message(false, "account ID is required"))
+        return
+    }
+
 	resp := account.Create() //Create account
 	u.Respond(w, resp)
 }
@@ -118,5 +132,56 @@ var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := models.Login(account.Email, account.Password)
+
+	message, _ := resp["message"].(string)
+
+    if message == constants.EMAIL_NOT_FOUND || message == constants.INVALID_CREDENTIALS {
+        w.WriteHeader(http.StatusUnauthorized)
+    }
+	if message == constants.CONNECTION_ERROR {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+	u.Respond(w, resp)
+}
+
+var UpdateAccount = func(w http.ResponseWriter, r *http.Request) {
+
+	var requestBody schema.User
+	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	userIDStr := r.URL.Query().Get("userID")
+	var userID uint
+	_, err := fmt.Sscanf(userIDStr, "%d", &userID)
+	if err != nil {
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+	updatedUser := schema.User{}
+	if requestBody.Name != "" {
+		updatedUser.Name = requestBody.Name
+	}
+	if requestBody.Email != "" {
+		updatedUser.Email = requestBody.Email
+	}
+	if requestBody.Password != "" {
+		updatedUser.Password = requestBody.Password
+	}
+	if requestBody.Role != "" {
+		updatedUser.Role = requestBody.Role
+	}
+
+	updatedUserPtr, err := models.UpdateUserByID(userID, &updatedUser)
+	if err != nil {
+		resp := u.Message(false, constants.FAILED)
+		w.WriteHeader(http.StatusInternalServerError)
+		u.Respond(w, resp)
+		return
+	}
+
+	resp := u.Message(true, constants.SUCCESS)
+	resp["data"] = updatedUserPtr
 	u.Respond(w, resp)
 }
