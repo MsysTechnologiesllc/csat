@@ -1,5 +1,14 @@
 @use "../../../assets//style" as *;
 
+
+.form-modal {
+  top: 5rem;
+
+  .ant-modal-title {
+    @include font-style($black, 2rem, 2.8rem, 500);
+  }
+}
+
 .projects-list-wrapper {
   background-color: #fff;
   padding: 3rem 2rem 2rem 2rem;

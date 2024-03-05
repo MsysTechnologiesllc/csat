@@ -6,6 +6,7 @@ import { GetService } from "../../services/get";
 import { ShimmerSimpleGallery } from "react-shimmer-effects";
 import { useDetectMobileOrDesktop } from "../../hooks/useDetectMobileOrDesktop";
 import "./projects-list/projects-list.scss";
+import AddEditAccount from "./add-edit-account/add-edit-account";
 
 export const Accounts = () => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
@@ -34,6 +35,15 @@ export const Accounts = () => {
     }
   }, [tenantId]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formStatus, setFormStatus] = useState("add");
+  const [accountsFormData, setAccountsFormData] = useState();
+  useEffect(() => {
+    setAccountsFormData({
+      accName: "sandeep",
+      accOwner: "dharma",
+    });
+    setFormStatus("edit");
+  }, []);
   const addNewAccount = () => {
     setIsModalOpen(true);
   };
@@ -46,11 +56,24 @@ export const Accounts = () => {
   return (
     <div className="projects-list-wrapper">
       <Modal
-        title="Basic Modal"
+        title={
+          formStatus === "add"
+            ? i18n.t("addAccount.addAccount")
+            : i18n.t("addAccount.editAccount")
+        }
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-      ></Modal>
+        footer={false}
+        className="form-modal"
+      >
+        <AddEditAccount
+          formStatus={formStatus}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          accountsFormData={accountsFormData}
+        />
+      </Modal>
       <div className="account-header-container">
         <h1 className="project-title">{i18n.t("greetings.account")}</h1>
         <div className="actions-container">

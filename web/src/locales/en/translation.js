@@ -212,5 +212,14 @@ export const translationEN = {
   },
   addAccount: {
     addBtn: "+ Add Account",
+    addAccount: "Add Account",
+    editAccount: "Edit Account",
+    updateAccount: "Update Account",
+    accNameRule: "Please Enter Account Name",
+    accNameule: "Please Enter Account Owner Name",
+    dropdownText: "Click or drag file to this area to upload Logo",
+    dropConditions: "SVG, PNG, JPG or GIF (max. 3MB)",
+    fileImageWarning: "You can only upload image files!",
+    imageSizeWarning: "Image must be smaller than 1MB!",
   },
 };
