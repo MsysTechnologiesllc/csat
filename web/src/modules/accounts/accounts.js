@@ -11,6 +11,7 @@ import {
 } from "react-icons/ai";
 import { useDetectMobileOrDesktop } from "../../hooks/useDetectMobileOrDesktop";
 import "./projects-list/projects-list.scss";
+import AddEditAccount from "./add-edit-account/add-edit-account";
 
 export const Accounts = () => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
@@ -61,10 +62,55 @@ export const Accounts = () => {
       });
     }
   }, [tenantId]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formStatus, setFormStatus] = useState("add");
+  const [accountsFormData, setAccountsFormData] = useState();
+  useEffect(() => {
+    setAccountsFormData({
+      accName: "sandeep",
+      accOwner: "dharma",
+    });
+    setFormStatus("add");
+  }, []);
+  const addNewAccount = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   return (
     <>
       <div className="projects-list-wrapper">
-        <h1 className="project-title">{i18n.t("greetings.account")}</h1>
+        <Modal
+          title={
+            formStatus === "add"
+              ? i18n.t("addAccount.addAccount")
+              : i18n.t("addAccount.editAccount")
+          }
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={false}
+          className="form-modal"
+        >
+          <AddEditAccount
+            formStatus={formStatus}
+            handleOk={handleOk}
+            handleCancel={handleCancel}
+            accountsFormData={accountsFormData}
+          />
+        </Modal>
+        <div className="account-header-container">
+          <h1 className="project-title">{i18n.t("greetings.account")}</h1>
+          <div className="actions-container">
+            <Button onClick={addNewAccount} className="add-account-button">
+              {i18n.t("addAccount.addBtn")}
+            </Button>
+          </div>
+        </div>
         {isLoading ? (
           isMobile ? (
             <ShimmerSimpleGallery col={1} card imageHeight={150} />
