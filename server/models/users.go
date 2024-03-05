@@ -18,9 +18,9 @@ import (
 JWT claims struct
 */
 type Token struct {
-	UserId uint
-	Email  string
-	Token  uint
+	UserId   uint
+	Email    string
+	TenantId uint
 	jwt.StandardClaims
 }
 
@@ -105,7 +105,7 @@ type LoginRequest struct {
 func Login(email, password string) map[string]interface{} {
 
 	user := &User{}
-	err := GetDB().Table("users").Where("email = ?", email).First(user).Error
+	err := GetDB().Table("users").Where("email = ?", email).Preload("Account").First(user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return u.Message(false, constants.EMAIL_NOT_FOUND)
@@ -121,7 +121,7 @@ func Login(email, password string) map[string]interface{} {
 	user.Password = ""
 
 	//Create JWT token
-	tk := &Token{UserId: user.ID, Email: user.Email}
+	tk := &Token{UserId: user.ID, Email: user.Email, TenantId: user.Account.TenantID}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
 	user.Token = tokenString //Store the token in the response
