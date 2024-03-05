@@ -40,7 +40,7 @@ func UpdateProjectByID(projectID uint, updatedProject *schema.Project) (*schema.
 	}
 
 	if len(updatedProject.TechStack) != 0 {
-		existingProject.TechStack = updatedProject.TechStack
+		existingProject.TechStack = append(existingProject.TechStack, updatedProject.TechStack...)
 	}
 
 	if updatedProject.StartDate != nil {
