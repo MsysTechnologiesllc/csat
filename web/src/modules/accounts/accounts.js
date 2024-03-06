@@ -183,7 +183,7 @@ export const Accounts = () => {
               },
             ]}
             onChange={(value) => {
-              setSelectedSegment(value); // string
+              setSelectedSegment(value);
             }}
           />
           <Button onClick={addNewAccount} className="add-account-button">
@@ -226,72 +226,72 @@ export const Accounts = () => {
                           {deliveryHead?.length > 0 && deliveryHead[0]?.name}
                         </p>
                       </div>
-                      <Popover
-                        content={
-                          <div className="more-options">
-                            <span
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                handleOnClickMore("Edit");
-                              }}
-                            >
-                              <AiOutlineEdit className="icon" />
-                              {i18n.t("common.edit")}
-                            </span>
-                            <span
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                handleOnClickMore("Delete", account.ID);
-                              }}
-                            >
-                              <AiOutlineDelete className="icon" />
-                              {i18n.t("common.delete")}
-                            </span>
-                          </div>
-                        }
-                        trigger="click"
-                        arrow={false}
-                        placement="bottomRight"
-                        overlayStyle={{ padding: 0 }}
-                        open={popId === account.ID && isPopover}
-                        onOpenChange={() => handleOnOpenChange(account.ID)}
-                      >
-                        <div
-                          onClick={(event) => {
-                            event.stopPropagation();
-                          }}
-                          className="more-option-icon"
-                        >
-                          <img
-                            src="/images/ellipse-vertical.svg"
-                            alt={i18n.t("common.moreOptions")}
-                          />
-                        </div>
-                      </Popover>
-                      {isId === account.ID && (
-                        <Modal
-                          open={deleteModal}
-                          closable={false}
-                          okText="Delete"
-                          onCancel={handleonCancel}
-                          onOk={handleonOk}
-                          className="more-modal"
-                          centered
-                        >
-                          <div className="model-content-container">
-                            <AiOutlineExclamationCircle className="excalamation-icon" />
-                            <div className="content-wrapper">
-                              <h3 className="title">
-                                {i18n.t("deleteModal.accountsTitle")}
-                              </h3>
-                              <p className="context">
-                                {i18n.t("deleteModal.context")}
-                              </p>
-                            </div>
-                          </div>
-                        </Modal>
-                      )}
                     </div>
+                    <Popover
+                      content={
+                        <div className="more-options">
+                          <span
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleOnClickMore("Edit");
+                            }}
+                          >
+                            <AiOutlineEdit className="icon" />
+                            {i18n.t("common.edit")}
+                          </span>
+                          <span
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleOnClickMore("Delete", account.ID);
+                            }}
+                          >
+                            <AiOutlineDelete className="icon" />
+                            {i18n.t("common.delete")}
+                          </span>
+                        </div>
+                      }
+                      trigger="click"
+                      arrow={false}
+                      placement="bottomRight"
+                      overlayStyle={{ padding: 0 }}
+                      open={popId === account.ID && isPopover}
+                      onOpenChange={() => handleOnOpenChange(account.ID)}
+                    >
+                      <div
+                        onClick={(event) => {
+                          event.stopPropagation();
+                        }}
+                        className="more-option-icon"
+                      >
+                        <img
+                          src="/images/ellipse-vertical.svg"
+                          alt={i18n.t("common.moreOptions")}
+                        />
+                      </div>
+                    </Popover>
+                    {isId === account.ID && (
+                      <Modal
+                        open={deleteModal}
+                        closable={false}
+                        okText="Delete"
+                        onCancel={handleonCancel}
+                        onOk={handleonOk}
+                        className="more-modal"
+                        centered
+                      >
+                        <div className="model-content-container">
+                          <AiOutlineExclamationCircle className="excalamation-icon" />
+                          <div className="content-wrapper">
+                            <h3 className="title">
+                              {i18n.t("deleteModal.accountsTitle")}
+                            </h3>
+                            <p className="context">
+                              {i18n.t("deleteModal.context")}
+                            </p>
+                          </div>
+                        </div>
+                      </Modal>
+                    )}
                   </div>
                   <div className="team-view-container">
                     <p className="team-members-context">{`${account?.account_projects?.length} project(s)`}</p>
