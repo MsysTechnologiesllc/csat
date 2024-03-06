@@ -104,13 +104,14 @@ type LoginRequest struct {
 // @Router /api/user/login [post]
 func Login(email, password string) map[string]interface{} {
     user := &User{}
-	err := GetDB().Table("users").Where("email = ?", email).First(user).Error
+	err := GetDB().Table("users").Where("email = ?", email).Preload("Account").First(user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return u.Message(false, constants.EMAIL_NOT_FOUND)
 		}
 		return u.Message(false, constants.CONNECTION_ERROR)
 	}
+	fmt.Println(user.Account.TenantID)
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
