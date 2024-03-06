@@ -127,6 +127,7 @@ export const translationEN = {
   },
   projects: {
     daysLeft: "Only {{days}} Days left",
+    completed: "Completed",
   },
   accounts: {
     view: "VIEW",

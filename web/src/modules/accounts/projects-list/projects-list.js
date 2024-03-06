@@ -211,14 +211,24 @@ export const ProjectsList = () => {
                       </div>
                     </div>
                     <div className="day-left-container">
-                      <GoDotFill className="dot-icon" />
+                      <GoDotFill
+                        className={
+                          NoOfDays(project?.end_date) <= 0
+                            ? "red-dot"
+                            : NoOfDays(project?.end_date) > 0 &&
+                                NoOfDays(project?.end_date) <= 10
+                              ? "orange-dot"
+                              : "green-dot"
+                        }
+                      />
                       <p className="days-left-context">
-                        {i18n.t("projects.daysLeft", {
-                          days:
-                            NoOfDays(project?.end_date) > 0
-                              ? NoOfDays(project?.end_date)
-                              : 0,
-                        })}
+                        {NoOfDays(project?.end_date) > 0
+                          ? i18n.t("projects.daysLeft", {
+                              days:
+                                NoOfDays(project?.end_date) > 0 &&
+                                NoOfDays(project?.end_date),
+                            })
+                          : i18n.t("projects.completed")}
                       </p>
                     </div>
                     <Popover
