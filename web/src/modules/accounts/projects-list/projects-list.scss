@@ -8,17 +8,31 @@
   }
 }
 
-.sider {
+.custom-drawer {
+
   .ant-drawer-header {
+    width: 100%;
+
+    @include media("<md") {
+      padding-left: 1rem;
+    }
+
+    .ant-drawer-close {
+      margin: 0
+    }
+
     .ant-drawer-title {
-      @include font-style($black, 1.6rem, 2.4rem, 500)
+      @include font-style($black, 1.6rem, 2.4rem, 500);
+      max-width: 10rem;
+
+      @include media("<md") {
+        font-size: 1.4rem;
+        line-height: 2rem;
+      }
     }
 
     .ant-drawer-extra {
-      @include d-flex;
-      min-width: 25rem;
-      max-width: 25rem;
-
+      @include justify-content-end;
       .cancle-btn,
       .submit-btn {
         min-height: 3.5rem;
@@ -28,17 +42,26 @@
       .cancle-btn {
         @include font-style($black, 1.6rem, 2.4rem, 400);
         border: 1px solid $dark-black;
+
+        @include media("<md") {
+          font-size: 1.4rem;
+          padding: 0.5rem 1rem;
+        }
       }
 
       .submit-btn {
         background-color: $indigo;
         @include font-style($white, 1.6rem, 2.4rem, 400);
         border-radius: 0.4rem;
-        width: 100%;
         padding: 1rem 2.2rem;
         @include justify-content-center;
         @include align-items-center;
         margin-left: 1rem;
+
+        @include media("<md") {
+          font-size: 1.4rem;
+          padding: 0.5rem 1rem;
+        }
 
         &:hover {
           background-color: $indigo;
@@ -57,7 +80,6 @@
   background-color: $white;
   padding: 3rem 2rem 2rem 2rem;
   min-height: 100vh;
-
 
   @include media("<md") {
     padding: 2rem 1.5rem;
@@ -98,9 +120,11 @@
       .ant-segmented {
         padding: 0;
       }
+
       .ant-segmented .ant-segmented-item {
         border-radius: 0.2rem;
       }
+
       .add-account-button {
         margin-left: 2rem;
         background-color: $indigo;
@@ -212,6 +236,7 @@
             .project-name {
               @include font-style($black, 1.6rem, 2.4rem, 400);
               text-transform: capitalize;
+
               @include media(">lg", "<xl") {
                 @include text-ellipsis;
                 max-width: 6rem;
@@ -237,10 +262,12 @@
             color: $orange-peel;
             font-size: 1.5rem;
           }
+
           .red-dot {
             color: $red;
             font-size: 1.5rem;
           }
+
           .green-dot {
             color: $lima;
             font-size: 1.5rem;

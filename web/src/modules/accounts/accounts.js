@@ -161,7 +161,7 @@ export const Accounts = () => {
   return (
     <div className="projects-list-wrapper">
       <Drawer
-        className="sider"
+        className="custom-drawer"
         title={
           formStatus === "add"
             ? i18n.t("addAccount.addAccount")
@@ -169,7 +169,7 @@ export const Accounts = () => {
         }
         onClose={onClose}
         open={open}
-        size="large"
+        width={isMobile ? "90%" : isTablet ? "60%" : "40%"}
         extra={
           <>
             <Button type="text" onClick={onClose} className="cancle-btn">
