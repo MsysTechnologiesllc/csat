@@ -1,9 +1,26 @@
-import { Breadcrumb, Button, Card, Col, Modal, Popover, Row } from "antd";
+import {
+  Breadcrumb,
+  Button,
+  Card,
+  Col,
+  Modal,
+  Pagination,
+  Popover,
+  Row,
+  Segmented,
+  Table,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import i18n from "../../../locales/i18next";
-import { IoMdInformationCircleOutline } from "react-icons/io";
+// import { IoMdInformationCircleOutline } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 import "./projects-list.scss";
+import {
+  AppstoreOutlined,
+  BarsOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router";
 import {
   AiOutlineEdit,
@@ -16,6 +33,8 @@ export const ProjectsList = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [breadcrumbList, setBreadcrumbList] = useState([]);
+  const [selectedSegment, setSelectedSegment] = useState("Grid");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [isId, setIsId] = useState("");
   const [isPopover, setIsPopover] = useState(false);
@@ -61,6 +80,15 @@ export const ProjectsList = () => {
   const handleBreadCrumb = () => {
     navigate("/accounts");
   };
+  const addNewAccount = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     let breadcrumbItems = [
@@ -73,21 +101,91 @@ export const ProjectsList = () => {
     }
     setBreadcrumbList(breadcrumbItems);
   }, [state?.accountName]);
-
-  return (
-    <>
-      <div className="projects-list-wrapper">
-        <Breadcrumb items={breadcrumbList} onClick={handleBreadCrumb} />
-        <h1 className="project-title">{i18n.t("greetings.project")}</h1>
-        <div className="context-wrapper">
-          <IoMdInformationCircleOutline className="info-icon" />
-          <p className="context">
-            {i18n.t("accounts.description")}
-            <a href="/surveys" target="_self" className="survey-anchor">
-              {i18n.t("accounts.surveys")}
-            </a>
-          </p>
+  const columns = [
+    {
+      title: "Project",
+      dataIndex: "projectName",
+      key: "projectName",
+    },
+    {
+      title: "Project Owner",
+      dataIndex: "projectOwner",
+      key: "projectOwner",
+    },
+    {
+      title: "Members",
+      dataIndex: "members",
+      key: "members",
+    },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      key: "actions",
+      render: () => (
+        <div>
+          <EditOutlined className="edit" />
+          <DeleteOutlined className="delete" />
         </div>
+      ),
+    },
+  ];
+  const data = [];
+  state?.projectsList?.map((project, index) => {
+    const prjManager = project?.Users?.filter(
+      (user) => user.role === "projectManager",
+    );
+    const teamMembers = project?.Users?.filter(
+      (user) => user.role === "member",
+    );
+    data.push({
+      key: index + 1,
+      projectName: project?.name,
+      projectOwner: prjManager[0]?.name,
+      members: `${teamMembers?.length} Member(s)`,
+    });
+  });
+  return (
+    <div className="projects-list-wrapper">
+      <Modal
+        title="Basic Modal"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      ></Modal>
+      <Breadcrumb items={breadcrumbList} onClick={handleBreadCrumb} />
+      <div className="account-header-container">
+        <h1 className="project-title">{state?.accountName}</h1>
+        <div className="actions-container">
+          <Segmented
+            options={[
+              {
+                value: "Grid",
+                icon: <AppstoreOutlined />,
+              },
+              {
+                value: "List",
+                icon: <BarsOutlined />,
+              },
+            ]}
+            onChange={(value) => {
+              setSelectedSegment(value);
+            }}
+          />
+          <Button onClick={addNewAccount} className="add-account-button">
+            {i18n.t("addAccount.addBtn")}
+          </Button>
+        </div>
+      </div>
+      {/* <div className="context-wrapper">
+        <IoMdInformationCircleOutline className="info-icon" />
+        <p className="context">
+          {i18n.t("accounts.description")}
+          <a href="/surveys" target="_self" className="survey-anchor">
+            {i18n.t("accounts.surveys")}
+          </a>
+        </p>
+      </div> */}
+      {selectedSegment === "Grid" ? (
         <Row gutter={[20, 20]} className="project-list-wrapper">
           {state?.projectsList?.map((project) => {
             const prjManager = project?.Users?.filter(
@@ -206,7 +304,18 @@ export const ProjectsList = () => {
             );
           })}
         </Row>
-      </div>
-    </>
+      ) : (
+        <div className="accounts-list-container">
+          <Table columns={columns} dataSource={data} pagination={false} />
+          <Pagination
+            total={data?.length}
+            showSizeChanger
+            showQuickJumper
+            showTotal={(total) => `Total ${total} items`}
+            className="pagination"
+          />
+        </div>
+      )}
+    </div>
   );
 };

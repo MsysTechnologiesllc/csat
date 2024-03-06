@@ -1,6 +1,22 @@
-import { Button, Card, Col, Modal, Popover, Row } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Modal,
+  Segmented,
+  Table,
+  Pagination,
+  Popover,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
+import {
+  AppstoreOutlined,
+  BarsOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import i18n from "../../locales/i18next";
 import { GetService } from "../../services/get";
 import { ShimmerSimpleGallery } from "react-shimmer-effects";
@@ -16,9 +32,11 @@ import AddEditAccount from "./add-edit-account/add-edit-account";
 export const Accounts = () => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
   const navigate = useNavigate();
+  const [tenantId] = useOutletContext();
   const [accountsList, setAccountsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [tenantId] = useOutletContext();
+  const [selectedSegment, setSelectedSegment] = useState("Grid");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [isPopover, setIsPopover] = useState(false);
   const [popId, setPopId] = useState("");
@@ -66,7 +84,6 @@ export const Accounts = () => {
       });
     }
   }, [tenantId]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [formStatus, setFormStatus] = useState("add");
   const [accountsFormData, setAccountsFormData] = useState();
   useEffect(() => {
@@ -85,71 +102,129 @@ export const Accounts = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  return (
-    <>
-      <div className="projects-list-wrapper">
-        <Modal
-          title={
-            formStatus === "add"
-              ? i18n.t("addAccount.addAccount")
-              : i18n.t("addAccount.editAccount")
-          }
-          open={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          footer={false}
-          className="form-modal"
-        >
-          <AddEditAccount
-            formStatus={formStatus}
-            handleOk={handleOk}
-            handleCancel={handleCancel}
-            accountsFormData={accountsFormData}
-          />
-        </Modal>
-        <div className="account-header-container">
-          <h1 className="project-title">{i18n.t("greetings.account")}</h1>
-          <div className="actions-container">
-            <Button onClick={addNewAccount} className="add-account-button">
-              {i18n.t("addAccount.addBtn")}
-            </Button>
-          </div>
+  const columns = [
+    {
+      title: "Account",
+      dataIndex: "accountName",
+      key: "accountName",
+    },
+    {
+      title: "Account Owner",
+      dataIndex: "accountOwner",
+      key: "accountOwner",
+    },
+    {
+      title: "Projects",
+      dataIndex: "projects",
+      key: "projects",
+    },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      key: "actions",
+      render: () => (
+        <div>
+          <EditOutlined className="edit" />
+          <DeleteOutlined className="delete" />
         </div>
-        {isLoading ? (
-          isMobile ? (
-            <ShimmerSimpleGallery col={1} card imageHeight={150} />
-          ) : isTablet ? (
-            <ShimmerSimpleGallery col={2} card imageHeight={150} />
-          ) : (
-            <ShimmerSimpleGallery card imageHeight={150} />
-          )
+      ),
+    },
+  ];
+  const data = [];
+  accountsList.map((account, index) => {
+    const deliveryHead =
+      account?.account_projects?.length > 0 &&
+      account?.account_projects[0]?.Users?.length > 0
+        ? account?.account_projects[0]?.Users
+        : account?.account_projects[1]?.Users?.filter((each) => {
+            each?.role === "deliveryHead";
+          });
+    selectedSegment === "List" &&
+      data.push({
+        key: index + 1,
+        accountName: account?.name,
+        accountOwner: deliveryHead?.length > 0 && deliveryHead[0]?.name,
+        projects: `${account?.account_projects?.length} project(s)`,
+      });
+  });
+  return (
+    <div className="projects-list-wrapper">
+      <Modal
+        title={
+          formStatus === "add"
+            ? i18n.t("addAccount.addAccount")
+            : i18n.t("addAccount.editAccount")
+        }
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={false}
+        className="form-modal"
+      >
+        <AddEditAccount
+          formStatus={formStatus}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          accountsFormData={accountsFormData}
+        />
+      </Modal>
+      <div className="account-header-container">
+        <h1 className="project-title">{i18n.t("greetings.account")}</h1>
+        <div className="actions-container">
+          <Segmented
+            options={[
+              {
+                value: "Grid",
+                icon: <AppstoreOutlined />,
+              },
+              {
+                value: "List",
+                icon: <BarsOutlined />,
+              },
+            ]}
+            onChange={(value) => {
+              setSelectedSegment(value); // string
+            }}
+          />
+          <Button onClick={addNewAccount} className="add-account-button">
+            {i18n.t("addAccount.addBtn")}
+          </Button>
+        </div>
+      </div>
+      {isLoading ? (
+        isMobile ? (
+          <ShimmerSimpleGallery col={1} card imageHeight={150} />
+        ) : isTablet ? (
+          <ShimmerSimpleGallery col={2} card imageHeight={150} />
         ) : (
-          <Row gutter={[20, 20]} className="project-list-wrapper">
-            {accountsList?.map((account) => {
-              const deliveryHead =
-                account?.account_projects?.length > 0 &&
-                account?.account_projects[0]?.Users?.length > 0
-                  ? account?.account_projects[0]?.Users
-                  : account?.account_projects[1]?.Users?.filter((each) => {
-                      each?.role === "deliveryHead";
-                    });
-              return (
-                <Col xs={24} md={12} lg={8} xxl={6} key={account?.ID}>
-                  <Card className="project-wrapper">
-                    <div className="project-client-context-day-container">
-                      <div className="avatar-project-client-context-container">
-                        <p className="avatar">
-                          {`${account?.name
-                            .split(" ")
-                            .map((word) => word?.charAt(0)?.toUpperCase())
-                            .join("")}`}
+          <ShimmerSimpleGallery card imageHeight={150} />
+        )
+      ) : selectedSegment === "Grid" ? (
+        <Row gutter={[20, 20]} className="project-list-wrapper">
+          {accountsList?.map((account) => {
+            const deliveryHead =
+              account?.account_projects?.length > 0 &&
+              account?.account_projects[0]?.Users?.length > 0
+                ? account?.account_projects[0]?.Users
+                : account?.account_projects[1]?.Users?.filter((each) => {
+                    each?.role === "deliveryHead";
+                  });
+            return (
+              <Col xs={24} md={12} lg={8} xxl={6} key={account?.ID}>
+                <Card className="project-wrapper">
+                  <div className="project-client-context-day-container">
+                    <div className="avatar-project-client-context-container">
+                      <p className="avatar">
+                        {`${account?.name
+                          .split(" ")
+                          .map((word) => word?.charAt(0)?.toUpperCase())
+                          .join("")}`}
+                      </p>
+                      <div className="project-client-container">
+                        <h4 className="project-name">{account?.name}</h4>
+                        <p className="client-name">
+                          {deliveryHead?.length > 0 && deliveryHead[0]?.name}
                         </p>
-                        <div className="project-client-container">
-                          <h4 className="project-name">{account?.name}</h4>
-                          <p className="client-name">
-                            {deliveryHead?.length > 0 && deliveryHead[0]?.name}
-                          </p>
-                        </div>
                       </div>
                       <Popover
                         content={
@@ -217,23 +292,34 @@ export const Accounts = () => {
                         </Modal>
                       )}
                     </div>
-                    <div className="team-view-container">
-                      <p className="team-members-context">{`${account?.account_projects?.length} project(s)`}</p>
-                      <Button
-                        className="view-button"
-                        type="text"
-                        onClick={() => handleView(account)}
-                      >
-                        {i18n.t("accounts.view")}
-                      </Button>
-                    </div>
-                  </Card>
-                </Col>
-              );
-            })}
-          </Row>
-        )}
-      </div>
-    </>
+                  </div>
+                  <div className="team-view-container">
+                    <p className="team-members-context">{`${account?.account_projects?.length} project(s)`}</p>
+                    <Button
+                      className="view-button"
+                      type="text"
+                      onClick={() => handleView(account)}
+                    >
+                      {i18n.t("accounts.view")}
+                    </Button>
+                  </div>
+                </Card>
+              </Col>
+            );
+          })}
+        </Row>
+      ) : (
+        <div className="accounts-list-container">
+          <Table columns={columns} dataSource={data} pagination={false} />
+          <Pagination
+            total={data?.length}
+            showSizeChanger
+            showQuickJumper
+            showTotal={(total) => `Total ${total} items`}
+            className="pagination"
+          />
+        </div>
+      )}
+    </div>
   );
 };
