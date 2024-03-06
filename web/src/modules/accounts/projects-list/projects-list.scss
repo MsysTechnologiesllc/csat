@@ -98,8 +98,11 @@
       .ant-segmented {
         padding: 0;
       }
-
+      .ant-segmented .ant-segmented-item {
+        border-radius: 0.2rem;
+      }
       .add-account-button {
+        margin-left: 2rem;
         background-color: $indigo;
         @include font-style($white, 1.6rem, 2.4rem, 400);
         border-radius: 0.4rem;
