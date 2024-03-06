@@ -166,6 +166,11 @@
 
             .project-name {
               @include font-style($black, 1.6rem, 2.4rem, 400);
+              text-transform: capitalize;
+              @include media(">lg", "<xl") {
+                @include text-ellipsis;
+                max-width: 6rem;
+              }
             }
 
             .client-name {
@@ -181,8 +186,16 @@
           @include align-items-start;
           gap: 0.5rem;
 
-          .dot-icon {
+          .orange-dot {
             color: $orange-peel;
+            font-size: 1.5rem;
+          }
+          .red-dot {
+            color: $red;
+            font-size: 1.5rem;
+          }
+          .green-dot {
+            color: $lima;
             font-size: 1.5rem;
           }
 
