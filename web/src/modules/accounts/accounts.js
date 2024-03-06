@@ -31,9 +31,13 @@ export const Accounts = () => {
   };
   const handleonCancel = () => {
     setDeleteModal(false);
+    setIsId("");
+    setPopId("");
   };
   const handleonOk = () => {
     setDeleteModal(false);
+    setIsId("");
+    setPopId("");
   };
   const handleOnClickMore = (option, id) => {
     if (option === "Delete" && isId !== id) {
@@ -196,7 +200,7 @@ export const Accounts = () => {
                           okText="Delete"
                           onCancel={handleonCancel}
                           onOk={handleonOk}
-                          className="modal"
+                          className="more-modal"
                           centered
                         >
                           <div className="model-content-container">

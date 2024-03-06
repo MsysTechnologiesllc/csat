@@ -28,9 +28,13 @@ export const ProjectsList = () => {
   };
   const handleonCancel = () => {
     setDeleteModal(false);
+    setIsId("");
+    setPopId("");
   };
   const handleonOk = () => {
     setDeleteModal(false);
+    setIsId("");
+    setPopId("");
   };
   const handleOnClickMore = (option, id) => {
     if (option === "Delete" && isId !== id) {
