@@ -8,6 +8,7 @@ import {
   Table,
   Pagination,
   Popover,
+  Drawer,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
@@ -36,7 +37,6 @@ export const Accounts = () => {
   const [accountsList, setAccountsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedSegment, setSelectedSegment] = useState("Grid");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [isPopover, setIsPopover] = useState(false);
   const [popId, setPopId] = useState("");
@@ -84,8 +84,20 @@ export const Accounts = () => {
       });
     }
   }, [tenantId]);
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [formStatus, setFormStatus] = useState("add");
   const [accountsFormData, setAccountsFormData] = useState();
+
+  const onFinish = () => {
+    console.log("Success:", formData);
+    setLoading(true);
+  };
+
+  function getUpdatedFormData(values) {
+    setFormData(values);
+  }
   useEffect(() => {
     setAccountsFormData({
       accName: "sandeep",
@@ -93,14 +105,12 @@ export const Accounts = () => {
     });
     setFormStatus("add");
   }, []);
+
   const addNewAccount = () => {
-    setIsModalOpen(true);
+    setOpen(true);
   };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const onClose = () => {
+    setOpen(false);
   };
   const columns = [
     {
@@ -147,27 +157,44 @@ export const Accounts = () => {
         projects: `${account?.account_projects?.length} project(s)`,
       });
   });
+
   return (
     <div className="projects-list-wrapper">
-      <Modal
+      <Drawer
+        className="sider"
         title={
           formStatus === "add"
             ? i18n.t("addAccount.addAccount")
             : i18n.t("addAccount.editAccount")
         }
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={false}
-        className="form-modal"
+        onClose={onClose}
+        open={open}
+        size="large"
+        extra={
+          <>
+            <Button type="text" onClick={onClose} className="cancle-btn">
+              {i18n.t("button.cancel")}
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => onFinish()}
+              className="submit-btn"
+              loading={loading}
+            >
+              {formStatus === "add"
+                ? i18n.t("addAccount.addAccount")
+                : i18n.t("addAccount.updateAccount")}
+            </Button>
+          </>
+        }
       >
         <AddEditAccount
+          handleClose={onClose}
           formStatus={formStatus}
-          handleOk={handleOk}
-          handleCancel={handleCancel}
           accountsFormData={accountsFormData}
+          getUpdatedFormData={getUpdatedFormData}
         />
-      </Modal>
+      </Drawer>
       <div className="account-header-container">
         <h1 className="project-title">{i18n.t("greetings.account")}</h1>
         <div className="actions-container">
@@ -183,7 +210,7 @@ export const Accounts = () => {
               },
             ]}
             onChange={(value) => {
-              setSelectedSegment(value); // string
+              setSelectedSegment(value);
             }}
           />
           <Button onClick={addNewAccount} className="add-account-button">

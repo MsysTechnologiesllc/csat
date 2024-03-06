@@ -1,25 +1,15 @@
-import React, { useState } from "react";
-import { Form, Input, Button, message, Upload } from "antd";
+import React from "react";
+import { Form, Input, message, Upload } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import PropTypes from "prop-types";
 import i18n from "../../../locales/i18next";
 import "./add-edit-account.scss";
 
 const AddEditAccount = ({
-  handleOk,
+  getUpdatedFormData,
   formStatus,
-  handleCancel,
   accountsFormData,
 }) => {
-  const [loading, setLoading] = useState(false);
-  const onFinish = (values) => {
-    console.log("Success:", values);
-    setLoading(true);
-    handleOk();
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
   const { Dragger } = Upload;
   const beforeUpload = (file) => {
     const isImage = file.type.startsWith("image/");
@@ -60,12 +50,13 @@ const AddEditAccount = ({
     <div className="add-edit-account-container">
       <Form
         name="accounts-form"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         initialValues={
           formStatus === "edit" && accountsFormData ? accountsFormData : false
         }
         className="accounts-form"
+        onValuesChange={(changedValues, allValues) => {
+          getUpdatedFormData(allValues);
+        }}
       >
         <Form.Item
           label="Account Name"
@@ -106,25 +97,6 @@ const AddEditAccount = ({
             </p>
           </Dragger>
         </Form.Item>
-        <div className="form-footer">
-          <Form.Item>
-            <Button type="text" onClick={handleCancel} className="cancle-btn">
-              {i18n.t("button.cancel")}
-            </Button>
-          </Form.Item>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={loading}
-              className="submit-btn"
-            >
-              {formStatus === "add"
-                ? i18n.t("addAccount.addAccount")
-                : i18n.t("addAccount.updateAccount")}
-            </Button>
-          </Form.Item>
-        </div>
       </Form>
     </div>
   );
@@ -133,8 +105,7 @@ const AddEditAccount = ({
 export default AddEditAccount;
 
 AddEditAccount.propTypes = {
-  handleOk: PropTypes.func.isRequired,
-  handleCancel: PropTypes.func.isRequired,
+  getUpdatedFormData: PropTypes.func.isRequired,
   formStatus: PropTypes.string.isRequired,
   accountsFormData: PropTypes.object.isRequired,
 };
