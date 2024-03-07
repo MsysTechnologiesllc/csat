@@ -598,6 +598,180 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/survey-format/list": {
+            "get": {
+                "description": "Retrieve Survey Format List details based on Project ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Survey"
+                ],
+                "summary": "Get Survey Format List Details",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 2,
+                        "description": "Project ID (required)",
+                        "name": "project_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Survey Format List details retrieved successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized: Token is missing or invalid",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "No Data found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/api/client": {
+            "post": {
+                "description": "Client Data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Client Data",
+                "parameters": [
+                    {
+                        "description": "Client Data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SurveyData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data retrieved successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized: Token is missing or invalid",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/api/survey-clone": {
+            "post": {
+                "description": "Survey id details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Survey"
+                ],
+                "summary": "Survey ID Data",
+                "parameters": [
+                    {
+                        "description": "Survey id Data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SurveyIdData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data retrieved successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized: Token is missing or invalid",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/api/userFeedback": {
             "put": {
                 "description": "Update user feedback details",
@@ -701,7 +875,48 @@ const docTemplate = `{
         },
         "schema.Survey": {
             "type": "object"
-        }
+        },
+        "models.SurveyData": {
+            "type": "object",
+            "properties": {
+              "survey_id": {
+                "type": "integer",
+                "example": "4"
+              },
+              "name": {
+                "type": "string",
+                "example": "Silambu"
+              },
+              "email": {
+                "type": "string",
+                "example": "sdhandapani@msystechnologies.com"
+              }
+            }
+          },
+          "models.SurveyIdData": {
+            "type": "object",
+            "properties": {
+              "survey_id": {
+                "type": "integer",
+                "example": 5
+              },
+              "survey_dates": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "2024-02-14 13:32:06.594507+05:30"
+                }
+              },
+              "client_email": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "sdhandapani@msystechnologies.com"
+                }
+              }
+            }
+          }          
+
     }
 }`
 
