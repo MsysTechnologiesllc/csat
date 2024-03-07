@@ -4,6 +4,7 @@ import SurveyHeader from "../survey-header/Survey-header";
 import SurveyList from "../survey-list/Survey-list";
 import { GetService } from "../../../services/get";
 import { useDetectMobileOrDesktop } from "../../../hooks/useDetectMobileOrDesktop";
+import { useOutletContext } from "react-router";
 
 const SurveyHome = () => {
   const { isMobile } = useDetectMobileOrDesktop();
@@ -15,7 +16,7 @@ const SurveyHome = () => {
   const [filterAccounts, setFilterAccounts] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [prjData, setPrjData] = useState([]);
-  let id = 1001;
+  const [tenantId] = useOutletContext();
   let page = pageNumber;
   let limit = dataPerPage;
   let accName = JSON.stringify(filterAccounts);
@@ -29,10 +30,10 @@ const SurveyHome = () => {
     });
   }, []);
   useEffect(() => {
-    if (id) {
+    if (tenantId) {
       setIsDataLoaded(false);
       new GetService().getSurveyList(
-        id,
+        tenantId,
         page,
         limit,
         accName,
@@ -47,7 +48,7 @@ const SurveyHome = () => {
         },
       );
     }
-  }, [pageNumber, dataPerPage, filterStatus, filterAccounts]);
+  }, [pageNumber, dataPerPage, filterStatus, filterAccounts, tenantId]);
 
   function getStatusFilterUpdates(value) {
     setPageNumber(1);

@@ -1,16 +1,15 @@
 @use "../../assets/style/" as *;
 
-
 .report-loading-spinner {
   width: 100%;
   @include align-items-center;
   @include justify-content-center;
   height: 100vh;
-  .loading{
+  .loading {
     width: 4rem;
     height: 4rem;
     margin: auto;
-    span{
+    span {
       width: 1rem;
       height: 1rem;
     }
@@ -247,7 +246,7 @@
     padding: 20px 24px;
     height: 50vh;
   }
-  .passcode-form{
+  .passcode-form {
     min-height: 20vh;
     @include flex-column;
     @include justify-content-between;
@@ -274,4 +273,7 @@
       border: 0;
     }
   }
+}
+.no-data-container {
+  height: 100vh;
 }

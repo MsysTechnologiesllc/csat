@@ -38,7 +38,7 @@ const SurveyList = ({
   };
   function handleActionOnClick(status, record) {
     if (status === "publish" || "pending") {
-      navigate(`/surveys/surveyDetails/${record.ID}`, {
+      navigate(`/surveys/surveyDetails?survey_id=${record.ID}`, {
         state: { survey_id: record.ID, status: true },
       });
     }
@@ -141,7 +141,7 @@ const SurveyList = ({
         pagination={false}
         rowKey="key"
         scroll={{ y: 300, x: true }}
-        rowClassName={getRowClassName}
+        rowClassName={(record, index) => getRowClassName(index)}
         className="custom-scrollbar-table"
       />
       <div className="pagination-container">

@@ -1,0 +1,12 @@
+@use "../../assets/style/" as *;
+.error-wrapper {
+  @include media("<=lg") {
+    width: 100%;
+    height: auto;
+  }
+  img {
+    @include media("<=lg") {
+      width: 80%;
+    }
+  }
+}

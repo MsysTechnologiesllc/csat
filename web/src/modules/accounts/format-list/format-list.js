@@ -122,7 +122,7 @@ const FormatList = ({}) => {
   return (
     <div className="survey-home-container">
       <Breadcrumb items={breadcrumbList} />
-      <h3 className="survey-heading">{i18n.t("surveyList.surveys")}</h3>
+      <h3 className="survey-heading">{i18n.t("accounts.surveyFormats")}</h3>
       <div className="survey-list-container">
         <Table
           locale={isDataLoaded && data?.length > 0 ? null : customLocale}
@@ -137,10 +137,7 @@ const FormatList = ({}) => {
           rowKey="key"
           scroll={{ y: 300, x: true }}
           rowClassName={getRowClassName}
-          className="custom-scrollbar-table"
-          // onRow={(record) => ({
-          //   onClick: () => handleRowClick(record),
-          // })}
+          className="custom-scrollbar-table-format"
         />
       </div>
     </div>

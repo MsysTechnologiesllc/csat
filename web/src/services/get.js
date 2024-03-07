@@ -8,10 +8,17 @@ export class GetService extends BaseService {
       callback,
     );
   }
-  getSurveyDetails(surveyId, callback) {
+  getSurveyDetails(surveyId, passcode, callback) {
     return this.get(
       process.env.GO_SERVICE_URL +
-        `/csat/rest/api/survey-details?id=${surveyId}`,
+        `/csat/rest/api/survey-details?id=${surveyId}&passcode=${passcode}`,
+      callback,
+    );
+  }
+  getManagerSurveyDetails(surveyId, callback) {
+    return this.get(
+      process.env.GO_SERVICE_URL +
+        `/csat/rest/api/manager/survey-details?id=${surveyId}`,
       callback,
     );
   }
@@ -55,6 +62,13 @@ export class GetService extends BaseService {
     return this.get(
       process.env.GO_SERVICE_URL +
         `/csat/rest/api/survey-format/list?project_id=${project_id}`,
+      callback,
+    );
+  }
+  getForgotPassword(email, callback) {
+    return this.get(
+      process.env.GO_SERVICE_URL +
+        `/csat/rest/auth/reset-password/link?email=${email}`,
       callback,
     );
   }

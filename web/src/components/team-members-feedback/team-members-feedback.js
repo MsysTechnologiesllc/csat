@@ -18,7 +18,6 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
   const [form] = Form.useForm();
   const [usersList, setUsersList] = useState([]);
   const [selectedMember, setSelectedMember] = useState([]);
-  // const [isAnyFieldFilled, setIsAnyFieldFilled] = useState(false);
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
   const [searchInput, setSearchInput] = useState("");
@@ -69,8 +68,9 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
       }
       setSurveyStatus(status);
     } else {
-      new GetService().getSurveyDetails(
+      new GetService().getManagerSurveyDetails(
         surveyId ? surveyId : state?.surveyDetails?.Survey?.ID,
+        // state?.surveyDetails?.Survey?.passcode,
         (result) => {
           if (result?.data?.data) {
             setUsersList(result?.data?.data?.Survey?.user_feedbacks);
@@ -125,16 +125,14 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
       });
     }
   }, [selectedMember, usersFeedback]);
-  // const onValuesChange = () => {
-  //   const formValues = form.getFieldsValue();
-  //   const anyFieldHasValue = Object.values(formValues).some((value) => !!value);
-  //   setIsAnyFieldFilled(anyFieldHasValue);
-  // };
   const handleBack = () => {
     setNotify("");
-    navigate(`/survey/${state?.surveyDetails?.Survey.ID}`, {
-      state: { surveyDetails: state?.surveyDetails, status: state?.status },
-    });
+    navigate(
+      `/survey?survey_id=${state?.surveyDetails?.Survey?.ID}&passcode=${state?.surveyDetails?.Survey?.passcode}`,
+      {
+        state: { surveyDetails: state?.surveyDetails, status: state?.status },
+      },
+    );
   };
 
   useEffect(() => {
@@ -280,11 +278,7 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
           <p className="feedback-title">{i18n.t("teamFeedBack.feedback")}</p>
           <p className="name">{selectedMember?.user?.name}</p>
         </div>
-        <Form
-          form={form}
-          // onValuesChange={onValuesChange}
-          onFieldsChange={handleFieldFinish}
-        >
+        <Form form={form} onFieldsChange={handleFieldFinish}>
           <Row className="text-area-container">
             <Col xs={24} lg={12}>
               <p>{i18n.t("teamFeedBack.positives")}</p>
@@ -327,28 +321,6 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
                 }
               />
             </Form.Item>
-            {/* {surveyStatus !== "publish" && (
-              <div className="rating-btn">
-                <Button
-                  classNames="draft-button"
-                  disabled={!isAnyFieldFilled}
-                  onClick={handleReset}
-                >
-                  {i18n.t("button.reset")}
-                </Button>
-                <Button
-                  className={
-                    isAnyFieldFilled
-                      ? "active-button"
-                      : "active-button disabled-button"
-                  }
-                  htmlType="submit"
-                  disabled={!isAnyFieldFilled}
-                >
-                  {i18n.t("button.save")}
-                </Button>
-              </div>
-            )} */}
           </Col>
         </Form>
       </Col>

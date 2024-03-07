@@ -8,10 +8,12 @@ import { SurveyQuestionList } from "../survey-questions-list/survey-questions-li
 import { TeamMembersFeedBack } from "../team-members-feedback/team-members-feedback";
 import i18n from "../../locales/i18next";
 import "./survey-details.scss";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 export const SurveyDetails = () => {
-  const { survey_id } = useParams();
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const survey_id = params.get("survey_id");
   const navigate = useNavigate();
   const { NavTabs } = plLibComponents.components;
   const [surveyDetails, setSurveyDetails] = useState({});
@@ -21,7 +23,7 @@ export const SurveyDetails = () => {
     const breadItems = [
       { title: i18n.t("surveyList.surveys"), onClick: handleBreadCrumb },
     ];
-    new GetService().getSurveyDetails(survey_id, (result) => {
+    new GetService().getManagerSurveyDetails(survey_id, (result) => {
       if (result?.data?.data) {
         setSurveyDetails(result?.data?.data);
         breadItems.push({

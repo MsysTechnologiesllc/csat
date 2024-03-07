@@ -56,7 +56,7 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
     setSelectedClient(values);
   };
   const handleChange = (date) => {
-    date.map((each) => {
+    date?.map((each) => {
       const { $y, $M, $D, $H, $m, $s, $SSS, $Z } = each;
       const formattedDate = moment(
         `${$y}-${$M + 1}-${$D} ${$H}:${$m}:${$s}.${$SSS}${$Z}`,
@@ -95,7 +95,6 @@ export const PreviewSettings = ({ userFeedback, surveyDetails }) => {
             className="date-picker"
             showTime
             placeholder={i18n.t("settings.selectDate")}
-            value={selectedDates}
           />
         </Form.Item>
         <Form.Item>
