@@ -1,5 +1,6 @@
 @use "../../../assets//style" as *;
 
+
 .add-edit-account-container {
 
     .accounts-form {
@@ -32,43 +33,29 @@
                 padding: 1rem 0;
             }
 
-            .ant-radio-group {
-                @include flex-column;
+            .ant-checkbox-wrapper {
+                margin: 1rem 0;
 
-                .default-logo-radio-container {
+                .default-logo-container {
+                    @include d-flex;
                     @include align-items-center;
-                    border: 1px solid red;
 
-                    .default-logo-container {
+                    .bg-round-container {
+                        background-color: $very-light-gray;
+                        border-radius: 50%;
+                        height: 4rem;
+                        width: 4rem;
                         @include align-items-center;
+                        @include justify-content-center;
+                        margin-right: 1rem;
 
-                        .bg-round-container {
-                            background-color: $very-light-gray;
-                            border-radius: 50%;
-                            height: 4rem;
-                            width: 4rem;
-                            @include align-items-center;
-                            @include justify-content-center;
-                            margin-right: 1rem;
-
-                            .logo-img {
-                                margin: auto;
-                            }
-                        }
-
-                        .logo-text {
-                            @include font-style($indigo, 1.4rem, 2.2rem, 400);
+                        .logo-img {
+                            margin: auto;
                         }
                     }
-                }
 
-                .radio-uploader {
-                    .ant-radio-inner {
-                        display: none;
-                    }
-
-                    .ant-upload {
-                        width: 100%;
+                    .logo-text {
+                        @include font-style($indigo, 1.4rem, 2.2rem, 400);
                     }
                 }
             }
