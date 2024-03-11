@@ -17,7 +17,6 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import i18n from "../../../locales/i18next";
-// import { IoMdInformationCircleOutline } from "react-icons/io";
 import { GoDotFill } from "react-icons/go";
 import "./projects-list.scss";
 import {
@@ -34,6 +33,9 @@ import {
   AiOutlineExclamationCircle,
 } from "react-icons/ai";
 import { NoOfDays } from "../../../utils/utils";
+import { GetService } from "../../../services/get";
+import { PutService } from "../../../services/put";
+import NotifyStatus from "../../../components/notify-status/notify-status";
 
 export const ProjectsList = () => {
   const navigate = useNavigate();
@@ -46,6 +48,26 @@ export const ProjectsList = () => {
   const [isId, setIsId] = useState("");
   const [isPopover, setIsPopover] = useState(false);
   const [popId, setPopId] = useState("");
+  const [projectsList, setProjectsList] = useState({});
+  const [notify, setNotify] = useState("");
+  const [message, setMessage] = useState("");
+  const projectsApi = () => {
+    new GetService().getAccountsList(state?.tenantId, (result) => {
+      if (result?.status === 200) {
+        const filteredAccount =
+          result?.data?.data?.tenant?.tenant_accounts.filter(
+            (account) => account.ID === state?.accountId,
+          );
+        setProjectsList(...filteredAccount);
+        setIsLoading(false);
+      }
+    });
+  };
+  useEffect(() => {
+    if (state?.tenantId) {
+      projectsApi();
+    }
+  }, [state?.tenantId]);
   const [open, setOpen] = useState(false);
   // const showDrawer = () => {
   //   setOpen(true);
@@ -64,10 +86,26 @@ export const ProjectsList = () => {
     setIsId("");
     setPopId("");
   };
-  const handleonOk = () => {
-    setDeleteModal(false);
-    setIsId("");
-    setPopId("");
+  const handleonOk = (project) => {
+    const payload = {
+      name: project?.name,
+      account_id: projectsList.ID,
+      active: false,
+    };
+    new PutService().updateProject(project.ID, payload, (result) => {
+      if (result.status === 200) {
+        projectsApi();
+        setNotify("success");
+        setMessage("Project Deleted Successfully");
+        setDeleteModal(false);
+        setIsId("");
+        setPopId("");
+        setTimeout(() => {
+          setNotify("");
+          setMessage("");
+        }, 2000);
+      }
+    });
   };
   const handleOnClickMore = (option, id) => {
     if (option === "Delete" && isId !== id) {
@@ -82,13 +120,13 @@ export const ProjectsList = () => {
       {
         state: {
           prjId: project?.ID,
-          accountName: state?.accountName,
-          accountId: state?.accountId,
-          projectsList: state?.projectsList,
+          accountName: projectsList?.name,
+          accountId: projectsList.ID,
+          projectsList: projectsList?.account_projects,
           projectName: project?.name,
           status: true,
         },
-      }
+      },
     );
   };
   const handleBreadCrumb = () => {
@@ -108,13 +146,13 @@ export const ProjectsList = () => {
     let breadcrumbItems = [
       { title: i18n.t("sidebar.accounts"), onClick: handleBreadCrumb },
     ];
-    if (state?.accountName) {
+    if (projectsList) {
       breadcrumbItems.push({
-        title: state?.accountName,
+        title: projectsList?.name,
       });
     }
     setBreadcrumbList(breadcrumbItems);
-  }, [state?.accountName]);
+  }, [projectsList]);
   const columns = [
     {
       title: "Project",
@@ -150,12 +188,12 @@ export const ProjectsList = () => {
     },
   ];
   const data = [];
-  state?.projectsList?.map((project, index) => {
+  projectsList?.account_projects?.map((project, index) => {
     const prjManager = project?.Users?.filter(
-      (user) => user.role === "projectManager"
+      (user) => user.role === "projectManager",
     );
     const teamMembers = project?.Users?.filter(
-      (user) => user.role === "member"
+      (user) => user.role === "member",
     );
     data.push({
       key: index + 1,
@@ -188,7 +226,7 @@ export const ProjectsList = () => {
     <div className="projects-list-wrapper">
       <Breadcrumb items={breadcrumbList} onClick={handleBreadCrumb} />
       <div className="account-header-container">
-        <h1 className="project-title">{state?.accountName}</h1>
+        <h1 className="project-title">{projectsList?.name}</h1>
         <div className="actions-container">
           <Segmented
             options={[
@@ -300,23 +338,14 @@ export const ProjectsList = () => {
           </Drawer>
         </div>
       </div>
-      {/* <div className="context-wrapper">
-        <IoMdInformationCircleOutline className="info-icon" />
-        <p className="context">
-          {i18n.t("accounts.description")}
-          <a href="/surveys" target="_self" className="survey-anchor">
-            {i18n.t("accounts.surveys")}
-          </a>
-        </p>
-      </div> */}
       {selectedSegment === "Grid" ? (
         <Row gutter={[20, 20]} className="project-list-wrapper">
-          {state?.projectsList?.map((project) => {
+          {projectsList?.account_projects?.map((project) => {
             const prjManager = project?.Users?.filter(
-              (user) => user.role === "projectManager"
+              (user) => user.role === "projectManager",
             );
             const teamMembers = project?.Users?.filter(
-              (user) => user.role === "member"
+              (user) => user.role === "member",
             );
             return (
               <Col xs={24} md={12} lg={8} xxl={6} key={project.ID}>
@@ -330,7 +359,9 @@ export const ProjectsList = () => {
                           .join("")}`}
                       </p>
                       <div className="project-client-container">
-                        <h4 className="project-name">{project.name}</h4>
+                        <h4 className="project-name" title={project.name}>
+                          {project.name}
+                        </h4>
                         <p className="client-name">{prjManager[0]?.name}</p>
                       </div>
                     </div>
@@ -403,7 +434,7 @@ export const ProjectsList = () => {
                         closable={false}
                         okText="Delete"
                         onCancel={handleonCancel}
-                        onOk={handleonOk}
+                        onOk={() => handleonOk(project)}
                         className="modal"
                         centered
                       >
@@ -450,6 +481,7 @@ export const ProjectsList = () => {
           />
         </div>
       )}
+      {notify && <NotifyStatus status={notify} message={message} />}
     </div>
   );
 };
