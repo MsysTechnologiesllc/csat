@@ -89,7 +89,7 @@ var CreateAccount = func(w http.ResponseWriter, r *http.Request) {
 		Name      string `json:"name"`
 		Email     string `json:"email"`
 		Password  string `json:"password"`
-		Role      string `json: "role"`
+		Role      string `json:"role"` 
 		AccountID uint   `json:"account_id"`
 		ProjectID uint   `json:"project_id"`
 	}
