@@ -66,6 +66,24 @@
           box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
         }
       }
+      .ant-form-item-label {
+        .custom-label {
+          @include font-style($indigo, 1.4rem, 2.2rem, 400);
+        }
+      }
+      .ant-row .ant-form-item-row {
+        .ant-form-item .ant-form-item-control-input-content.ant-input {
+          border-radius: 0.2rem;
+          height: 3.2rem;
+          border: 0.1rem;
+        }
+        .ant-form-item-control-input-content {
+          .ant-picker {
+            border-radius: 0.2rem;
+            height: 3.2rem;
+          }
+        }
+      }
     }
   }
   .project-title {

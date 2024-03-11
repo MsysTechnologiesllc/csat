@@ -3,12 +3,17 @@ import {
   Button,
   Card,
   Col,
+  DatePicker,
+  Drawer,
+  Form,
+  Input,
   Modal,
   Pagination,
   Popover,
   Row,
   Segmented,
   Table,
+  TreeSelect,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import i18n from "../../../locales/i18next";
@@ -31,14 +36,22 @@ import { NoOfDays } from "../../../utils/utils";
 
 export const ProjectsList = () => {
   const navigate = useNavigate();
+  const [form] = Form.useForm();
   const { state } = useLocation();
   const [breadcrumbList, setBreadcrumbList] = useState([]);
   const [selectedSegment, setSelectedSegment] = useState("Grid");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [isId, setIsId] = useState("");
   const [isPopover, setIsPopover] = useState(false);
   const [popId, setPopId] = useState("");
+  const [open, setOpen] = useState(false);
+  // const showDrawer = () => {
+  //   setOpen(true);
+  // };
+  const onClose = () => {
+    setOpen(false);
+  };
   const handleOnOpenChange = (id) => {
     if (id !== popId) {
       setPopId(id);
@@ -70,21 +83,21 @@ export const ProjectsList = () => {
           projectName: project?.name,
           status: true,
         },
-      },
+      }
     );
   };
   const handleBreadCrumb = () => {
     navigate("/accounts");
   };
-  const addNewAccount = () => {
-    setIsModalOpen(true);
+  const addNewProject = () => {
+    setOpen(true);
   };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  // const handleOk = () => {
+  //   setIsModalOpen(false);
+  // };
+  // const handleCancel = () => {
+  //   setIsModalOpen(false);
+  // };
 
   useEffect(() => {
     let breadcrumbItems = [
@@ -128,10 +141,10 @@ export const ProjectsList = () => {
   const data = [];
   state?.projectsList?.map((project, index) => {
     const prjManager = project?.Users?.filter(
-      (user) => user.role === "projectManager",
+      (user) => user.role === "projectManager"
     );
     const teamMembers = project?.Users?.filter(
-      (user) => user.role === "member",
+      (user) => user.role === "member"
     );
     data.push({
       key: index + 1,
@@ -140,14 +153,28 @@ export const ProjectsList = () => {
       members: `${teamMembers?.length} Member(s)`,
     });
   });
+  const handleFieldFinish = (changedFields, allFields) => {
+    console.log(allFields);
+  };
+  const treeData = [
+    {
+      title: "Node1",
+      value: "0-0",
+      key: "0-0",
+    },
+    {
+      title: "Node2",
+      value: "0-1",
+      key: "0-1",
+    },
+    {
+      title: "Node3",
+      value: "0-2",
+      key: "0-2",
+    },
+  ];
   return (
     <div className="projects-list-wrapper">
-      <Modal
-        title="Basic Modal"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      ></Modal>
       <Breadcrumb items={breadcrumbList} onClick={handleBreadCrumb} />
       <div className="account-header-container">
         <h1 className="project-title">{state?.accountName}</h1>
@@ -167,9 +194,99 @@ export const ProjectsList = () => {
               setSelectedSegment(value);
             }}
           />
-          <Button onClick={addNewAccount} className="add-account-button">
-            {i18n.t("addAccount.addBtn")}
+          <Button onClick={addNewProject} className="add-account-button">
+            ADD PROJECTS
           </Button>
+          <Drawer
+            title="Add project"
+            width={720}
+            onClose={onClose}
+            open={open}
+            extra={
+              <div>
+                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={onClose} htmlType="submit" type="primary">
+                  Add Project
+                </Button>
+              </div>
+            }
+          >
+            <Form
+              form={form}
+              onFieldsChange={handleFieldFinish}
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+            >
+              <Form.Item
+                name="projectName"
+                label={<span className="custom-label">Project Name</span>}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter project name",
+                  },
+                ]}
+              >
+                <Input placeholder="Project #" />
+              </Form.Item>
+              <Form.Item name="startDate" label="SOW Start Date">
+                <DatePicker />
+              </Form.Item>
+              <Form.Item
+                name="projectStakeholders"
+                label="Project Stakeholders"
+              >
+                <TreeSelect
+                  treeData={treeData}
+                  treeNodeFilterProp="title"
+                  allowClear="true"
+                  showSearch
+                  multiple
+                  placeholder="First Name /Last Name / Email ID"
+                />
+              </Form.Item>
+              <Form.Item name="stakeholder" label="Stake holder">
+                <TreeSelect
+                  treeData={treeData}
+                  treeNodeFilterProp="title"
+                  allowClear="true"
+                  showSearch
+                  multiple
+                  placeholder="Select / Type Email ID"
+                />
+              </Form.Item>
+              <Form.Item name="scrumTeam" label="SCRUM Team">
+                <TreeSelect
+                  treeData={treeData}
+                  treeNodeFilterProp="title"
+                  allowClear="true"
+                  showSearch
+                  multiple
+                  placeholder="Select / Type Email ID"
+                />
+              </Form.Item>
+              <Form.Item name="lead" label="Lead">
+                <TreeSelect
+                  treeData={treeData}
+                  treeNodeFilterProp="title"
+                  allowClear="true"
+                  showSearch
+                  multiple
+                  placeholder="Select / Type Email ID"
+                />
+              </Form.Item>
+              <Form.Item name="pmo" label="PMO">
+                <TreeSelect
+                  treeData={treeData}
+                  treeNodeFilterProp="title"
+                  allowClear="true"
+                  showSearch
+                  multiple
+                  placeholder="Select / Type Email ID"
+                />
+              </Form.Item>
+            </Form>
+          </Drawer>
         </div>
       </div>
       {/* <div className="context-wrapper">
@@ -185,10 +302,10 @@ export const ProjectsList = () => {
         <Row gutter={[20, 20]} className="project-list-wrapper">
           {state?.projectsList?.map((project) => {
             const prjManager = project?.Users?.filter(
-              (user) => user.role === "projectManager",
+              (user) => user.role === "projectManager"
             );
             const teamMembers = project?.Users?.filter(
-              (user) => user.role === "member",
+              (user) => user.role === "member"
             );
             return (
               <Col xs={24} md={12} lg={8} xxl={6} key={project.ID}>
