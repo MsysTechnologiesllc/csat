@@ -111,11 +111,24 @@ var CreateAccountData = func(w http.ResponseWriter, r *http.Request) {
 }
 
 var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
-	var requestBody schema.Project
-	if err := json.NewDecoder(r.Body).Decode(&requestBody); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+	type TeamMember struct {
+		Name  string `json:"name"`
+		Role  string `json:"role"`
+		Email string `json:"email"`
 	}
+
+	type TeamMembersWrapper struct {
+        TeamMember []TeamMember `json:"team_member"`
+    }
+
+    var wrapper TeamMembersWrapper
+    if err := json.NewDecoder(r.Body).Decode(&wrapper); err != nil {
+        // Handle JSON decoding error
+        fmt.Println("Error decoding JSON:", err)
+        http.Error(w, "Failed to decode JSON", http.StatusBadRequest)
+        return
+    }
+    teamMembers := wrapper.TeamMember
 
 	projectIdStr := r.URL.Query().Get("projectId")
 	var projectId uint
@@ -124,38 +137,46 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid account ID", http.StatusBadRequest)
 		return
 	}
-	updatedProject := schema.Project{}
 
-	if requestBody.Name != "" {
-		updatedProject.Name = requestBody.Name
-	}
-	if requestBody.AccountID != 0 {
-		updatedProject.AccountID = uint(requestBody.AccountID)
-	}
-	if len(requestBody.TechStack) != 0 {
-		updatedProject.TechStack = requestBody.TechStack
-	}
-	if requestBody.StartDate != nil {
-		updatedProject.StartDate = requestBody.StartDate
-	}
-	if requestBody.EndDate != nil {
-		updatedProject.EndDate = requestBody.EndDate
-	}
-	if requestBody.Active == true || requestBody.Active == false {
-		updatedProject.Active = requestBody.Active
-	}
+	db := models.GetDB()
+	for _, member := range teamMembers {
+        // Check if the user exists based on the provided email
+        var user schema.User
+        if err := db.Where("email = ?", member.Email).First(&user).Error; err != nil {
+            // User doesn't exist, create a new one
+            user = schema.User{Name: member.Name, Email: member.Email, Role: member.Role}
+            if err := db.Create(&user).Error; err != nil {
+                // Handle database error
+                http.Error(w, "Failed to create user", http.StatusInternalServerError)
+                return
+            }
+        }
 
-	updatedProjectPtr, err := models.UpdateProjectByID(projectId, &updatedProject)
-	if err != nil {
-		resp := u.Message(false, constants.FAILED)
-		w.WriteHeader(http.StatusInternalServerError)
-		u.Respond(w, resp)
-		return
-	}
+        // Check if the user-project mapping exists
+        var userProject schema.UserProject
+        if err := db.Where("user_id = ? AND project_id = ?", user.ID, projectId).First(&userProject).Error; err != nil {
+            // Mapping doesn't exist, create a new one
+            userProject = schema.UserProject{UserID: user.ID, ProjectID: projectId, Role: member.Role}
+            if err := db.Create(&userProject).Error; err != nil {
+                // Handle database error
+                http.Error(w, "Failed to create user project", http.StatusInternalServerError)
+                return
+            }
+        } else {
+            // Mapping exists, update the role
+            userProject.Role = member.Role
+            if err := db.Save(&userProject).Error; err != nil {
+                // Handle database error
+                http.Error(w, "Failed to update user project", http.StatusInternalServerError)
+                return
+            }
+        }
+    }
 
-	resp := u.Message(true, constants.SUCCESS)
-	resp["data"] = updatedProjectPtr
-	u.Respond(w, resp)
+    // Respond with success
+    w.WriteHeader(http.StatusOK)
+    fmt.Fprintf(w, "Project updated successfully")
+
 }
 
 var UpdateAccountData = func(w http.ResponseWriter, r *http.Request) {

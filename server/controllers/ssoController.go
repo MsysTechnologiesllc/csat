@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"bytes"
+	"context"
 	"crypto/rand"
 	constants "csat/helpers"
 	"csat/logger"
@@ -11,6 +13,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -270,4 +273,175 @@ var ResetPassword = func(w http.ResponseWriter, r *http.Request) {
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = "Password reset successfully"
 	u.Respond(w, resp)
+}
+
+var SearchUser = func(w http.ResponseWriter, r *http.Request) {
+
+	clientID, clientSecret, refreshToken, err := GetTenantCredentials()
+    if err != nil {
+        log.Fatalf("Error fetching client credentials and refresh token: %v", err)
+        http.Error(w, "Failed to fetch credentials and refresh token", http.StatusInternalServerError)
+        return
+    }
+
+	accessToken, err := getAccessToken(clientID, clientSecret, refreshToken)
+    if err != nil {
+        log.Fatalf("Error retrieving access token: %v", err)
+        http.Error(w, "Failed to retrieve access token", http.StatusInternalServerError)
+        return
+    }
+
+    err = getGoogleAPIResponse(w, accessToken)
+    if err != nil {
+        log.Fatalf("Error retrieving Google API response: %v", err)
+    }
+    searchStr := r.URL.Query().Get("search")
+    if len(searchStr) < 3 {
+        http.Error(w, "Search query must have at least 3 characters", http.StatusBadRequest)
+        return
+    }
+
+    config := &oauth2.Config{
+        ClientID:     clientID,
+        ClientSecret: clientSecret,
+        Scopes:       []string{"https://www.googleapis.com/auth/contacts.other.readonly"},
+        // RedirectURL:  redirectURI,
+        Endpoint:     google.Endpoint,
+    }
+    url := config.AuthCodeURL("state")
+
+    fmt.Printf("Visit the URL for the auth dialog: %v\n", url)
+
+    // Get authorization code from user input
+    fmt.Print("Enter authorization code: ")
+    var code string
+    fmt.Scan(&code)
+
+    // Exchange authorization code for access token
+    token, err := config.Exchange(context.Background(), code)
+    if err != nil {
+        log.Fatalf("Error exchanging authorization code: %v", err)
+        return
+    }
+    fmt.Println("Response Body:", token.AccessToken)
+
+    // Use the obtained access token to make a request to the Google People API
+
+}
+type Person struct {
+    Name  string `json:"Name"`
+    Email string `json:"Email"`
+}
+
+func getGoogleAPIResponse(w http.ResponseWriter, accessToken string) error {
+    apiEndpoint := "https://people.googleapis.com/v1/otherContacts:search"
+    queryParameters := "?pageSize=10&query=raj&readMask=emailAddresses%2Cnames"
+
+    url := apiEndpoint + queryParameters
+
+    // Create a new request with the Google People API URL
+    req, err := http.NewRequest("GET", url, nil)
+    if err != nil {
+        return fmt.Errorf("error creating request: %v", err)
+    }
+
+    // Set the Authorization header with the access token
+    req.Header.Set("Authorization", "Bearer "+accessToken)
+    req.Header.Set("Accept", "application/json")
+
+    // Make the GET request
+    client := &http.Client{}
+    resp, err := client.Do(req)
+    if err != nil {
+        return fmt.Errorf("error making API request: %v", err)
+    }
+
+    defer resp.Body.Close()
+    fmt.Println(resp)
+
+    // Check the response status code
+    if resp.StatusCode != http.StatusOK {
+        return fmt.Errorf("API request failed with status code: %v", resp.StatusCode)
+    }
+
+	var results struct {
+        Results []struct {
+            Person struct {
+                Names         []struct{ DisplayName string } `json:"names"`
+                EmailAddresses []struct{ Value string }      `json:"emailAddresses"`
+            } `json:"person"`
+        } `json:"results"`
+    }
+
+    // Decode the JSON response
+    err = json.NewDecoder(resp.Body).Decode(&results)
+    if err != nil {
+        return fmt.Errorf("error decoding JSON response: %v", err)
+    }
+
+    // Convert the results into an array of Person objects
+    var contacts []Person
+    for _, result := range results.Results {
+        for _, person := range result.Person.Names {
+            for _, email := range result.Person.EmailAddresses {
+                contact := Person{Name: person.DisplayName, Email: email.Value}
+                contacts = append(contacts, contact)
+            }
+        }
+    }
+
+    // Marshal the contacts slice into JSON
+    consolidatedJSON, err := json.Marshal(contacts)
+    if err != nil {
+        return fmt.Errorf("error marshalling JSON: %v", err)
+    }
+	w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    w.Write(consolidatedJSON)
+
+    return nil
+
+}
+
+func GetTenantCredentials() (clientID, clientSecret, refreshToken string, err error) {
+	var tenant schema.Tenant
+	db := models.GetDB()
+	if err := db.First(&tenant).Error; err != nil {
+		return "", "", "", err
+	}
+	return tenant.ClientID, tenant.ClientSecret, tenant.RefreshToken, nil
+}
+
+func getAccessToken(clientID, clientSecret, refreshToken string) (string, error) {
+    // Construct the request body for token refresh using the refresh token
+    requestBody := map[string]string{
+        "client_id":     clientID,
+        "client_secret": clientSecret,
+        "refresh_token": refreshToken,
+        "grant_type":    "refresh_token",
+    }
+
+    // Marshal the request body to JSON
+    requestBodyBytes, err := json.Marshal(requestBody)
+    if err != nil {
+        return "", fmt.Errorf("error marshaling request body: %v", err)
+    }
+
+    // Make a request to the token endpoint
+    resp, err := http.Post("https://oauth2.googleapis.com/token", "application/json", bytes.NewReader(requestBodyBytes))
+    if err != nil {
+        return "", fmt.Errorf("error making token refresh request: %v", err)
+    }
+    defer resp.Body.Close()
+
+    // Parse the response body to extract the access token
+    var tokenResp struct {
+        AccessToken string `json:"access_token"`
+    }
+    err = json.NewDecoder(resp.Body).Decode(&tokenResp)
+    if err != nil {
+        return "", fmt.Errorf("error parsing token refresh response: %v", err)
+    }
+
+    return tokenResp.AccessToken, nil
 }
