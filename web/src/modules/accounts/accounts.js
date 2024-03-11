@@ -17,6 +17,7 @@ import {
   BarsOutlined,
   EditOutlined,
   DeleteOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import i18n from "../../locales/i18next";
 import { GetService } from "../../services/get";
@@ -58,13 +59,17 @@ export const Accounts = () => {
     setPopId("");
   };
   const handleOnClickMore = (option, id) => {
+    console.log(option, id);
+    console.log(isId, "isid");
     if (option === "Delete" && isId !== id) {
+      console.log("done");
       setDeleteModal(true);
       setIsId(id);
       setIsPopover(false);
     }
   };
   const handleView = (account) => {
+    console.log(account, "accounts");
     navigate(`/accounts/${account.ID}/projects`, {
       state: {
         projectsList: account?.account_projects,
@@ -132,11 +137,22 @@ export const Accounts = () => {
       title: "Actions",
       dataIndex: "actions",
       key: "actions",
-      render: () => (
+      render: (text, record) => (
         <div>
           <EditOutlined className="edit" />
-          <DeleteOutlined className="delete" />
+          <DeleteOutlined
+            className="delete"
+            onClick={() => handleOnClickMore("Delete", record?.accountId)}
+          />
         </div>
+      ),
+    },
+    {
+      title: "View",
+      dataIndex: "view",
+      key: "view",
+      render: (text, record) => (
+        <EyeOutlined onClick={() => handleView(record)} />
       ),
     },
   ];
@@ -155,6 +171,7 @@ export const Accounts = () => {
         accountName: account?.name,
         accountOwner: deliveryHead?.length > 0 && deliveryHead[0]?.name,
         projects: `${account?.account_projects?.length} project(s)`,
+        accountId: account?.ID,
       });
   });
 

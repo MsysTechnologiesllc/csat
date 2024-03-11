@@ -25,6 +25,7 @@ import {
   BarsOutlined,
   EditOutlined,
   DeleteOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router";
 import {
@@ -140,6 +141,12 @@ export const ProjectsList = () => {
           <DeleteOutlined className="delete" />
         </div>
       ),
+    },
+    {
+      title: "View",
+      dataIndex: "view",
+      key: "view",
+      render: () => <EyeOutlined />,
     },
   ];
   const data = [];
