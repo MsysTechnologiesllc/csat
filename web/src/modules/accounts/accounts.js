@@ -29,6 +29,8 @@ import {
 import { useDetectMobileOrDesktop } from "../../hooks/useDetectMobileOrDesktop";
 import "./projects-list/projects-list.scss";
 import AddEditAccount from "./add-edit-account/add-edit-account";
+import { PutService } from "../../services/put";
+import NotifyStatus from "../../components/notify-status/notify-status";
 
 export const Accounts = () => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
@@ -41,6 +43,16 @@ export const Accounts = () => {
   const [isPopover, setIsPopover] = useState(false);
   const [popId, setPopId] = useState("");
   const [isId, setIsId] = useState("");
+  const [notify, setNotify] = useState("");
+  const [message, setMessage] = useState("");
+  const accountsApi = () => {
+    new GetService().getAccountsList(tenantId, (result) => {
+      if (result?.status === 200) {
+        setAccountsList(result?.data?.data?.tenant?.tenant_accounts);
+        setIsLoading(false);
+      }
+    });
+  };
   const handleOnOpenChange = (id) => {
     if (id !== popId) {
       setPopId(id);
@@ -52,36 +64,46 @@ export const Accounts = () => {
     setIsId("");
     setPopId("");
   };
-  const handleonOk = () => {
-    setDeleteModal(false);
-    setIsId("");
-    setPopId("");
+  const handleonOk = (account) => {
+    const payload = {
+      name: account.name,
+      tenant_id: account.tenant_id,
+      is_active: false,
+    };
+    new PutService().updateAccount(account.ID, payload, (result) => {
+      if (result.status === 200) {
+        accountsApi();
+        setNotify("success");
+        setMessage("Account Deleted Successfully");
+        setDeleteModal(false);
+        setIsId("");
+        setPopId("");
+        setTimeout(() => {
+          setNotify("");
+          setMessage("");
+        }, 2000);
+      }
+    });
   };
-  const handleOnClickMore = (option, id) => {
-    if (option === "Delete" && isId !== id) {
+  const handleOnClickMore = (option, account) => {
+    if (option === "Delete" && isId !== account.ID) {
       setDeleteModal(true);
-      setIsId(id);
+      setIsId(account.ID);
       setIsPopover(false);
     }
   };
   const handleView = (account) => {
     navigate(`/accounts/${account.ID}/projects`, {
       state: {
-        projectsList: account?.account_projects,
-        accountName: account?.name,
         accountId: account.ID,
+        tenantId: tenantId,
       },
     });
   };
   useEffect(() => {
     setIsLoading(true);
     if (tenantId) {
-      new GetService().getAccountsList(tenantId, (result) => {
-        if (result?.status === 200) {
-          setAccountsList(result?.data?.data?.tenant?.tenant_accounts);
-          setIsLoading(false);
-        }
-      });
+      accountsApi();
     }
   }, [tenantId]);
   const [open, setOpen] = useState(false);
@@ -254,7 +276,9 @@ export const Accounts = () => {
                           .join("")}`}
                       </p>
                       <div className="project-client-container">
-                        <h4 className="project-name">{account?.name}</h4>
+                        <h4 className="project-name" title={account?.name}>
+                          {account?.name}
+                        </h4>
                         <p className="client-name">
                           {deliveryHead?.length > 0 && deliveryHead[0]?.name}
                         </p>
@@ -275,7 +299,7 @@ export const Accounts = () => {
                           <span
                             onClick={(event) => {
                               event.stopPropagation();
-                              handleOnClickMore("Delete", account.ID);
+                              handleOnClickMore("Delete", account);
                             }}
                           >
                             <AiOutlineDelete className="icon" />
@@ -308,7 +332,7 @@ export const Accounts = () => {
                         closable={false}
                         okText="Delete"
                         onCancel={handleonCancel}
-                        onOk={handleonOk}
+                        onOk={() => handleonOk(account)}
                         className="more-modal"
                         centered
                       >
@@ -353,6 +377,7 @@ export const Accounts = () => {
           />
         </div>
       )}
+      {notify && <NotifyStatus status={notify} message={message} />}
     </div>
   );
 };

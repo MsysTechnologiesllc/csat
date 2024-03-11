@@ -142,6 +142,24 @@
           box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
         }
       }
+      .ant-form-item-label {
+        .custom-label {
+          @include font-style($indigo, 1.4rem, 2.2rem, 400);
+        }
+      }
+      .ant-row .ant-form-item-row {
+        .ant-form-item .ant-form-item-control-input-content.ant-input {
+          border-radius: 0.2rem;
+          height: 3.2rem;
+          border: 0.1rem;
+        }
+        .ant-form-item-control-input-content {
+          .ant-picker {
+            border-radius: 0.2rem;
+            height: 3.2rem;
+          }
+        }
+      }
     }
   }
 
@@ -151,54 +169,6 @@
 
     @include media("<md") {
       font-size: 2rem;
-    }
-  }
-
-  .context-wrapper {
-    @include align-items-center;
-    color: $steel-grey;
-    margin-top: 2rem;
-
-    @include media("<md") {
-      @include align-items-start;
-
-      margin-top: 1.5rem;
-    }
-
-    .info-icon {
-      font-size: 2rem;
-      margin-right: 1rem;
-      max-width: 2rem;
-      max-height: 2rem;
-
-      @include media("<md") {
-        font-size: 4rem;
-        margin-right: 0.5rem;
-      }
-
-      @include media("<lg") {
-        font-size: 3rem;
-      }
-    }
-
-    .context {
-      @include font-style($steel-grey, 1.5rem, 2.6rem, 400);
-      text-align: left;
-
-      @include media("<md") {
-        font-size: 1.2rem;
-        line-height: 2rem;
-      }
-
-      @include media("<lg") {
-        font-size: 1.5rem;
-      }
-    }
-
-    .survey-anchor {
-      @include font-style($wild-red, 1.5rem, 2.6rem, 400);
-      margin-left: 0.5rem;
-      text-decoration: underline;
     }
   }
 
