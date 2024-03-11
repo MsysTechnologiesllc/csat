@@ -235,7 +235,7 @@ const AddEditAccount = ({ open, setOpen }) => {
             rules={[
               {
                 required: true,
-                message: i18n.t("addAccount.accOwnerRule"),
+                message: i18n.t("addAccount.accLogoRule"),
               },
             ]}
           >

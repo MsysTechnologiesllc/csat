@@ -228,6 +228,7 @@ export const translationEN = {
     updateAccount: "Update Account",
     accNameRule: "Please Enter Account Name",
     accOwnerRule: "Please Enter Account Owner Name",
+    accLogoRule: "Please Provide logo for Account",
     dropdownText: "Click or drag file to this area to upload Logo",
     dropConditions: "SVG, PNG, JPG or GIF (max. 3MB)",
     fileImageWarning: "You can only upload SVG, PNG, JPG, JPEG, or FIG files!",
