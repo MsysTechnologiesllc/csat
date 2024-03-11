@@ -127,6 +127,7 @@ export const translationEN = {
   },
   projects: {
     daysLeft: "Only {{days}} Days left",
+    completed: "Completed",
   },
   accounts: {
     view: "VIEW",
@@ -162,6 +163,7 @@ export const translationEN = {
     usingSSO: "OR Login using SSO",
     message: "Please input your passcode!",
     heading: "Customer Feedback Survey",
+    checkMail: "Check Your Email",
     desc: "Gathering feedback isn’t easy. If you can convince your audience to click through to your feedback survey, you then have to craft a survey that will keep them engaged until the end.",
     passcodePlaceholder: "Enter your passcode",
     passcodeDesc: "Enter Passcode to Start Survey",

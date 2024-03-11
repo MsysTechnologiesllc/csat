@@ -8,8 +8,76 @@
   }
 }
 
+.custom-drawer {
+
+  .ant-drawer-header {
+    width: 100%;
+
+    @include media("<md") {
+      padding-left: 1rem;
+    }
+
+    .ant-drawer-close {
+      margin: 0
+    }
+
+    .ant-drawer-title {
+      @include font-style($black, 1.6rem, 2.4rem, 500);
+      max-width: 10rem;
+
+      @include media("<md") {
+        font-size: 1.4rem;
+        line-height: 2rem;
+      }
+    }
+
+    .ant-drawer-extra {
+      @include justify-content-end;
+      .cancle-btn,
+      .submit-btn {
+        min-height: 3.5rem;
+        max-height: 3.5rem;
+      }
+
+      .cancle-btn {
+        @include font-style($black, 1.6rem, 2.4rem, 400);
+        border: 1px solid $dark-black;
+
+        @include media("<md") {
+          font-size: 1.4rem;
+          padding: 0.5rem 1rem;
+        }
+      }
+
+      .submit-btn {
+        background-color: $indigo;
+        @include font-style($white, 1.6rem, 2.4rem, 400);
+        border-radius: 0.4rem;
+        padding: 1rem 2.2rem;
+        @include justify-content-center;
+        @include align-items-center;
+        margin-left: 1rem;
+
+        @include media("<md") {
+          font-size: 1.4rem;
+          padding: 0.5rem 1rem;
+        }
+
+        &:hover {
+          background-color: $indigo;
+          box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
+        }
+      }
+    }
+  }
+
+  .ant-drawer-body {
+    padding-top: 1rem;
+  }
+}
+
 .projects-list-wrapper {
-  background-color: #fff;
+  background-color: $white;
   padding: 3rem 2rem 2rem 2rem;
   min-height: 100vh;
 
@@ -42,15 +110,23 @@
 
   .account-header-container {
     @include justify-content-between;
+
     .actions-container {
       @include justify-content-between;
       @include align-items-center;
       min-height: 4rem;
       max-height: 4rem;
+
       .ant-segmented {
         padding: 0;
       }
+
+      .ant-segmented .ant-segmented-item {
+        border-radius: 0.2rem;
+      }
+
       .add-account-button {
+        margin-left: 2rem;
         background-color: $indigo;
         @include font-style($white, 1.6rem, 2.4rem, 400);
         border-radius: 0.4rem;
@@ -86,6 +162,7 @@
       }
     }
   }
+
   .project-title {
     @include font-style($jet-black, 3.4rem, 4.2rem, 400);
     text-align: left;
@@ -94,6 +171,7 @@
       font-size: 2rem;
     }
   }
+
   .context-wrapper {
     @include align-items-center;
     color: $steel-grey;
@@ -175,6 +253,12 @@
 
             .project-name {
               @include font-style($black, 1.6rem, 2.4rem, 400);
+              text-transform: capitalize;
+
+              @include media(">lg", "<xl") {
+                @include text-ellipsis;
+                max-width: 6rem;
+              }
             }
 
             .client-name {
@@ -182,16 +266,28 @@
             }
           }
         }
+
         .more-option-icon {
           cursor: pointer;
           height: 2rem;
         }
+
         .day-left-container {
           @include align-items-start;
           gap: 0.5rem;
 
-          .dot-icon {
+          .orange-dot {
             color: $orange-peel;
+            font-size: 1.5rem;
+          }
+
+          .red-dot {
+            color: $red;
+            font-size: 1.5rem;
+          }
+
+          .green-dot {
+            color: $lima;
             font-size: 1.5rem;
           }
 
@@ -220,14 +316,17 @@
     }
   }
 }
+
 .accounts-list-container {
   .edit {
     margin-right: 2rem;
     color: $indigo;
   }
+
   .delete {
     color: $wild-red;
   }
+
   .pagination {
     text-align: right;
     position: absolute;
@@ -235,59 +334,72 @@
     right: 2rem;
   }
 }
+
 .more-options {
   @include flex-column;
+
   span {
     font-style: normal;
     @include font-style($black, 1.4rem, 2.2rem, 400);
     cursor: pointer;
     padding: 0.5rem 1.5rem;
     @include align-items-center;
+
     &:hover {
       color: $black;
       background-color: $white-lilac;
     }
+
     .icon {
       font-size: 1.5rem;
       margin-right: 1rem;
     }
   }
 }
+
 .ant-popover {
   z-index: 1;
+
   .ant-popover-inner {
     padding: 0.5rem 0;
     border-radius: 0;
   }
 }
+
 .model-content-container {
   @include d-flex;
   gap: 2rem;
   margin-bottom: 3rem;
+
   .excalamation-icon {
     font-size: 3rem;
     color: $sun;
   }
+
   .content-wrapper {
     .title {
       @include font-style($black, 1.6rem, 2.4rem, 500);
     }
+
     .context {
       @include font-style($black, 1.4rem, 2.2rem, 400);
     }
   }
 }
+
 .ant-modal .ant-modal-content {
   border-radius: 0.2rem;
   padding: 3.2rem 3.2rem 2.4rem;
   margin: auto;
 }
+
 .ant-modal .ant-modal-footer .ant-btn:first-child {
   padding: 0.4rem 1.5rem;
   border-radius: 0.4rem;
   @include font-style($black, 1.4rem, 2.2rem, 400);
   border: 0.1rem solid $mid-grey;
 }
+
 .ant-modal .ant-modal-footer .ant-btn:last-child {
   background: $sunset-orange;
   padding: 0.4rem 1.5rem;

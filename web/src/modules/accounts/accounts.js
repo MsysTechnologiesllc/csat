@@ -8,6 +8,7 @@ import {
   Table,
   Pagination,
   Popover,
+  Drawer,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
@@ -36,7 +37,6 @@ export const Accounts = () => {
   const [accountsList, setAccountsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedSegment, setSelectedSegment] = useState("Grid");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [isPopover, setIsPopover] = useState(false);
   const [popId, setPopId] = useState("");
@@ -49,9 +49,13 @@ export const Accounts = () => {
   };
   const handleonCancel = () => {
     setDeleteModal(false);
+    setIsId("");
+    setPopId("");
   };
   const handleonOk = () => {
     setDeleteModal(false);
+    setIsId("");
+    setPopId("");
   };
   const handleOnClickMore = (option, id) => {
     if (option === "Delete" && isId !== id) {
@@ -80,8 +84,20 @@ export const Accounts = () => {
       });
     }
   }, [tenantId]);
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [formStatus, setFormStatus] = useState("add");
   const [accountsFormData, setAccountsFormData] = useState();
+
+  const onFinish = () => {
+    console.log("Success:", formData);
+    setLoading(true);
+  };
+
+  function getUpdatedFormData(values) {
+    setFormData(values);
+  }
   useEffect(() => {
     setAccountsFormData({
       accName: "sandeep",
@@ -89,14 +105,12 @@ export const Accounts = () => {
     });
     setFormStatus("add");
   }, []);
+
   const addNewAccount = () => {
-    setIsModalOpen(true);
+    setOpen(true);
   };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const onClose = () => {
+    setOpen(false);
   };
   const columns = [
     {
@@ -143,27 +157,44 @@ export const Accounts = () => {
         projects: `${account?.account_projects?.length} project(s)`,
       });
   });
+
   return (
     <div className="projects-list-wrapper">
-      <Modal
+      <Drawer
+        className="custom-drawer"
         title={
           formStatus === "add"
             ? i18n.t("addAccount.addAccount")
             : i18n.t("addAccount.editAccount")
         }
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={false}
-        className="form-modal"
+        onClose={onClose}
+        open={open}
+        width={isMobile ? "90%" : isTablet ? "60%" : "40%"}
+        extra={
+          <>
+            <Button type="text" onClick={onClose} className="cancle-btn">
+              {i18n.t("button.cancel")}
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => onFinish()}
+              className="submit-btn"
+              loading={loading}
+            >
+              {formStatus === "add"
+                ? i18n.t("addAccount.addAccount")
+                : i18n.t("addAccount.updateAccount")}
+            </Button>
+          </>
+        }
       >
         <AddEditAccount
+          handleClose={onClose}
           formStatus={formStatus}
-          handleOk={handleOk}
-          handleCancel={handleCancel}
           accountsFormData={accountsFormData}
+          getUpdatedFormData={getUpdatedFormData}
         />
-      </Modal>
+      </Drawer>
       <div className="account-header-container">
         <h1 className="project-title">{i18n.t("greetings.account")}</h1>
         <div className="actions-container">
@@ -179,7 +210,7 @@ export const Accounts = () => {
               },
             ]}
             onChange={(value) => {
-              setSelectedSegment(value); // string
+              setSelectedSegment(value);
             }}
           />
           <Button onClick={addNewAccount} className="add-account-button">
@@ -222,72 +253,72 @@ export const Accounts = () => {
                           {deliveryHead?.length > 0 && deliveryHead[0]?.name}
                         </p>
                       </div>
-                      <Popover
-                        content={
-                          <div className="more-options">
-                            <span
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                handleOnClickMore("Edit");
-                              }}
-                            >
-                              <AiOutlineEdit className="icon" />
-                              {i18n.t("common.edit")}
-                            </span>
-                            <span
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                handleOnClickMore("Delete", account.ID);
-                              }}
-                            >
-                              <AiOutlineDelete className="icon" />
-                              {i18n.t("common.delete")}
-                            </span>
-                          </div>
-                        }
-                        trigger="click"
-                        arrow={false}
-                        placement="bottomRight"
-                        overlayStyle={{ padding: 0 }}
-                        open={popId === account.ID && isPopover}
-                        onOpenChange={() => handleOnOpenChange(account.ID)}
-                      >
-                        <div
-                          onClick={(event) => {
-                            event.stopPropagation();
-                          }}
-                          className="more-option-icon"
-                        >
-                          <img
-                            src="/images/ellipse-vertical.svg"
-                            alt={i18n.t("common.moreOptions")}
-                          />
-                        </div>
-                      </Popover>
-                      {isId === account.ID && (
-                        <Modal
-                          open={deleteModal}
-                          closable={false}
-                          okText="Delete"
-                          onCancel={handleonCancel}
-                          onOk={handleonOk}
-                          className="modal"
-                          centered
-                        >
-                          <div className="model-content-container">
-                            <AiOutlineExclamationCircle className="excalamation-icon" />
-                            <div className="content-wrapper">
-                              <h3 className="title">
-                                {i18n.t("deleteModal.accountsTitle")}
-                              </h3>
-                              <p className="context">
-                                {i18n.t("deleteModal.context")}
-                              </p>
-                            </div>
-                          </div>
-                        </Modal>
-                      )}
                     </div>
+                    <Popover
+                      content={
+                        <div className="more-options">
+                          <span
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleOnClickMore("Edit");
+                            }}
+                          >
+                            <AiOutlineEdit className="icon" />
+                            {i18n.t("common.edit")}
+                          </span>
+                          <span
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              handleOnClickMore("Delete", account.ID);
+                            }}
+                          >
+                            <AiOutlineDelete className="icon" />
+                            {i18n.t("common.delete")}
+                          </span>
+                        </div>
+                      }
+                      trigger="click"
+                      arrow={false}
+                      placement="bottomRight"
+                      overlayStyle={{ padding: 0 }}
+                      open={popId === account.ID && isPopover}
+                      onOpenChange={() => handleOnOpenChange(account.ID)}
+                    >
+                      <div
+                        onClick={(event) => {
+                          event.stopPropagation();
+                        }}
+                        className="more-option-icon"
+                      >
+                        <img
+                          src="/images/ellipse-vertical.svg"
+                          alt={i18n.t("common.moreOptions")}
+                        />
+                      </div>
+                    </Popover>
+                    {isId === account.ID && (
+                      <Modal
+                        open={deleteModal}
+                        closable={false}
+                        okText="Delete"
+                        onCancel={handleonCancel}
+                        onOk={handleonOk}
+                        className="more-modal"
+                        centered
+                      >
+                        <div className="model-content-container">
+                          <AiOutlineExclamationCircle className="excalamation-icon" />
+                          <div className="content-wrapper">
+                            <h3 className="title">
+                              {i18n.t("deleteModal.accountsTitle")}
+                            </h3>
+                            <p className="context">
+                              {i18n.t("deleteModal.context")}
+                            </p>
+                          </div>
+                        </div>
+                      </Modal>
+                    )}
                   </div>
                   <div className="team-view-container">
                     <p className="team-members-context">{`${account?.account_projects?.length} project(s)`}</p>
