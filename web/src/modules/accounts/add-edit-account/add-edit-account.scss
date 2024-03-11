@@ -33,8 +33,25 @@
                 padding: 1rem 0;
             }
 
-            .ant-checkbox-wrapper {
+            .ant-radio-wrapper {
                 margin: 1rem 0;
+
+                .ant-radio-disabled .ant-radio-inner {
+                    background-color: $white;
+                    border: 2px solid $light-grey;
+                }
+
+                .ant-radio-inner {
+                    border: 2px solid $indigo;
+                }
+
+                .ant-radio-inner {
+                    background-color: $white;
+                }
+
+                .ant-radio-inner::after {
+                    background-color: $indigo;
+                }
 
                 .default-logo-container {
                     @include d-flex;

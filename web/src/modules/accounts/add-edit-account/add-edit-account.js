@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Form,
   Input,
-  Checkbox,
+  Radio,
   Upload,
   Select,
   Drawer,
@@ -22,9 +22,9 @@ const AddEditAccount = ({ open, setOpen }) => {
   useEffect(() => {
     setAccountsFormData({
       accName: "sandeep",
-      accOwner: "dharma",
+      accOwner: "domininc",
     });
-    setFormStatus("add");
+    setFormStatus("edit");
   }, []);
 
   // const [loading, setLoading] = useState(false);
@@ -40,30 +40,30 @@ const AddEditAccount = ({ open, setOpen }) => {
     const isImage = file.type.startsWith("image/");
     const isAllowedType =
       isImage && /\.(svg|png|jpg|jpeg|fig)$/i.test(file.name);
-    const isSizeValid = file.size / 1024 / 1024 < 3; // Size limit: 3MB
+    const isSizeValid = file.size / 1024 / 1024 < 3;
 
     if (!isAllowedType) {
-      message.error("You can only upload SVG, PNG, JPG, JPEG, or FIG files!");
+      message.error(i18n.t("addAccount.fileImageWarning"));
+      return false; // Prevent upload
     }
 
     if (!isSizeValid) {
-      message.error("Image must be smaller than 3MB!");
+      message.error(i18n.t("addAccount.imageSizeWarning"));
+      return false; // Prevent upload
     }
 
-    return isAllowedType && isSizeValid
-      ? new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => {
-            const data = reader.result;
-            setBase64(data);
-            resolve({ file, data });
-          };
-          reader.onerror = (error) => {
-            reject(error);
-          };
-        })
-      : false;
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const data = reader.result;
+        setBase64(data);
+        resolve({ file, data });
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
   };
 
   function handleChange() {
@@ -189,9 +189,6 @@ const AddEditAccount = ({ open, setOpen }) => {
               : { accLogo: DefaultLogo }
           }
           className="accounts-form"
-          // onValuesChange={(changedValues, allValues) => {
-          //   getUpdatedFormData(allValues);
-          // }}
         >
           <Form.Item
             label="Account Name"
@@ -242,7 +239,7 @@ const AddEditAccount = ({ open, setOpen }) => {
               },
             ]}
           >
-            <Checkbox
+            <Radio
               onChange={onChangeCheckbox}
               checked={checkboxSelected}
               disabled={!checkboxSelected}
@@ -253,7 +250,7 @@ const AddEditAccount = ({ open, setOpen }) => {
                 </div>
                 <p className="logo-text">Default.png</p>
               </div>
-            </Checkbox>
+            </Radio>
             <div className="radio-uploader">
               <Dragger {...draggerProps}>
                 <p className="ant-upload-drag-icon">
