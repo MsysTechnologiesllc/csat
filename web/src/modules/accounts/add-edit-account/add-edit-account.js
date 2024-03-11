@@ -68,16 +68,13 @@ const AddEditAccount = ({
       logo: DefaultLogo,
     },
   ];
-  const [value, setValue] = useState(DefaultLogo);
+  const [logoValue, setLogoValue] = useState(DefaultLogo);
+  console.log(logoValue);
   const onChange = (e) => {
     console.log("radio checked", e.target.value);
-    setValue(e.target.value);
+    setLogoValue(e.target.value);
   };
   const [selectedItems, setSelectedItems] = useState([]);
-
-  // useEffect(() => {
-  //   setValue(selectedItems.length > 0 ? selectedItems[0].logo : DefaultLogo);
-  // }, [selectedItems]);
   return (
     <div className="add-edit-account-container">
       <Form

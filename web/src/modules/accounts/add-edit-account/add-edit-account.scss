@@ -37,6 +37,7 @@
 
                 .default-logo-radio-container {
                     @include align-items-center;
+                    border: 1px solid red;
 
                     .default-logo-container {
                         @include align-items-center;
