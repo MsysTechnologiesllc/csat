@@ -85,18 +85,24 @@ export const Accounts = () => {
     }
   }, [tenantId]);
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({});
+  // const [loading, setLoading] = useState(false);
   const [formStatus, setFormStatus] = useState("add");
   const [accountsFormData, setAccountsFormData] = useState();
 
   const onFinish = () => {
-    console.log("Success:", formData);
-    setLoading(true);
+    console.log(formData);
+    // setLoading(true);
   };
 
-  function getUpdatedFormData(values) {
-    setFormData(values);
+  function getUpdatedFormData(values, logo) {
+    let payload = {
+      name: values.accName,
+      owner: values.accOwner,
+      avatar: logo,
+    };
+    console.log(payload);
+    setFormData(payload);
   }
   useEffect(() => {
     setAccountsFormData({
@@ -179,7 +185,7 @@ export const Accounts = () => {
               type="primary"
               onClick={() => onFinish()}
               className="submit-btn"
-              loading={loading}
+              // loading={loading}
             >
               {formStatus === "add"
                 ? i18n.t("addAccount.addAccount")

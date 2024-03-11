@@ -227,7 +227,7 @@ export const translationEN = {
     editAccount: "Edit Account",
     updateAccount: "Update Account",
     accNameRule: "Please Enter Account Name",
-    accNameule: "Please Enter Account Owner Name",
+    accOwnerRule: "Please Enter Account Owner Name",
     dropdownText: "Click or drag file to this area to upload Logo",
     dropConditions: "SVG, PNG, JPG or GIF (max. 3MB)",
     fileImageWarning: "You can only upload image files!",

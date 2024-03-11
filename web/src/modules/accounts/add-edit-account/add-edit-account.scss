@@ -22,13 +22,70 @@
                 width: 100%;
                 border: 1px solid transparent;
             }
+
+            .ant-select-selector {
+                padding: 0.2rem;
+                cursor: pointer;
+            }
+
+            .ant-radio-wrapper {
+                padding: 1rem 0;
+            }
+
+            .ant-radio-group {
+                @include flex-column;
+
+                .default-logo-radio-container {
+                    @include align-items-center;
+
+                    .default-logo-container {
+                        @include align-items-center;
+
+                        .bg-round-container {
+                            background-color: $very-light-gray;
+                            border-radius: 50%;
+                            height: 4rem;
+                            width: 4rem;
+                            @include align-items-center;
+                            @include justify-content-center;
+                            margin-right: 1rem;
+
+                            .logo-img {
+                                margin: auto;
+                            }
+                        }
+
+                        .logo-text {
+                            @include font-style($indigo, 1.4rem, 2.2rem, 400);
+                        }
+                    }
+                }
+
+                .radio-uploader {
+                    .ant-radio-inner {
+                        display: none;
+                    }
+
+                    .ant-upload {
+                        width: 100%;
+                    }
+                }
+            }
+
         }
-
-        .dummy-placeholder {
-            margin: 0.5rem 0 1.5rem 0;
-            @include font-style($dark-grey, 1.4rem, 2.2rem, 400);
-        }
-
-
     }
+}
+
+.list-options-container {
+    @include d-flex;
+    @include align-items-start;
+
+    .label-container {
+        margin-left: 0.5rem;
+
+        .label {}
+
+        .email {}
+    }
+
 }
