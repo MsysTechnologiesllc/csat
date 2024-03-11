@@ -154,54 +154,6 @@
     }
   }
 
-  .context-wrapper {
-    @include align-items-center;
-    color: $steel-grey;
-    margin-top: 2rem;
-
-    @include media("<md") {
-      @include align-items-start;
-
-      margin-top: 1.5rem;
-    }
-
-    .info-icon {
-      font-size: 2rem;
-      margin-right: 1rem;
-      max-width: 2rem;
-      max-height: 2rem;
-
-      @include media("<md") {
-        font-size: 4rem;
-        margin-right: 0.5rem;
-      }
-
-      @include media("<lg") {
-        font-size: 3rem;
-      }
-    }
-
-    .context {
-      @include font-style($steel-grey, 1.5rem, 2.6rem, 400);
-      text-align: left;
-
-      @include media("<md") {
-        font-size: 1.2rem;
-        line-height: 2rem;
-      }
-
-      @include media("<lg") {
-        font-size: 1.5rem;
-      }
-    }
-
-    .survey-anchor {
-      @include font-style($wild-red, 1.5rem, 2.6rem, 400);
-      margin-left: 0.5rem;
-      text-decoration: underline;
-    }
-  }
-
   .ant-card-body {
     padding: 1.6rem;
   }
