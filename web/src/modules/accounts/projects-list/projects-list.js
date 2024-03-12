@@ -20,7 +20,7 @@ import i18n from "../../../locales/i18next";
 import { GoDotFill } from "react-icons/go";
 import "./projects-list.scss";
 import {
-  AppstoreOutlined,
+  TableOutlined,
   BarsOutlined,
   EditOutlined,
   DeleteOutlined,
@@ -36,21 +36,26 @@ import { NoOfDays } from "../../../utils/utils";
 import { GetService } from "../../../services/get";
 import { PutService } from "../../../services/put";
 import NotifyStatus from "../../../components/notify-status/notify-status";
+import { useDetectMobileOrDesktop } from "../../../hooks/useDetectMobileOrDesktop";
 
 export const ProjectsList = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
+  const { isMobile, isTablet } = useDetectMobileOrDesktop();
   const { state } = useLocation();
   const [breadcrumbList, setBreadcrumbList] = useState([]);
   const [selectedSegment, setSelectedSegment] = useState("Grid");
   // const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [isId, setIsId] = useState("");
+  // const [isId, setIsId] = useState("");
+  const [eachProject, setEachProject] = useState({});
   const [isPopover, setIsPopover] = useState(false);
   const [popId, setPopId] = useState("");
   const [projectsList, setProjectsList] = useState({});
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
+  const [open, setOpen] = useState(false);
+
   const projectsApi = () => {
     new GetService().getAccountsList(state?.tenantId, (result) => {
       if (result?.status === 200) {
@@ -68,7 +73,6 @@ export const ProjectsList = () => {
       projectsApi();
     }
   }, [state?.tenantId]);
-  const [open, setOpen] = useState(false);
   // const showDrawer = () => {
   //   setOpen(true);
   // };
@@ -83,7 +87,8 @@ export const ProjectsList = () => {
   };
   const handleonCancel = () => {
     setDeleteModal(false);
-    setIsId("");
+    // setIsId("");
+    setEachProject({});
     setPopId("");
   };
   const handleonOk = (project) => {
@@ -98,7 +103,8 @@ export const ProjectsList = () => {
         setNotify("success");
         setMessage("Project Deleted Successfully");
         setDeleteModal(false);
-        setIsId("");
+        // setIsId("");
+        setEachProject({});
         setPopId("");
         setTimeout(() => {
           setNotify("");
@@ -107,10 +113,11 @@ export const ProjectsList = () => {
       }
     });
   };
-  const handleOnClickMore = (option, id) => {
-    if (option === "Delete" && isId !== id) {
+  const handleOnClickMore = (option, project) => {
+    if (option === "Delete") {
       setDeleteModal(true);
-      setIsId(id);
+      // setIsId(id);
+      setEachProject(project);
       setIsPopover(false);
     }
   };
@@ -156,8 +163,8 @@ export const ProjectsList = () => {
   const columns = [
     {
       title: "Project",
-      dataIndex: "projectName",
-      key: "projectName",
+      dataIndex: "name",
+      key: "name",
     },
     {
       title: "Project Owner",
@@ -173,10 +180,13 @@ export const ProjectsList = () => {
       title: "Actions",
       dataIndex: "actions",
       key: "actions",
-      render: () => (
+      render: (text, record) => (
         <div>
           <EditOutlined className="edit" />
-          <DeleteOutlined className="delete" />
+          <DeleteOutlined
+            className="delete"
+            onClick={() => handleOnClickMore("Delete", record)}
+          />
         </div>
       ),
     },
@@ -184,7 +194,9 @@ export const ProjectsList = () => {
       title: "View",
       dataIndex: "view",
       key: "view",
-      render: () => <EyeOutlined />,
+      render: (text, record) => (
+        <EyeOutlined className="view" onClick={() => handleView(record)} />
+      ),
     },
   ];
   const data = [];
@@ -197,29 +209,91 @@ export const ProjectsList = () => {
     );
     data.push({
       key: index + 1,
-      projectName: project?.name,
+      name: project?.name,
       projectOwner: prjManager[0]?.name,
       members: `${teamMembers?.length} Member(s)`,
+      ID: project?.ID,
     });
   });
-  const handleFieldFinish = (changedFields, allFields) => {
-    console.log(allFields);
+  const handleFinish = (values) => {
+    const formattedValues = {
+      projectName: values.projectName,
+      startDate: values.startDate,
+      formData: [
+        ...formatTreeData(values.pointOfContact, treeData1, "client"),
+        ...formatTreeData(values.pmo, treeData2, "manager"),
+        ...formatTreeData(values.lead, treeData3, "lead"),
+        ...formatTreeData(values.scrumTeam, treeData4, "member"),
+      ],
+    };
+
+    console.log("Form values:", formattedValues);
   };
-  const treeData = [
+  const formatTreeData = (selectedValues, treeData, role) =>
+    Array.isArray(selectedValues)
+      ? selectedValues
+          .map((value) => {
+            const node = treeData.find((node) => node.value === value);
+            return node
+              ? { email: node.title, name: node.value, role: role }
+              : null;
+          })
+          .filter(Boolean)
+      : [];
+  const treeData1 = [
     {
       title: "Node1",
-      value: "0-0",
-      key: "0-0",
+      value: "name1",
     },
     {
       title: "Node2",
-      value: "0-1",
-      key: "0-1",
+      value: "name2",
     },
     {
       title: "Node3",
-      value: "0-2",
-      key: "0-2",
+      value: "name3",
+    },
+  ];
+  const treeData2 = [
+    {
+      title: "Node4",
+      value: "name4",
+    },
+    {
+      title: "Node5",
+      value: "name5",
+    },
+    {
+      title: "Node6",
+      value: "name6",
+    },
+  ];
+  const treeData3 = [
+    {
+      title: "Node7",
+      value: "name7",
+    },
+    {
+      title: "Node8",
+      value: "name8",
+    },
+    {
+      title: "Node9",
+      value: "name9",
+    },
+  ];
+  const treeData4 = [
+    {
+      title: "NodeA",
+      value: "nameA",
+    },
+    {
+      title: "NodeB",
+      value: "nameB",
+    },
+    {
+      title: "NodeC",
+      value: "nameC",
     },
   ];
   return (
@@ -232,7 +306,7 @@ export const ProjectsList = () => {
             options={[
               {
                 value: "Grid",
-                icon: <AppstoreOutlined />,
+                icon: <TableOutlined />,
               },
               {
                 value: "List",
@@ -248,21 +322,29 @@ export const ProjectsList = () => {
           </Button>
           <Drawer
             title="Add project"
-            width={720}
+            width={isMobile ? "90%" : isTablet ? "60%" : "40%"}
             onClose={onClose}
             open={open}
+            className="custom-drawer"
             extra={
-              <div>
-                <Button onClick={onClose}>Cancel</Button>
-                <Button onClick={onClose} htmlType="submit" type="primary">
+              <>
+                <Button onClick={onClose} className="cancle-btn">
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => form.submit()}
+                  className="submit-btn"
+                  htmlType="submit"
+                  type="primary"
+                >
                   Add Project
                 </Button>
-              </div>
+              </>
             }
           >
             <Form
               form={form}
-              onFieldsChange={handleFieldFinish}
+              onFinish={handleFinish}
               labelCol={{ span: 24 }}
               wrapperCol={{ span: 24 }}
             >
@@ -281,12 +363,9 @@ export const ProjectsList = () => {
               <Form.Item name="startDate" label="SOW Start Date">
                 <DatePicker />
               </Form.Item>
-              <Form.Item
-                name="projectStakeholders"
-                label="Project Stakeholders"
-              >
+              <Form.Item name="pointOfContact" label="Point of contact">
                 <TreeSelect
-                  treeData={treeData}
+                  treeData={treeData1}
                   treeNodeFilterProp="title"
                   allowClear="true"
                   showSearch
@@ -294,19 +373,10 @@ export const ProjectsList = () => {
                   placeholder="First Name /Last Name / Email ID"
                 />
               </Form.Item>
-              <Form.Item name="stakeholder" label="Stake holder">
+              <h5 className="team-members">Team Members</h5>
+              <Form.Item name="pmo" label="PMO">
                 <TreeSelect
-                  treeData={treeData}
-                  treeNodeFilterProp="title"
-                  allowClear="true"
-                  showSearch
-                  multiple
-                  placeholder="Select / Type Email ID"
-                />
-              </Form.Item>
-              <Form.Item name="scrumTeam" label="SCRUM Team">
-                <TreeSelect
-                  treeData={treeData}
+                  treeData={treeData2}
                   treeNodeFilterProp="title"
                   allowClear="true"
                   showSearch
@@ -316,7 +386,7 @@ export const ProjectsList = () => {
               </Form.Item>
               <Form.Item name="lead" label="Lead">
                 <TreeSelect
-                  treeData={treeData}
+                  treeData={treeData3}
                   treeNodeFilterProp="title"
                   allowClear="true"
                   showSearch
@@ -324,9 +394,9 @@ export const ProjectsList = () => {
                   placeholder="Select / Type Email ID"
                 />
               </Form.Item>
-              <Form.Item name="pmo" label="PMO">
+              <Form.Item name="scrumTeam" label="SCRUM Team">
                 <TreeSelect
-                  treeData={treeData}
+                  treeData={treeData4}
                   treeNodeFilterProp="title"
                   allowClear="true"
                   showSearch
@@ -401,7 +471,7 @@ export const ProjectsList = () => {
                           <span
                             onClick={(event) => {
                               event.stopPropagation();
-                              handleOnClickMore("Delete", project.ID);
+                              handleOnClickMore("Delete", project);
                             }}
                           >
                             <AiOutlineDelete className="icon" />
@@ -428,31 +498,6 @@ export const ProjectsList = () => {
                         />
                       </div>
                     </Popover>
-                    {isId === project.ID && (
-                      <Modal
-                        open={deleteModal}
-                        closable={false}
-                        okText="Delete"
-                        onCancel={handleonCancel}
-                        onOk={() => handleonOk(project)}
-                        className="modal"
-                        centered
-                      >
-                        <div className="model-content-container">
-                          <AiOutlineExclamationCircle className="excalamation-icon" />
-                          <div className="content-wrapper">
-                            <h3 className="title">
-                              {i18n.t("deleteModal.projectsTitle", {
-                                projectName: project.name,
-                              })}
-                            </h3>
-                            <p className="context">
-                              {i18n.t("deleteModal.context")}
-                            </p>
-                          </div>
-                        </div>
-                      </Modal>
-                    )}
                   </div>
                   <div className="team-view-container">
                     <p className="team-members-context">{`${teamMembers?.length} Member(s)`}</p>
@@ -481,6 +526,29 @@ export const ProjectsList = () => {
           />
         </div>
       )}
+      {/* {isId === project.ID && ( */}
+      <Modal
+        open={deleteModal}
+        closable={false}
+        okText="Delete"
+        onCancel={handleonCancel}
+        onOk={() => handleonOk(eachProject)}
+        className="modal"
+        centered
+      >
+        <div className="model-content-container">
+          <AiOutlineExclamationCircle className="excalamation-icon" />
+          <div className="content-wrapper">
+            <h3 className="title">
+              {i18n.t("deleteModal.projectsTitle", {
+                projectName: eachProject?.name,
+              })}
+            </h3>
+            <p className="context">{i18n.t("deleteModal.context")}</p>
+          </div>
+        </div>
+      </Modal>
+      {/* )} */}
       {notify && <NotifyStatus status={notify} message={message} />}
     </div>
   );

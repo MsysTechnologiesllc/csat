@@ -9,7 +9,6 @@
 }
 
 .custom-drawer {
-
   .ant-drawer-header {
     width: 100%;
 
@@ -18,7 +17,7 @@
     }
 
     .ant-drawer-close {
-      margin: 0
+      margin: 0;
     }
 
     .ant-drawer-title {
@@ -38,7 +37,6 @@
         min-height: 3.5rem;
         max-height: 3.5rem;
       }
-
       .cancle-btn {
         @include font-style($black, 1.6rem, 2.4rem, 400);
         border: 1px solid $dark-black;
@@ -48,7 +46,6 @@
           padding: 0.5rem 1rem;
         }
       }
-
       .submit-btn {
         background-color: $indigo;
         @include font-style($white, 1.6rem, 2.4rem, 400);
@@ -73,6 +70,10 @@
 
   .ant-drawer-body {
     padding-top: 1rem;
+  }
+  .team-members {
+    @include font-style($black, 1.6rem, 2.4rem, 500);
+    margin-bottom: 1.5rem;
   }
 }
 
@@ -107,24 +108,30 @@
       line-height: 1.8rem;
     }
   }
-
   .account-header-container {
     @include justify-content-between;
-
     .actions-container {
       @include justify-content-between;
       @include align-items-center;
       min-height: 4rem;
       max-height: 4rem;
-
       .ant-segmented {
         padding: 0;
+        background-color: $white;
       }
-
+      .ant-segmented &:hover {
+        background-color: $white;
+      }
+      .ant-segmented .ant-segmented-item-selected {
+        box-shadow: none;
+        border: 0.1rem solid $indigo;
+        border-radius: 0.2rem;
+        background-color: #e9ebf7;
+        color: $indigo;
+      }
       .ant-segmented .ant-segmented-item {
         border-radius: 0.2rem;
       }
-
       .add-account-button {
         margin-left: 2rem;
         background-color: $indigo;
@@ -136,28 +143,9 @@
         padding: 1rem 2.2rem;
         @include justify-content-center;
         @include align-items-center;
-
         &:hover {
           background-color: $indigo;
           box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
-        }
-      }
-      .ant-form-item-label {
-        .custom-label {
-          @include font-style($indigo, 1.4rem, 2.2rem, 400);
-        }
-      }
-      .ant-row .ant-form-item-row {
-        .ant-form-item .ant-form-item-control-input-content.ant-input {
-          border-radius: 0.2rem;
-          height: 3.2rem;
-          border: 0.1rem;
-        }
-        .ant-form-item-control-input-content {
-          .ant-picker {
-            border-radius: 0.2rem;
-            height: 3.2rem;
-          }
         }
       }
     }
@@ -166,12 +154,10 @@
   .project-title {
     @include font-style($jet-black, 3.4rem, 4.2rem, 400);
     text-align: left;
-
     @include media("<md") {
       font-size: 2rem;
     }
   }
-
   .ant-card-body {
     padding: 1.6rem;
   }
@@ -273,12 +259,17 @@
   .edit {
     margin-right: 2rem;
     color: $indigo;
+    font-size: 2rem;
   }
 
   .delete {
     color: $wild-red;
+    font-size: 2rem;
   }
-
+  .view {
+    color: $indigo;
+    font-size: 2.5rem;
+  }
   .pagination {
     text-align: right;
     position: absolute;
