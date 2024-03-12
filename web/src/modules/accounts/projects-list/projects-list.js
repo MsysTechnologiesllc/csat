@@ -61,7 +61,7 @@ export const ProjectsList = () => {
       if (result?.status === 200) {
         const filteredAccount =
           result?.data?.data?.tenant?.tenant_accounts.filter(
-            (account) => account.ID === state?.accountId
+            (account) => account.ID === state?.accountId,
           );
         setProjectsList(...filteredAccount);
         setIsLoading(false);
@@ -133,7 +133,7 @@ export const ProjectsList = () => {
           projectName: project?.name,
           status: true,
         },
-      }
+      },
     );
   };
   const handleBreadCrumb = () => {
@@ -202,10 +202,10 @@ export const ProjectsList = () => {
   const data = [];
   projectsList?.account_projects?.map((project, index) => {
     const prjManager = project?.Users?.filter(
-      (user) => user.role === "projectManager"
+      (user) => user.role === "projectManager",
     );
     const teamMembers = project?.Users?.filter(
-      (user) => user.role === "member"
+      (user) => user.role === "member",
     );
     data.push({
       key: index + 1,
@@ -412,10 +412,10 @@ export const ProjectsList = () => {
         <Row gutter={[20, 20]} className="project-list-wrapper">
           {projectsList?.account_projects?.map((project) => {
             const prjManager = project?.Users?.filter(
-              (user) => user.role === "projectManager"
+              (user) => user.role === "projectManager",
             );
             const teamMembers = project?.Users?.filter(
-              (user) => user.role === "member"
+              (user) => user.role === "member",
             );
             return (
               <Col xs={24} md={12} lg={8} xxl={6} key={project.ID}>

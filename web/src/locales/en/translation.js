@@ -230,7 +230,7 @@ export const translationEN = {
     accOwnerRule: "Please Enter Account Owner Name",
     dropdownText: "Click or drag file to this area to upload Logo",
     dropConditions: "SVG, PNG, JPG or GIF (max. 3MB)",
-    fileImageWarning: "You can only upload image files!",
-    imageSizeWarning: "Image must be smaller than 1MB!",
+    fileImageWarning: "You can only upload SVG, PNG, JPG, JPEG, or FIG files!",
+    imageSizeWarning: "Image must be smaller than 3MB!",
   },
 };

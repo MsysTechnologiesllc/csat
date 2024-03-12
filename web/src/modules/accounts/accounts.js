@@ -8,7 +8,6 @@ import {
   Table,
   Pagination,
   Popover,
-  Drawer,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
@@ -47,10 +46,7 @@ export const Accounts = () => {
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({});
   // const [loading, setLoading] = useState(false);
-  const [formStatus, setFormStatus] = useState("add");
-  const [accountsFormData, setAccountsFormData] = useState();
   const [eachAccount, setEachAccount] = useState({});
   const accountsApi = () => {
     new GetService().getAccountsList(tenantId, (result) => {
@@ -116,33 +112,8 @@ export const Accounts = () => {
       accountsApi();
     }
   }, [tenantId]);
-
-  const onFinish = () => {
-    console.log(formData);
-    // setLoading(true);
-  };
-
-  function getUpdatedFormData(values, logo) {
-    let payload = {
-      name: values.accName,
-      owner: values.accOwner,
-      avatar: logo,
-    };
-    setFormData(payload);
-  }
-  useEffect(() => {
-    setAccountsFormData({
-      accName: "sandeep",
-      accOwner: "dharma",
-    });
-    setFormStatus("add");
-  }, []);
-
   const addNewAccount = () => {
     setOpen(true);
-  };
-  const onClose = () => {
-    setOpen(false);
   };
   const columns = [
     {
@@ -205,41 +176,7 @@ export const Accounts = () => {
 
   return (
     <div className="projects-list-wrapper">
-      <Drawer
-        className="custom-drawer"
-        title={
-          formStatus === "add"
-            ? i18n.t("addAccount.addAccount")
-            : i18n.t("addAccount.editAccount")
-        }
-        onClose={onClose}
-        open={open}
-        width={isMobile ? "90%" : isTablet ? "60%" : "40%"}
-        extra={
-          <>
-            <Button type="text" onClick={onClose} className="cancle-btn">
-              {i18n.t("button.cancel")}
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => onFinish()}
-              className="submit-btn"
-              // loading={loading}
-            >
-              {formStatus === "add"
-                ? i18n.t("addAccount.addAccount")
-                : i18n.t("addAccount.updateAccount")}
-            </Button>
-          </>
-        }
-      >
-        <AddEditAccount
-          handleClose={onClose}
-          formStatus={formStatus}
-          accountsFormData={accountsFormData}
-          getUpdatedFormData={getUpdatedFormData}
-        />
-      </Drawer>
+      <AddEditAccount open={open} setOpen={setOpen} />
       <div className="account-header-container">
         <h1 className="project-title">{i18n.t("greetings.account")}</h1>
         <div className="actions-container">
