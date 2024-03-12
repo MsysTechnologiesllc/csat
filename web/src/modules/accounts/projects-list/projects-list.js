@@ -124,8 +124,9 @@ export const ProjectsList = () => {
           projectsList: projectsList?.account_projects,
           projectName: project?.name,
           status: true,
+          tenantId: state?.tenantId,
         },
-      }
+      },
     );
   };
   const handleBreadCrumb = () => {
@@ -183,10 +184,10 @@ export const ProjectsList = () => {
   const data = [];
   projectsList?.account_projects?.map((project, index) => {
     const prjManager = project?.Users?.filter(
-      (user) => user.role === "projectManager"
+      (user) => user.role === "projectManager",
     );
     const teamMembers = project?.Users?.filter(
-      (user) => user.role === "member"
+      (user) => user.role === "member",
     );
     data.push({
       key: index + 1,
@@ -252,6 +253,7 @@ export const ProjectsList = () => {
                 </Button>
               </div>
             }
+            className="add-projects-drawer"
           >
             <Form
               form={form}
@@ -335,10 +337,10 @@ export const ProjectsList = () => {
         <Row gutter={[20, 20]} className="project-list-wrapper">
           {projectsList?.account_projects?.map((project) => {
             const prjManager = project?.Users?.filter(
-              (user) => user.role === "projectManager"
+              (user) => user.role === "projectManager",
             );
             const teamMembers = project?.Users?.filter(
-              (user) => user.role === "member"
+              (user) => user.role === "member",
             );
             return (
               <Col xs={24} md={12} lg={8} xxl={6} key={project.ID}>

@@ -20,6 +20,7 @@ const FormatList = ({}) => {
         accountName: state?.accountName,
         projectsList: state?.projectsList,
         accountId: state?.accountId,
+        tenantId: state?.tenantId,
       },
     });
   };
