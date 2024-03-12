@@ -2,6 +2,7 @@ package controllers
 
 import (
 	constants "csat/helpers"
+	"csat/logger"
 	"csat/models"
 	"csat/schema"
 	u "csat/utils"
@@ -61,11 +62,14 @@ var CreateAccountData = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var accountData *schema.Account
+	newAccount := schema.Account{}
+
 	// Extract logo data from base64 string
 	var decodedData []byte
 	var mediaType string
 
-	if logoBase64, ok := requestBody["logo"].(string); ok && logoBase64 != "" {
+	if logoBase64, ok := requestBody["account_logo"].(string); ok && logoBase64 != "" {
 		dataURIParts := strings.SplitN(logoBase64, ",", 2)
 		if len(dataURIParts) != 2 {
 			http.Error(w, "Invalid Data URI format", http.StatusBadRequest)
@@ -87,25 +91,62 @@ var CreateAccountData = func(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "File size exceeds the limit", http.StatusBadRequest)
 			return
 		}
+		newAccount.MediaType = mediaType
+		newAccount.Logo = decodedData
 	}
 
-	newAccount := schema.Account{
-		Name:        requestBody["name"].(string),
-		TenantID:    uint(requestBody["tenant_id"].(float64)),
-		Description: "",
-		Logo:        decodedData,
-		Location:    "",
-		IsActive:    true,
-		MediaType:   mediaType,
+	if name, ok := requestBody["account_name"].(string); ok && name != "" {
+		newAccount.Name = name
+	}
+	if tenantID, ok := requestBody["tenant_id"].(float64); ok && tenantID != 0 {
+		newAccount.TenantID = uint(tenantID)
+	}
+	if isActive, ok := requestBody["is_active"].(bool); ok {
+		newAccount.IsActive = isActive
 	}
 
-	accountData, err := models.CreateAccountData(&newAccount)
-	if err != nil {
-		resp := u.Message(false, constants.FAILED)
-		w.WriteHeader(http.StatusInternalServerError)
-		u.Respond(w, resp)
-		return
+	accountIdStr := r.URL.Query().Get("accountId")
+	fmt.Println(accountIdStr)
+	if accountIdStr != "" {
+		var accountId uint
+		_, err = fmt.Sscanf(accountIdStr, "%d", &accountId)
+		if err != nil {
+			http.Error(w, "Invalid account ID", http.StatusBadRequest)
+			return
+		}
+
+		updatedAccountPtr, err := models.UpdateAccountByID(accountId, &newAccount)
+		if err != nil {
+			resp := u.Message(false, constants.FAILED)
+			w.WriteHeader(http.StatusInternalServerError)
+			u.Respond(w, resp)
+			return
+		}
+		if owners, ok := requestBody["account_owner"].([]interface{}); ok {
+			if err := models.HandleAccountOwners(owners, updatedAccountPtr.ID); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		}
+		accountData = updatedAccountPtr
+	} else {
+		accountDetails, err := models.CreateAccountData(&newAccount)
+		if err != nil {
+			resp := u.Message(false, constants.FAILED)
+			w.WriteHeader(http.StatusInternalServerError)
+			u.Respond(w, resp)
+			return
+		}
+		// var accountOwners []schema.User
+		if owners, ok := requestBody["account_owner"].([]interface{}); ok {
+			if err := models.HandleAccountOwners(owners, accountDetails.ID); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		}
+		accountData = accountDetails
 	}
+
 	resp := u.Message(true, constants.SUCCESS)
 	resp["data"] = accountData
 	u.Respond(w, resp)
@@ -127,13 +168,13 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
     }
 
 	var payload ProjectPayload
-    if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-        // Handle JSON decoding error
-        fmt.Println("Error decoding JSON:", err)
-        http.Error(w, "Failed to decode JSON", http.StatusBadRequest)
-        return
-    }
-    teamMembers := payload.TeamMembers
+	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		// Handle JSON decoding error
+		fmt.Println("Error decoding JSON:", err)
+		http.Error(w, "Failed to decode JSON", http.StatusBadRequest)
+		return
+	}
+	teamMembers := payload.TeamMembers
 
 	projectIdStr := r.URL.Query().Get("projectId")
 	var projectId uint
@@ -196,30 +237,32 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
             }
         }
 
-        // Check if the user-project mapping exists
-        var userProject schema.UserProject
-        if err := db.Where("user_id = ? AND project_id = ?", user.ID, projectId).First(&userProject).Error; err != nil {
-            // Mapping doesn't exist, create a new one
-            userProject = schema.UserProject{UserID: user.ID, ProjectID: projectId, Role: member.Role}
-            if err := db.Create(&userProject).Error; err != nil {
-                // Handle database error
-                http.Error(w, "Failed to create user project", http.StatusInternalServerError)
-                return
-            }
-        } else {
-            // Mapping exists, update the role
-            userProject.Role = member.Role
-            if err := db.Save(&userProject).Error; err != nil {
-                // Handle database error
-                http.Error(w, "Failed to update user project", http.StatusInternalServerError)
-                return
-            }
-        }
-    }
+		// Check if the user-project mapping exists
+		var userProject schema.UserProject
+		if err := db.Where("user_id = ? AND project_id = ?", user.ID, projectId).First(&userProject).Error; err != nil {
+			// Mapping doesn't exist, create a new one
+			userProject = schema.UserProject{UserID: user.ID, ProjectID: projectId, Role: member.Role}
+			if err := db.Create(&userProject).Error; err != nil {
+				// Handle database error
+				http.Error(w, "Failed to create user project", http.StatusInternalServerError)
+				return
+			}
+		} else {
+			// Mapping exists, update the role
+			userProject.Role = member.Role
+			if err := db.Save(&userProject).Error; err != nil {
+				// Handle database error
+				http.Error(w, "Failed to update user project", http.StatusInternalServerError)
+				return
+			}
+		}
+	}
 
-    // Respond with success
-    w.WriteHeader(http.StatusOK)
-    fmt.Fprintf(w, "Project updated successfully")
+	// Respond with success
+	w.WriteHeader(http.StatusOK)
+	resp := u.Message(true, constants.SUCCESS)
+    resp[constants.DATA] = "Update Successfully"
+    u.Respond(w, resp)
 
 }
 
@@ -296,5 +339,22 @@ var UpdateAccountData = func(w http.ResponseWriter, r *http.Request) {
 
 	resp := u.Message(true, constants.SUCCESS)
 	resp["data"] = updatedAccountPtr
+	u.Respond(w, resp)
+}
+
+var GetProjectData = func(w http.ResponseWriter, r *http.Request) {
+	logger.Log.Println("Logging from Controller")
+
+	// Parse query parameters
+	projectIdStr := r.URL.Query().Get("projectId")
+	var projectId uint
+	_, err := fmt.Sscanf(projectIdStr, "%d", &projectId)
+	if err != nil {
+		http.Error(w, "Invalid 'id' format", http.StatusBadRequest)
+		return
+	}
+	data, _ := models.GetProjectDetails(projectId)
+	resp := u.Message(true, constants.SUCCESS)
+	resp[constants.DATA] = data
 	u.Respond(w, resp)
 }

@@ -2,7 +2,9 @@ package models
 
 import (
 	"bytes"
+	"csat/logger"
 	"csat/schema"
+	"fmt"
 )
 
 func CreateProject(projectData *schema.Project) (*schema.Project, error) {
@@ -105,4 +107,41 @@ func UpdateAccountByID(projectID uint, updatedAccount *schema.Account) (*schema.
 	}
 
 	return &existingAccount, nil
+}
+
+func HandleAccountOwners(accountOwnersData []interface{}, accountID uint) error {
+	for _, ownerData := range accountOwnersData {
+		if owner, ok := ownerData.(map[string]interface{}); ok {
+			accountOwner := schema.User{
+				Name:      owner["name"].(string),
+				Email:     owner["email"].(string),
+				Password:  "",
+				Role:      "accountOwner",
+				AccountID: accountID,
+			}
+
+			// Check if the email already exists
+			existingUser, _ := FindUserByEmail(accountOwner.Email)
+			fmt.Println(existingUser)
+
+			// If the user doesn't exist, create a new user
+			if existingUser == nil {
+				_, err := CreateUser(db, accountOwner.Name, accountOwner.Email, accountOwner.Role, accountOwner.AccountID)
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+	return nil
+}
+
+func GetProjectDetails(projectId uint) (*schema.Project, error) {
+	var projectDetails schema.Project
+
+	if err := GetDB().Preload("Users").First(&projectDetails, projectId).Error; err != nil {
+		logger.Log.Println("Error fetching project details:", err)
+		return nil, err
+	}
+	return &projectDetails, nil
 }
