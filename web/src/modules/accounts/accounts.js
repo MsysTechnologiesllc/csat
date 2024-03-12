@@ -8,15 +8,15 @@ import {
   Table,
   Pagination,
   Popover,
-  Drawer,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
 import {
-  AppstoreOutlined,
+  TableOutlined,
   BarsOutlined,
   EditOutlined,
   DeleteOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import i18n from "../../locales/i18next";
 import { GetService } from "../../services/get";
@@ -42,9 +42,12 @@ export const Accounts = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [isPopover, setIsPopover] = useState(false);
   const [popId, setPopId] = useState("");
-  const [isId, setIsId] = useState("");
+  // const [isId, setIsId] = useState("");
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
+  const [open, setOpen] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  const [eachAccount, setEachAccount] = useState({});
   const accountsApi = () => {
     new GetService().getAccountsList(tenantId, (result) => {
       if (result?.status === 200) {
@@ -61,7 +64,8 @@ export const Accounts = () => {
   };
   const handleonCancel = () => {
     setDeleteModal(false);
-    setIsId("");
+    // setIsId("");
+    setEachAccount({});
     setPopId("");
   };
   const handleonOk = (account) => {
@@ -77,6 +81,7 @@ export const Accounts = () => {
         setMessage("Account Deleted Successfully");
         setDeleteModal(false);
         setIsId("");
+        setEachAccount({});
         setPopId("");
         setTimeout(() => {
           setNotify("");
@@ -86,9 +91,10 @@ export const Accounts = () => {
     });
   };
   const handleOnClickMore = (option, account) => {
-    if (option === "Delete" && isId !== account.ID) {
+    if (option === "Delete") {
       setDeleteModal(true);
-      setIsId(account.ID);
+      setEachAccount(account);
+      // setIsId(account.ID);
       setIsPopover(false);
     }
   };
@@ -106,39 +112,14 @@ export const Accounts = () => {
       accountsApi();
     }
   }, [tenantId]);
-  const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [formStatus, setFormStatus] = useState("add");
-  const [accountsFormData, setAccountsFormData] = useState();
-
-  const onFinish = () => {
-    setLoading(true);
-    console.log(formData);
-  };
-
-  function getUpdatedFormData(values) {
-    setFormData(values);
-  }
-  useEffect(() => {
-    setAccountsFormData({
-      accName: "sandeep",
-      accOwner: "dharma",
-    });
-    setFormStatus("add");
-  }, []);
-
   const addNewAccount = () => {
     setOpen(true);
-  };
-  const onClose = () => {
-    setOpen(false);
   };
   const columns = [
     {
       title: "Account",
-      dataIndex: "accountName",
-      key: "accountName",
+      dataIndex: "name",
+      key: "name",
     },
     {
       title: "Account Owner",
@@ -154,11 +135,22 @@ export const Accounts = () => {
       title: "Actions",
       dataIndex: "actions",
       key: "actions",
-      render: () => (
+      render: (text, record) => (
         <div>
           <EditOutlined className="edit" />
-          <DeleteOutlined className="delete" />
+          <DeleteOutlined
+            className="delete"
+            onClick={() => handleOnClickMore("Delete", record)}
+          />
         </div>
+      ),
+    },
+    {
+      title: "View",
+      dataIndex: "view",
+      key: "view",
+      render: (text, record) => (
+        <EyeOutlined className="view" onClick={() => handleView(record)} />
       ),
     },
   ];
@@ -174,49 +166,17 @@ export const Accounts = () => {
     selectedSegment === "List" &&
       data.push({
         key: index + 1,
-        accountName: account?.name,
+        name: account?.name,
         accountOwner: deliveryHead?.length > 0 && deliveryHead[0]?.name,
         projects: `${account?.account_projects?.length} project(s)`,
+        ID: account?.ID,
+        tenant_id: account?.tenant_id,
       });
   });
 
   return (
     <div className="projects-list-wrapper">
-      <Drawer
-        className="custom-drawer"
-        title={
-          formStatus === "add"
-            ? i18n.t("addAccount.addAccount")
-            : i18n.t("addAccount.editAccount")
-        }
-        onClose={onClose}
-        open={open}
-        width={isMobile ? "90%" : isTablet ? "60%" : "40%"}
-        extra={
-          <>
-            <Button type="text" onClick={onClose} className="cancle-btn">
-              {i18n.t("button.cancel")}
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => onFinish()}
-              className="submit-btn"
-              loading={loading}
-            >
-              {formStatus === "add"
-                ? i18n.t("addAccount.addAccount")
-                : i18n.t("addAccount.updateAccount")}
-            </Button>
-          </>
-        }
-      >
-        <AddEditAccount
-          handleClose={onClose}
-          formStatus={formStatus}
-          accountsFormData={accountsFormData}
-          getUpdatedFormData={getUpdatedFormData}
-        />
-      </Drawer>
+      <AddEditAccount open={open} setOpen={setOpen} />
       <div className="account-header-container">
         <h1 className="project-title">{i18n.t("greetings.account")}</h1>
         <div className="actions-container">
@@ -224,7 +184,7 @@ export const Accounts = () => {
             options={[
               {
                 value: "Grid",
-                icon: <AppstoreOutlined />,
+                icon: <TableOutlined />,
               },
               {
                 value: "List",
@@ -320,29 +280,6 @@ export const Accounts = () => {
                         />
                       </div>
                     </Popover>
-                    {isId === account.ID && (
-                      <Modal
-                        open={deleteModal}
-                        closable={false}
-                        okText="Delete"
-                        onCancel={handleonCancel}
-                        onOk={() => handleonOk(account)}
-                        className="more-modal"
-                        centered
-                      >
-                        <div className="model-content-container">
-                          <AiOutlineExclamationCircle className="excalamation-icon" />
-                          <div className="content-wrapper">
-                            <h3 className="title">
-                              {i18n.t("deleteModal.accountsTitle")}
-                            </h3>
-                            <p className="context">
-                              {i18n.t("deleteModal.context")}
-                            </p>
-                          </div>
-                        </div>
-                      </Modal>
-                    )}
                   </div>
                   <div className="team-view-container">
                     <p className="team-members-context">{`${account?.account_projects?.length} project(s)`}</p>
@@ -371,6 +308,25 @@ export const Accounts = () => {
           />
         </div>
       )}
+      {/* {isId && ( */}
+      <Modal
+        open={deleteModal}
+        closable={false}
+        okText="Delete"
+        onCancel={handleonCancel}
+        onOk={() => handleonOk(eachAccount)}
+        className="more-modal"
+        centered
+      >
+        <div className="model-content-container">
+          <AiOutlineExclamationCircle className="excalamation-icon" />
+          <div className="content-wrapper">
+            <h3 className="title">{i18n.t("deleteModal.accountsTitle")}</h3>
+            <p className="context">{i18n.t("deleteModal.context")}</p>
+          </div>
+        </div>
+      </Modal>
+      {/* )} */}
       {notify && <NotifyStatus status={notify} message={message} />}
     </div>
   );
