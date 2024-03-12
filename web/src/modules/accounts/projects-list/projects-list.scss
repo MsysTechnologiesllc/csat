@@ -9,6 +9,9 @@
 }
 
 .custom-drawer {
+  .ant-picker-outlined {
+    width: 100%;
+  }
   .ant-drawer-header {
     width: 100%;
 
@@ -348,9 +351,4 @@
   padding: 0.4rem 1.5rem;
   border-radius: 0.4rem;
   @include font-style($white, 1.4rem, 2.2rem, 400);
-}
-.add-projects-drawer {
-  .ant-picker-outlined {
-    width: 100%;
-  }
 }

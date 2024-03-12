@@ -342,7 +342,6 @@ export const ProjectsList = () => {
                 </Button>
               </>
             }
-            className="add-projects-drawer"
           >
             <Form
               form={form}
