@@ -160,11 +160,12 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type ProjectPayload struct {
-		Name        string       `json:"Project_name"`
-		StartDate   *time.Time   `json:"Start_Date"`
-		Active      bool         `json:"active"`
-		TeamMembers []TeamMember `json:"team_member"`
-	}
+        Name        string       `json:"Project_name"`
+        StartDate   *time.Time   `json:"Start_Date"`
+        Active      bool         `json:"active"`
+        AccountID   uint         `json:"account_id"`
+        TeamMembers []TeamMember `json:"team_member"`
+    }
 
 	var payload ProjectPayload
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
@@ -182,50 +183,59 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid account ID", http.StatusBadRequest)
 		return
 	}
+	accountIdStr := r.URL.Query().Get("accountId")
+    var accountId uint
+    _, err = fmt.Sscanf(accountIdStr, "%d", &accountId)
+    if err != nil {
+        http.Error(w, "Invalid account ID", http.StatusBadRequest)
+        return
+    }
 
 	db := models.GetDB()
-	// var payload struct {
-	//     Name      string    `json:"project_name"`
-	//     StartDate *time.Time `json:"start_date"`
-	// }
+
 	if projectId != 0 {
-		// Project ID provided, update the project
-		var project schema.Project
-		if err := db.First(&project, projectId).Error; err != nil {
-			// Project not found, return error
-			http.Error(w, "Project not found", http.StatusNotFound)
-			return
-		}
-		// Update project name and start date
-		project.Name = payload.Name
-		project.StartDate = payload.StartDate
-		if err := db.Save(&project).Error; err != nil {
-			// Handle database error
-			http.Error(w, "Failed to update project", http.StatusInternalServerError)
-			return
-		}
-	} else {
-		// Project ID not provided, create a new project
-		project := schema.Project{Name: payload.Name, StartDate: payload.StartDate, Active: true}
-		if err := db.Create(&project).Error; err != nil {
-			// Handle database error
-			http.Error(w, "Failed to create project", http.StatusInternalServerError)
-			return
-		}
-		projectId = project.ID // Update projectId with the newly created project's ID
-	}
+        // Project ID provided, update the project
+        var project schema.Project
+        if err := db.First(&project, projectId).Error; err != nil {
+            // Project not found, return error
+            http.Error(w, "Project not found", http.StatusNotFound)
+            return
+        }
+        // Update project name and start date
+        project.Name = payload.Name
+        project.StartDate = payload.StartDate
+        if err := db.Save(&project).Error; err != nil {
+            // Handle database error
+            http.Error(w, "Failed to update project", http.StatusInternalServerError)
+            return
+        }
+    } else {
+        // Project ID not provided, create a new project
+         project := schema.Project{
+            Name:      payload.Name,
+            StartDate: payload.StartDate,
+            Active:    payload.Active,
+            AccountID: accountId,
+        }
+        if err := db.Create(&project).Error; err != nil {
+            // Handle database error
+            http.Error(w, "Failed to create project", http.StatusInternalServerError)
+            return
+        }
+        projectId = project.ID // Update projectId with the newly created project's ID
+    }
 	for _, member := range teamMembers {
-		// Check if the user exists based on the provided email
-		var user schema.User
-		if err := db.Where("email = ?", member.Email).First(&user).Error; err != nil {
-			// User doesn't exist, create a new one
-			user = schema.User{Name: member.Name, Email: member.Email, Role: member.Role}
-			if err := db.Create(&user).Error; err != nil {
-				// Handle database error
-				http.Error(w, "Failed to create user", http.StatusInternalServerError)
-				return
-			}
-		}
+        // Check if the user exists based on the provided email
+        var user schema.User
+        if err := db.Where("email = ?", member.Email).First(&user).Error; err != nil {
+            // User doesn't exist, create a new one
+            user = schema.User{Name: member.Name, Email: member.Email, Role: member.Role,  AccountID: accountId}
+            if err := db.Create(&user).Error; err != nil {
+                // Handle database error
+                http.Error(w, "Failed to create user", http.StatusInternalServerError)
+                return
+            }
+        }
 
 		// Check if the user-project mapping exists
 		var userProject schema.UserProject
@@ -250,7 +260,9 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 
 	// Respond with success
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Project updated successfully")
+	resp := u.Message(true, constants.SUCCESS)
+    resp[constants.DATA] = "Update Successfully"
+    u.Respond(w, resp)
 
 }
 
