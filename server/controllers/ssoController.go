@@ -296,8 +296,8 @@ var SearchUser = func(w http.ResponseWriter, r *http.Request) {
         log.Fatalf("Error retrieving Google API response: %v", err)
     }
     searchStr := r.URL.Query().Get("search")
-    if len(searchStr) < 3 {
-        http.Error(w, "Search query must have at least 3 characters", http.StatusBadRequest)
+    if len(searchStr) < 3  {
+        // http.Error(w, "Search query must have at least 3 characters", http.StatusBadRequest)
         return
     }
 
