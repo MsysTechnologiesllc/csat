@@ -13,7 +13,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
 import {
-  AppstoreOutlined,
+  TableOutlined,
   BarsOutlined,
   EditOutlined,
   DeleteOutlined,
@@ -43,9 +43,15 @@ export const Accounts = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [isPopover, setIsPopover] = useState(false);
   const [popId, setPopId] = useState("");
-  const [isId, setIsId] = useState("");
+  // const [isId, setIsId] = useState("");
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({});
+  // const [loading, setLoading] = useState(false);
+  const [formStatus, setFormStatus] = useState("add");
+  const [accountsFormData, setAccountsFormData] = useState();
+  const [eachAccount, setEachAccount] = useState({});
   const accountsApi = () => {
     new GetService().getAccountsList(tenantId, (result) => {
       if (result?.status === 200) {
@@ -62,7 +68,8 @@ export const Accounts = () => {
   };
   const handleonCancel = () => {
     setDeleteModal(false);
-    setIsId("");
+    // setIsId("");
+    setEachAccount({});
     setPopId("");
   };
   const handleonOk = (account) => {
@@ -78,6 +85,7 @@ export const Accounts = () => {
         setMessage("Account Deleted Successfully");
         setDeleteModal(false);
         setIsId("");
+        setEachAccount({});
         setPopId("");
         setTimeout(() => {
           setNotify("");
@@ -87,14 +95,14 @@ export const Accounts = () => {
     });
   };
   const handleOnClickMore = (option, account) => {
-    if (option === "Delete" && isId !== account.ID) {
+    if (option === "Delete") {
       setDeleteModal(true);
-      setIsId(account.ID);
+      setEachAccount(account);
+      // setIsId(account.ID);
       setIsPopover(false);
     }
   };
   const handleView = (account) => {
-    console.log(account, "accounts");
     navigate(`/accounts/${account.ID}/projects`, {
       state: {
         accountId: account.ID,
@@ -108,11 +116,6 @@ export const Accounts = () => {
       accountsApi();
     }
   }, [tenantId]);
-  const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({});
-  // const [loading, setLoading] = useState(false);
-  const [formStatus, setFormStatus] = useState("add");
-  const [accountsFormData, setAccountsFormData] = useState();
 
   const onFinish = () => {
     console.log(formData);
@@ -125,7 +128,6 @@ export const Accounts = () => {
       owner: values.accOwner,
       avatar: logo,
     };
-    console.log(payload);
     setFormData(payload);
   }
   useEffect(() => {
@@ -145,8 +147,8 @@ export const Accounts = () => {
   const columns = [
     {
       title: "Account",
-      dataIndex: "accountName",
-      key: "accountName",
+      dataIndex: "name",
+      key: "name",
     },
     {
       title: "Account Owner",
@@ -167,7 +169,7 @@ export const Accounts = () => {
           <EditOutlined className="edit" />
           <DeleteOutlined
             className="delete"
-            onClick={() => handleOnClickMore("Delete", record?.accountId)}
+            onClick={() => handleOnClickMore("Delete", record)}
           />
         </div>
       ),
@@ -177,7 +179,7 @@ export const Accounts = () => {
       dataIndex: "view",
       key: "view",
       render: (text, record) => (
-        <EyeOutlined onClick={() => handleView(record)} />
+        <EyeOutlined className="view" onClick={() => handleView(record)} />
       ),
     },
   ];
@@ -193,10 +195,11 @@ export const Accounts = () => {
     selectedSegment === "List" &&
       data.push({
         key: index + 1,
-        accountName: account?.name,
+        name: account?.name,
         accountOwner: deliveryHead?.length > 0 && deliveryHead[0]?.name,
         projects: `${account?.account_projects?.length} project(s)`,
-        accountId: account?.ID,
+        ID: account?.ID,
+        tenant_id: account?.tenant_id,
       });
   });
 
@@ -244,7 +247,7 @@ export const Accounts = () => {
             options={[
               {
                 value: "Grid",
-                icon: <AppstoreOutlined />,
+                icon: <TableOutlined />,
               },
               {
                 value: "List",
@@ -340,29 +343,6 @@ export const Accounts = () => {
                         />
                       </div>
                     </Popover>
-                    {isId === account.ID && (
-                      <Modal
-                        open={deleteModal}
-                        closable={false}
-                        okText="Delete"
-                        onCancel={handleonCancel}
-                        onOk={() => handleonOk(account)}
-                        className="more-modal"
-                        centered
-                      >
-                        <div className="model-content-container">
-                          <AiOutlineExclamationCircle className="excalamation-icon" />
-                          <div className="content-wrapper">
-                            <h3 className="title">
-                              {i18n.t("deleteModal.accountsTitle")}
-                            </h3>
-                            <p className="context">
-                              {i18n.t("deleteModal.context")}
-                            </p>
-                          </div>
-                        </div>
-                      </Modal>
-                    )}
                   </div>
                   <div className="team-view-container">
                     <p className="team-members-context">{`${account?.account_projects?.length} project(s)`}</p>
@@ -391,6 +371,25 @@ export const Accounts = () => {
           />
         </div>
       )}
+      {/* {isId && ( */}
+      <Modal
+        open={deleteModal}
+        closable={false}
+        okText="Delete"
+        onCancel={handleonCancel}
+        onOk={() => handleonOk(eachAccount)}
+        className="more-modal"
+        centered
+      >
+        <div className="model-content-container">
+          <AiOutlineExclamationCircle className="excalamation-icon" />
+          <div className="content-wrapper">
+            <h3 className="title">{i18n.t("deleteModal.accountsTitle")}</h3>
+            <p className="context">{i18n.t("deleteModal.context")}</p>
+          </div>
+        </div>
+      </Modal>
+      {/* )} */}
       {notify && <NotifyStatus status={notify} message={message} />}
     </div>
   );
