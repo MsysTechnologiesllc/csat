@@ -120,8 +120,9 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 
 	type ProjectPayload struct {
         Name        string       `json:"Project_name"`
-        StartDate   *time.Time    `json:"Start_Date"`
-		Active      bool		  `json: "active"`
+        StartDate   *time.Time   `json:"Start_Date"`
+        Active      bool         `json:"active"`
+        AccountID   uint         `json:"account_id"`
         TeamMembers []TeamMember `json:"team_member"`
     }
 
@@ -141,12 +142,16 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid account ID", http.StatusBadRequest)
 		return
 	}
+	accountIdStr := r.URL.Query().Get("accountId")
+    var accountId uint
+    _, err = fmt.Sscanf(accountIdStr, "%d", &accountId)
+    if err != nil {
+        http.Error(w, "Invalid account ID", http.StatusBadRequest)
+        return
+    }
 
 	db := models.GetDB()
-	// var payload struct {
-    //     Name      string    `json:"project_name"`
-    //     StartDate *time.Time `json:"start_date"`
-    // }
+
 	if projectId != 0 {
         // Project ID provided, update the project
         var project schema.Project
@@ -165,7 +170,12 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
         }
     } else {
         // Project ID not provided, create a new project
-        project := schema.Project{Name: payload.Name, StartDate: payload.StartDate, Active: true}
+         project := schema.Project{
+            Name:      payload.Name,
+            StartDate: payload.StartDate,
+            Active:    payload.Active,
+            AccountID: accountId,
+        }
         if err := db.Create(&project).Error; err != nil {
             // Handle database error
             http.Error(w, "Failed to create project", http.StatusInternalServerError)
@@ -178,7 +188,7 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
         var user schema.User
         if err := db.Where("email = ?", member.Email).First(&user).Error; err != nil {
             // User doesn't exist, create a new one
-            user = schema.User{Name: member.Name, Email: member.Email, Role: member.Role}
+            user = schema.User{Name: member.Name, Email: member.Email, Role: member.Role,  AccountID: accountId}
             if err := db.Create(&user).Error; err != nil {
                 // Handle database error
                 http.Error(w, "Failed to create user", http.StatusInternalServerError)
