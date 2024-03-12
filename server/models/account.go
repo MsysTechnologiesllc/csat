@@ -17,6 +17,8 @@ func GetAccountDetails(tenantID uint) map[string]interface{} {
 		return db.Where("is_active = ?", true)
 	}).Preload("Accounts.Projects", func(db *gorm.DB) *gorm.DB {
         return db.Where("active = ?", true)
+    }).Preload("Accounts.AccountOwner", func(db *gorm.DB) *gorm.DB {
+        return db.Where("role = ?", "accountOwner")
     }).Preload("Accounts.Projects.Users").Where("id = ?", tenantID).First(&tenant).Error; err != nil {
         logger.Log.Println("Error", err)
         return u.Message(false, constants.TENANT_NOT_FOUND)
