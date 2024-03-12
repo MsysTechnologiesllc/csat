@@ -13,4 +13,5 @@ func ProjectRoutes(router *mux.Router) {
 	apiRouter.HandleFunc("/api/project", controllers.UpdateProject).Methods("PUT")
 	apiRouter.HandleFunc("/api/account", controllers.CreateAccountData).Methods("POST")
 	apiRouter.HandleFunc("/api/account", controllers.UpdateAccountData).Methods("PUT")
+	apiRouter.HandleFunc("/api/project-details", controllers.GetProjectData).Methods("GET")
 }
