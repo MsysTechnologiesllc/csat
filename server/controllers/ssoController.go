@@ -235,15 +235,15 @@ var ResetPassword = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if exp, ok := claims["exp"].(float64); ok {
-        expirationTime := time.Unix(int64(exp), 0)
-        if time.Now().After(expirationTime) {
-            http.Error(w, "Token has expired", http.StatusUnauthorized)
-            return
-        }
-    } else {
-        http.Error(w, "Token expiration time not found", http.StatusUnauthorized)
-        return
-    }
+		expirationTime := time.Unix(int64(exp), 0)
+		if time.Now().After(expirationTime) {
+			http.Error(w, "Token has expired", http.StatusUnauthorized)
+			return
+		}
+	} else {
+		http.Error(w, "Token expiration time not found", http.StatusUnauthorized)
+		return
+	}
 
 	if requestData.NewPassword != requestData.ConfirmPassword {
 		http.Error(w, "New password and confirm password do not match", http.StatusBadRequest)
@@ -277,102 +277,125 @@ var ResetPassword = func(w http.ResponseWriter, r *http.Request) {
 var SearchUser = func(w http.ResponseWriter, r *http.Request) {
 
 	searchStr := r.URL.Query().Get("search")
-    if len(searchStr) < 3  {
-        http.Error(w, "Search query must have at least 3 characters", http.StatusBadRequest)
-        return
-    }
+	if len(searchStr) < 3 {
+		http.Error(w, "Search query must have at least 3 characters", http.StatusBadRequest)
+		return
+	}
+
+	dbUsers, err := models.SearchUsersList(searchStr)
+	if err != nil {
+		resp := u.Message(false, constants.FAILED)
+		w.WriteHeader(http.StatusInternalServerError)
+		u.Respond(w, resp)
+		return
+	}
 
 	clientID, clientSecret, refreshToken, err := GetTenantCredentials()
-    if err != nil {
-        log.Fatalf("Error fetching client credentials and refresh token: %v", err)
-        http.Error(w, "Failed to fetch credentials and refresh token", http.StatusInternalServerError)
-        return
-    }
+	if err != nil {
+		log.Fatalf("Error fetching client credentials and refresh token: %v", err)
+		http.Error(w, "Failed to fetch credentials and refresh token", http.StatusInternalServerError)
+		return
+	}
 
 	accessToken, err := getAccessToken(clientID, clientSecret, refreshToken)
-    if err != nil {
-        log.Fatalf("Error retrieving access token: %v", err)
-        http.Error(w, "Failed to retrieve access token", http.StatusInternalServerError)
-        return
-    }
+	if err != nil {
+		log.Fatalf("Error retrieving access token: %v", err)
+		http.Error(w, "Failed to retrieve access token", http.StatusInternalServerError)
+		return
+	}
 
-    err = getGoogleAPIResponse(w, accessToken, searchStr)
-    if err != nil {
-        log.Fatalf("Error retrieving Google API response: %v", err)
-    }   
+	contacts, err := getGoogleAPIResponse(w, accessToken, searchStr)
+	if err != nil {
+		log.Fatalf("Error retrieving Google API response: %v", err)
+	}
+	var dbUsersData []Person
+	for _, result := range *dbUsers {
+		contact := Person{Name: result.Name, Email: result.Email}
+		dbUsersData = append(dbUsersData, contact)
+	}
+
+	response := map[string]interface{}{
+		"db_users":   dbUsersData,
+		"gsuit_users": contacts,
+	}
+
+	resp := u.Message(true, constants.SUCCESS)
+	resp[constants.DATA] = response
+	u.Respond(w, resp)
 
 }
+
 type Person struct {
-    Name  string `json:"Name"`
-    Email string `json:"Email"`
+	Name  string `json:"Name"`
+	Email string `json:"Email"`
 }
 
-func getGoogleAPIResponse(w http.ResponseWriter, accessToken, searchStr string) error {
-    apiEndpoint := "https://people.googleapis.com/v1/otherContacts:search"
-    queryParameters := fmt.Sprintf("?pageSize=10&query=%s&readMask=emailAddresses%%2Cnames", searchStr)
-    url := apiEndpoint + queryParameters
+func getGoogleAPIResponse(w http.ResponseWriter, accessToken, searchStr string) ([]Person, error) {
+	apiEndpoint := "https://people.googleapis.com/v1/otherContacts:search"
+	queryParameters := fmt.Sprintf("?pageSize=10&query=%s&readMask=emailAddresses%%2Cnames", searchStr)
+	url := apiEndpoint + queryParameters
 
-    // Create a new request with the Google People API URL
-    req, err := http.NewRequest("GET", url, nil)
-    if err != nil {
-        return fmt.Errorf("error creating request: %v", err)
-    }
+	// Create a new request with the Google People API URL
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("error creating request: %v", err)
+	}
 
-    // Set the Authorization header with the access token
-    req.Header.Set("Authorization", "Bearer "+accessToken)
-    req.Header.Set("Accept", "application/json")
+	// Set the Authorization header with the access token
+	req.Header.Set("Authorization", "Bearer "+accessToken)
+	req.Header.Set("Accept", "application/json")
 
-    // Make the GET request
-    client := &http.Client{}
-    resp, err := client.Do(req)
-    if err != nil {
-        return fmt.Errorf("error making API request: %v", err)
-    }
+	// Make the GET request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("error making API request: %v", err)
+	}
 
-    defer resp.Body.Close()
-    fmt.Println(resp)
+	defer resp.Body.Close()
+	fmt.Println(resp)
 
-    // Check the response status code
-    if resp.StatusCode != http.StatusOK {
-        return fmt.Errorf("API request failed with status code: %v", resp.StatusCode)
-    }
+	// Check the response status code
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("API request failed with status code: %v", resp.StatusCode)
+	}
 
 	var results struct {
-        Results []struct {
-            Person struct {
-                Names         []struct{ DisplayName string } `json:"names"`
-                EmailAddresses []struct{ Value string }      `json:"emailAddresses"`
-            } `json:"person"`
-        } `json:"results"`
-    }
+		Results []struct {
+			Person struct {
+				Names          []struct{ DisplayName string } `json:"names"`
+				EmailAddresses []struct{ Value string }       `json:"emailAddresses"`
+			} `json:"person"`
+		} `json:"results"`
+	}
 
-    // Decode the JSON response
-    err = json.NewDecoder(resp.Body).Decode(&results)
-    if err != nil {
-        return fmt.Errorf("error decoding JSON response: %v", err)
-    }
+	// Decode the JSON response
+	err = json.NewDecoder(resp.Body).Decode(&results)
+	if err != nil {
+		return nil, fmt.Errorf("error decoding JSON response: %v", err)
+	}
 
-    // Convert the results into an array of Person objects
-    var contacts []Person
-    for _, result := range results.Results {
-        for _, person := range result.Person.Names {
-            for _, email := range result.Person.EmailAddresses {
-                contact := Person{Name: person.DisplayName, Email: email.Value}
-                contacts = append(contacts, contact)
-            }
-        }
-    }
+	// Convert the results into an array of Person objects
+	var contacts []Person
+	for _, result := range results.Results {
+		for _, person := range result.Person.Names {
+			for _, email := range result.Person.EmailAddresses {
+				contact := Person{Name: person.DisplayName, Email: email.Value}
+				contacts = append(contacts, contact)
+			}
+		}
+	}
 
-    // Marshal the contacts slice into JSON
-    consolidatedJSON, err := json.Marshal(contacts)
-    if err != nil {
-        return fmt.Errorf("error marshalling JSON: %v", err)
-    }
-	w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-    w.Write(consolidatedJSON)
+	// Marshal the contacts slice into JSON
+	// consolidatedJSON, err := json.Marshal(contacts)
+	// if err != nil {
+	//     return nil, fmt.Errorf("error marshalling JSON: %v", err)
+	// }
+	// w.Header().Set("Content-Type", "application/json")
+	// w.WriteHeader(http.StatusOK)
+	// w.Write(consolidatedJSON)
 
-    return nil
+	return contacts, nil
 
 }
 
@@ -386,35 +409,35 @@ func GetTenantCredentials() (clientID, clientSecret, refreshToken string, err er
 }
 
 func getAccessToken(clientID, clientSecret, refreshToken string) (string, error) {
-    // Construct the request body for token refresh using the refresh token
-    requestBody := map[string]string{
-        "client_id":     clientID,
-        "client_secret": clientSecret,
-        "refresh_token": refreshToken,
-        "grant_type":    "refresh_token",
-    }
+	// Construct the request body for token refresh using the refresh token
+	requestBody := map[string]string{
+		"client_id":     clientID,
+		"client_secret": clientSecret,
+		"refresh_token": refreshToken,
+		"grant_type":    "refresh_token",
+	}
 
-    // Marshal the request body to JSON
-    requestBodyBytes, err := json.Marshal(requestBody)
-    if err != nil {
-        return "", fmt.Errorf("error marshaling request body: %v", err)
-    }
+	// Marshal the request body to JSON
+	requestBodyBytes, err := json.Marshal(requestBody)
+	if err != nil {
+		return "", fmt.Errorf("error marshaling request body: %v", err)
+	}
 
-    // Make a request to the token endpoint
-    resp, err := http.Post("https://oauth2.googleapis.com/token", "application/json", bytes.NewReader(requestBodyBytes))
-    if err != nil {
-        return "", fmt.Errorf("error making token refresh request: %v", err)
-    }
-    defer resp.Body.Close()
+	// Make a request to the token endpoint
+	resp, err := http.Post("https://oauth2.googleapis.com/token", "application/json", bytes.NewReader(requestBodyBytes))
+	if err != nil {
+		return "", fmt.Errorf("error making token refresh request: %v", err)
+	}
+	defer resp.Body.Close()
 
-    // Parse the response body to extract the access token
-    var tokenResp struct {
-        AccessToken string `json:"access_token"`
-    }
-    err = json.NewDecoder(resp.Body).Decode(&tokenResp)
-    if err != nil {
-        return "", fmt.Errorf("error parsing token refresh response: %v", err)
-    }
+	// Parse the response body to extract the access token
+	var tokenResp struct {
+		AccessToken string `json:"access_token"`
+	}
+	err = json.NewDecoder(resp.Body).Decode(&tokenResp)
+	if err != nil {
+		return "", fmt.Errorf("error parsing token refresh response: %v", err)
+	}
 
-    return tokenResp.AccessToken, nil
+	return tokenResp.AccessToken, nil
 }

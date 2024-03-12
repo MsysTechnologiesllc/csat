@@ -68,3 +68,13 @@ func UpdateUserPassword(user *schema.User) error {
     err := db.Save(user).Error
     return err
 }
+
+func SearchUsersList(search string) (*[]schema.User, error) {
+	var users []schema.User
+
+	if err := GetDB().Where("name ILIKE ? OR email ILIKE ?", "%"+search+"%", "%"+search+"%").Find(&users).Error; err != nil {
+		logger.Log.Println("Error fetching Users details:", err)
+		return nil, err
+	}
+	return &users, nil
+}
