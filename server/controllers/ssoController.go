@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"bytes"
-	"context"
 	"crypto/rand"
 	constants "csat/helpers"
 	"csat/logger"
@@ -277,6 +276,12 @@ var ResetPassword = func(w http.ResponseWriter, r *http.Request) {
 
 var SearchUser = func(w http.ResponseWriter, r *http.Request) {
 
+	searchStr := r.URL.Query().Get("search")
+    if len(searchStr) < 3  {
+        http.Error(w, "Search query must have at least 3 characters", http.StatusBadRequest)
+        return
+    }
+
 	clientID, clientSecret, refreshToken, err := GetTenantCredentials()
     if err != nil {
         log.Fatalf("Error fetching client credentials and refresh token: %v", err)
@@ -291,41 +296,10 @@ var SearchUser = func(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    err = getGoogleAPIResponse(w, accessToken)
+    err = getGoogleAPIResponse(w, accessToken, searchStr)
     if err != nil {
         log.Fatalf("Error retrieving Google API response: %v", err)
-    }
-    searchStr := r.URL.Query().Get("search")
-    if len(searchStr) < 3  {
-        // http.Error(w, "Search query must have at least 3 characters", http.StatusBadRequest)
-        return
-    }
-
-    config := &oauth2.Config{
-        ClientID:     clientID,
-        ClientSecret: clientSecret,
-        Scopes:       []string{"https://www.googleapis.com/auth/contacts.other.readonly"},
-        // RedirectURL:  redirectURI,
-        Endpoint:     google.Endpoint,
-    }
-    url := config.AuthCodeURL("state")
-
-    fmt.Printf("Visit the URL for the auth dialog: %v\n", url)
-
-    // Get authorization code from user input
-    fmt.Print("Enter authorization code: ")
-    var code string
-    fmt.Scan(&code)
-
-    // Exchange authorization code for access token
-    token, err := config.Exchange(context.Background(), code)
-    if err != nil {
-        log.Fatalf("Error exchanging authorization code: %v", err)
-        return
-    }
-    fmt.Println("Response Body:", token.AccessToken)
-
-    // Use the obtained access token to make a request to the Google People API
+    }   
 
 }
 type Person struct {
@@ -333,10 +307,9 @@ type Person struct {
     Email string `json:"Email"`
 }
 
-func getGoogleAPIResponse(w http.ResponseWriter, accessToken string) error {
+func getGoogleAPIResponse(w http.ResponseWriter, accessToken, searchStr string) error {
     apiEndpoint := "https://people.googleapis.com/v1/otherContacts:search"
-    queryParameters := "?pageSize=10&query=raj&readMask=emailAddresses%2Cnames"
-
+    queryParameters := fmt.Sprintf("?pageSize=10&query=%s&readMask=emailAddresses%%2Cnames", searchStr)
     url := apiEndpoint + queryParameters
 
     // Create a new request with the Google People API URL
