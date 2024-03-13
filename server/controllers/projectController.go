@@ -130,6 +130,7 @@ var CreateAccountData = func(w http.ResponseWriter, r *http.Request) {
 		}
 		accountData = updatedAccountPtr
 	} else {
+		newAccount.IsActive = true
 		accountDetails, err := models.CreateAccountData(&newAccount)
 		if err != nil {
 			resp := u.Message(false, constants.FAILED)
