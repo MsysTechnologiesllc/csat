@@ -130,6 +130,7 @@ var CreateAccountData = func(w http.ResponseWriter, r *http.Request) {
 		}
 		accountData = updatedAccountPtr
 	} else {
+		newAccount.IsActive = true
 		accountDetails, err := models.CreateAccountData(&newAccount)
 		if err != nil {
 			resp := u.Message(false, constants.FAILED)
@@ -164,6 +165,7 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
         StartDate   *time.Time   `json:"Start_Date"`
         Active      bool         `json:"active"`
         AccountID   uint         `json:"account_id"`
+		Logo        string       `json:"logo"`
         TeamMembers []TeamMember `json:"team_member"`
     }
 
@@ -193,6 +195,37 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 
 	db := models.GetDB()
 
+	// Add logo to the project if provided
+    var logoData []byte
+    var mediaType string
+    if payload.Logo != "" {
+        // Decode logo data
+        dataURIParts := strings.SplitN(payload.Logo, ",", 2)
+        if len(dataURIParts) != 2 {
+            fmt.Println("Invalid Data URI format")
+            http.Error(w, "Invalid Data URI format", http.StatusBadRequest)
+            return
+        }
+        mediaType = dataURIParts[0]
+        base64Data := dataURIParts[1]
+
+        // Decode base64 data
+        decodedData, err := base64.StdEncoding.DecodeString(base64Data)
+        if err != nil {
+            fmt.Println("Error decoding base64:", err)
+            http.Error(w, "Error decoding base64", http.StatusInternalServerError)
+            return
+        }
+        maxSizeBytes := 2 * 1024 * 1024 // 2 MB
+        if len(decodedData) > maxSizeBytes {
+            http.Error(w, "File size exceeds the limit", http.StatusBadRequest)
+            return
+        }
+        logoData = decodedData
+    }
+
+
+
 	if projectId != 0 {
         // Project ID provided, update the project
         var project schema.Project
@@ -204,6 +237,10 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
         // Update project name and start date
         project.Name = payload.Name
         project.StartDate = payload.StartDate
+		project.Logo = logoData
+        project.MediaType = mediaType
+		project.AccountID = accountId
+		project.Active = payload.Active
         if err := db.Save(&project).Error; err != nil {
             // Handle database error
             http.Error(w, "Failed to update project", http.StatusInternalServerError)
@@ -214,8 +251,10 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
          project := schema.Project{
             Name:      payload.Name,
             StartDate: payload.StartDate,
-            Active:    payload.Active,
+            Active:    true,
             AccountID: accountId,
+			Logo:      logoData,
+            MediaType: mediaType,
         }
         if err := db.Create(&project).Error; err != nil {
             // Handle database error

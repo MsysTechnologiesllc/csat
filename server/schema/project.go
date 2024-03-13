@@ -16,5 +16,7 @@ type Project struct {
 	StartDate *time.Time     `gorm:"type:timestamptz" json:"start_date"`
 	EndDate   *time.Time     `gorm:"type:timestamptz" json:"end_date"`
 	Active    bool           `gorm:"default:false" json:"active"`
+	Logo      []byte         `gorm:"type:BLOB" json:"logo"`
+	MediaType string         `gorm:"null" json:"media_type"`
 	Users     []User         `gorm:"many2many:user_projects;"`
 }
