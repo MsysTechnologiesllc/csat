@@ -72,4 +72,10 @@ export class GetService extends BaseService {
       callback,
     );
   }
+  getAccountOwners(search, callback) {
+    return this.get(
+      process.env.GO_SERVICE_URL + `/csat/rest/auth/search?search=${search}`,
+      callback,
+    );
+  }
 }

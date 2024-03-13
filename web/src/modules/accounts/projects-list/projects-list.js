@@ -3,17 +3,12 @@ import {
   Button,
   Card,
   Col,
-  DatePicker,
-  Drawer,
-  Form,
-  Input,
   Modal,
   Pagination,
   Popover,
   Row,
   Segmented,
   Table,
-  TreeSelect,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import i18n from "../../../locales/i18next";
@@ -36,26 +31,51 @@ import { NoOfDays } from "../../../utils/utils";
 import { GetService } from "../../../services/get";
 import { PutService } from "../../../services/put";
 import NotifyStatus from "../../../components/notify-status/notify-status";
-import { useDetectMobileOrDesktop } from "../../../hooks/useDetectMobileOrDesktop";
+import { AddEditProjects } from "./add-edit-projects";
+import moment from "moment";
 
 export const ProjectsList = () => {
   const navigate = useNavigate();
-  const [form] = Form.useForm();
-  const { isMobile, isTablet } = useDetectMobileOrDesktop();
   const { state } = useLocation();
   const [breadcrumbList, setBreadcrumbList] = useState([]);
   const [selectedSegment, setSelectedSegment] = useState("Grid");
-  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  // const [isId, setIsId] = useState("");
   const [eachProject, setEachProject] = useState({});
   const [isPopover, setIsPopover] = useState(false);
   const [popId, setPopId] = useState("");
   const [projectsList, setProjectsList] = useState({});
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
-  const [open, setOpen] = useState(false);
-
+  const [addProject, setAddProject] = useState("");
+  const [dropdownOptions, setDropdownOptions] = useState([]);
+  const [dropdownOptionsData, setDropdownOptionsData] = useState([]);
+  const [search, setSearch] = useState("");
+  useEffect(() => {
+    setDropdownOptions([]);
+    if (search?.length >= 3) {
+      new GetService().getAccountOwners(search, (result) => {
+        const updatedArray = [];
+        if (result?.status === 200) {
+          result?.data?.data?.db_users?.map((option) => {
+            updatedArray.push({ title: option.Email, value: option?.Name });
+          });
+          result?.data?.data?.gsuit_users?.map((option) => {
+            updatedArray.push({ title: option.Email, value: option?.Name });
+          });
+          console.log(updatedArray);
+          setDropdownOptions(updatedArray);
+        } else {
+          setDropdownOptions([]);
+        }
+      });
+    } else {
+      setDropdownOptions([]);
+    }
+  }, [search]);
+  useEffect(() => {
+    setDropdownOptionsData((prevData) => [...prevData, ...dropdownOptions]);
+  }, [dropdownOptions]);
+  console.log(dropdownOptionsData, "options");
   const projectsApi = () => {
     new GetService().getAccountsList(state?.tenantId, (result) => {
       if (result?.status === 200) {
@@ -73,12 +93,104 @@ export const ProjectsList = () => {
       projectsApi();
     }
   }, [state?.tenantId]);
-  // const showDrawer = () => {
-  //   setOpen(true);
-  // };
   const onClose = () => {
-    setOpen(false);
+    setAddProject("");
   };
+  const handleFinish = (values) => {
+    const { $y, $M, $D, $H, $m, $s, $SSS, $Z } = values.startDate;
+    const formattedDate = moment(
+      `${$y}-${$M + 1}-${$D} ${$H}:${$m}:${$s}.${$SSS}${$Z}`,
+      "YYYY-MM-DD HH:mm:ss.SSSZZ",
+    ).format("YYYY-MM-DD HH:mm:ss.SSSSSSZ");
+    const payload = {
+      Project_name: values.projectName,
+      Start_Date: formattedDate,
+      team_member: [
+        ...formatTreeData(values.pointOfContact, dropdownOptionsData, "client"),
+        ...formatTreeData(values.pmo, dropdownOptionsData, "manager"),
+        ...formatTreeData(values.lead, dropdownOptionsData, "lead"),
+        ...formatTreeData(values.scrumTeam, dropdownOptionsData, "member"),
+      ],
+    };
+    // new PutService().addUpdateProject(
+    //   addProject === "add" ? "" : projectId,
+    //   state?.accountId,
+    //   payload,
+    //   (result) => {
+    //     if (result?.status === 200) {
+    //       console.log("added");
+    //     }
+    //   },
+    // );
+    console.log("Form values:", payload);
+  };
+  const formatTreeData = (selectedValues, treeData, role) =>
+    Array.isArray(selectedValues)
+      ? selectedValues
+          .map((value) => {
+            const node = treeData.find((node) => node.value === value);
+            return node
+              ? { email: node.title, name: node.value, role: role }
+              : null;
+          })
+          .filter(Boolean)
+      : [];
+  // const treeData1 = [
+  //   {
+  //     title: "Node1",
+  //     value: "name1",
+  //   },
+  //   {
+  //     title: "Node2",
+  //     value: "name2",
+  //   },
+  //   {
+  //     title: "Node3",
+  //     value: "name3",
+  //   },
+  // ];
+  // const treeData2 = [
+  //   {
+  //     title: "Node4",
+  //     value: "name4",
+  //   },
+  //   {
+  //     title: "Node5",
+  //     value: "name5",
+  //   },
+  //   {
+  //     title: "Node6",
+  //     value: "name6",
+  //   },
+  // ];
+  // const treeData3 = [
+  //   {
+  //     title: "Node7",
+  //     value: "name7",
+  //   },
+  //   {
+  //     title: "Node8",
+  //     value: "name8",
+  //   },
+  //   {
+  //     title: "Node9",
+  //     value: "name9",
+  //   },
+  // ];
+  // const treeData4 = [
+  //   {
+  //     title: "NodeA",
+  //     value: "nameA",
+  //   },
+  //   {
+  //     title: "NodeB",
+  //     value: "nameB",
+  //   },
+  //   {
+  //     title: "NodeC",
+  //     value: "nameC",
+  //   },
+  // ];
   const handleOnOpenChange = (id) => {
     if (id !== popId) {
       setPopId(id);
@@ -87,9 +199,9 @@ export const ProjectsList = () => {
   };
   const handleonCancel = () => {
     setDeleteModal(false);
-    // setIsId("");
     setEachProject({});
     setPopId("");
+    setAddProject("");
   };
   const handleonOk = (project) => {
     const payload = {
@@ -103,8 +215,8 @@ export const ProjectsList = () => {
         setNotify("success");
         setMessage("Project Deleted Successfully");
         setDeleteModal(false);
-        // setIsId("");
         setEachProject({});
+        setAddProject("");
         setPopId("");
         setTimeout(() => {
           setNotify("");
@@ -116,7 +228,6 @@ export const ProjectsList = () => {
   const handleOnClickMore = (option, project) => {
     if (option === "Delete") {
       setDeleteModal(true);
-      // setIsId(id);
       setEachProject(project);
       setIsPopover(false);
     }
@@ -140,15 +251,8 @@ export const ProjectsList = () => {
     navigate("/accounts");
   };
   const addNewProject = () => {
-    setOpen(true);
+    setAddProject("add");
   };
-  // const handleOk = () => {
-  //   setIsModalOpen(false);
-  // };
-  // const handleCancel = () => {
-  //   setIsModalOpen(false);
-  // };
-
   useEffect(() => {
     let breadcrumbItems = [
       { title: i18n.t("sidebar.accounts"), onClick: handleBreadCrumb },
@@ -182,7 +286,10 @@ export const ProjectsList = () => {
       key: "actions",
       render: (text, record) => (
         <div>
-          <EditOutlined className="edit" />
+          <EditOutlined
+            className="edit"
+            onClick={() => setAddProject("edit")}
+          />
           <DeleteOutlined
             className="delete"
             onClick={() => handleOnClickMore("Delete", record)}
@@ -215,87 +322,6 @@ export const ProjectsList = () => {
       ID: project?.ID,
     });
   });
-  const handleFinish = (values) => {
-    const formattedValues = {
-      projectName: values.projectName,
-      startDate: values.startDate,
-      formData: [
-        ...formatTreeData(values.pointOfContact, treeData1, "client"),
-        ...formatTreeData(values.pmo, treeData2, "manager"),
-        ...formatTreeData(values.lead, treeData3, "lead"),
-        ...formatTreeData(values.scrumTeam, treeData4, "member"),
-      ],
-    };
-
-    console.log("Form values:", formattedValues);
-  };
-  const formatTreeData = (selectedValues, treeData, role) =>
-    Array.isArray(selectedValues)
-      ? selectedValues
-          .map((value) => {
-            const node = treeData.find((node) => node.value === value);
-            return node
-              ? { email: node.title, name: node.value, role: role }
-              : null;
-          })
-          .filter(Boolean)
-      : [];
-  const treeData1 = [
-    {
-      title: "Node1",
-      value: "name1",
-    },
-    {
-      title: "Node2",
-      value: "name2",
-    },
-    {
-      title: "Node3",
-      value: "name3",
-    },
-  ];
-  const treeData2 = [
-    {
-      title: "Node4",
-      value: "name4",
-    },
-    {
-      title: "Node5",
-      value: "name5",
-    },
-    {
-      title: "Node6",
-      value: "name6",
-    },
-  ];
-  const treeData3 = [
-    {
-      title: "Node7",
-      value: "name7",
-    },
-    {
-      title: "Node8",
-      value: "name8",
-    },
-    {
-      title: "Node9",
-      value: "name9",
-    },
-  ];
-  const treeData4 = [
-    {
-      title: "NodeA",
-      value: "nameA",
-    },
-    {
-      title: "NodeB",
-      value: "nameB",
-    },
-    {
-      title: "NodeC",
-      value: "nameC",
-    },
-  ];
   return (
     <div className="projects-list-wrapper">
       <Breadcrumb items={breadcrumbList} onClick={handleBreadCrumb} />
@@ -320,92 +346,14 @@ export const ProjectsList = () => {
           <Button onClick={addNewProject} className="add-account-button">
             ADD PROJECTS
           </Button>
-          <Drawer
-            title="Add project"
-            width={isMobile ? "90%" : isTablet ? "60%" : "40%"}
+          <AddEditProjects
+            handleFinish={handleFinish}
             onClose={onClose}
-            open={open}
-            className="custom-drawer"
-            extra={
-              <>
-                <Button onClick={onClose} className="cancle-btn">
-                  Cancel
-                </Button>
-                <Button
-                  onClick={() => form.submit()}
-                  className="submit-btn"
-                  htmlType="submit"
-                  type="primary"
-                >
-                  Add Project
-                </Button>
-              </>
-            }
-          >
-            <Form
-              form={form}
-              onFinish={handleFinish}
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-            >
-              <Form.Item
-                name="projectName"
-                label={<span className="custom-label">Project Name</span>}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter project name",
-                  },
-                ]}
-              >
-                <Input placeholder="Project #" />
-              </Form.Item>
-              <Form.Item name="startDate" label="SOW Start Date">
-                <DatePicker />
-              </Form.Item>
-              <Form.Item name="pointOfContact" label="Point of contact">
-                <TreeSelect
-                  treeData={treeData1}
-                  treeNodeFilterProp="title"
-                  allowClear="true"
-                  showSearch
-                  multiple
-                  placeholder="First Name /Last Name / Email ID"
-                />
-              </Form.Item>
-              <h5 className="team-members">Team Members</h5>
-              <Form.Item name="pmo" label="PMO">
-                <TreeSelect
-                  treeData={treeData2}
-                  treeNodeFilterProp="title"
-                  allowClear="true"
-                  showSearch
-                  multiple
-                  placeholder="Select / Type Email ID"
-                />
-              </Form.Item>
-              <Form.Item name="lead" label="Lead">
-                <TreeSelect
-                  treeData={treeData3}
-                  treeNodeFilterProp="title"
-                  allowClear="true"
-                  showSearch
-                  multiple
-                  placeholder="Select / Type Email ID"
-                />
-              </Form.Item>
-              <Form.Item name="scrumTeam" label="SCRUM Team">
-                <TreeSelect
-                  treeData={treeData4}
-                  treeNodeFilterProp="title"
-                  allowClear="true"
-                  showSearch
-                  multiple
-                  placeholder="Select / Type Email ID"
-                />
-              </Form.Item>
-            </Form>
-          </Drawer>
+            addProject={addProject}
+            setSearch={setSearch}
+            dropdownOptions={dropdownOptions}
+            setDropdownOptions={setDropdownOptions}
+          />
         </div>
       </div>
       {selectedSegment === "Grid" ? (
@@ -462,7 +410,7 @@ export const ProjectsList = () => {
                           <span
                             onClick={(event) => {
                               event.stopPropagation();
-                              handleOnClickMore("Edit");
+                              setAddProject("edit");
                             }}
                           >
                             <AiOutlineEdit className="icon" />
@@ -526,7 +474,6 @@ export const ProjectsList = () => {
           />
         </div>
       )}
-      {/* {isId === project.ID && ( */}
       <Modal
         open={deleteModal}
         closable={false}
@@ -548,7 +495,6 @@ export const ProjectsList = () => {
           </div>
         </div>
       </Modal>
-      {/* )} */}
       {notify && <NotifyStatus status={notify} message={message} />}
     </div>
   );
