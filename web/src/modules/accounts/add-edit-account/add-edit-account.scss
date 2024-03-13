@@ -24,6 +24,30 @@
                 border: 1px solid transparent;
             }
 
+            .logo-success-container {
+                @include d-flex;
+                @include align-items-center;
+                margin-bottom: 0.7rem;
+
+                .check-image {
+                    background-color: $lima;
+                    border-radius: 0.2rem;
+                    min-height: 1.7rem;
+                    max-height: 1.7rem;
+                    min-width: 1.7rem;
+                    max-width: 1.7rem;
+                }
+
+                .success-message {
+                    margin-left: 0.7rem;
+                    @include font-style($black, 1.4rem, 2.2rem, 400);
+                }
+            }
+
+            .logo-recommendations {
+                @include font-style($dark-grey, 1.4rem, 2.2rem, 400);
+            }
+
             .ant-select-selector {
                 padding: 0.2rem;
                 cursor: pointer;
