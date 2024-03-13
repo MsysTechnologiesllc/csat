@@ -243,6 +243,7 @@ export const ProjectsList = () => {
           projectsList: projectsList?.account_projects,
           projectName: project?.name,
           status: true,
+          tenantId: state?.tenantId,
         },
       },
     );
