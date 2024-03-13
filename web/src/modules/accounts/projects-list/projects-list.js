@@ -93,25 +93,29 @@ export const ProjectsList = () => {
   };
   const handleonOk = (project) => {
     const payload = {
-      name: project?.name,
-      account_id: projectsList.ID,
+      Project_name: project?.name,
       active: false,
     };
-    new PutService().updateProject(project.ID, payload, (result) => {
-      if (result.status === 200) {
-        projectsApi();
-        setNotify("success");
-        setMessage("Project Deleted Successfully");
-        setDeleteModal(false);
-        // setIsId("");
-        setEachProject({});
-        setPopId("");
-        setTimeout(() => {
-          setNotify("");
-          setMessage("");
-        }, 2000);
-      }
-    });
+    new PutService().updateProject(
+      project.ID,
+      projectsList.ID,
+      payload,
+      (result) => {
+        if (result.status === 200) {
+          projectsApi();
+          setNotify("success");
+          setMessage("Project Deleted Successfully");
+          setDeleteModal(false);
+          // setIsId("");
+          setEachProject({});
+          setPopId("");
+          setTimeout(() => {
+            setNotify("");
+            setMessage("");
+          }, 2000);
+        }
+      },
+    );
   };
   const handleOnClickMore = (option, project) => {
     if (option === "Delete") {
