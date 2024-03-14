@@ -67,6 +67,7 @@ export const translationEN = {
     gauge: "gauge",
     needle: "needle",
     ticket: "ticket",
+    avatar: "avatar",
   },
   placeholder: {
     message: "Your message",
@@ -230,8 +231,11 @@ export const translationEN = {
     accOwnerRule: "Please Enter Account Owner Name",
     accLogoRule: "Please Provide logo for Account",
     dropdownText: "Click or drag file to this area to upload Logo",
-    dropConditions: "SVG, PNG, JPG or GIF (max. 3MB)",
+    dropConditions: "SVG, PNG, JPG or GIF (max. 2MB)",
     fileImageWarning: "You can only upload SVG, PNG, JPG, JPEG, or FIG files!",
-    imageSizeWarning: "Image must be smaller than 3MB!",
+    imageSizeWarning: "Image must be smaller than 2MB!",
+    logoSuccess: " Logo uploaded successfully",
+    logoRecommendation:
+      "Recommanded resolution is 640*640 with file size less than 2MB, keep visual elements centered",
   },
 };

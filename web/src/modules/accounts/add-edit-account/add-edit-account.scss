@@ -24,6 +24,10 @@
                 border: 1px solid transparent;
             }
 
+            .url-image{
+                width: 100%;
+                border-radius: 50%;
+            }
             .logo-success-container {
                 @include d-flex;
                 @include align-items-center;
