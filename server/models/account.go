@@ -30,4 +30,12 @@ func GetAccountDetails(tenantID uint) map[string]interface{} {
 
     return response
 }
+func GetAccountByID(projectId uint) (*schema.Account, error) {
+    var projectDetails schema.Account
 
+    if err := GetDB().First(&projectDetails, projectId).Error; err != nil {
+        logger.Log.Println("Error fetching project details:", err)
+        return nil, err
+    }
+    return &projectDetails, nil
+}
