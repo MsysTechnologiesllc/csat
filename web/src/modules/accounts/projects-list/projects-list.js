@@ -9,6 +9,7 @@ import {
   Row,
   Segmented,
   Table,
+  Form,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import i18n from "../../../locales/i18next";
@@ -37,6 +38,7 @@ import moment from "moment";
 export const ProjectsList = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const [form] = Form.useForm();
   const [breadcrumbList, setBreadcrumbList] = useState([]);
   const [selectedSegment, setSelectedSegment] = useState("Grid");
   const [deleteModal, setDeleteModal] = useState(false);
@@ -61,7 +63,7 @@ export const ProjectsList = () => {
           result?.data?.data?.gsuit_users?.map((option) => {
             updatedArray.push({ title: option?.email, value: option?.name });
           });
-          setDropdownOptions((prevData) => [...prevData, ...updatedArray]);
+          setDropdownOptions(updatedArray);
         }
       });
     }
@@ -88,6 +90,7 @@ export const ProjectsList = () => {
   }, [state?.tenantId]);
   const onClose = () => {
     setAddProject("");
+    form.resetFields();
   };
   const handleFinish = (values) => {
     const formattedDate = moment(values?.startDate).format(
@@ -107,17 +110,19 @@ export const ProjectsList = () => {
         ...formatTreeData(values?.scrumTeam, dropdownOptionsData, "member"),
       ],
     };
-    new PutService().addUpdateProject(
-      addProject === "add" ? 0 : eachProject?.ID,
-      state?.accountId,
-      payload,
-      (result) => {
-        if (result?.status === 200) {
-          setDropdownOptionsData([]);
-          setAddProject("");
-        }
-      },
-    );
+    console.log(payload);
+    // new PutService().addUpdateProject(
+    //   addProject === "add" ? 0 : eachProject?.ID,
+    //   state?.accountId,
+    //   payload,
+    //   (result) => {
+    //     if (result?.status === 200) {
+    //       form.resetFields();
+    //       setDropdownOptionsData([]);
+    //       setAddProject("");
+    //     }
+    //   },
+    // );
   };
   const formatTreeData = (selectedValues, treeData, role) =>
     Array.isArray(selectedValues)
@@ -302,6 +307,7 @@ export const ProjectsList = () => {
             dropdownOptions={dropdownOptions}
             setDropdownOptions={setDropdownOptions}
             eachProject={eachProject}
+            form={form}
           />
         </div>
       </div>

@@ -13,9 +13,9 @@ export const AddEditProjects = ({
   dropdownOptions,
   setDropdownOptions,
   eachProject,
+  form,
 }) => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
-  const [form] = Form.useForm();
   useEffect(() => {
     const pointOfContactData = eachProject?.Users?.filter(
       (user) => user.role === "client",
@@ -160,4 +160,5 @@ AddEditProjects.propTypes = {
   dropdownOptions: PropTypes.array.isRequired,
   setDropdownOptions: PropTypes.array.isRequired,
   eachProject: PropTypes.object.isRequired,
+  form: PropTypes.any.isRequired,
 };
