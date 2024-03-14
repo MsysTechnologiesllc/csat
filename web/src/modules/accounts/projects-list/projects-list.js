@@ -74,7 +74,7 @@ export const ProjectsList = () => {
       if (result?.status === 200) {
         const filteredAccount =
           result?.data?.data?.tenant?.tenant_accounts.filter(
-            (account) => account.ID === state?.accountId
+            (account) => account.ID === state?.accountId,
           );
         setProjectsList(...filteredAccount);
         setIsLoading(false);
@@ -91,7 +91,7 @@ export const ProjectsList = () => {
   };
   const handleFinish = (values) => {
     const formattedDate = moment(values?.startDate).format(
-      "YYYY-MM-DDTHH:mm:ss.SSSZ"
+      "YYYY-MM-DDTHH:mm:ss.SSSZ",
     );
     const payload = {
       Project_name: values?.projectName,
@@ -100,7 +100,7 @@ export const ProjectsList = () => {
         ...formatTreeData(
           values?.pointOfContact,
           dropdownOptionsData,
-          "client"
+          "client",
         ),
         ...formatTreeData(values?.pmo, dropdownOptionsData, "manager"),
         ...formatTreeData(values?.lead, dropdownOptionsData, "lead"),
@@ -114,8 +114,9 @@ export const ProjectsList = () => {
       (result) => {
         if (result?.status === 200) {
           setDropdownOptionsData([]);
+          setAddProject("");
         }
-      }
+      },
     );
   };
   const formatTreeData = (selectedValues, treeData, role) =>
@@ -163,7 +164,7 @@ export const ProjectsList = () => {
             setMessage("");
           }, 2000);
         }
-      }
+      },
     );
   };
   const handleOnClickMore = (option, project) => {
@@ -189,7 +190,7 @@ export const ProjectsList = () => {
           status: true,
           tenantId: state?.tenantId,
         },
-      }
+      },
     );
   };
   const handleBreadCrumb = () => {
@@ -256,10 +257,10 @@ export const ProjectsList = () => {
   const data = [];
   projectsList?.account_projects?.map((project, index) => {
     const prjManager = project?.Users?.filter(
-      (user) => user.role === "projectManager"
+      (user) => user.role === "projectManager",
     );
     const teamMembers = project?.Users?.filter(
-      (user) => user.role === "member"
+      (user) => user.role === "member",
     );
     data.push({
       key: index + 1,
@@ -308,10 +309,10 @@ export const ProjectsList = () => {
         <Row gutter={[20, 20]} className="project-list-wrapper">
           {projectsList?.account_projects?.map((project) => {
             const prjManager = project?.Users?.filter(
-              (user) => user.role === "projectManager"
+              (user) => user.role === "projectManager",
             );
             const teamMembers = project?.Users?.filter(
-              (user) => user.role === "member"
+              (user) => user.role === "member",
             );
             return (
               <Col xs={24} md={12} lg={8} xxl={6} key={project.ID}>

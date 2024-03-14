@@ -18,14 +18,14 @@ export const AddEditProjects = ({
   const [form] = Form.useForm();
   useEffect(() => {
     const pointOfContactData = eachProject?.Users?.filter(
-      (user) => user.role === "client"
+      (user) => user.role === "client",
     );
     const pmoData = eachProject?.Users?.filter(
-      (user) => user.role === "Manager"
+      (user) => user.role === "Manager",
     );
     const leadData = eachProject?.Users?.filter((user) => user.role === "Lead");
     const scrumTeamData = eachProject?.Users?.filter(
-      (user) => user.role === "Developer"
+      (user) => user.role === "Developer",
     );
     addProject === "edit" &&
       form.setFieldsValue({
@@ -57,7 +57,7 @@ export const AddEditProjects = ({
       ]
         .filter((item) => item?.length > 0)
         .flat()
-        .map((item) => ({ value: item?.value, title: item?.title }))
+        .map((item) => ({ value: item?.value, title: item?.title })),
     );
   }, [addProject]);
   return (
