@@ -30,10 +30,10 @@ export class PutService extends BaseService {
       callback,
     );
   }
-  updateProject(projectId, payload, callback) {
+  updateProject(projectId, accountId, payload, callback) {
     return this.put(
       process.env.GO_SERVICE_URL +
-        `/csat/rest/api/project?projectId=${projectId}`,
+        `/csat/rest/api/project?projectId=${projectId}&accountId=${accountId}`,
       payload,
       callback,
     );

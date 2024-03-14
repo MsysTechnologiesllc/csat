@@ -129,62 +129,6 @@ export const ProjectsList = () => {
           })
           .filter(Boolean)
       : [];
-  // const treeData1 = [
-  //   {
-  //     title: "Node1",
-  //     value: "name1",
-  //   },
-  //   {
-  //     title: "Node2",
-  //     value: "name2",
-  //   },
-  //   {
-  //     title: "Node3",
-  //     value: "name3",
-  //   },
-  // ];
-  // const treeData2 = [
-  //   {
-  //     title: "Node4",
-  //     value: "name4",
-  //   },
-  //   {
-  //     title: "Node5",
-  //     value: "name5",
-  //   },
-  //   {
-  //     title: "Node6",
-  //     value: "name6",
-  //   },
-  // ];
-  // const treeData3 = [
-  //   {
-  //     title: "Node7",
-  //     value: "name7",
-  //   },
-  //   {
-  //     title: "Node8",
-  //     value: "name8",
-  //   },
-  //   {
-  //     title: "Node9",
-  //     value: "name9",
-  //   },
-  // ];
-  // const treeData4 = [
-  //   {
-  //     title: "NodeA",
-  //     value: "nameA",
-  //   },
-  //   {
-  //     title: "NodeB",
-  //     value: "nameB",
-  //   },
-  //   {
-  //     title: "NodeC",
-  //     value: "nameC",
-  //   },
-  // ];
   const handleOnOpenChange = (id) => {
     if (id !== popId) {
       setPopId(id);
@@ -199,25 +143,28 @@ export const ProjectsList = () => {
   };
   const handleonOk = (project) => {
     const payload = {
-      name: project?.name,
-      account_id: projectsList.ID,
+      Project_name: project?.name,
       active: false,
     };
-    new PutService().updateProject(project.ID, payload, (result) => {
-      if (result.status === 200) {
-        projectsApi();
-        setNotify("success");
-        setMessage("Project Deleted Successfully");
-        setDeleteModal(false);
-        setEachProject({});
-        setAddProject("");
-        setPopId("");
-        setTimeout(() => {
-          setNotify("");
-          setMessage("");
-        }, 2000);
-      }
-    });
+    new PutService().updateProject(
+      project.ID,
+      projectsList.ID,
+      payload,
+      (result) => {
+        if (result.status === 200) {
+          projectsApi();
+          setNotify("success");
+          setMessage("Project Deleted Successfully");
+          setDeleteModal(false);
+          setEachProject({});
+          setPopId("");
+          setTimeout(() => {
+            setNotify("");
+            setMessage("");
+          }, 2000);
+        }
+      },
+    );
   };
   const handleOnClickMore = (option, project) => {
     setEachProject(project);
