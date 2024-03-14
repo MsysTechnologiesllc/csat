@@ -5,21 +5,21 @@ export class GetService extends BaseService {
     return this.get(
       process.env.GO_SERVICE_URL +
         `/csat/rest/api/team-list?project_id=${prjId}`,
-      callback
+      callback,
     );
   }
   getSurveyDetails(surveyId, passcode, callback) {
     return this.get(
       process.env.GO_SERVICE_URL +
         `/csat/rest/api/survey-details?id=${surveyId}&passcode=${passcode}`,
-      callback
+      callback,
     );
   }
   getManagerSurveyDetails(surveyId, callback) {
     return this.get(
       process.env.GO_SERVICE_URL +
         `/csat/rest/api/manager/survey-details?id=${surveyId}`,
-      callback
+      callback,
     );
   }
   getSurveyList(
@@ -29,60 +29,60 @@ export class GetService extends BaseService {
     accountName,
     status,
     user_id,
-    callback
+    callback,
   ) {
     return this.get(
       process.env.GO_SERVICE_URL +
         `/csat/rest/api/surveys?tenant_id=${tenant_id}&page=${page}&limit=${limit}&accountName=${accountName}&status=${status}&user_id=${user_id}`,
-      callback
+      callback,
     );
   }
   getPreviewSurvey(project_id, callback) {
     return this.get(
       process.env.GO_SERVICE_URL +
         `/csat/rest/api/survey-format?project_id=${project_id}`,
-      callback
+      callback,
     );
   }
   getAccountsList(tenant_id, callback) {
     return this.get(
       process.env.GO_SERVICE_URL +
         `/csat/rest/api/account?tenant_id=${tenant_id}`,
-      callback
+      callback,
     );
   }
   getSurveyProjectsFilter(userid, callback) {
     return this.get(
       process.env.GO_SERVICE_URL +
         `/csat/rest/api/user-projects?user_id=${userid}`,
-      callback
+      callback,
     );
   }
   getSurveyFormatList(project_id, callback) {
     return this.get(
       process.env.GO_SERVICE_URL +
         `/csat/rest/api/survey-format/list?project_id=${project_id}`,
-      callback
+      callback,
     );
   }
   getForgotPassword(email, callback) {
     return this.get(
       process.env.GO_SERVICE_URL +
         `/csat/rest/auth/reset-password/link?email=${email}`,
-      callback
+      callback,
     );
   }
   getAccountOwners(search, callback) {
     return this.get(
       process.env.GO_SERVICE_URL + `/csat/rest/auth/search?search=${search}`,
-      callback
+      callback,
     );
   }
   getProjectDetails(projectId, callback) {
     return this.get(
       process.env.GO_SERVICE_URL +
         `/csat/rest/api/project-details?projectId=${projectId}`,
-      callback
+      callback,
     );
   }
 }
