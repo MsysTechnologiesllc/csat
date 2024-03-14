@@ -64,7 +64,7 @@ const AddEditAccount = ({
         editData?.account_owner?.map((owner) => ({
           name: owner.name,
           email: owner.email,
-        }))
+        })),
       );
       form.setFieldsValue({
         accName: editData.name,
@@ -171,8 +171,8 @@ const AddEditAccount = ({
   const handleDeselect = (value) => {
     setSelectedItems(
       selectedItems.filter(
-        (item) => item.name !== value && item.email !== value
-      )
+        (item) => item.name !== value && item.email !== value,
+      ),
     );
   };
   return (
