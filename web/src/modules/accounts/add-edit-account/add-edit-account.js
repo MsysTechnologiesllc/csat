@@ -64,7 +64,7 @@ const AddEditAccount = ({
         editData?.account_owner?.map((owner) => ({
           name: owner.name,
           email: owner.email,
-        })),
+        }))
       );
       form.setFieldsValue({
         accName: editData.name,
@@ -171,8 +171,8 @@ const AddEditAccount = ({
   const handleDeselect = (value) => {
     setSelectedItems(
       selectedItems.filter(
-        (item) => item.name !== value && item.email !== value,
-      ),
+        (item) => item.name !== value && item.email !== value
+      )
     );
   };
   return (
@@ -257,7 +257,7 @@ const AddEditAccount = ({
             </Row>
           </Form.Item>
           <Form.Item
-            label="Account Name"
+            label={i18n.t("addAccount.accName")}
             name="accName"
             rules={[
               {
@@ -269,7 +269,7 @@ const AddEditAccount = ({
             <Input placeholder={i18n.t("addAccount.example")} />
           </Form.Item>
           <Form.Item
-            label="Account Owner"
+            label={i18n.t("addAccount.accOwner")}
             name="accOwner"
             rules={[
               {
@@ -283,7 +283,7 @@ const AddEditAccount = ({
               defaultValue={selectedItems}
               value={selectedItems}
               onDeselect={handleDeselect}
-              placeholder="Please select"
+              placeholder={i18n.t("addAccount.accOwnerRule")}
               onSearch={(e) => setSearch(e)}
               onChange={handleChangeSelect}
               optionLabelProp="label"
