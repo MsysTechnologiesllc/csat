@@ -92,6 +92,7 @@ const AddEditAccount = ({
     if (serviceType === "add") {
       new PostService().createAccount(payload, (result) => {
         if (result?.status === 200) {
+          form.resetFields();
           setLoading(false);
           onClose();
           accountsApi();
@@ -102,6 +103,7 @@ const AddEditAccount = ({
     } else {
       new PostService().updateAccount(editData.ID, payload, (result) => {
         if (result?.status === 200) {
+          form.resetFields();
           setLoading(false);
           onClose();
           accountsApi();
@@ -179,7 +181,11 @@ const AddEditAccount = ({
     }
   };
   const handleDeselect = (value) => {
-    setSelectedItems(selectedItems.filter((item) => item.name !== value));
+    setSelectedItems(
+      selectedItems.filter(
+        (item) => item.name !== value && item.email !== value,
+      ),
+    );
   };
   return (
     <Drawer
@@ -296,7 +302,7 @@ const AddEditAccount = ({
               mode="multiple"
               defaultValue={selectedItems}
               value={selectedItems}
-              onDeselect={handleDeselect} // Handle deselecting options
+              onDeselect={handleDeselect}
               placeholder="Please select"
               onSearch={(e) => setSearch(e)}
               onChange={handleChangeSelect}
