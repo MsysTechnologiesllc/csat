@@ -145,3 +145,17 @@ func GetProjectDetails(projectId uint) (*schema.Project, error) {
 	}
 	return &projectDetails, nil
 }
+
+func GetProjectUsers(projectID uint) ([]schema.User, error) {
+	var users []schema.User
+
+	// Fetch users associated with the specified project_id
+	if err := db.Model(&User{}).
+		Joins("JOIN user_projects ON users.id = user_projects.user_id").
+		Joins("JOIN projects ON user_projects.project_id = projects.id").
+		Where("user_projects.project_id = ?", projectID).
+		Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}

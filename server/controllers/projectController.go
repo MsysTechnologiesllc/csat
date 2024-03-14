@@ -392,7 +392,22 @@ var GetProjectData = func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid 'id' format", http.StatusBadRequest)
 		return
 	}
-	data, _ := models.GetProjectDetails(projectId)
+	data, err := models.GetProjectDetails(projectId)
+	if err != nil {
+		resp := u.Message(false, constants.FAILED)
+		w.WriteHeader(http.StatusInternalServerError)
+		u.Respond(w, resp)
+		return
+	}
+
+	users, err := models.GetProjectUsers(projectId)
+    if err != nil {
+        resp := u.Message(false, constants.FAILED)
+		w.WriteHeader(http.StatusInternalServerError)
+		u.Respond(w, resp)
+		return
+    }
+	data.Users = users
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = data
 	u.Respond(w, resp)
