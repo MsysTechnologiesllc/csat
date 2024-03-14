@@ -145,21 +145,9 @@ const AddEditAccount = ({
     }
   };
   const uploadButton = (
-    <button
-      style={{
-        border: 0,
-        background: "none",
-      }}
-      type="button"
-    >
+    <button className="upload-button-logo" type="button">
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
+      <span className="logo-container ">{i18n.t("common.upload")}</span>
     </button>
   );
   const handleChangeSelect = (values, options) => {
@@ -207,7 +195,7 @@ const AddEditAccount = ({
             type="primary"
             htmlType="submit"
             className="submit-btn"
-            // loading={loading}
+            loading={loading}
             onClick={() => form.submit()}
           >
             {serviceType === "add"
@@ -224,15 +212,7 @@ const AddEditAccount = ({
           onFinish={onFinish}
           className="accounts-form"
         >
-          <Form.Item
-            name="accLogo"
-            rules={[
-              {
-                required: true,
-                message: i18n.t("addAccount.accLogoRule"),
-              },
-            ]}
-          >
+          <Form.Item name="accLogo">
             <Row justify="space-between" align="middle">
               <Col span={6}>
                 <Upload
@@ -243,17 +223,14 @@ const AddEditAccount = ({
                   action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
                   beforeUpload={beforeUpload}
                   onChange={handleChange}
-                  // maxCount={1}
-                  // accept=".svg, .png, .jpg, .jpeg, .fig"
+                  maxCount={1}
+                  accept=".svg, .png, .jpg, .jpeg, .fig"
                 >
                   {imageUrl ? (
                     <img
                       src={imageUrl}
-                      alt="avatar"
-                      style={{
-                        width: "100%",
-                        borderRadius: "50%", // This adds rounded corners
-                      }}
+                      alt={i18n.t("imageAlt.avatar")}
+                      className="url-image"
                     />
                   ) : (
                     uploadButton
@@ -263,21 +240,24 @@ const AddEditAccount = ({
               <Col span={18}>
                 {logoSuccessMessage && (
                   <div className="logo-success-container">
-                    <img src={Check} alt="/" className="check-image" />
+                    <img
+                      src={Check}
+                      alt={i18n.t("imageAlt.ticket")}
+                      className="check-image"
+                    />
                     <p className="success-message">
-                      Logo uploaded successfully
+                      {i18n.t("addAccount.logoSuccess")}
                     </p>
                   </div>
                 )}
                 <p className="logo-recommendations">
-                  Recommanded resolution is 640*640 with file size less than
-                  2MB, keep visual elements centered
+                  {i18n.t("addAccount.logoRecommendation")}
                 </p>
               </Col>
             </Row>
           </Form.Item>
           <Form.Item
-            label="Account Name"
+            label={i18n.t("addAccount.accName")}
             name="accName"
             rules={[
               {
@@ -289,7 +269,7 @@ const AddEditAccount = ({
             <Input placeholder={i18n.t("addAccount.example")} />
           </Form.Item>
           <Form.Item
-            label="Account Owner"
+            label={i18n.t("addAccount.accOwner")}
             name="accOwner"
             rules={[
               {
@@ -303,7 +283,7 @@ const AddEditAccount = ({
               defaultValue={selectedItems}
               value={selectedItems}
               onDeselect={handleDeselect}
-              placeholder="Please select"
+              placeholder={i18n.t("addAccount.accOwnerRule")}
               onSearch={(e) => setSearch(e)}
               onChange={handleChangeSelect}
               optionLabelProp="label"

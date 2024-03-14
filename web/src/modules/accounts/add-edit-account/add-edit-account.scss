@@ -21,7 +21,12 @@
 
             .ant-form-item-control {
                 width: 100%;
-                border: 1px solid transparent;
+                border: 0.1rem solid transparent;
+            }
+
+            .url-image {
+                width: 100%;
+                border-radius: 50%;
             }
 
             .logo-success-container {
@@ -62,11 +67,11 @@
 
                 .ant-radio-disabled .ant-radio-inner {
                     background-color: $white;
-                    border: 2px solid $light-grey;
+                    border: 0.2rem solid $light-grey;
                 }
 
                 .ant-radio-inner {
-                    border: 2px solid $indigo;
+                    border: 0.2rem solid $indigo;
                 }
 
                 .ant-radio-inner {
@@ -101,5 +106,16 @@
                 }
             }
         }
+    }
+}
+
+.upload-button-logo {
+    border: 0;
+    background: none;
+
+    .logo-container {
+        @include flex-column;
+        @include justify-content-center;
+        margin-top: 0.8rem;
     }
 }
