@@ -43,7 +43,6 @@ export const Accounts = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [isPopover, setIsPopover] = useState(false);
   const [popId, setPopId] = useState("");
-  // const [isId, setIsId] = useState("");
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
@@ -66,7 +65,6 @@ export const Accounts = () => {
   };
   const handleonCancel = () => {
     setDeleteModal(false);
-    // setIsId("");
     setEachAccount({});
     setPopId("");
   };
