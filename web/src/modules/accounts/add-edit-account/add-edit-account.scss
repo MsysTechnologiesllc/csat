@@ -100,21 +100,6 @@
                     }
                 }
             }
-
         }
     }
-}
-
-.list-options-container {
-    @include d-flex;
-    @include align-items-start;
-
-    .label-container {
-        margin-left: 0.5rem;
-
-        .label {}
-
-        .email {}
-    }
-
 }

@@ -8,6 +8,7 @@ import {
   Table,
   Pagination,
   Popover,
+  Avatar,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
@@ -48,6 +49,7 @@ export const Accounts = () => {
   const [open, setOpen] = useState(false);
   // const [loading, setLoading] = useState(false);
   const [eachAccount, setEachAccount] = useState({});
+  const [serviceType, setServiceType] = useState("add");
   const accountsApi = () => {
     new GetService().getAccountsList(tenantId, (result) => {
       if (result?.status === 200) {
@@ -96,6 +98,10 @@ export const Accounts = () => {
       setEachAccount(account);
       // setIsId(account.ID);
       setIsPopover(false);
+    } else {
+      setServiceType("edit");
+      setOpen(true);
+      setEachAccount(account);
     }
   };
   const handleView = (account) => {
@@ -113,6 +119,7 @@ export const Accounts = () => {
     }
   }, [tenantId]);
   const addNewAccount = () => {
+    setServiceType("add");
     setOpen(true);
   };
   const columns = [
@@ -173,10 +180,16 @@ export const Accounts = () => {
         tenant_id: account?.tenant_id,
       });
   });
-
   return (
     <div className="projects-list-wrapper">
-      <AddEditAccount open={open} setOpen={setOpen} />
+      <AddEditAccount
+        open={open}
+        setOpen={setOpen}
+        editData={eachAccount}
+        accountsApi={accountsApi}
+        serviceType={serviceType}
+        setServiceType={setServiceType}
+      />
       <div className="account-header-container">
         <h1 className="project-title">{i18n.t("greetings.account")}</h1>
         <div className="actions-container">
@@ -223,12 +236,16 @@ export const Accounts = () => {
                 <Card className="project-wrapper">
                   <div className="project-client-context-day-container">
                     <div className="avatar-project-client-context-container">
-                      <p className="avatar">
-                        {`${account?.name
-                          .split(" ")
-                          .map((word) => word?.charAt(0)?.toUpperCase())
-                          .join("")}`}
-                      </p>
+                      {account.logo ? (
+                        <Avatar src={`${account.media_type},${account.logo}`} />
+                      ) : (
+                        <p className="avatar">
+                          {`${account?.name
+                            .split(" ")
+                            .map((word) => word?.charAt(0)?.toUpperCase())
+                            .join("")}`}
+                        </p>
+                      )}
                       <div className="project-client-container">
                         <h4 className="project-name" title={account?.name}>
                           {account?.name}
@@ -244,7 +261,7 @@ export const Accounts = () => {
                           <span
                             onClick={(event) => {
                               event.stopPropagation();
-                              handleOnClickMore("Edit");
+                              handleOnClickMore("Edit", account);
                             }}
                           >
                             <AiOutlineEdit className="icon" />
