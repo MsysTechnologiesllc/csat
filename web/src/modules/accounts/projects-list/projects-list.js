@@ -51,8 +51,8 @@ export const ProjectsList = () => {
   const [dropdownOptionsData, setDropdownOptionsData] = useState([]);
   const [search, setSearch] = useState("");
   useEffect(() => {
-    setDropdownOptions([]);
     if (search?.length >= 3) {
+      setDropdownOptions([]);
       new GetService().getAccountOwners(search, (result) => {
         const updatedArray = [];
         if (result?.status === 200) {
@@ -62,7 +62,6 @@ export const ProjectsList = () => {
           result?.data?.data?.gsuit_users?.map((option) => {
             updatedArray.push({ title: option.Email, value: option?.Name });
           });
-          console.log(updatedArray);
           setDropdownOptions(updatedArray);
         } else {
           setDropdownOptions([]);
@@ -75,7 +74,6 @@ export const ProjectsList = () => {
   useEffect(() => {
     setDropdownOptionsData((prevData) => [...prevData, ...dropdownOptions]);
   }, [dropdownOptions]);
-  console.log(dropdownOptionsData, "options");
   const projectsApi = () => {
     new GetService().getAccountsList(state?.tenantId, (result) => {
       if (result?.status === 200) {
@@ -97,11 +95,9 @@ export const ProjectsList = () => {
     setAddProject("");
   };
   const handleFinish = (values) => {
-    const { $y, $M, $D, $H, $m, $s, $SSS, $Z } = values.startDate;
-    const formattedDate = moment(
-      `${$y}-${$M + 1}-${$D} ${$H}:${$m}:${$s}.${$SSS}${$Z}`,
-      "YYYY-MM-DD HH:mm:ss.SSSZZ",
-    ).format("YYYY-MM-DD HH:mm:ss.SSSSSSZ");
+    const formattedDate = moment(values?.startDate).format(
+      "YYYY-MM-DDTHH:mm:ss.SSSZ",
+    );
     const payload = {
       Project_name: values.projectName,
       Start_Date: formattedDate,
@@ -112,17 +108,15 @@ export const ProjectsList = () => {
         ...formatTreeData(values.scrumTeam, dropdownOptionsData, "member"),
       ],
     };
-    // new PutService().addUpdateProject(
-    //   addProject === "add" ? "" : projectId,
-    //   state?.accountId,
-    //   payload,
-    //   (result) => {
-    //     if (result?.status === 200) {
-    //       console.log("added");
-    //     }
-    //   },
-    // );
-    console.log("Form values:", payload);
+    new PutService().addUpdateProject(
+      addProject === "add" ? 0 : projectId,
+      state?.accountId,
+      payload,
+      (result) => {
+        if (result?.status === 200) {
+        }
+      },
+    );
   };
   const formatTreeData = (selectedValues, treeData, role) =>
     Array.isArray(selectedValues)
@@ -226,9 +220,12 @@ export const ProjectsList = () => {
     });
   };
   const handleOnClickMore = (option, project) => {
+    setEachProject(project);
     if (option === "Delete") {
       setDeleteModal(true);
-      setEachProject(project);
+      setIsPopover(false);
+    } else {
+      setAddProject("edit");
       setIsPopover(false);
     }
   };
@@ -289,7 +286,9 @@ export const ProjectsList = () => {
         <div>
           <EditOutlined
             className="edit"
-            onClick={() => setAddProject("edit")}
+            onClick={() => {
+              handleOnClickMore("Edit", record);
+            }}
           />
           <DeleteOutlined
             className="delete"
@@ -354,6 +353,7 @@ export const ProjectsList = () => {
             setSearch={setSearch}
             dropdownOptions={dropdownOptions}
             setDropdownOptions={setDropdownOptions}
+            eachProject={eachProject}
           />
         </div>
       </div>
@@ -411,7 +411,7 @@ export const ProjectsList = () => {
                           <span
                             onClick={(event) => {
                               event.stopPropagation();
-                              setAddProject("edit");
+                              handleOnClickMore("Edit", project);
                             }}
                           >
                             <AiOutlineEdit className="icon" />

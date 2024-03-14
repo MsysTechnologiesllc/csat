@@ -1,8 +1,9 @@
 import { Button, DatePicker, Drawer, Form, Input, TreeSelect } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useDetectMobileOrDesktop } from "../../../hooks/useDetectMobileOrDesktop";
 import "./projects-list.scss";
+import { GetService } from "../../../services/get";
 
 export const AddEditProjects = ({
   addProject,
@@ -11,9 +12,47 @@ export const AddEditProjects = ({
   setSearch,
   dropdownOptions,
   setDropdownOptions,
+  eachProject,
 }) => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
   const [form] = Form.useForm();
+  // const [getData, setGetData] = useState([]);
+  const [pointOfContactData, setPointOfContactData] = useState([]);
+  // const [leadData, setLeadData] = useState([]);
+  // const [scrumTeamData, setScrumTeamData] = useState([]);
+  // const [pmoData, setPmoData] = useState([]);
+  useEffect(() => {
+    addProject === "edit" &&
+      new GetService().getProjectDetails(eachProject?.ID, (result) => {
+        if (result?.status === 200) {
+          // setGetData(result?.data?.data);
+          const data = [];
+          const pointOfContact = result?.data?.data?.Users?.filter(
+            (user) => user.role === "client",
+          );
+          pointOfContact?.map((each) => {
+            data.push(each?.email);
+            setPointOfContactData(data);
+          });
+          const scrumTeam = result?.data?.data?.Users?.filter(
+            (user) => user.role === "member",
+          );
+          setScrumTeamData(scrumTeam);
+          const pmo = result?.data?.data?.Users?.filter(
+            (user) => user.role === "manager",
+          );
+          setPmoData(pmo);
+          const lead = result?.data?.data?.Users?.filter(
+            (user) => user.role === "lead",
+          );
+          setLeadData(lead);
+          form.setFieldsValue({
+            projectName: result?.data?.data?.name,
+            // pointOfContact: pointOfContactData,
+          });
+        }
+      });
+  }, [addProject]);
 
   return (
     <Drawer
@@ -66,6 +105,7 @@ export const AddEditProjects = ({
               setDropdownOptions([]);
               setSearch(value);
             }}
+            value={addProject === "edit" && pointOfContactData}
             allowClear="true"
             showSearch
             multiple
@@ -114,4 +154,5 @@ AddEditProjects.propTypes = {
   setSearch: PropTypes.string.isRequired,
   dropdownOptions: PropTypes.array.isRequired,
   setDropdownOptions: PropTypes.array.isRequired,
+  eachProject: PropTypes.object.isRequired,
 };
