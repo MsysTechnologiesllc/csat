@@ -326,8 +326,8 @@ var SearchUser = func(w http.ResponseWriter, r *http.Request) {
 }
 
 type Person struct {
-	Name  string `json:"Name"`
-	Email string `json:"Email"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 func getGoogleAPIResponse(w http.ResponseWriter, accessToken, searchStr string) ([]Person, error) {
