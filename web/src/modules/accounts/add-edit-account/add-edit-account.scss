@@ -21,7 +21,7 @@
 
             .ant-form-item-control {
                 width: 100%;
-                border: 1px solid transparent;
+                border: 0.1rem solid transparent;
             }
 
             .url-image{
@@ -66,11 +66,11 @@
 
                 .ant-radio-disabled .ant-radio-inner {
                     background-color: $white;
-                    border: 2px solid $light-grey;
+                    border: 0.2rem solid $light-grey;
                 }
 
                 .ant-radio-inner {
-                    border: 2px solid $indigo;
+                    border: 0.2rem solid $indigo;
                 }
 
                 .ant-radio-inner {
