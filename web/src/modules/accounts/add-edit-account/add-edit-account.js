@@ -89,7 +89,6 @@ const AddEditAccount = ({
       account_logo: imageUrl,
       is_active: true,
     };
-    console.log("form data : ", payload);
     if (serviceType === "add") {
       new PostService().createAccount(payload, (result) => {
         if (result?.status === 200) {
