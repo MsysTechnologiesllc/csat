@@ -11,4 +11,8 @@ func SetupGoogleRoutes(router *mux.Router) {
 	apiRouter.HandleFunc("/auth/google", controllers.GoogleLoginHandler).Methods("GET")
 	apiRouter.HandleFunc("/auth/google/update", controllers.GoogleAuthCallbackHandler).Methods("POST")
 	apiRouter.HandleFunc("/auth/customer-login", controllers.CustomerLogin).Methods("POST")
+	apiRouter.HandleFunc("/auth/reset-password/link", controllers.ResetPasswordLink).Methods("GET")
+	apiRouter.HandleFunc("/auth/reset-password", controllers.ResetPassword).Methods("PUT")
+	apiRouter.HandleFunc("/auth/search", controllers.SearchUser).Methods("GET")
+
 }

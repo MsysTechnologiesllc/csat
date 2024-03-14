@@ -139,9 +139,6 @@ const FormatList = ({}) => {
           scroll={{ y: 300, x: true }}
           rowClassName={getRowClassName}
           className="custom-scrollbar-table-format"
-          // onRow={(record) => ({
-          //   onClick: () => handleRowClick(record),
-          // })}
         />
       </div>
     </div>

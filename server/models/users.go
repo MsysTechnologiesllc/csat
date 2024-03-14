@@ -18,9 +18,9 @@ import (
 JWT claims struct
 */
 type Token struct {
-	UserId uint
-	Email  string
-	Token  uint
+	UserId   uint
+	Email    string
+	TenantId uint
 	jwt.StandardClaims
 }
 
@@ -103,15 +103,15 @@ type LoginRequest struct {
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/user/login [post]
 func Login(email, password string) map[string]interface{} {
-
-	user := &User{}
-	err := GetDB().Table("users").Where("email = ?", email).First(user).Error
+    user := &User{}
+	err := GetDB().Table("users").Where("email = ?", email).Preload("Account").First(user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return u.Message(false, constants.EMAIL_NOT_FOUND)
 		}
 		return u.Message(false, constants.CONNECTION_ERROR)
 	}
+	fmt.Println(user.Account.TenantID)
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword { //Password does not match!
@@ -121,7 +121,7 @@ func Login(email, password string) map[string]interface{} {
 	user.Password = ""
 
 	//Create JWT token
-	tk := &Token{UserId: user.ID, Email: user.Email}
+	tk := &Token{UserId: user.ID, Email: user.Email, TenantId: user.Account.TenantID}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
 	user.Token = tokenString //Store the token in the response
@@ -434,6 +434,39 @@ func UpdateUserLoginToken(id uint, user *schema.User) (*schema.User, error) {
 	result = GetDB().Save(&existingUser)
 	if result.Error != nil {
 		return nil, result.Error
+	}
+
+	return &existingUser, nil
+}
+
+func UpdateUserByID(userID uint, updatedUser *schema.User) (*schema.User, error) {
+	var existingUser schema.User
+
+	err := db.Where("id = ?", userID).First(&existingUser).Error
+	if err != nil {
+		return nil, err
+	}
+
+	if updatedUser.Name != "" {
+		existingUser.Name = updatedUser.Name
+	}
+	if updatedUser.Email != "" {
+		existingUser.Email = updatedUser.Email
+	}
+	if updatedUser.Password != "" {
+		// Hash the new password before saving it
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(updatedUser.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return nil, err
+		}
+		existingUser.Password = string(hashedPassword)
+	}
+	if updatedUser.Role != "" {
+		existingUser.Role = updatedUser.Role
+	}
+
+	if err := db.Save(&existingUser).Error; err != nil {
+		return nil, err
 	}
 
 	return &existingUser, nil

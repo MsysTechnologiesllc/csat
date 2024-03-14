@@ -3,7 +3,9 @@ package models
 import (
 	"csat/logger"
 	"csat/schema"
+	"csat/utils"
 	"errors"
+	"fmt"
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
@@ -45,4 +47,34 @@ func CreateSSOUser(db *gorm.DB, name string, email string, role string, accountI
 		return nil, err
 	}
 	return &user, nil
+}
+
+func SendResetPasswordMail(userDetails *schema.User, token string) error {
+	resetURL := fmt.Sprintf("%s?user_id=%d&token=%s", os.Getenv("RESET_PASSWORD_LINK"), userDetails.ID, token)
+	emailData := utils.EmailData{
+		Name:        userDetails.Name,
+		SurveyID:    resetURL,
+	}
+	emailRecipient := utils.EmailRecipient{
+		To:      []string{userDetails.Email},
+		Subject: "Reset password link",
+	}
+	templateName := "reset_password"
+
+	return utils.SendMail(templateName, emailData, emailRecipient)
+}
+
+func UpdateUserPassword(user *schema.User) error {
+    err := db.Save(user).Error
+    return err
+}
+
+func SearchUsersList(search string) (*[]schema.User, error) {
+	var users []schema.User
+
+	if err := GetDB().Where("name ILIKE ? OR email ILIKE ?", "%"+search+"%", "%"+search+"%").Find(&users).Error; err != nil {
+		logger.Log.Println("Error fetching Users details:", err)
+		return nil, err
+	}
+	return &users, nil
 }

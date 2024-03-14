@@ -178,6 +178,16 @@ export const Accounts = () => {
         tenant_id: account?.tenant_id,
       });
   });
+  useEffect(() => {
+    if (tenantId) {
+      new GetService().getAccountsList(tenantId, (result) => {
+        if (result?.status === 200) {
+          setAccountsList(result?.data?.data?.tenant?.tenant_accounts);
+          setIsLoading(false);
+        }
+      });
+    }
+  }, [tenantId]);
   return (
     <div className="projects-list-wrapper">
       <AddEditAccount
