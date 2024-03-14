@@ -24,10 +24,11 @@
                 border: 0.1rem solid transparent;
             }
 
-            .url-image{
+            .url-image {
                 width: 100%;
                 border-radius: 50%;
             }
+
             .logo-success-container {
                 @include d-flex;
                 @include align-items-center;
@@ -105,5 +106,16 @@
                 }
             }
         }
+    }
+}
+
+.upload-button-logo {
+    border: 0;
+    background: none;
+
+    .logo-container {
+        @include flex-column;
+        @include justify-content-center;
+        margin-top: 0.8rem;
     }
 }

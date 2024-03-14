@@ -145,21 +145,9 @@ const AddEditAccount = ({
     }
   };
   const uploadButton = (
-    <button
-      style={{
-        border: 0,
-        background: "none",
-      }}
-      type="button"
-    >
+    <button className="upload-button-logo" type="button">
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
+      <span className="logo-container ">{i18n.t("common.upload")}</span>
     </button>
   );
   const handleChangeSelect = (values, options) => {
