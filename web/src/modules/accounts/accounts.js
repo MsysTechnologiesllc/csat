@@ -46,7 +46,6 @@ export const Accounts = () => {
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
-  // const [loading, setLoading] = useState(false);
   const [eachAccount, setEachAccount] = useState({});
   const [serviceType, setServiceType] = useState("add");
   const accountsApi = () => {

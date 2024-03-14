@@ -42,7 +42,7 @@
       }
       .cancle-btn {
         @include font-style($black, 1.6rem, 2.4rem, 400);
-        border: 1px solid $dark-black;
+        border: 0.1rem solid $dark-black;
 
         @include media("<md") {
           font-size: 1.4rem;
