@@ -1,9 +1,9 @@
 import { Button, DatePicker, Drawer, Form, Input, TreeSelect } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { useDetectMobileOrDesktop } from "../../../hooks/useDetectMobileOrDesktop";
 import "./projects-list.scss";
-import { GetService } from "../../../services/get";
+import moment from "moment";
 
 export const AddEditProjects = ({
   addProject,
@@ -16,44 +16,50 @@ export const AddEditProjects = ({
 }) => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
   const [form] = Form.useForm();
-  // const [getData, setGetData] = useState([]);
-  const [pointOfContactData, setPointOfContactData] = useState([]);
-  // const [leadData, setLeadData] = useState([]);
-  // const [scrumTeamData, setScrumTeamData] = useState([]);
-  // const [pmoData, setPmoData] = useState([]);
   useEffect(() => {
+    const pointOfContactData = eachProject?.Users?.filter(
+      (user) => user.role === "client"
+    );
+    const pmoData = eachProject?.Users?.filter(
+      (user) => user.role === "Manager"
+    );
+    const leadData = eachProject?.Users?.filter((user) => user.role === "Lead");
+    const scrumTeamData = eachProject?.Users?.filter(
+      (user) => user.role === "Developer"
+    );
     addProject === "edit" &&
-      new GetService().getProjectDetails(eachProject?.ID, (result) => {
-        if (result?.status === 200) {
-          // setGetData(result?.data?.data);
-          const data = [];
-          const pointOfContact = result?.data?.data?.Users?.filter(
-            (user) => user.role === "client",
-          );
-          pointOfContact?.map((each) => {
-            data.push(each?.email);
-            setPointOfContactData(data);
-          });
-          const scrumTeam = result?.data?.data?.Users?.filter(
-            (user) => user.role === "member",
-          );
-          setScrumTeamData(scrumTeam);
-          const pmo = result?.data?.data?.Users?.filter(
-            (user) => user.role === "manager",
-          );
-          setPmoData(pmo);
-          const lead = result?.data?.data?.Users?.filter(
-            (user) => user.role === "lead",
-          );
-          setLeadData(lead);
-          form.setFieldsValue({
-            projectName: result?.data?.data?.name,
-            // pointOfContact: pointOfContactData,
-          });
-        }
+      form.setFieldsValue({
+        projectName: eachProject?.name,
+        startDate: moment(eachProject?.start_date, "DD-MM-YYYY"),
+        pointOfContact: pointOfContactData?.map((each) => each?.email),
+        pmo: pmoData?.map((each) => each?.email),
+        lead: leadData?.map((each) => each?.email),
+        scrumTeam: scrumTeamData?.map((each) => each?.email),
       });
+    setDropdownOptions(
+      [
+        pointOfContactData?.map((each) => ({
+          value: each?.email,
+          title: each?.name,
+        })),
+        pmoData?.map((each) => ({
+          value: each?.email,
+          title: each?.name,
+        })),
+        leadData?.map((each) => ({
+          value: each?.email,
+          title: each?.name,
+        })),
+        scrumTeamData?.map((each) => ({
+          value: each?.email,
+          title: each?.name,
+        })),
+      ]
+        .filter((item) => item?.length > 0)
+        .flat()
+        .map((item) => ({ value: item?.value, title: item?.title }))
+    );
   }, [addProject]);
-
   return (
     <Drawer
       title={addProject === "add" ? "Add Project" : "Edit Project"}
@@ -102,10 +108,9 @@ export const AddEditProjects = ({
           <TreeSelect
             treeData={dropdownOptions}
             onSearch={(value) => {
-              setDropdownOptions([]);
               setSearch(value);
             }}
-            value={addProject === "edit" && pointOfContactData}
+            value={["johnA3@example.com"]}
             allowClear="true"
             showSearch
             multiple
