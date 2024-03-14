@@ -92,8 +92,8 @@ const AddEditAccount = ({
     if (serviceType === "add") {
       new PostService().createAccount(payload, (result) => {
         if (result?.status === 200) {
-          form.resetFields();
           setLoading(false);
+          form.resetFields();
           onClose();
           accountsApi();
         } else {
@@ -103,8 +103,8 @@ const AddEditAccount = ({
     } else {
       new PostService().updateAccount(editData.ID, payload, (result) => {
         if (result?.status === 200) {
-          form.resetFields();
           setLoading(false);
+          form.resetFields();
           onClose();
           accountsApi();
         } else {
