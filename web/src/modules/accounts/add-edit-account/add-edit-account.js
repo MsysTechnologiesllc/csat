@@ -178,7 +178,9 @@ const AddEditAccount = ({
       setSelectedItems([...selectedItems, ...option]);
     }
   };
-
+  const handleDeselect = (value) => {
+    setSelectedItems(selectedItems.filter((item) => item.name !== value));
+  };
   return (
     <Drawer
       className="custom-drawer"
@@ -292,7 +294,9 @@ const AddEditAccount = ({
           >
             <Select
               mode="multiple"
-              value={editData && selectedItems}
+              defaultValue={selectedItems}
+              value={selectedItems}
+              onDeselect={handleDeselect} // Handle deselecting options
               placeholder="Please select"
               onSearch={(e) => setSearch(e)}
               onChange={handleChangeSelect}
