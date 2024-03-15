@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"csat/logger"
 	"csat/schema"
-	"fmt"
+
+	"github.com/jinzhu/gorm"
 )
 
 func CreateProject(projectData *schema.Project) (*schema.Project, error) {
@@ -119,17 +120,24 @@ func HandleAccountOwners(accountOwnersData []interface{}, accountID uint) error 
 				Role:      "accountOwner",
 				AccountID: accountID,
 			}
+			var userID uint
 
 			// Check if the email already exists
 			existingUser, _ := FindUserByEmail(accountOwner.Email)
-			fmt.Println(existingUser)
 
 			// If the user doesn't exist, create a new user
 			if existingUser == nil {
-				_, err := CreateUser(db, accountOwner.Name, accountOwner.Email, accountOwner.Role, accountOwner.AccountID)
+				createdUser, err := CreateUser(db, accountOwner.Name, accountOwner.Email, accountOwner.Role, accountOwner.AccountID)
 				if err != nil {
 					return err
 				}
+				userID = createdUser.ID
+			} else {
+				userID = existingUser.ID
+			}
+			err := CreateUsersAccountMap(userID, accountID, accountOwner.Role)
+			if err != nil {
+				return err
 			}
 		}
 	}
@@ -158,4 +166,68 @@ func GetProjectUsers(projectID uint) ([]schema.User, error) {
 		return nil, err
 	}
 	return users, nil
+}
+
+func CreateUsersAccountMap(userID uint, accountID uint, role string) error {
+    // Define a new account owner instance
+    accountOwner := &schema.AccountOwner{
+        UserID:    userID,
+        AccountID: accountID,
+        Role:      role,
+        IsActive:  true,
+    }
+
+    // Check if the record already exists
+    var existingOwner schema.AccountOwner
+    if err := db.Where("user_id = ? AND account_id = ?", userID, accountID).First(&existingOwner).Error; err != nil {
+        if err != gorm.ErrRecordNotFound {
+            return err
+        }
+        if err := db.Create(accountOwner).Error; err != nil {
+            return err
+        }
+    } else {
+        logger.Log.Println("Record already exists")
+    }
+    return nil
+}
+
+func HandleRemoveOwners(accountOwnersData []interface{}, accountID uint) error {
+	for _, ownerData := range accountOwnersData {
+		if owner, ok := ownerData.(map[string]interface{}); ok {
+			accountOwner := schema.User{
+				Name:      owner["name"].(string),
+				Email:     owner["email"].(string),
+				Password:  "",
+				Role:      "accountOwner",
+				AccountID: accountID,
+			}
+
+			// Check if the email already exists
+			existingUser, err := FindUserByEmail(accountOwner.Email)
+			if err != nil {
+				return err
+			}
+			updateOwner := &schema.AccountOwner{
+				UserID:    existingUser.ID,
+				AccountID: accountID,
+				IsActive:  false,
+			}
+			err = UpdateUsersAccountMap(updateOwner)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func UpdateUsersAccountMap(updatedAccount *schema.AccountOwner) error {
+	err := db.Model(&schema.AccountOwner{}).
+		Where("user_id = ? AND account_id = ?", updatedAccount.UserID, updatedAccount.AccountID).
+		Update("is_active", false).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }

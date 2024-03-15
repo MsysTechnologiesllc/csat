@@ -106,7 +106,6 @@ var CreateAccountData = func(w http.ResponseWriter, r *http.Request) {
 	}
 
 	accountIdStr := r.URL.Query().Get("accountId")
-	fmt.Println(accountIdStr)
 	if accountIdStr != "" {
 		var accountId uint
 		_, err = fmt.Sscanf(accountIdStr, "%d", &accountId)
@@ -135,6 +134,12 @@ var CreateAccountData = func(w http.ResponseWriter, r *http.Request) {
 		}
 		if owners, ok := requestBody["account_owner"].([]interface{}); ok {
 			if err := models.HandleAccountOwners(owners, updatedAccountPtr.ID); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		}
+		if owners, ok := requestBody["removed_user"].([]interface{}); ok {
+			if err := models.HandleRemoveOwners(owners, updatedAccountPtr.ID); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -365,7 +370,6 @@ var UpdateAccountData = func(w http.ResponseWriter, r *http.Request) {
 
 		mediaType := dataURIParts[0]
 		base64Data := dataURIParts[1]
-		fmt.Println(mediaType)
 
 		// Decode base64 data
 		decodedData, err := base64.StdEncoding.DecodeString(base64Data)
