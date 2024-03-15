@@ -174,7 +174,7 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 	type ProjectPayload struct {
         Name        string       `json:"Project_name"`
         StartDate   *time.Time   `json:"Start_Date"`
-        Active      bool         `json:"active"`
+        Active      *bool         `json:"active"`
         AccountID   uint         `json:"account_id"`
 		Logo        string       `json:"logo"`
         TeamMembers []TeamMember `json:"team_member"`
@@ -209,6 +209,7 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 	// Add logo to the project if provided
     var logoData []byte
     var mediaType string
+
     if payload.Logo != "" {
         // Decode logo data
         dataURIParts := strings.SplitN(payload.Logo, ",", 2)
@@ -235,8 +236,6 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
         logoData = decodedData
     }
 
-
-
 	if projectId != 0 {
         // Project ID provided, update the project
         var project schema.Project
@@ -246,17 +245,29 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
             return
         }
         // Update project name and start date
+
+	if payload.Name != "" {
         project.Name = payload.Name
+    }
+	if payload.StartDate != nil {
         project.StartDate = payload.StartDate
-		project.Logo = logoData
-        project.MediaType = mediaType
-		project.AccountID = accountId
-		project.Active = payload.Active
-        if err := db.Save(&project).Error; err != nil {
+    }
+	if payload.Logo != "" {
+        project.Logo = logoData
+		project.MediaType = mediaType
+    }
+	if payload.AccountID != 0 {
+        project.AccountID = payload.AccountID
+    }
+	if payload.Active != nil {
+        project.Active = *payload.Active
+    }
+
+    if err := db.Save(&project).Error; err != nil {
             // Handle database error
             http.Error(w, "Failed to update project", http.StatusInternalServerError)
             return
-        }
+    }
     } else {
         // Project ID not provided, create a new project
          project := schema.Project{
