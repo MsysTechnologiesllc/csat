@@ -115,6 +115,17 @@ var CreateAccountData = func(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		existingAccount, err := models.GetAccountByID(accountId)
+        if err != nil {
+            http.Error(w, "Failed to retrieve account", http.StatusInternalServerError)
+            return
+        }
+        if isActive, exists := requestBody["is_active"].(bool); exists {
+            newAccount.IsActive = isActive
+        } else {
+            newAccount.IsActive = existingAccount.IsActive
+        }
+		
 		updatedAccountPtr, err := models.UpdateAccountByID(accountId, &newAccount)
 		if err != nil {
 			resp := u.Message(false, constants.FAILED)
