@@ -10,6 +10,7 @@ import {
   Row,
   Col,
   Modal,
+  message,
 } from "antd";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useDetectMobileOrDesktop } from "../../../hooks/useDetectMobileOrDesktop";
@@ -32,7 +33,7 @@ const AddEditAccount = ({
   const { Option } = Select;
   const [form] = Form.useForm();
   const [imageUrl, setImageUrl] = useState();
-  const [message, setMessage] = useState("");
+  const [statusMessage, setStatusMessage] = useState("");
   const [notify, setNotify] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -104,7 +105,7 @@ const AddEditAccount = ({
     if (serviceType === "add") {
       new PostService().createAccount(payload, (result) => {
         if (result?.status === 200) {
-          setMessage(`${values.accName} has been created`);
+          setStatusMessage(`${values.accName} has been created`);
           setLoading(false);
           setNotify("addAccountSuccess");
           form.resetFields();
@@ -117,7 +118,7 @@ const AddEditAccount = ({
     } else {
       new PostService().updateAccount(editData.ID, payload, (result) => {
         if (result?.status === 200) {
-          setMessage(`${values.accName} updated successfully`);
+          setStatusMessage(`${values.accName} updated successfully`);
           setNotify("updateAccountSuccess");
           setLoading(false);
           form.resetFields();
@@ -190,13 +191,14 @@ const AddEditAccount = ({
     setLogoSuccessMessage(false);
     serviceType === "edit" && setFileList([]);
   };
-  const getBase64 = (file) =>
+  const getBase64 = (file) => {
     new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
       reader.onerror = (error) => reject(error);
     });
+  };
   const handleLogoPreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -205,8 +207,33 @@ const AddEditAccount = ({
     setPreviewOpen(true);
   };
   const handleLogoChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
+    let isError = false;
+
+    newFileList.forEach((file) => {
+      const isAllowedType =
+        file.type === "image/svg+xml" ||
+        file.type === "image/png" ||
+        file.type === "image/jpeg" ||
+        file.type === "image/jpg";
+
+      if (file.size / 1024 / 1024 > 2) {
+        isError = true;
+        return;
+      }
+
+      if (!isAllowedType) {
+        isError = true;
+        return;
+      }
+    });
+
+    if (isError) {
+      message.error(i18n.t("addAccount.imageOrFileSizeWarning"));
+    } else {
+      setFileList(newFileList);
+    }
   };
+
   const uploadButton = (
     <button className="upload-button-logo" type="button">
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -357,7 +384,7 @@ const AddEditAccount = ({
           </Form>
         </div>
       </Drawer>
-      {notify && <NotifyStatus status={notify} message={message} />}
+      {notify && <NotifyStatus status={notify} message={statusMessage} />}
     </>
   );
 };

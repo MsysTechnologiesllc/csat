@@ -233,11 +233,10 @@ export const translationEN = {
     accNameRule: "Please Enter Account Name",
     accOwnerRule: "Please Enter Account Owner Name",
     accLogoRule: "Please Provide logo for Account",
-    dropdownText: "Click or drag file to this area to upload Logo",
-    dropConditions: "SVG, PNG, JPG or GIF (max. 2MB)",
     fileImageWarning: "You can only upload SVG, PNG, JPG, JPEG, or FIG files!",
     imageSizeWarning: "Image must be smaller than 2MB!",
     logoSuccess: " Logo uploaded successfully",
+    imageOrFileSizeWarning: "Unsupported file please check size and format",
     logoRecommendation:
       "Recommanded resolution is 640*640 with file size less than 2MB, keep visual elements centered",
   },
