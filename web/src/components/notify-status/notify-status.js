@@ -47,6 +47,57 @@ const NotifyStatus = ({ status, message }) => {
           }),
         );
         break;
+      case "addAccountSuccess":
+        setStatusAbout(
+          notification["success"]({
+            onClose: resetStates,
+            icon: (
+              <div className="tick-container">
+                <CheckCircleOutlined className="tick" />
+              </div>
+            ),
+            className: "notify-status-container",
+            key: STATUS_KEY,
+            message: <h2 className="message-title">{message}</h2>,
+            duration: NOTIFICATION_DURATION,
+            placement: "bottomRight",
+          }),
+        );
+        break;
+      case "updateAccountSuccess":
+        setStatusAbout(
+          notification["success"]({
+            onClose: resetStates,
+            icon: (
+              <div className="tick-container">
+                <CheckCircleOutlined className="tick" />
+              </div>
+            ),
+            className: "notify-status-container",
+            key: STATUS_KEY,
+            message: <h2 className="message-title">{message}</h2>,
+            duration: NOTIFICATION_DURATION,
+            placement: "bottomRight",
+          }),
+        );
+        break;
+      case "deleteAccountSuccess":
+        setStatusAbout(
+          notification["info"]({
+            onClose: resetStates,
+            icon: (
+              <div className="tick-container">
+                <CheckCircleOutlined className="tick" />
+              </div>
+            ),
+            className: "notify-status-container info",
+            key: STATUS_KEY,
+            message: <h2 className="message-title">{message}</h2>,
+            duration: NOTIFICATION_DURATION,
+            placement: "bottomRight",
+          }),
+        );
+        break;
       default:
     }
   };

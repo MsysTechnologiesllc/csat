@@ -76,8 +76,8 @@ export const Accounts = () => {
     new PutService().updateAccount(account.ID, payload, (result) => {
       if (result.status === 200) {
         accountsApi();
-        setNotify("success");
-        setMessage("Account Deleted Successfully");
+        setNotify("deleteAccountSuccess");
+        setMessage(`${account.name} has been removed`);
         setDeleteModal(false);
         setIsId("");
         setEachAccount({});
@@ -122,18 +122,36 @@ export const Accounts = () => {
   const columns = [
     {
       title: "Account",
-      dataIndex: "name",
+      dataIndex: "account.name",
       key: "name",
+      render: (text, record) => record.account.name,
     },
     {
       title: "Account Owner",
-      dataIndex: "accountOwner",
+      dataIndex: "account.account_owner.length",
       key: "accountOwner",
+      render: (text, record) => (
+        <>
+          <p>
+            {record.account.account_owner.length > 0 &&
+              record.account.account_owner[0]?.name}
+          </p>
+        </>
+      ),
     },
     {
       title: "Projects",
-      dataIndex: "projects",
+      dataIndex: "account.account_projects.length",
       key: "projects",
+      render: (text, record) => (
+        <>
+          <p>
+            {record.account?.account_projects?.length > 0 &&
+              record.account?.account_projects?.length}{" "}
+            <span>Projects</span>
+          </p>
+        </>
+      ),
     },
     {
       title: "Actions",
@@ -141,10 +159,13 @@ export const Accounts = () => {
       key: "actions",
       render: (text, record) => (
         <div>
-          <EditOutlined className="edit" />
+          <EditOutlined
+            className="edit"
+            onClick={() => handleOnClickMore("Edit", record.account)}
+          />
           <DeleteOutlined
             className="delete"
-            onClick={() => handleOnClickMore("Delete", record)}
+            onClick={() => handleOnClickMore("Delete", record.account)}
           />
         </div>
       ),
@@ -154,27 +175,18 @@ export const Accounts = () => {
       dataIndex: "view",
       key: "view",
       render: (text, record) => (
-        <EyeOutlined className="view" onClick={() => handleView(record)} />
+        <EyeOutlined
+          className="view"
+          onClick={() => handleView(record.account)}
+        />
       ),
     },
   ];
   const data = [];
-  accountsList.map((account, index) => {
-    const deliveryHead =
-      account?.account_projects?.length > 0 &&
-      account?.account_projects[0]?.Users?.length > 0
-        ? account?.account_projects[0]?.Users
-        : account?.account_projects[1]?.Users?.filter((each) => {
-            each?.role === "deliveryHead";
-          });
+  accountsList.map((account) => {
     selectedSegment === "List" &&
       data.push({
-        key: index + 1,
-        name: account?.name,
-        accountOwner: deliveryHead?.length > 0 && deliveryHead[0]?.name,
-        projects: `${account?.account_projects?.length} project(s)`,
-        ID: account?.ID,
-        tenant_id: account?.tenant_id,
+        account: account,
       });
   });
   useEffect(() => {
@@ -285,7 +297,7 @@ export const Accounts = () => {
                           </span>
                         </div>
                       }
-                      trigger="click"
+                      trigger="hover"
                       arrow={false}
                       placement="bottomRight"
                       overlayStyle={{ padding: 0 }}

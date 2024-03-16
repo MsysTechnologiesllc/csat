@@ -49,23 +49,36 @@
           padding: 0.5rem 1rem;
         }
       }
-      .submit-btn {
-        background-color: $indigo;
+      .common-btn-styles {
         @include font-style($white, 1.6rem, 2.4rem, 400);
         border-radius: 0.4rem;
         padding: 1rem 2.2rem;
         @include justify-content-center;
         @include align-items-center;
         margin-left: 1rem;
+        min-height: 3.5rem;
 
         @include media("<md") {
           font-size: 1.4rem;
           padding: 0.5rem 1rem;
         }
+      }
+      .submit-btn {
+        background-color: $indigo;
+        color: $white;
 
         &:hover {
           background-color: $indigo;
           box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
+        }
+      }
+      .disable-btn {
+        background-color: $white;
+        color: $steel-grey;
+
+        &:hover {
+          background-color: $white;
+          box-shadow: none;
         }
       }
     }
@@ -122,9 +135,11 @@
         padding: 0;
         background-color: $white;
       }
+
       .ant-segmented &:hover {
         background-color: $white;
       }
+
       .ant-segmented .ant-segmented-item-selected {
         box-shadow: none;
         border: 0.1rem solid $indigo;
@@ -132,9 +147,11 @@
         background-color: #e9ebf7;
         color: $indigo;
       }
+
       .ant-segmented .ant-segmented-item {
         border-radius: 0.2rem;
       }
+
       .add-account-button {
         margin-left: 2rem;
         background-color: $indigo;
@@ -146,6 +163,7 @@
         padding: 1rem 2.2rem;
         @include justify-content-center;
         @include align-items-center;
+
         &:hover {
           background-color: $indigo;
           box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
@@ -157,10 +175,12 @@
   .project-title {
     @include font-style($jet-black, 3.4rem, 4.2rem, 400);
     text-align: left;
+
     @include media("<md") {
       font-size: 2rem;
     }
   }
+
   .ant-card-body {
     padding: 1.6rem;
   }
@@ -269,10 +289,12 @@
     color: $wild-red;
     font-size: 2rem;
   }
+
   .view {
     color: $indigo;
     font-size: 2.5rem;
   }
+
   .pagination {
     text-align: right;
     position: absolute;
