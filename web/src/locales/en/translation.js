@@ -230,6 +230,8 @@ export const translationEN = {
     updateAccount: "Update Account",
     accName: "Account Name",
     accOwner: "Account Owner",
+    updateSuccess: "{{accName}} updated successfully",
+    addSuccess: "{{accName}} has been created",
     accNameRule: "Please Enter Account Name",
     accOwnerRule: "Please Enter Account Owner Name",
     accLogoRule: "Please Provide logo for Account",

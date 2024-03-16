@@ -105,7 +105,11 @@ const AddEditAccount = ({
     if (serviceType === "add") {
       new PostService().createAccount(payload, (result) => {
         if (result?.status === 200) {
-          setStatusMessage(`${values.accName} has been created`);
+          setStatusMessage(
+            i18n.t("addAccount.addSuccess", {
+              accName: values.accName,
+            }),
+          );
           setLoading(false);
           setNotify("addAccountSuccess");
           form.resetFields();
@@ -118,7 +122,11 @@ const AddEditAccount = ({
     } else {
       new PostService().updateAccount(editData.ID, payload, (result) => {
         if (result?.status === 200) {
-          setStatusMessage(`${values.accName} updated successfully`);
+          setStatusMessage(
+            i18n.t("addAccount.updateSuccess", {
+              accName: values.accName,
+            }),
+          );
           setNotify("updateAccountSuccess");
           setLoading(false);
           form.resetFields();
