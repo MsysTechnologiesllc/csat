@@ -87,6 +87,7 @@ export const SSOIntegration = () => {
     };
     new PostService().postLoginDetails(payload, (result) => {
       if (result?.status === 200) {
+        localStorage.setItem("userId", result?.data?.user?.ID);
         Cookies.set("jwt", result?.data?.user?.token);
         navigate("/accounts");
       }

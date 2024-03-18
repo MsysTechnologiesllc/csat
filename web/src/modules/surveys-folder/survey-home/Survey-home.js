@@ -21,7 +21,7 @@ const SurveyHome = () => {
   let limit = dataPerPage;
   let accName = JSON.stringify(filterAccounts);
   let status = filterStatus;
-  let user_id = 1;
+  let user_id = localStorage.getItem("userId");
   useEffect(() => {
     new GetService().getSurveyProjectsFilter(user_id, (result) => {
       if (result) {

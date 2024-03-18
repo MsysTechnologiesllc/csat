@@ -58,10 +58,10 @@ export class GetService extends BaseService {
       callback,
     );
   }
-  getSurveyFormatList(project_id, callback) {
+  getSurveyFormatList(acc_id, callback) {
     return this.get(
       process.env.GO_SERVICE_URL +
-        `/csat/rest/api/survey-format/list?project_id=${project_id}`,
+        `/csat/rest/api/survey-format/list?account_id=${acc_id}`,
       callback,
     );
   }
