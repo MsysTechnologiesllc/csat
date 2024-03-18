@@ -113,12 +113,12 @@ export const ProjectsList = () => {
           setNotify("success");
           addProject === "add"
             ? setMessage(
-                i18n.t("addAccount.addSuccess", {
+                i18n.t("addProjects.addSuccess", {
                   prjName: eachProject?.name,
                 }),
               )
             : setMessage(
-                i18n.t("addAccount.addSuccess", {
+                i18n.t("addProjects.updateSuccess", {
                   prjName: eachProject?.name,
                 }),
               );
