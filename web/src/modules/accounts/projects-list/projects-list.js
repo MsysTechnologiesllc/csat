@@ -52,25 +52,11 @@ export const ProjectsList = () => {
   const [message, setMessage] = useState("");
   const [addProject, setAddProject] = useState("");
   const [dropdownOptions, setDropdownOptions] = useState([]);
-  // const [dropdownOptionsData, setDropdownOptionsData] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const [removedItems, setRemovedItems] = useState([]);
   useEffect(() => {
     if (search?.length >= 3) {
-      // new GetService().getAccountOwners(search, (result) => {
-      //   const updatedArray = [];
-      //   if (result?.status === 200) {
-      //     // result?.data?.data?.db_users?.map((option) => {
-      //     //   updatedArray.push({ title: option?.email, value: option?.name });
-      //     //   setDropdownOptions((prevData) => [...prevData, option]);
-      //     // });
-      //     result?.data?.data?.gsuit_users?.map((option) => {
-      //       updatedArray.push({ title: option?.name, value: option?.email });
-      //     });
-      //   }
-      //   setDropdownOptions(updatedArray);
-      // });
       new GetService().getAccountOwners(search, (result) => {
         if (result?.status === 200) {
           setDropdownOptions(result?.data?.data?.gsuit_users || []);
@@ -80,9 +66,6 @@ export const ProjectsList = () => {
       });
     }
   }, [search]);
-  // useEffect(() => {
-  //   setDropdownOptionsData((prevData) => [...prevData, ...dropdownOptions]);
-  // }, [dropdownOptions]);
   const projectsApi = () => {
     new GetService().getAccountsList(state?.tenantId, (result) => {
       if (result?.status === 200) {
@@ -126,7 +109,6 @@ export const ProjectsList = () => {
       (result) => {
         if (result?.status === 200) {
           form.resetFields();
-          // setDropdownOptionsData([]);
           setSelectedItems([]);
           setNotify("success");
           addProject === "add"
