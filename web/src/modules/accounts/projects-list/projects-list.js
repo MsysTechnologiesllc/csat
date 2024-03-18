@@ -14,7 +14,6 @@ import {
 import React, { useEffect, useState } from "react";
 import i18n from "../../../locales/i18next";
 import { GoDotFill } from "react-icons/go";
-import "./projects-list.scss";
 import {
   TableOutlined,
   BarsOutlined,
@@ -35,6 +34,7 @@ import NotifyStatus from "../../../components/notify-status/notify-status";
 import { AddEditProjects } from "./add-edit-projects";
 import moment from "moment";
 import { plLibComponents } from "../../../context-provider/component-provider";
+import "./projects-list.scss";
 
 export const ProjectsList = () => {
   const { NoData } = plLibComponents.components;
@@ -112,8 +112,16 @@ export const ProjectsList = () => {
           setSelectedItems([]);
           setNotify("success");
           addProject === "add"
-            ? setMessage("Added the project successfully")
-            : setMessage("Updated the project successfully");
+            ? setMessage(
+                i18n.t("addAccount.addSuccess", {
+                  prjName: eachProject?.name,
+                }),
+              )
+            : setMessage(
+                i18n.t("addAccount.addSuccess", {
+                  prjName: eachProject?.name,
+                }),
+              );
           setAddProject("");
         }
       },
@@ -157,7 +165,7 @@ export const ProjectsList = () => {
         if (result.status === 200) {
           projectsApi();
           setNotify("success");
-          setMessage("Project Deleted Successfully");
+          setMessage(i18n.t("addProjects.deletedMessage"));
           setDeleteModal(false);
           setEachProject({});
           setSelectedItems([]);
@@ -215,22 +223,22 @@ export const ProjectsList = () => {
   }, [projectsList]);
   const columns = [
     {
-      title: "Project",
+      title: i18n.t("addProjects.project"),
       dataIndex: "name",
       key: "name",
     },
     {
-      title: "Project Owner",
+      title: i18n.t("addProjects.projectOwner"),
       dataIndex: "projectOwner",
       key: "projectOwner",
     },
     {
-      title: "Members",
+      title: i18n.t("addProjects.members"),
       dataIndex: "members",
       key: "members",
     },
     {
-      title: "Actions",
+      title: i18n.t("addProjects.actions"),
       dataIndex: "actions",
       key: "actions",
       render: (text, record) => (
@@ -249,7 +257,7 @@ export const ProjectsList = () => {
       ),
     },
     {
-      title: "View",
+      title: i18n.t("addProjects.view"),
       dataIndex: "view",
       key: "view",
       render: (text, record) => (
