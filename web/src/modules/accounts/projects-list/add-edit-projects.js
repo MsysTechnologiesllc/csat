@@ -21,11 +21,11 @@ export const AddEditProjects = ({
       (user) => user.role === "client",
     );
     const pmoData = eachProject?.Users?.filter(
-      (user) => user.role === "Manager",
+      (user) => user.role === "manager",
     );
-    const leadData = eachProject?.Users?.filter((user) => user.role === "Lead");
+    const leadData = eachProject?.Users?.filter((user) => user.role === "lead");
     const scrumTeamData = eachProject?.Users?.filter(
-      (user) => user.role === "Developer",
+      (user) => user.role === "member",
     );
     addProject === "edit" &&
       form.setFieldsValue({
@@ -39,20 +39,20 @@ export const AddEditProjects = ({
     setDropdownOptions(
       [
         pointOfContactData?.map((each) => ({
-          value: each?.email,
-          title: each?.name,
+          value: each?.name,
+          title: each?.email,
         })),
         pmoData?.map((each) => ({
-          value: each?.email,
-          title: each?.name,
+          value: each?.name,
+          title: each?.email,
         })),
         leadData?.map((each) => ({
-          value: each?.email,
-          title: each?.name,
+          value: each?.name,
+          title: each?.email,
         })),
         scrumTeamData?.map((each) => ({
-          value: each?.email,
-          title: each?.name,
+          value: each?.name,
+          title: each?.email,
         })),
       ]
         .filter((item) => item?.length > 0)

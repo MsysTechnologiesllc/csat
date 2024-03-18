@@ -87,7 +87,7 @@ export const ProjectsList = () => {
     if (state?.tenantId) {
       projectsApi();
     }
-  }, [state?.tenantId]);
+  }, [state?.tenantId, addProject]);
   const onClose = () => {
     setAddProject("");
     form.resetFields();
@@ -110,25 +110,26 @@ export const ProjectsList = () => {
         ...formatTreeData(values?.scrumTeam, dropdownOptionsData, "member"),
       ],
     };
-    console.log(payload);
-    // new PutService().addUpdateProject(
-    //   addProject === "add" ? 0 : eachProject?.ID,
-    //   state?.accountId,
-    //   payload,
-    //   (result) => {
-    //     if (result?.status === 200) {
-    //       form.resetFields();
-    //       setDropdownOptionsData([]);
-    //       setAddProject("");
-    //     }
-    //   },
-    // );
+    new PutService().addUpdateProject(
+      addProject === "add" ? 0 : eachProject?.ID,
+      state?.accountId,
+      payload,
+      (result) => {
+        if (result?.status === 200) {
+          form.resetFields();
+          setDropdownOptionsData([]);
+          setAddProject("");
+        }
+      },
+    );
   };
   const formatTreeData = (selectedValues, treeData, role) =>
     Array.isArray(selectedValues)
       ? selectedValues
           .map((value) => {
-            const node = treeData.find((node) => node.value === value);
+            const node = treeData.find(
+              (node) => node.value === value || node.title === value,
+            );
             return node
               ? { email: node.title, name: node.value, role: role }
               : null;
@@ -273,6 +274,8 @@ export const ProjectsList = () => {
       projectOwner: prjManager[0]?.name,
       members: `${teamMembers?.length} Member(s)`,
       ID: project?.ID,
+      Users: project?.Users,
+      start_date: project?.start_date,
     });
   });
   return (
