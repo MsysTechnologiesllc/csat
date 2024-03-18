@@ -227,6 +227,7 @@ export const translationEN = {
     example: "example",
     addBtn: "+ Add Account",
     addAccount: "Add Account",
+    addPrj: "ADD PROJECTS",
     editAccount: "Edit Account",
     updateAccount: "Update Account",
     accName: "Account Name",

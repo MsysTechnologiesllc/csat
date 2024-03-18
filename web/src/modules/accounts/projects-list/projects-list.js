@@ -302,7 +302,7 @@ export const ProjectsList = () => {
             }}
           />
           <Button onClick={addNewProject} className="add-account-button">
-            ADD PROJECTS
+            {i18n.t("addAccount.addPrj")}
           </Button>
           <AddEditProjects
             handleFinish={handleFinish}
