@@ -30,7 +30,6 @@
             }
 
             .logo-success-container {
-                @include d-flex;
                 @include align-items-center;
                 margin-bottom: 0.7rem;
 
@@ -83,7 +82,6 @@
                 }
 
                 .default-logo-container {
-                    @include d-flex;
                     @include align-items-center;
 
                     .bg-round-container {
