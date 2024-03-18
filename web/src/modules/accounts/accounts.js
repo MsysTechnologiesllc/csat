@@ -19,7 +19,6 @@ import {
   EditOutlined,
   DeleteOutlined,
   EyeOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import i18n from "../../locales/i18next";
 import { GetService } from "../../services/get";
@@ -158,12 +157,11 @@ export const Accounts = () => {
                 {record.account.account_owner.slice(1).map(({ name }) => (
                   <Tooltip title={name} placement="top" key={name}>
                     <Avatar
-                      icon={<UserOutlined />}
                       style={{
                         backgroundColor: "#3f51b5",
                       }}
                     >
-                      {name}
+                      {name && name.charAt(0)}
                     </Avatar>
                   </Tooltip>
                 ))}
@@ -294,7 +292,6 @@ export const Accounts = () => {
             deliveryHead?.map((each) => {
               deliveryHeadName.push(each?.name);
             });
-            console.log(deliveryHeadName);
             return (
               <Col xs={24} md={12} lg={8} xxl={6} key={account?.ID}>
                 <Card className="project-wrapper">
