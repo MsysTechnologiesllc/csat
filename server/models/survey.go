@@ -376,7 +376,7 @@ func CreateAndStoreSurveyAnswers(questionIDs []uint, surveyID uint) ([]*schema.S
 	return surveyAnswersData, nil
 }
 
-func GetSurveyFormatListFromDB(projectID uint) (*[]schema.SurveyFormat, error) {
+func GetSurveyFormatListFromDB(accountID uint) (*[]schema.SurveyFormat, error) {
 	var surveyFormats []schema.SurveyFormat
 
 	if err := GetDB().Preload("Surveys", "Status = ?", "template").Preload("Surveys.UserFeedback").
@@ -384,7 +384,7 @@ func GetSurveyFormatListFromDB(projectID uint) (*[]schema.SurveyFormat, error) {
 		Preload("Surveys.SurveyAnswers").
 		Preload("Surveys.SurveyAnswers.McqQuestions").
 		Preload("McqQuestions").
-		Where("project_id = ?", projectID).Find(&surveyFormats).Error; err != nil {
+		Where("account_id = ?", accountID).Find(&surveyFormats).Error; err != nil {
 		logger.Log.Println("Error fetching survey format list:", err)
 		return nil, err
 	}
