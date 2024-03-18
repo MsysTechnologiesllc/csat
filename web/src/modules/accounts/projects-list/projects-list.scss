@@ -224,6 +224,10 @@
 
             .client-name {
               @include font-style($steel-grey, 1.4rem, 2rem, 400);
+              .delivery-head-length {
+                font-weight: 600;
+                margin-left: 0.5rem;
+              }
             }
           }
         }

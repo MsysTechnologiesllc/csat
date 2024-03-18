@@ -28,6 +28,7 @@ const AddEditAccount = ({
   accountsApi,
   serviceType,
   setServiceType,
+  setPopId,
 }) => {
   const { Option } = Select;
   const [form] = Form.useForm();
@@ -114,8 +115,10 @@ const AddEditAccount = ({
           form.resetFields();
           onClose();
           accountsApi();
+          setPopId("");
         } else {
           setLoading(false);
+          setPopId("");
         }
       });
     } else {
@@ -160,6 +163,7 @@ const AddEditAccount = ({
   const onClose = () => {
     setOpen(false);
     setServiceType("");
+    setPopId("");
   };
   const handleChangeInOwners = (values, options) => {
     if (serviceType === "add") {
@@ -404,4 +408,5 @@ AddEditAccount.propTypes = {
   serviceType: PropTypes.string.isRequired,
   editData: PropTypes.object.isRequired,
   setServiceType: PropTypes.string.isRequired,
+  setPopId: PropTypes.string.isRequired,
 };
