@@ -301,7 +301,15 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
                 http.Error(w, "Failed to create user", http.StatusInternalServerError)
                 return
             }
-        }
+        } else {
+			// User exists, update the role
+			user.Role = member.Role
+			if err := db.Save(&user).Error; err != nil {
+				// Handle database error
+				http.Error(w, "Failed to update user", http.StatusInternalServerError)
+				return
+			}
+		}
 
 		// Check if the user-project mapping exists
 		var userProject schema.UserProject
