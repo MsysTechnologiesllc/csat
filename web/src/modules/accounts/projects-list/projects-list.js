@@ -93,6 +93,7 @@ export const ProjectsList = () => {
   const onClose = () => {
     setAddProject("");
     form.resetFields();
+    setPopId("");
   };
   const handleFinish = (values) => {
     const formattedDate = moment(values?.startDate).format(
@@ -121,6 +122,7 @@ export const ProjectsList = () => {
           form.resetFields();
           setDropdownOptionsData([]);
           setAddProject("");
+          setPopId("");
         }
       },
     );

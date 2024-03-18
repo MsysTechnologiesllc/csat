@@ -101,6 +101,7 @@ export const Accounts = () => {
       setServiceType("edit");
       setOpen(true);
       setEachAccount(account);
+      setIsPopover(false);
     }
   };
   const handleView = (account) => {
@@ -241,6 +242,7 @@ export const Accounts = () => {
         accountsApi={accountsApi}
         serviceType={serviceType}
         setServiceType={setServiceType}
+        setPopId={setPopId}
       />
       <div className="account-header-container">
         <h1 className="project-title">{i18n.t("greetings.account")}</h1>
@@ -283,6 +285,11 @@ export const Accounts = () => {
                 : account?.account_projects[1]?.Users?.filter((each) => {
                     each?.role === "deliveryHead";
                   });
+            let deliveryHeadName = [];
+            deliveryHead?.map((each) => {
+              deliveryHeadName.push(each?.name);
+            });
+            console.log(deliveryHeadName);
             return (
               <Col xs={24} md={12} lg={8} xxl={6} key={account?.ID}>
                 <Card className="project-wrapper">
@@ -302,8 +309,16 @@ export const Accounts = () => {
                         <h4 className="project-name" title={account?.name}>
                           {account?.name}
                         </h4>
-                        <p className="client-name">
-                          {deliveryHead?.length > 0 && deliveryHead[0]?.name}
+                        <p className="client-name" title={deliveryHeadName}>
+                          {deliveryHead?.length > 0 &&
+                            (deliveryHead.length === 1
+                              ? deliveryHead[0]?.name
+                              : `${deliveryHead[0]?.name}`)}
+                          {deliveryHead?.length > 1 && (
+                            <Avatar className="delivery-head-length">
+                              +{deliveryHead?.length - 1}
+                            </Avatar>
+                          )}
                         </p>
                       </div>
                     </div>
@@ -330,7 +345,7 @@ export const Accounts = () => {
                           </span>
                         </div>
                       }
-                      trigger="hover"
+                      trigger="click"
                       arrow={false}
                       placement="bottomRight"
                       overlayStyle={{ padding: 0 }}
