@@ -115,16 +115,16 @@ var CreateAccountData = func(w http.ResponseWriter, r *http.Request) {
 		}
 
 		existingAccount, err := models.GetAccountByID(accountId)
-        if err != nil {
-            http.Error(w, "Failed to retrieve account", http.StatusInternalServerError)
-            return
-        }
-        if isActive, exists := requestBody["is_active"].(bool); exists {
-            newAccount.IsActive = isActive
-        } else {
-            newAccount.IsActive = existingAccount.IsActive
-        }
-		
+		if err != nil {
+			http.Error(w, "Failed to retrieve account", http.StatusInternalServerError)
+			return
+		}
+		if isActive, exists := requestBody["is_active"].(bool); exists {
+			newAccount.IsActive = isActive
+		} else {
+			newAccount.IsActive = existingAccount.IsActive
+		}
+
 		updatedAccountPtr, err := models.UpdateAccountByID(accountId, &newAccount)
 		if err != nil {
 			resp := u.Message(false, constants.FAILED)
@@ -177,13 +177,14 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type ProjectPayload struct {
-        Name        string       `json:"Project_name"`
-        StartDate   *time.Time   `json:"Start_Date"`
-        Active      *bool         `json:"active"`
-        AccountID   uint         `json:"account_id"`
+		Name        string       `json:"Project_name"`
+		StartDate   *time.Time   `json:"Start_Date"`
+		Active      *bool        `json:"active"`
+		AccountID   uint         `json:"account_id"`
 		Logo        string       `json:"logo"`
-        TeamMembers []TeamMember `json:"team_member"`
-    }
+		TeamMembers []TeamMember `json:"team_member"`
+		RemoveUsers []TeamMember `json:"removed_user"`
+	}
 
 	var payload ProjectPayload
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
@@ -193,6 +194,8 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	teamMembers := payload.TeamMembers
+	removeUsers := payload.RemoveUsers
+	fmt.Println(removeUsers)
 
 	projectIdStr := r.URL.Query().Get("projectId")
 	var projectId uint
@@ -202,106 +205,106 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	accountIdStr := r.URL.Query().Get("accountId")
-    var accountId uint
-    _, err = fmt.Sscanf(accountIdStr, "%d", &accountId)
-    if err != nil {
-        http.Error(w, "Invalid account ID", http.StatusBadRequest)
-        return
-    }
+	var accountId uint
+	_, err = fmt.Sscanf(accountIdStr, "%d", &accountId)
+	if err != nil {
+		http.Error(w, "Invalid account ID", http.StatusBadRequest)
+		return
+	}
 
 	db := models.GetDB()
 
 	// Add logo to the project if provided
-    var logoData []byte
-    var mediaType string
+	var logoData []byte
+	var mediaType string
 
-    if payload.Logo != "" {
-        // Decode logo data
-        dataURIParts := strings.SplitN(payload.Logo, ",", 2)
-        if len(dataURIParts) != 2 {
-            fmt.Println("Invalid Data URI format")
-            http.Error(w, "Invalid Data URI format", http.StatusBadRequest)
-            return
-        }
-        mediaType = dataURIParts[0]
-        base64Data := dataURIParts[1]
+	if payload.Logo != "" {
+		// Decode logo data
+		dataURIParts := strings.SplitN(payload.Logo, ",", 2)
+		if len(dataURIParts) != 2 {
+			fmt.Println("Invalid Data URI format")
+			http.Error(w, "Invalid Data URI format", http.StatusBadRequest)
+			return
+		}
+		mediaType = dataURIParts[0]
+		base64Data := dataURIParts[1]
 
-        // Decode base64 data
-        decodedData, err := base64.StdEncoding.DecodeString(base64Data)
-        if err != nil {
-            fmt.Println("Error decoding base64:", err)
-            http.Error(w, "Error decoding base64", http.StatusInternalServerError)
-            return
-        }
-        maxSizeBytes := 2 * 1024 * 1024 // 2 MB
-        if len(decodedData) > maxSizeBytes {
-            http.Error(w, "File size exceeds the limit", http.StatusBadRequest)
-            return
-        }
-        logoData = decodedData
-    }
+		// Decode base64 data
+		decodedData, err := base64.StdEncoding.DecodeString(base64Data)
+		if err != nil {
+			fmt.Println("Error decoding base64:", err)
+			http.Error(w, "Error decoding base64", http.StatusInternalServerError)
+			return
+		}
+		maxSizeBytes := 2 * 1024 * 1024 // 2 MB
+		if len(decodedData) > maxSizeBytes {
+			http.Error(w, "File size exceeds the limit", http.StatusBadRequest)
+			return
+		}
+		logoData = decodedData
+	}
 
 	if projectId != 0 {
-        // Project ID provided, update the project
-        var project schema.Project
-        if err := db.First(&project, projectId).Error; err != nil {
-            // Project not found, return error
-            http.Error(w, "Project not found", http.StatusNotFound)
-            return
-        }
-        // Update project name and start date
+		// Project ID provided, update the project
+		var project schema.Project
+		if err := db.First(&project, projectId).Error; err != nil {
+			// Project not found, return error
+			http.Error(w, "Project not found", http.StatusNotFound)
+			return
+		}
+		// Update project name and start date
 
-	if payload.Name != "" {
-        project.Name = payload.Name
-    }
-	if payload.StartDate != nil {
-        project.StartDate = payload.StartDate
-    }
-	if payload.Logo != "" {
-        project.Logo = logoData
-		project.MediaType = mediaType
-    }
-	if payload.AccountID != 0 {
-        project.AccountID = payload.AccountID
-    }
-	if payload.Active != nil {
-        project.Active = *payload.Active
-    }
+		if payload.Name != "" {
+			project.Name = payload.Name
+		}
+		if payload.StartDate != nil {
+			project.StartDate = payload.StartDate
+		}
+		if payload.Logo != "" {
+			project.Logo = logoData
+			project.MediaType = mediaType
+		}
+		if payload.AccountID != 0 {
+			project.AccountID = payload.AccountID
+		}
+		if payload.Active != nil {
+			project.Active = *payload.Active
+		}
 
-    if err := db.Save(&project).Error; err != nil {
-            // Handle database error
-            http.Error(w, "Failed to update project", http.StatusInternalServerError)
-            return
-    }
-    } else {
-        // Project ID not provided, create a new project
-         project := schema.Project{
-            Name:      payload.Name,
-            StartDate: payload.StartDate,
-            Active:    true,
-            AccountID: accountId,
+		if err := db.Save(&project).Error; err != nil {
+			// Handle database error
+			http.Error(w, "Failed to update project", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		// Project ID not provided, create a new project
+		project := schema.Project{
+			Name:      payload.Name,
+			StartDate: payload.StartDate,
+			Active:    true,
+			AccountID: accountId,
 			Logo:      logoData,
-            MediaType: mediaType,
-        }
-        if err := db.Create(&project).Error; err != nil {
-            // Handle database error
-            http.Error(w, "Failed to create project", http.StatusInternalServerError)
-            return
-        }
-        projectId = project.ID // Update projectId with the newly created project's ID
-    }
+			MediaType: mediaType,
+		}
+		if err := db.Create(&project).Error; err != nil {
+			// Handle database error
+			http.Error(w, "Failed to create project", http.StatusInternalServerError)
+			return
+		}
+		projectId = project.ID // Update projectId with the newly created project's ID
+	}
 	for _, member := range teamMembers {
-        // Check if the user exists based on the provided email
-        var user schema.User
-        if err := db.Where("email = ?", member.Email).First(&user).Error; err != nil {
-            // User doesn't exist, create a new one
-            user = schema.User{Name: member.Name, Email: member.Email, Role: member.Role,  AccountID: accountId}
-            if err := db.Create(&user).Error; err != nil {
-                // Handle database error
-                http.Error(w, "Failed to create user", http.StatusInternalServerError)
-                return
-            }
-        } else {
+		// Check if the user exists based on the provided email
+		var user schema.User
+		if err := db.Where("email = ?", member.Email).First(&user).Error; err != nil {
+			// User doesn't exist, create a new one
+			user = schema.User{Name: member.Name, Email: member.Email, Role: member.Role, AccountID: accountId}
+			if err := db.Create(&user).Error; err != nil {
+				// Handle database error
+				http.Error(w, "Failed to create user", http.StatusInternalServerError)
+				return
+			}
+		} else {
 			// User exists, update the role
 			user.Role = member.Role
 			if err := db.Save(&user).Error; err != nil {
@@ -315,7 +318,7 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 		var userProject schema.UserProject
 		if err := db.Where("user_id = ? AND project_id = ?", user.ID, projectId).First(&userProject).Error; err != nil {
 			// Mapping doesn't exist, create a new one
-			userProject = schema.UserProject{UserID: user.ID, ProjectID: projectId, Role: member.Role}
+			userProject = schema.UserProject{UserID: user.ID, ProjectID: projectId, Role: member.Role, IsActive: true}
 			if err := db.Create(&userProject).Error; err != nil {
 				// Handle database error
 				http.Error(w, "Failed to create user project", http.StatusInternalServerError)
@@ -331,12 +334,20 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+	for _, removedUser := range removeUsers {
+		fmt.Println("loop1")
+		existingUser, _ := models.FindUserByEmail(removedUser.Email)
+		err = models.UpdateUserProjectIsActive(existingUser.ID, projectId, false)
+		if err != nil {
+			return
+		}
+	}
 
 	// Respond with success
 	w.WriteHeader(http.StatusOK)
 	resp := u.Message(true, constants.SUCCESS)
-    resp[constants.DATA] = "Update Successfully"
-    u.Respond(w, resp)
+	resp[constants.DATA] = "Update Successfully"
+	u.Respond(w, resp)
 
 }
 
@@ -435,12 +446,12 @@ var GetProjectData = func(w http.ResponseWriter, r *http.Request) {
 	}
 
 	users, err := models.GetProjectUsers(projectId)
-    if err != nil {
-        resp := u.Message(false, constants.FAILED)
+	if err != nil {
+		resp := u.Message(false, constants.FAILED)
 		w.WriteHeader(http.StatusInternalServerError)
 		u.Respond(w, resp)
 		return
-    }
+	}
 	data.Users = users
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = data
