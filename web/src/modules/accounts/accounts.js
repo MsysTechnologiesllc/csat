@@ -179,11 +179,16 @@ export const Accounts = () => {
       key: "projects",
       render: (text, record) => (
         <>
-          <p>
-            {record.account?.account_projects?.length > 0 &&
-              record.account?.account_projects?.length}{" "}
-            <span>Projects</span>
-          </p>
+          <span>
+            {record.account?.account_projects?.length > 0 ? (
+              <>
+                {record.account?.account_projects?.length}
+                {i18n.t("addAccount.projects")}
+              </>
+            ) : (
+              `0 ${i18n.t("addAccount.projects")}`
+            )}
+          </span>
         </>
       ),
     },
