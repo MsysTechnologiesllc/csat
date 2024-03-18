@@ -1,89 +1,203 @@
 @use "../../../assets//style" as *;
 
+.form-modal {
+  top: 5rem;
+
+  .ant-modal-title {
+    @include font-style($black, 2rem, 2.8rem, 500);
+  }
+}
+
+.custom-drawer {
+  .ant-picker-outlined {
+    width: 100%;
+  }
+  .ant-drawer-header {
+    width: 100%;
+
+    @include media("<md") {
+      padding-left: 1rem;
+    }
+
+    .ant-drawer-close {
+      margin: 0;
+    }
+
+    .ant-drawer-title {
+      @include font-style($black, 1.6rem, 2.4rem, 500);
+      max-width: 10rem;
+
+      @include media("<md") {
+        font-size: 1.4rem;
+        line-height: 2rem;
+      }
+    }
+
+    .ant-drawer-extra {
+      @include justify-content-end;
+      .cancle-btn,
+      .submit-btn {
+        min-height: 3.5rem;
+        max-height: 3.5rem;
+      }
+      .cancle-btn {
+        @include font-style($black, 1.6rem, 2.4rem, 400);
+        border: 0.1rem solid $dark-black;
+
+        @include media("<md") {
+          font-size: 1.4rem;
+          padding: 0.5rem 1rem;
+        }
+      }
+      .common-btn-styles {
+        @include font-style($white, 1.6rem, 2.4rem, 400);
+        border-radius: 0.4rem;
+        padding: 1rem 2.2rem;
+        @include justify-content-center;
+        @include align-items-center;
+        margin-left: 1rem;
+        min-height: 3.5rem;
+
+        @include media("<md") {
+          font-size: 1.4rem;
+          padding: 0.5rem 1rem;
+        }
+      }
+      .submit-btn {
+        background-color: $indigo;
+        color: $white;
+
+        &:hover {
+          background-color: $indigo;
+          box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
+        }
+      }
+      .disable-btn {
+        background-color: $white;
+        color: $steel-grey;
+
+        &:hover {
+          background-color: $white;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
+  .ant-drawer-body {
+    padding-top: 1rem;
+  }
+  .team-members {
+    @include font-style($black, 1.6rem, 2.4rem, 500);
+    margin-bottom: 1.5rem;
+  }
+}
+
 .projects-list-wrapper {
-  background-color: #fff;
+  background-color: $white;
   padding: 3rem 2rem 2rem 2rem;
   min-height: 100vh;
+
   @include media("<md") {
     padding: 2rem 1.5rem;
   }
+
   .ant-breadcrumb,
   .ant-breadcrumb a {
     @include font-style($dark-black, 1.6rem, 2.4rem, 400);
+
     @include media("<md") {
       font-size: 1.2rem;
       line-height: 1.8rem;
     }
   }
+
   .ant-breadcrumb li:first-child {
     cursor: pointer;
   }
+
   .ant-breadcrumb li:last-child {
     @include font-style($wild-red, 1.6rem, 2.4rem, 400);
+
     @include media("<md") {
       font-size: 1.2rem;
       line-height: 1.8rem;
     }
   }
+  .account-header-container {
+    @include justify-content-between;
+    .actions-container {
+      @include justify-content-between;
+      @include align-items-center;
+      min-height: 4rem;
+      max-height: 4rem;
+      .ant-segmented {
+        padding: 0;
+        background-color: $white;
+      }
+
+      .ant-segmented &:hover {
+        background-color: $white;
+      }
+
+      .ant-segmented .ant-segmented-item-selected {
+        box-shadow: none;
+        border: 0.1rem solid $indigo;
+        border-radius: 0.2rem;
+        background-color: #e9ebf7;
+        color: $indigo;
+      }
+
+      .ant-segmented .ant-segmented-item {
+        border-radius: 0.2rem;
+      }
+
+      .add-account-button {
+        margin-left: 2rem;
+        background-color: $indigo;
+        @include font-style($white, 1.6rem, 2.4rem, 400);
+        border-radius: 0.4rem;
+        width: 100%;
+        min-height: 4rem;
+        max-height: 4rem;
+        padding: 1rem 2.2rem;
+        @include justify-content-center;
+        @include align-items-center;
+
+        &:hover {
+          background-color: $indigo;
+          box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
+        }
+      }
+    }
+  }
+
   .project-title {
     @include font-style($jet-black, 3.4rem, 4.2rem, 400);
     text-align: left;
-    @include media("<md") {
-      font-size: 2rem;
-    }
-  }
-  .context-wrapper {
-    @include align-items-center;
-    color: $steel-grey;
-    margin-top: 2rem;
-    @include media("<md") {
-      @include align-items-start;
 
-      margin-top: 1.5rem;
-    }
-    .info-icon {
+    @include media("<md") {
       font-size: 2rem;
-      margin-right: 1rem;
-      max-width: 2rem;
-      max-height: 2rem;
-      @include media("<md") {
-        font-size: 4rem;
-        margin-right: 0.5rem;
-      }
-      @include media("<lg") {
-        font-size: 3rem;
-      }
-    }
-    .context {
-      @include font-style($steel-grey, 1.5rem, 2.6rem, 400);
-      text-align: left;
-      @include media("<md") {
-        font-size: 1.2rem;
-        line-height: 2rem;
-      }
-      @include media("<lg") {
-        font-size: 1.5rem;
-      }
-    }
-    .survey-anchor {
-      @include font-style($wild-red, 1.5rem, 2.6rem, 400);
-      margin-left: 0.5rem;
-      text-decoration: underline;
     }
   }
+
   .ant-card-body {
     padding: 1.6rem;
   }
+
   .project-list-wrapper {
     margin-top: 2rem;
+
     .project-wrapper {
       background-color: $silver;
 
       .project-client-context-day-container {
         @include justify-content-between;
+
         .avatar-project-client-context-container {
           @include d-flex;
           gap: 1rem;
+
           .avatar {
             min-width: 4rem;
             min-height: 4rem;
@@ -94,36 +208,67 @@
             @include font-style($cerulean, 2rem, 2rem, 400);
             border-radius: 6.4rem;
           }
+
           .project-client-container {
             text-align: left;
+
             .project-name {
               @include font-style($black, 1.6rem, 2.4rem, 400);
+              text-transform: capitalize;
+
+              @include media(">lg", "<xl") {
+                @include text-ellipsis;
+                max-width: 6rem;
+              }
             }
+
             .client-name {
               @include font-style($steel-grey, 1.4rem, 2rem, 400);
             }
           }
         }
+
+        .more-option-icon {
+          cursor: pointer;
+          height: 2rem;
+        }
+
         .day-left-container {
           @include align-items-start;
           gap: 0.5rem;
-          .dot-icon {
+
+          .orange-dot {
             color: $orange-peel;
             font-size: 1.5rem;
           }
+
+          .red-dot {
+            color: $red;
+            font-size: 1.5rem;
+          }
+
+          .green-dot {
+            color: $lima;
+            font-size: 1.5rem;
+          }
+
           .days-left-context {
             @include font-style($jet-black, 1.2rem, 1.7rem, 400);
           }
         }
       }
+
       .team-view-container {
         @include justify-content-between;
         margin-top: 2.5rem;
+
         .team-members-context {
           @include font-style($steel-grey, 1.4rem, 2rem, 400);
         }
+
         .view-button {
           @include font-style($muted-bold-red, 1.3rem, 2.2rem, 500);
+
           &:hover {
             background-color: transparent;
           }
@@ -131,4 +276,101 @@
       }
     }
   }
+}
+
+.accounts-list-container {
+  .edit {
+    margin-right: 2rem;
+    color: $indigo;
+    font-size: 2rem;
+  }
+
+  .delete {
+    color: $wild-red;
+    font-size: 2rem;
+  }
+
+  .view {
+    color: $indigo;
+    font-size: 2.5rem;
+  }
+
+  .pagination {
+    text-align: right;
+    position: absolute;
+    bottom: 5rem;
+    right: 2rem;
+  }
+}
+
+.more-options {
+  @include flex-column;
+
+  span {
+    font-style: normal;
+    @include font-style($black, 1.4rem, 2.2rem, 400);
+    cursor: pointer;
+    padding: 0.5rem 1.5rem;
+    @include align-items-center;
+
+    &:hover {
+      color: $black;
+      background-color: $white-lilac;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+    }
+  }
+}
+
+.ant-popover {
+  z-index: 1;
+
+  .ant-popover-inner {
+    padding: 0.5rem 0;
+    border-radius: 0;
+  }
+}
+
+.model-content-container {
+  @include d-flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+
+  .excalamation-icon {
+    font-size: 3rem;
+    color: $sun;
+  }
+
+  .content-wrapper {
+    .title {
+      @include font-style($black, 1.6rem, 2.4rem, 500);
+    }
+
+    .context {
+      @include font-style($black, 1.4rem, 2.2rem, 400);
+    }
+  }
+}
+
+.ant-modal .ant-modal-content {
+  border-radius: 0.2rem;
+  padding: 3.2rem 3.2rem 2.4rem;
+  margin: auto;
+}
+
+.ant-modal .ant-modal-footer .ant-btn:first-child {
+  padding: 0.4rem 1.5rem;
+  border-radius: 0.4rem;
+  @include font-style($black, 1.4rem, 2.2rem, 400);
+  border: 0.1rem solid $mid-grey;
+}
+
+.ant-modal .ant-modal-footer .ant-btn:last-child {
+  background: $sunset-orange;
+  padding: 0.4rem 1.5rem;
+  border-radius: 0.4rem;
+  @include font-style($white, 1.4rem, 2.2rem, 400);
 }

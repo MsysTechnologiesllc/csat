@@ -36,4 +36,19 @@ export class PostService extends BaseService {
       callback,
     );
   }
+  createAccount(payload, callback) {
+    return this.post(
+      process.env.GO_SERVICE_URL + "/csat/rest/api/account",
+      payload,
+      callback,
+    );
+  }
+  updateAccount(accountID, payload, callback) {
+    return this.post(
+      process.env.GO_SERVICE_URL +
+        `/csat/rest/api/account?accountId=${accountID}`,
+      payload,
+      callback,
+    );
+  }
 }

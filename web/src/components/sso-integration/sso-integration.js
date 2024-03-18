@@ -182,7 +182,7 @@ export const SSOIntegration = () => {
   return (
     <>
       <Modal
-        title="Forgot Password?"
+        title={i18n.t("login.forgotPwd")}
         centered
         open={isForgotOpen}
         onOk={handleCancel}
@@ -203,7 +203,7 @@ export const SSOIntegration = () => {
         />
       </Modal>
       <Modal
-        title="Check Your Email"
+        title={i18n.t("login.checkMail")}
         centered
         open={isSuccessOpen}
         onOk={handleCancel}
@@ -211,7 +211,12 @@ export const SSOIntegration = () => {
         className="success-message-modal"
         footer={[
           <div key="success" className="signIn-btn">
-            <Button type="link" htmlType="submit" onClick={handleCancel}>
+            <Button
+              type="link"
+              htmlType="submit"
+              className="update-button"
+              onClick={handleCancel}
+            >
               {i18n.t("login.BackTo")} {i18n.t("login.signIn")}
             </Button>
           </div>,
