@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"csat/logger"
 	"csat/schema"
+	"fmt"
 
 	"github.com/jinzhu/gorm"
 )
@@ -230,4 +231,21 @@ func UpdateUsersAccountMap(updatedAccount *schema.AccountOwner) error {
 		return err
 	}
 	return nil
+}
+
+func UpdateUserProjectIsActive(userID, projectID uint, isActive bool) error {
+    var userProject schema.UserProject
+    if err := db.Where("user_id = ? AND project_id = ?", userID, projectID).First(&userProject).Error; err != nil {
+        fmt.Println("Failed to fetch UserProject:", err)
+        return err
+    }
+
+    userProject.IsActive = isActive
+
+    if err := db.Save(&userProject).Error; err != nil {
+        fmt.Println("Failed to update UserProject is_active:", err)
+        return err
+    }
+
+    return nil
 }

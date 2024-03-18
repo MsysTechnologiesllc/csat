@@ -37,6 +37,22 @@ func GetAccountDetails(tenantID uint) map[string]interface{} {
 
 		// Assign fetched users to the Account struct as account owners
 		tenant.Accounts[i].AccountOwner = accountUsers
+
+		for j := range tenant.Accounts[i].Projects {
+			var projectUsers []schema.User
+			db := GetDB().Joins("JOIN user_projects ON users.id = user_projects.user_id").
+				Joins("JOIN projects ON projects.id = user_projects.project_id").
+				Where("projects.id = ? AND user_projects.is_active = ?", tenant.Accounts[i].Projects[j].ID, true)
+
+			// Fetch users from the database
+			if err := db.Find(&projectUsers).Error; err != nil {
+				logger.Log.Println("Error fetching users for project", err)
+				continue
+			}
+
+			// Assign fetched users to the Project struct
+			tenant.Accounts[i].Projects[j].Users = projectUsers
+		}
 	}
 
 	response := map[string]interface{}{
