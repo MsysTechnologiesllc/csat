@@ -34,8 +34,10 @@ import { PutService } from "../../../services/put";
 import NotifyStatus from "../../../components/notify-status/notify-status";
 import { AddEditProjects } from "./add-edit-projects";
 import moment from "moment";
+import { plLibComponents } from "../../../context-provider/component-provider";
 
 export const ProjectsList = () => {
+  const { NoData } = plLibComponents.components;
   const navigate = useNavigate();
   const { state } = useLocation();
   const [form] = Form.useForm();
@@ -302,7 +304,7 @@ export const ProjectsList = () => {
             }}
           />
           <Button onClick={addNewProject} className="add-account-button">
-            ADD PROJECTS
+            {i18n.t("addAccount.addPrj")}
           </Button>
           <AddEditProjects
             handleFinish={handleFinish}
@@ -318,109 +320,117 @@ export const ProjectsList = () => {
       </div>
       {selectedSegment === "Grid" ? (
         <Row gutter={[20, 20]} className="project-list-wrapper">
-          {projectsList?.account_projects?.map((project) => {
-            const prjManager = project?.Users?.filter(
-              (user) => user.role === "projectManager",
-            );
-            const teamMembers = project?.Users?.filter(
-              (user) => user.role === "member",
-            );
-            return (
-              <Col xs={24} md={12} lg={8} xxl={6} key={project.ID}>
-                <Card className="project-wrapper">
-                  <div className="project-client-context-day-container">
-                    <div className="avatar-project-client-context-container">
-                      <p className="avatar">
-                        {`${project.name
-                          .split(" ")
-                          .map((word) => word.charAt(0).toUpperCase())
-                          .join("")}`}
-                      </p>
-                      <div className="project-client-container">
-                        <h4 className="project-name" title={project.name}>
-                          {project.name}
-                        </h4>
-                        <p className="client-name">{prjManager[0]?.name}</p>
-                      </div>
-                    </div>
-                    <div className="day-left-container">
-                      <GoDotFill
-                        className={
-                          NoOfDays(project?.end_date) <= 0
-                            ? "red-dot"
-                            : NoOfDays(project?.end_date) > 0 &&
-                                NoOfDays(project?.end_date) <= 10
-                              ? "orange-dot"
-                              : "green-dot"
-                        }
-                      />
-                      <p className="days-left-context">
-                        {NoOfDays(project?.end_date) > 0
-                          ? i18n.t("projects.daysLeft", {
-                              days:
-                                NoOfDays(project?.end_date) > 0 &&
-                                NoOfDays(project?.end_date),
-                            })
-                          : i18n.t("projects.completed")}
-                      </p>
-                    </div>
-                    <Popover
-                      content={
-                        <div className="more-options">
-                          <span
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              handleOnClickMore("Edit", project);
-                            }}
-                          >
-                            <AiOutlineEdit className="icon" />
-                            {i18n.t("common.edit")}
-                          </span>
-                          <span
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              handleOnClickMore("Delete", project);
-                            }}
-                          >
-                            <AiOutlineDelete className="icon" />
-                            {i18n.t("common.delete")}
-                          </span>
+          {projectsList?.account_projects?.length > 0 ? (
+            projectsList?.account_projects?.map((project) => {
+              const prjManager = project?.Users?.filter(
+                (user) => user.role === "projectManager",
+              );
+              const teamMembers = project?.Users?.filter(
+                (user) => user.role === "member",
+              );
+              return (
+                <Col xs={24} md={12} lg={8} xxl={6} key={project.ID}>
+                  <Card className="project-wrapper">
+                    <div className="project-client-context-day-container">
+                      <div className="avatar-project-client-context-container">
+                        <p className="avatar">
+                          {`${project.name
+                            .split(" ")
+                            .map((word) => word.charAt(0).toUpperCase())
+                            .join("")}`}
+                        </p>
+                        <div className="project-client-container">
+                          <h4 className="project-name" title={project.name}>
+                            {project.name}
+                          </h4>
+                          <p className="client-name">{prjManager[0]?.name}</p>
                         </div>
-                      }
-                      trigger="click"
-                      arrow={false}
-                      placement="bottomRight"
-                      overlayStyle={{ padding: 0 }}
-                      open={popId === project.ID && isPopover}
-                      onOpenChange={() => handleOnOpenChange(project.ID)}
-                    >
-                      <div
-                        onClick={(event) => {
-                          event.stopPropagation();
-                        }}
-                        className="more-option-icon"
-                      >
-                        <img
-                          src="/images/ellipse-vertical.svg"
-                          alt={i18n.t("common.moreOptions")}
-                        />
                       </div>
-                    </Popover>
-                  </div>
-                  <div className="team-view-container">
-                    <p className="team-members-context">{`${teamMembers?.length} Member(s)`}</p>
-                    <Button
-                      className="view-button"
-                      type="text"
-                      onClick={() => handleView(project)}
-                    >
-                      {i18n.t("accounts.view")}
-                    </Button>
-                  </div>
-                </Card>
-              </Col>
-            );
-          })}
+                      <div className="day-left-container">
+                        <GoDotFill
+                          className={
+                            NoOfDays(project?.end_date) <= 0
+                              ? "red-dot"
+                              : NoOfDays(project?.end_date) > 0 &&
+                                  NoOfDays(project?.end_date) <= 10
+                                ? "orange-dot"
+                                : "green-dot"
+                          }
+                        />
+                        <p className="days-left-context">
+                          {NoOfDays(project?.end_date) > 0
+                            ? i18n.t("projects.daysLeft", {
+                                days:
+                                  NoOfDays(project?.end_date) > 0 &&
+                                  NoOfDays(project?.end_date),
+                              })
+                            : i18n.t("projects.completed")}
+                        </p>
+                      </div>
+                      <Popover
+                        content={
+                          <div className="more-options">
+                            <span
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleOnClickMore("Edit", project);
+                              }}
+                            >
+                              <AiOutlineEdit className="icon" />
+                              {i18n.t("common.edit")}
+                            </span>
+                            <span
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleOnClickMore("Delete", project);
+                              }}
+                            >
+                              <AiOutlineDelete className="icon" />
+                              {i18n.t("common.delete")}
+                            </span>
+                          </div>
+                        }
+                        trigger="click"
+                        arrow={false}
+                        placement="bottomRight"
+                        overlayStyle={{ padding: 0 }}
+                        open={popId === project.ID && isPopover}
+                        onOpenChange={() => handleOnOpenChange(project.ID)}
+                      >
+                        <div
+                          onClick={(event) => {
+                            event.stopPropagation();
+                          }}
+                          className="more-option-icon"
+                        >
+                          <img
+                            src="/images/ellipse-vertical.svg"
+                            alt={i18n.t("common.moreOptions")}
+                          />
+                        </div>
+                      </Popover>
+                    </div>
+                    <div className="team-view-container">
+                      <p className="team-members-context">{`${teamMembers?.length} Member(s)`}</p>
+                      <Button
+                        className="view-button"
+                        type="text"
+                        onClick={() => handleView(project)}
+                      >
+                        {i18n.t("accounts.view")}
+                      </Button>
+                    </div>
+                  </Card>
+                </Col>
+              );
+            })
+          ) : (
+            <NoData
+              heading={i18n.t("addAccount.noPrj")}
+              descriptionLine1=""
+              descriptionLine2=""
+            />
+          )}
         </Row>
       ) : (
         <div className="accounts-list-container">

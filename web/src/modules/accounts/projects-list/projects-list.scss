@@ -12,6 +12,7 @@
   .ant-picker-outlined {
     width: 100%;
   }
+
   .ant-drawer-header {
     width: 100%;
 
@@ -35,11 +36,13 @@
 
     .ant-drawer-extra {
       @include justify-content-end;
+
       .cancle-btn,
       .submit-btn {
         min-height: 3.5rem;
         max-height: 3.5rem;
       }
+
       .cancle-btn {
         @include font-style($black, 1.6rem, 2.4rem, 400);
         border: 0.1rem solid $dark-black;
@@ -49,6 +52,7 @@
           padding: 0.5rem 1rem;
         }
       }
+
       .common-btn-styles {
         @include font-style($white, 1.6rem, 2.4rem, 400);
         border-radius: 0.4rem;
@@ -63,6 +67,7 @@
           padding: 0.5rem 1rem;
         }
       }
+
       .submit-btn {
         background-color: $indigo;
         color: $white;
@@ -72,6 +77,7 @@
           box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
         }
       }
+
       .disable-btn {
         background-color: $white;
         color: $steel-grey;
@@ -87,6 +93,7 @@
   .ant-drawer-body {
     padding-top: 1rem;
   }
+
   .team-members {
     @include font-style($black, 1.6rem, 2.4rem, 500);
     margin-bottom: 1.5rem;
@@ -124,13 +131,17 @@
       line-height: 1.8rem;
     }
   }
+
   .account-header-container {
     @include justify-content-between;
+    margin-top: 1.4rem;
+
     .actions-container {
       @include justify-content-between;
       @include align-items-center;
       min-height: 4rem;
       max-height: 4rem;
+
       .ant-segmented {
         padding: 0;
         background-color: $white;
@@ -144,7 +155,7 @@
         box-shadow: none;
         border: 0.1rem solid $indigo;
         border-radius: 0.2rem;
-        background-color: #e9ebf7;
+        background-color: $white-lilac;
         color: $indigo;
       }
 
@@ -175,6 +186,7 @@
   .project-title {
     @include font-style($jet-black, 3.4rem, 4.2rem, 400);
     text-align: left;
+    text-transform: capitalize;
 
     @include media("<md") {
       font-size: 2rem;
@@ -188,11 +200,20 @@
   .project-list-wrapper {
     margin-top: 2rem;
 
+    .no-data-container {
+      width: 100%;
+      height: auto;
+    }
+
     .project-wrapper {
+      min-height: 13rem;
+      max-height: 13rem;
       background-color: $silver;
 
       .project-client-context-day-container {
         @include justify-content-between;
+        min-height: 5rem;
+        max-height: 5rem;
 
         .avatar-project-client-context-container {
           @include d-flex;

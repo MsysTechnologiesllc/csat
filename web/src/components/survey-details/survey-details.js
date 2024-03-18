@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Progress, Row, Breadcrumb } from "antd";
+import { Button, Col, Row, Breadcrumb } from "antd";
 import { plLibComponents } from "../../context-provider/component-provider";
 import { GetService } from "../../services/get";
 // import { MdTimer } from "react-icons/md";
@@ -61,7 +61,7 @@ export const SurveyDetails = () => {
         {i18n.t("surveyDetails.surveyDetails")}
       </h1>
       <Row className="details-progress-avg-container">
-        <Col sm={24} xl={16} className="details-container">
+        <Col sm={24} className="details-container">
           <div className="details">
             <p className="details-name">{i18n.t("surveyDetails.name")}</p>
             <p className="details-name-data">{surveyDetails?.Survey?.name}</p>
@@ -80,19 +80,6 @@ export const SurveyDetails = () => {
             </p>
           </div>
         </Col>
-        <Col xs={24} xl={7} className="progress-container">
-          <Progress
-            type="circle"
-            percent={(4.2 / 5) * 100}
-            format={() => surveyDetails?.AverageRating}
-          />
-          <p className="score">{i18n.t("surveyDetails.score")}</p>
-        </Col>
-        {/* <Col xs={11} md={14} xl={5} className="avg-time-container">
-          <MdTimer className="time-icon" />
-          <p className="hrs">4.2 {i18n.t("surveyDetails.hrs")}</p>
-          <p className="avg-time">{i18n.t("surveyDetails.avgTime")}</p>
-        </Col> */}
       </Row>
       <NavTabs tabItems={items} defaultOpenTabKey="" />
       <div className="back-btn-container">

@@ -223,9 +223,11 @@ export const translationEN = {
     context: "Active project surveys pending",
   },
   addAccount: {
+    noPrj: "No Projects Found",
     example: "example",
     addBtn: "+ Add Account",
     addAccount: "Add Account",
+    addPrj: "ADD PROJECTS",
     editAccount: "Edit Account",
     updateAccount: "Update Account",
     accName: "Account Name",
