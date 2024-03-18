@@ -15,7 +15,6 @@ import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useDetectMobileOrDesktop } from "../../../hooks/useDetectMobileOrDesktop";
 import PropTypes from "prop-types";
 import i18n from "../../../locales/i18next";
-import Check from "../../../assets/images/check.svg";
 import "./add-edit-account.scss";
 import { GetService } from "../../../services/get";
 import { PostService } from "../../../services/post";
@@ -44,7 +43,6 @@ const AddEditAccount = ({
   const [dropdownOptions, setDropdownOptions] = useState();
   const [optionsLoader, setOptionsLoader] = useState(false);
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
-  const [logoSuccessMessage, setLogoSuccessMessage] = useState(false);
   useEffect(() => {
     if (serviceType === "edit") {
       setSelectedItems(
@@ -199,7 +197,6 @@ const AddEditAccount = ({
   };
   const handleLogoRemove = () => {
     setImageUrl(null);
-    setLogoSuccessMessage(false);
     serviceType === "edit" && setFileList([]);
   };
   const getBase64 = (file) => {
@@ -326,18 +323,6 @@ const AddEditAccount = ({
                   </Modal>
                 </Col>
                 <Col span={18}>
-                  {logoSuccessMessage && (
-                    <div className="logo-success-container">
-                      <img
-                        src={Check}
-                        alt={i18n.t("imageAlt.ticket")}
-                        className="check-image"
-                      />
-                      <p className="success-message">
-                        {i18n.t("addAccount.logoSuccess")}
-                      </p>
-                    </div>
-                  )}
                   <p className="logo-recommendations">
                     {i18n.t("addAccount.logoRecommendation")}
                   </p>
