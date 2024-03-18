@@ -263,11 +263,13 @@
 
     .signIn-btn {
       text-align: center;
-
+      
       .ant-btn-link {
         padding-inline: 0;
         font-weight: 500;
         color: $blue;
+        background-color: $white;
+        border: none;
       }
     }
   }

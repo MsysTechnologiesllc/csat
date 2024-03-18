@@ -12,7 +12,6 @@ function ForgotPassword({ value, callBack, isLoading }) {
     });
   }, [form, value]);
   function onForgotPassword(values) {
-    console.log(values);
     callBack(values);
   }
   return (
