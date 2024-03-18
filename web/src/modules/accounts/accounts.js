@@ -158,8 +158,11 @@ export const Accounts = () => {
                   <Tooltip title={name} placement="top" key={name}>
                     <Avatar
                       style={{
-                        backgroundColor: "#3f51b5",
+                        color: "#f56a00",
+                        backgroundColor: "#fde3cf",
+                        cursor: "pointer",
                       }}
+                      size="small"
                     >
                       {name && name.charAt(0)}
                     </Avatar>
