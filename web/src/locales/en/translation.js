@@ -13,6 +13,10 @@ export const translationEN = {
     publish: "Publish",
     google: "Google",
     login: "Login",
+    edit: "Edit",
+    delete: "Delete",
+    moreOptions: "More Options",
+    upload: "Upload",
   },
   header: {
     title: "CSAT",
@@ -64,6 +68,7 @@ export const translationEN = {
     gauge: "gauge",
     needle: "needle",
     ticket: "ticket",
+    avatar: "avatar",
   },
   placeholder: {
     message: "Your message",
@@ -124,6 +129,7 @@ export const translationEN = {
   },
   projects: {
     daysLeft: "Only {{days}} Days left",
+    completed: "Completed",
   },
   accounts: {
     view: "VIEW",
@@ -159,6 +165,7 @@ export const translationEN = {
     usingSSO: "OR Login using SSO",
     message: "Please input your passcode!",
     heading: "Customer Feedback Survey",
+    checkMail: "Check Your Email",
     desc: "Gathering feedback isn’t easy. If you can convince your audience to click through to your feedback survey, you then have to craft a survey that will keep them engaged until the end.",
     passcodePlaceholder: "Enter your passcode",
     passcodeDesc: "Enter Passcode to Start Survey",
@@ -209,5 +216,30 @@ export const translationEN = {
     emailNotReceive: "Didn't receive the email? ",
     resend: " Click to resend",
     learniply: "learniply",
+  },
+  deleteModal: {
+    accountsTitle: "Are you sure delete this Account?",
+    projectsTitle: "Are you sure delete this {{projectName}}?",
+    context: "Active project surveys pending",
+  },
+  addAccount: {
+    example: "example",
+    addBtn: "+ Add Account",
+    addAccount: "Add Account",
+    editAccount: "Edit Account",
+    updateAccount: "Update Account",
+    accName: "Account Name",
+    accOwner: "Account Owner",
+    updateSuccess: "{{accName}} updated successfully",
+    addSuccess: "{{accName}} has been created",
+    accNameRule: "Please Enter Account Name",
+    accOwnerRule: "Please Enter Account Owner Name",
+    accLogoRule: "Please Provide logo for Account",
+    fileImageWarning: "You can only upload SVG, PNG, JPG, JPEG, or FIG files!",
+    imageSizeWarning: "Image must be smaller than 2MB!",
+    logoSuccess: " Logo uploaded successfully",
+    imageOrFileSizeWarning: "Unsupported file please check size and format",
+    logoRecommendation:
+      "Recommanded resolution is 640*640 with file size less than 2MB, keep visual elements centered",
   },
 };
