@@ -9,6 +9,7 @@ import {
   Pagination,
   Popover,
   Avatar,
+  Tooltip,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
@@ -18,6 +19,7 @@ import {
   EditOutlined,
   DeleteOutlined,
   EyeOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import i18n from "../../locales/i18next";
 import { GetService } from "../../services/get";
@@ -132,10 +134,41 @@ export const Accounts = () => {
       key: "accountOwner",
       render: (text, record) => (
         <>
-          <p>
-            {record.account.account_owner.length > 0 &&
-              record.account.account_owner[0]?.name}
-          </p>
+          {record?.account?.account_owner?.length === 1 ? (
+            <p className="avatar-name">
+              {record?.account?.account_owner[0]?.name}
+            </p>
+          ) : (
+            <div className="extra-avatars">
+              <Avatar.Group
+                className="avatar-group"
+                maxCount={1}
+                maxPopoverTrigger="click"
+                size="small"
+                maxStyle={{
+                  color: "#f56a00",
+                  backgroundColor: "#fde3cf",
+                  cursor: "pointer",
+                }}
+              >
+                <p className="avatar-name">
+                  {record?.account?.account_owner[0]?.name}
+                </p>
+                {record.account.account_owner.slice(1).map(({ name }) => (
+                  <Tooltip title={name} placement="top" key={name}>
+                    <Avatar
+                      icon={<UserOutlined />}
+                      style={{
+                        backgroundColor: "#3f51b5",
+                      }}
+                    >
+                      {name}
+                    </Avatar>
+                  </Tooltip>
+                ))}
+              </Avatar.Group>
+            </div>
+          )}
         </>
       ),
     },

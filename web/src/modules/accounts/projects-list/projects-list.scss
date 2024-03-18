@@ -109,6 +109,23 @@
     padding: 2rem 1.5rem;
   }
 
+  .avatar-name {
+    @include font-style($black, 1.4rem, 2.2rem, 400);
+    margin-right: 0.5rem
+  }
+
+  .extra-avatars {
+    @include d-flex;
+    @include align-items-center;
+
+    .avatar-group {
+      .ant-avatar {
+        margin-left: 1rem;
+      }
+    }
+  }
+
+
   .ant-breadcrumb,
   .ant-breadcrumb a {
     @include font-style($dark-black, 1.6rem, 2.4rem, 400);
