@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Spin,
   Form,
   Input,
   Upload,
@@ -139,7 +138,7 @@ const AddEditAccount = ({
     }
   };
   const handleOwnerSearch = (search) => {
-    if (search?.length > 3) {
+    if (search?.length > 2) {
       setOptionsLoader(true);
       new GetService().getAccountOwners(search, (result) => {
         if (result.status === 200) {
@@ -166,15 +165,15 @@ const AddEditAccount = ({
     if (serviceType === "add") {
       let option = [];
       options.map((item) => {
-        option.push({ name: item.label, email: item.value });
+        option.push({ name: item.label, email: item.key });
       });
       setSelectedItems(option);
     }
     if (serviceType === "edit") {
       let option = [];
       options.map((item) => {
-        if (item.label !== undefined && item.value !== undefined) {
-          option.push({ name: item.label, email: item.value });
+        if (item.label !== undefined && item.key !== undefined) {
+          option.push({ name: item.label, email: item.key });
         }
       });
       setSelectedItems([...selectedItems, ...option]);
@@ -373,12 +372,11 @@ const AddEditAccount = ({
                 onChange={handleChangeInOwners}
                 optionLabelProp="label"
                 loading={optionsLoader}
-                notFoundContent={optionsLoader ? <Spin size="small" /> : null}
               >
                 {dropdownOptions?.map((option) => (
                   <Option
                     key={option.email}
-                    value={option.email}
+                    value={option.name}
                     label={option.name}
                   >
                     <>
