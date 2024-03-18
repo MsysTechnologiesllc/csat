@@ -200,6 +200,11 @@
   .project-list-wrapper {
     margin-top: 2rem;
 
+    .no-data-container {
+      width: 100%;
+      height: auto;
+    }
+
     .project-wrapper {
       min-height: 13rem;
       max-height: 13rem;
