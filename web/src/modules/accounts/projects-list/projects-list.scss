@@ -36,7 +36,7 @@
 
     .ant-drawer-extra {
       @include justify-content-end;
-
+      gap: 1rem;
       .cancle-btn,
       .submit-btn {
         min-height: 3.5rem;

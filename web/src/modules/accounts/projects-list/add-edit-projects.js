@@ -1,4 +1,4 @@
-import { Button, DatePicker, Drawer, Form, Input, TreeSelect } from "antd";
+import { Button, DatePicker, Drawer, Form, Input, Select } from "antd";
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { useDetectMobileOrDesktop } from "../../../hooks/useDetectMobileOrDesktop";
@@ -11,11 +11,14 @@ export const AddEditProjects = ({
   onClose,
   setSearch,
   dropdownOptions,
-  setDropdownOptions,
   eachProject,
   form,
+  selectedItems,
+  setSelectedItems,
+  setRemovedItems,
 }) => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
+  const { Option } = Select;
   useEffect(() => {
     const pointOfContactData = eachProject?.Users?.filter(
       (user) => user.role === "client",
@@ -36,30 +39,48 @@ export const AddEditProjects = ({
         lead: leadData?.map((each) => each?.email),
         scrumTeam: scrumTeamData?.map((each) => each?.email),
       });
-    setDropdownOptions(
-      [
-        pointOfContactData?.map((each) => ({
-          value: each?.name,
-          title: each?.email,
-        })),
-        pmoData?.map((each) => ({
-          value: each?.name,
-          title: each?.email,
-        })),
-        leadData?.map((each) => ({
-          value: each?.name,
-          title: each?.email,
-        })),
-        scrumTeamData?.map((each) => ({
-          value: each?.name,
-          title: each?.email,
-        })),
-      ]
-        .filter((item) => item?.length > 0)
-        .flat()
-        .map((item) => ({ value: item?.value, title: item?.title })),
+    setSelectedItems(
+      eachProject?.Users?.map((user) => ({
+        name: user.name,
+        email: user.email,
+      })),
     );
   }, [addProject]);
+  const handleChangeInOwners = (values, options) => {
+    if (addProject === "add") {
+      let option = [];
+      options.map((item) => {
+        option.push({ name: item.label, email: item.value });
+      });
+      setSelectedItems((prevData) => [...prevData, ...option]);
+    }
+    if (addProject === "edit") {
+      let option = [];
+      options.map((item) => {
+        if (item.label !== undefined && item.value !== undefined) {
+          option.push({ name: item.label, email: item.value });
+        }
+      });
+      setSelectedItems((prevData) => [...prevData, ...option]);
+    }
+  };
+  const handleOwnersDeselect = (value) => {
+    let deletedItems = selectedItems.filter((item) => item.email === value);
+    if (deletedItems) {
+      setRemovedItems((prevData) => [...prevData, ...deletedItems]);
+    }
+    setSelectedItems(
+      selectedItems.filter(
+        (item) => item.name !== value && item.email !== value,
+      ),
+    );
+  };
+  const formItemData = [
+    { name: "pmo", label: "PMO" },
+    { name: "lead", label: "Lead" },
+    { name: "scrumTeam", label: "SCRUM Team" },
+  ];
+
   return (
     <Drawer
       title={addProject === "add" ? "Add Project" : "Edit Project"}
@@ -105,49 +126,56 @@ export const AddEditProjects = ({
           <DatePicker />
         </Form.Item>
         <Form.Item name="pointOfContact" label="Point of contact">
-          <TreeSelect
-            treeData={dropdownOptions}
-            onSearch={(value) => {
-              setSearch(value);
-            }}
-            value={["johnA3@example.com"]}
-            allowClear="true"
-            showSearch
-            multiple
+          <Select
+            mode="multiple"
+            onDeselect={handleOwnersDeselect}
             placeholder="First Name /Last Name / Email ID"
-          />
+            onSearch={(value) => setSearch(value)}
+            onChange={handleChangeInOwners}
+            optionLabelProp="label"
+            // loading={optionsLoader}
+            // notFoundContent={optionsLoader ? <Spin size="small" /> : null}
+          >
+            {dropdownOptions?.map((option) => (
+              <Option
+                key={option.email}
+                value={option.email}
+                label={option.name}
+              >
+                <>
+                  <p>{option.name}</p>
+                  <p>{option.email}</p>
+                </>
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
         <h5 className="team-members">Team Members</h5>
-        <Form.Item name="pmo" label="PMO">
-          <TreeSelect
-            treeData={dropdownOptions}
-            onSearch={(value) => setSearch(value)}
-            allowClear="true"
-            showSearch
-            multiple
-            placeholder="Select / Type Email ID"
-          />
-        </Form.Item>
-        <Form.Item name="lead" label="Lead">
-          <TreeSelect
-            treeData={dropdownOptions}
-            onSearch={(value) => setSearch(value)}
-            allowClear="true"
-            showSearch
-            multiple
-            placeholder="Select / Type Email ID"
-          />
-        </Form.Item>
-        <Form.Item name="scrumTeam" label="SCRUM Team">
-          <TreeSelect
-            treeData={dropdownOptions}
-            onSearch={(value) => setSearch(value)}
-            allowClear="true"
-            showSearch
-            multiple
-            placeholder="Select / Type Email ID"
-          />
-        </Form.Item>
+        {formItemData.map(({ name, label }) => (
+          <Form.Item key={name} name={name} label={label}>
+            <Select
+              mode="multiple"
+              onDeselect={handleOwnersDeselect}
+              placeholder="Select / Type Email ID"
+              onSearch={(value) => setSearch(value)}
+              onChange={handleChangeInOwners}
+              optionLabelProp="label"
+            >
+              {dropdownOptions?.map((option) => (
+                <Option
+                  key={option.email}
+                  value={option.email}
+                  label={option.name}
+                >
+                  <>
+                    <p>{option.name}</p>
+                    <p>{option.email}</p>
+                  </>
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        ))}
       </Form>
     </Drawer>
   );
@@ -158,7 +186,9 @@ AddEditProjects.propTypes = {
   onClose: PropTypes.func.isRequired,
   setSearch: PropTypes.string.isRequired,
   dropdownOptions: PropTypes.array.isRequired,
-  setDropdownOptions: PropTypes.array.isRequired,
+  selectedItems: PropTypes.array.isRequired,
+  setSelectedItems: PropTypes.array.isRequired,
+  setRemovedItems: PropTypes.array.isRequired,
   eachProject: PropTypes.object.isRequired,
   form: PropTypes.any.isRequired,
 };

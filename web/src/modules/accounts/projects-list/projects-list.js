@@ -52,27 +52,37 @@ export const ProjectsList = () => {
   const [message, setMessage] = useState("");
   const [addProject, setAddProject] = useState("");
   const [dropdownOptions, setDropdownOptions] = useState([]);
-  const [dropdownOptionsData, setDropdownOptionsData] = useState([]);
+  // const [dropdownOptionsData, setDropdownOptionsData] = useState([]);
   const [search, setSearch] = useState("");
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [removedItems, setRemovedItems] = useState([]);
   useEffect(() => {
     if (search?.length >= 3) {
+      // new GetService().getAccountOwners(search, (result) => {
+      //   const updatedArray = [];
+      //   if (result?.status === 200) {
+      //     // result?.data?.data?.db_users?.map((option) => {
+      //     //   updatedArray.push({ title: option?.email, value: option?.name });
+      //     //   setDropdownOptions((prevData) => [...prevData, option]);
+      //     // });
+      //     result?.data?.data?.gsuit_users?.map((option) => {
+      //       updatedArray.push({ title: option?.name, value: option?.email });
+      //     });
+      //   }
+      //   setDropdownOptions(updatedArray);
+      // });
       new GetService().getAccountOwners(search, (result) => {
-        const updatedArray = [];
         if (result?.status === 200) {
-          result?.data?.data?.db_users?.map((option) => {
-            updatedArray.push({ title: option?.email, value: option?.name });
-          });
-          result?.data?.data?.gsuit_users?.map((option) => {
-            updatedArray.push({ title: option?.email, value: option?.name });
-          });
-          setDropdownOptions(updatedArray);
+          setDropdownOptions(result?.data?.data?.gsuit_users || []);
+        } else {
+          setDropdownOptions([]);
         }
       });
     }
   }, [search]);
-  useEffect(() => {
-    setDropdownOptionsData((prevData) => [...prevData, ...dropdownOptions]);
-  }, [dropdownOptions]);
+  // useEffect(() => {
+  //   setDropdownOptionsData((prevData) => [...prevData, ...dropdownOptions]);
+  // }, [dropdownOptions]);
   const projectsApi = () => {
     new GetService().getAccountsList(state?.tenantId, (result) => {
       if (result?.status === 200) {
@@ -81,7 +91,6 @@ export const ProjectsList = () => {
             (account) => account.ID === state?.accountId,
           );
         setProjectsList(...filteredAccount);
-        setIsLoading(false);
       }
     });
   };
@@ -93,7 +102,7 @@ export const ProjectsList = () => {
   const onClose = () => {
     setAddProject("");
     form.resetFields();
-    setPopId("");
+    setSelectedItems([]);
   };
   const handleFinish = (values) => {
     const formattedDate = moment(values?.startDate).format(
@@ -103,15 +112,12 @@ export const ProjectsList = () => {
       Project_name: values?.projectName,
       Start_Date: formattedDate,
       team_member: [
-        ...formatTreeData(
-          values?.pointOfContact,
-          dropdownOptionsData,
-          "client",
-        ),
-        ...formatTreeData(values?.pmo, dropdownOptionsData, "manager"),
-        ...formatTreeData(values?.lead, dropdownOptionsData, "lead"),
-        ...formatTreeData(values?.scrumTeam, dropdownOptionsData, "member"),
+        ...formatTreeData(values?.pointOfContact, selectedItems, "client"),
+        ...formatTreeData(values?.pmo, selectedItems, "manager"),
+        ...formatTreeData(values?.lead, selectedItems, "lead"),
+        ...formatTreeData(values?.scrumTeam, selectedItems, "member"),
       ],
+      removed_user: removedItems,
     };
     new PutService().addUpdateProject(
       addProject === "add" ? 0 : eachProject?.ID,
@@ -120,9 +126,13 @@ export const ProjectsList = () => {
       (result) => {
         if (result?.status === 200) {
           form.resetFields();
-          setDropdownOptionsData([]);
+          // setDropdownOptionsData([]);
+          setSelectedItems([]);
+          setNotify("success");
+          addProject === "add"
+            ? setMessage("Added the project successfully")
+            : setMessage("Updated the project successfully");
           setAddProject("");
-          setPopId("");
         }
       },
     );
@@ -132,10 +142,10 @@ export const ProjectsList = () => {
       ? selectedValues
           .map((value) => {
             const node = treeData.find(
-              (node) => node.value === value || node.title === value,
+              (node) => node.name === value || node.email === value,
             );
             return node
-              ? { email: node.title, name: node.value, role: role }
+              ? { email: node.email, name: node.name, role: role }
               : null;
           })
           .filter(Boolean)
@@ -168,6 +178,7 @@ export const ProjectsList = () => {
           setMessage("Project Deleted Successfully");
           setDeleteModal(false);
           setEachProject({});
+          setSelectedItems([]);
           setPopId("");
           setTimeout(() => {
             setNotify("");
@@ -315,6 +326,10 @@ export const ProjectsList = () => {
             setDropdownOptions={setDropdownOptions}
             eachProject={eachProject}
             form={form}
+            selectedItems={selectedItems}
+            setSelectedItems={setSelectedItems}
+            removedItems={removedItems}
+            setRemovedItems={setRemovedItems}
           />
         </div>
       </div>
