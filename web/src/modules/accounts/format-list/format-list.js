@@ -20,11 +20,13 @@ const FormatList = ({}) => {
         accountName: state?.accountName,
         projectsList: state?.projectsList,
         accountId: state?.accountId,
+        tenantId: state?.tenantId,
       },
     });
   };
+  let user_id = localStorage.getItem("userId");
   useEffect(() => {
-    new GetService().getSurveyFormatList(state?.prjId, (result) => {
+    new GetService().getSurveyFormatList(user_id, (result) => {
       if (result) {
         setData(result?.data?.data);
       }
