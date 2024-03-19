@@ -327,6 +327,7 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 		} else {
 			// Mapping exists, update the role
 			userProject.Role = member.Role
+			userProject.IsActive = true
 			if err := db.Save(&userProject).Error; err != nil {
 				// Handle database error
 				http.Error(w, "Failed to update user project", http.StatusInternalServerError)
