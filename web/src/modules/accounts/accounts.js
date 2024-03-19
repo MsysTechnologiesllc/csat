@@ -9,6 +9,7 @@ import {
   Pagination,
   Popover,
   Avatar,
+  Tooltip,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router";
@@ -121,10 +122,43 @@ export const Accounts = () => {
       key: "accountOwner",
       render: (text, record) => (
         <>
-          <p>
-            {record.account.account_owner.length > 0 &&
-              record.account.account_owner[0]?.name}
-          </p>
+          {record?.account?.account_owner?.length === 1 ? (
+            <p className="avatar-name">
+              {record?.account?.account_owner[0]?.name}
+            </p>
+          ) : (
+            <div className="extra-avatars">
+              <Avatar.Group
+                className="avatar-group"
+                maxCount={1}
+                maxPopoverTrigger="click"
+                size="small"
+                maxStyle={{
+                  color: "#f56a00",
+                  backgroundColor: "#fde3cf",
+                  cursor: "pointer",
+                }}
+              >
+                <p className="avatar-name">
+                  {record?.account?.account_owner[0]?.name}
+                </p>
+                {record.account.account_owner.slice(1).map(({ name }) => (
+                  <Tooltip title={name} placement="top" key={name}>
+                    <Avatar
+                      style={{
+                        color: "#f56a00",
+                        backgroundColor: "#fde3cf",
+                        cursor: "pointer",
+                      }}
+                      size="small"
+                    >
+                      {name && name.charAt(0)}
+                    </Avatar>
+                  </Tooltip>
+                ))}
+              </Avatar.Group>
+            </div>
+          )}
         </>
       ),
     },
@@ -134,11 +168,16 @@ export const Accounts = () => {
       key: "projects",
       render: (text, record) => (
         <>
-          <p>
-            {record.account?.account_projects?.length > 0 &&
-              record.account?.account_projects?.length}{" "}
-            <span>Projects</span>
-          </p>
+          <span>
+            {record.account?.account_projects?.length > 0 ? (
+              <>
+                {record.account?.account_projects?.length}
+                {i18n.t("addAccount.projects")}
+              </>
+            ) : (
+              `0 ${i18n.t("addAccount.projects")}`
+            )}
+          </span>
         </>
       ),
     },
@@ -243,7 +282,6 @@ export const Accounts = () => {
             deliveryHead?.map((each) => {
               deliveryHeadName.push(each?.name);
             });
-            console.log(deliveryHeadName);
             return (
               <Col xs={24} md={12} lg={8} xxl={6} key={account?.ID}>
                 <Card className="project-wrapper">
