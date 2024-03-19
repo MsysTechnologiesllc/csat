@@ -24,9 +24,8 @@ const FormatList = ({}) => {
       },
     });
   };
-  let user_id = localStorage.getItem("userId");
   useEffect(() => {
-    new GetService().getSurveyFormatList(user_id, (result) => {
+    new GetService().getSurveyFormatList(state?.accountId, (result) => {
       if (result) {
         setData(result?.data?.data);
       }
