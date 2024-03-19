@@ -25,7 +25,7 @@ const FormatList = ({}) => {
     });
   };
   useEffect(() => {
-    new GetService().getSurveyFormatList(state?.prjId, (result) => {
+    new GetService().getSurveyFormatList(state?.account_id, (result) => {
       if (result) {
         setData(result?.data?.data);
       }
