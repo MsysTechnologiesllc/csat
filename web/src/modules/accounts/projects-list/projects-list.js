@@ -11,7 +11,7 @@ import {
   Table,
   Form,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import i18n from "../../../locales/i18next";
 import { GoDotFill } from "react-icons/go";
 import "./projects-list.scss";
@@ -45,8 +45,6 @@ export const ProjectsList = () => {
   const [selectedSegment, setSelectedSegment] = useState("Grid");
   const [deleteModal, setDeleteModal] = useState(false);
   const [eachProject, setEachProject] = useState({});
-  const [isPopover, setIsPopover] = useState(false);
-  const [popId, setPopId] = useState("");
   const [projectsList, setProjectsList] = useState({});
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
@@ -93,7 +91,6 @@ export const ProjectsList = () => {
   const onClose = () => {
     setAddProject("");
     form.resetFields();
-    setPopId("");
   };
   const handleFinish = (values) => {
     const formattedDate = moment(values?.startDate).format(
@@ -122,7 +119,6 @@ export const ProjectsList = () => {
           form.resetFields();
           setDropdownOptionsData([]);
           setAddProject("");
-          setPopId("");
         }
       },
     );
@@ -140,16 +136,9 @@ export const ProjectsList = () => {
           })
           .filter(Boolean)
       : [];
-  const handleOnOpenChange = (id) => {
-    if (id !== popId) {
-      setPopId(id);
-      setIsPopover(true);
-    }
-  };
   const handleonCancel = () => {
     setDeleteModal(false);
     setEachProject({});
-    setPopId("");
     setAddProject("");
   };
   const handleonOk = (project) => {
@@ -168,7 +157,6 @@ export const ProjectsList = () => {
           setMessage("Project Deleted Successfully");
           setDeleteModal(false);
           setEachProject({});
-          setPopId("");
           setTimeout(() => {
             setNotify("");
             setMessage("");
@@ -181,10 +169,8 @@ export const ProjectsList = () => {
     setEachProject(project);
     if (option === "Delete") {
       setDeleteModal(true);
-      setIsPopover(false);
     } else {
       setAddProject("edit");
-      setIsPopover(false);
     }
   };
   const handleView = (project) => {
@@ -282,6 +268,25 @@ export const ProjectsList = () => {
       start_date: project?.start_date,
     });
   });
+
+  const popoverRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+        setVisible(false); // Click outside the popover, hide it
+      }
+    };
+
+    // Add event listener when component mounts
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Remove event listener when component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [popoverRef]);
+
   return (
     <div className="projects-list-wrapper">
       <Breadcrumb items={breadcrumbList} onClick={handleBreadCrumb} />
@@ -390,12 +395,9 @@ export const ProjectsList = () => {
                             </span>
                           </div>
                         }
-                        trigger="click"
                         arrow={false}
                         placement="bottomRight"
                         overlayStyle={{ padding: 0 }}
-                        open={popId === project.ID && isPopover}
-                        onOpenChange={() => handleOnOpenChange(project.ID)}
                       >
                         <div
                           onClick={(event) => {
