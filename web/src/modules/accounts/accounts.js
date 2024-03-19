@@ -42,8 +42,6 @@ export const Accounts = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedSegment, setSelectedSegment] = useState("Grid");
   const [deleteModal, setDeleteModal] = useState(false);
-  const [isPopover, setIsPopover] = useState(false);
-  const [popId, setPopId] = useState("");
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
   const [open, setOpen] = useState(false);
@@ -57,16 +55,9 @@ export const Accounts = () => {
       }
     });
   };
-  const handleOnOpenChange = (id) => {
-    if (id !== popId) {
-      setPopId(id);
-      setIsPopover(true);
-    }
-  };
   const handleonCancel = () => {
     setDeleteModal(false);
     setEachAccount({});
-    setPopId("");
   };
   const handleonOk = (account) => {
     const payload = {
@@ -82,7 +73,6 @@ export const Accounts = () => {
         setDeleteModal(false);
         setIsId("");
         setEachAccount({});
-        setPopId("");
         setTimeout(() => {
           setNotify("");
           setMessage("");
@@ -95,12 +85,10 @@ export const Accounts = () => {
       setDeleteModal(true);
       setEachAccount(account);
       // setIsId(account.ID);
-      setIsPopover(false);
     } else {
       setServiceType("edit");
       setOpen(true);
       setEachAccount(account);
-      setIsPopover(false);
     }
   };
   const handleView = (account) => {
@@ -248,7 +236,6 @@ export const Accounts = () => {
         accountsApi={accountsApi}
         serviceType={serviceType}
         setServiceType={setServiceType}
-        setPopId={setPopId}
       />
       <div className="account-header-container">
         <h1 className="project-title">{i18n.t("greetings.account")}</h1>
@@ -350,12 +337,9 @@ export const Accounts = () => {
                           </span>
                         </div>
                       }
-                      trigger="click"
                       arrow={false}
                       placement="bottomRight"
                       overlayStyle={{ padding: 0 }}
-                      open={popId === account.ID && isPopover}
-                      onOpenChange={() => handleOnOpenChange(account.ID)}
                     >
                       <div
                         onClick={(event) => {

@@ -45,8 +45,6 @@ export const ProjectsList = () => {
   const [selectedSegment, setSelectedSegment] = useState("Grid");
   const [deleteModal, setDeleteModal] = useState(false);
   const [eachProject, setEachProject] = useState({});
-  const [isPopover, setIsPopover] = useState(false);
-  const [popId, setPopId] = useState("");
   const [projectsList, setProjectsList] = useState({});
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
@@ -140,16 +138,9 @@ export const ProjectsList = () => {
           })
           .filter(Boolean)
       : [];
-  const handleOnOpenChange = (id) => {
-    if (id !== popId) {
-      setPopId(id);
-      setIsPopover(true);
-    }
-  };
   const handleonCancel = () => {
     setDeleteModal(false);
     setEachProject({});
-    setPopId("");
     setAddProject("");
   };
   const handleonOk = (project) => {
@@ -169,7 +160,6 @@ export const ProjectsList = () => {
           setDeleteModal(false);
           setEachProject({});
           setSelectedItems([]);
-          setPopId("");
           setTimeout(() => {
             setNotify("");
             setMessage("");
@@ -182,10 +172,8 @@ export const ProjectsList = () => {
     setEachProject(project);
     if (option === "Delete") {
       setDeleteModal(true);
-      setIsPopover(false);
     } else {
       setAddProject("edit");
-      setIsPopover(false);
     }
   };
   const handleView = (project) => {
@@ -395,12 +383,9 @@ export const ProjectsList = () => {
                             </span>
                           </div>
                         }
-                        trigger="click"
                         arrow={false}
                         placement="bottomRight"
                         overlayStyle={{ padding: 0 }}
-                        open={popId === project.ID && isPopover}
-                        onOpenChange={() => handleOnOpenChange(project.ID)}
                       >
                         <div
                           onClick={(event) => {
