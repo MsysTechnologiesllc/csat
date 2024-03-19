@@ -281,16 +281,12 @@ export const ProjectsList = () => {
   ];
   const data = [];
   projectsList?.account_projects?.map((project, index) => {
-    const prjManager = project?.Users?.filter(
-      (user) => user.role === "projectManager",
-    );
     const teamMembers = project?.Users?.filter(
       (user) => user.role === "member",
     );
     data.push({
       key: index + 1,
       name: project?.name,
-      projectOwner: prjManager[0]?.name,
       members: `${teamMembers?.length} Member(s)`,
       ID: project?.ID,
       Users: project?.Users,
