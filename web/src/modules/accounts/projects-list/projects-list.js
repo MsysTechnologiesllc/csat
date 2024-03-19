@@ -11,7 +11,7 @@ import {
   Table,
   Form,
 } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import i18n from "../../../locales/i18next";
 import { GoDotFill } from "react-icons/go";
 import {
@@ -271,25 +271,6 @@ export const ProjectsList = () => {
       start_date: project?.start_date,
     });
   });
-
-  const popoverRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
-        setVisible(false); // Click outside the popover, hide it
-      }
-    };
-
-    // Add event listener when component mounts
-    document.addEventListener("mousedown", handleClickOutside);
-
-    // Remove event listener when component unmounts
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [popoverRef]);
-
   return (
     <div className="projects-list-wrapper">
       <Breadcrumb items={breadcrumbList} onClick={handleBreadCrumb} />

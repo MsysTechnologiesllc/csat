@@ -77,15 +77,15 @@ func CreateUserData(db *gorm.DB, name string, email string, password string, rol
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-    if err != nil {
-        return schema.User{}, fmt.Errorf("error hashing password: %v", err)
-    }
+	if err != nil {
+		return schema.User{}, fmt.Errorf("error hashing password: %v", err)
+	}
 
 	// User doesn't exist, create a new one
 	user := schema.User{
 		Name:      name,
 		Email:     email,
-		Password:  string(hashedPassword),		
+		Password:  string(hashedPassword),
 		Role:      role,
 		AccountID: accountId,
 	}
@@ -138,6 +138,7 @@ func CreateUsersProject(db *gorm.DB, userID uint, projectID uint, role string) e
 		UserID:    userID,
 		ProjectID: projectID,
 		Role:      role,
+		IsActive:  true,
 	}
 
 	if err := db.Create(userProject).Error; err != nil {
