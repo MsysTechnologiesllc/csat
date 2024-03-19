@@ -271,17 +271,10 @@ export const Accounts = () => {
       ) : selectedSegment === "Grid" ? (
         <Row gutter={[20, 20]} className="project-list-wrapper">
           {accountsList?.map((account) => {
-            const deliveryHead =
-              account?.account_projects?.length > 0 &&
-              account?.account_projects[0]?.Users?.length > 0
-                ? account?.account_projects[0]?.Users
-                : account?.account_projects[1]?.Users?.filter((each) => {
-                    each?.role === "deliveryHead";
-                  });
             let deliveryHeadName = [];
-            deliveryHead?.map((each) => {
-              deliveryHeadName.push(each?.name);
-            });
+            account?.account_owner?.map((each) =>
+              deliveryHeadName.push(each.name),
+            );
             return (
               <Col xs={24} md={12} lg={8} xxl={6} key={account?.ID}>
                 <Card className="project-wrapper">
@@ -302,13 +295,13 @@ export const Accounts = () => {
                           {account?.name}
                         </h4>
                         <p className="client-name" title={deliveryHeadName}>
-                          {deliveryHead?.length > 0 &&
-                            (deliveryHead.length === 1
-                              ? deliveryHead[0]?.name
-                              : `${deliveryHead[0]?.name}`)}
-                          {deliveryHead?.length > 1 && (
+                          {account?.account_owner?.length > 0 &&
+                            (account?.account_owner?.length === 1
+                              ? account?.account_owner[0]?.name
+                              : `${account?.account_owner[0]?.name}`)}
+                          {account?.account_owner?.length > 1 && (
                             <Avatar className="delivery-head-length">
-                              +{deliveryHead?.length - 1}
+                              +{account?.account_owner?.length - 1}
                             </Avatar>
                           )}
                         </p>
