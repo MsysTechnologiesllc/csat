@@ -58,10 +58,10 @@ export class GetService extends BaseService {
       callback,
     );
   }
-  getSurveyFormatList(project_id, callback) {
+  getSurveyFormatList(acc_id, callback) {
     return this.get(
       process.env.GO_SERVICE_URL +
-        `/csat/rest/api/survey-format/list?project_id=${project_id}`,
+        `/csat/rest/api/survey-format/list?account_id=${acc_id}`,
       callback,
     );
   }
@@ -69,6 +69,19 @@ export class GetService extends BaseService {
     return this.get(
       process.env.GO_SERVICE_URL +
         `/csat/rest/auth/reset-password/link?email=${email}`,
+      callback,
+    );
+  }
+  getAccountOwners(search, callback) {
+    return this.get(
+      process.env.GO_SERVICE_URL + `/csat/rest/auth/search?search=${search}`,
+      callback,
+    );
+  }
+  getProjectDetails(projectId, callback) {
+    return this.get(
+      process.env.GO_SERVICE_URL +
+        `/csat/rest/api/project-details?projectId=${projectId}`,
       callback,
     );
   }

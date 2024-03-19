@@ -142,6 +142,9 @@
         @include font-style($white, 1.6rem, 2.4rem, 400);
         text-align: left;
       }
+      .ant-menu-light.ant-menu-root.ant-menu-inline{
+        border: 0
+      }
     }
   }
   .sidebar-container {

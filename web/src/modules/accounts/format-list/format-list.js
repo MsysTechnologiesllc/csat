@@ -20,11 +20,12 @@ const FormatList = ({}) => {
         accountName: state?.accountName,
         projectsList: state?.projectsList,
         accountId: state?.accountId,
+        tenantId: state?.tenantId,
       },
     });
   };
   useEffect(() => {
-    new GetService().getSurveyFormatList(state?.prjId, (result) => {
+    new GetService().getSurveyFormatList(state?.accountId, (result) => {
       if (result) {
         setData(result?.data?.data);
       }
