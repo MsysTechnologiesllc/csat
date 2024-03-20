@@ -10,6 +10,7 @@ import {
   Segmented,
   Table,
   Form,
+  Avatar,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import i18n from "../../../locales/i18next";
@@ -57,7 +58,17 @@ export const ProjectsList = () => {
     if (search?.length >= 3) {
       new GetService().getAccountOwners(search, (result) => {
         if (result?.status === 200) {
-          setDropdownOptions(result?.data?.data?.gsuit_users || []);
+          const data = [
+            ...(result?.data?.data?.db_users || []),
+            ...(result?.data?.data?.gsuit_users || []),
+          ];
+          const filteredData = data.filter((item) => {
+            return (
+              (item.name && item.name.toLowerCase().includes(search)) ||
+              (item.email && item.email.toLowerCase().includes(search))
+            );
+          });
+          setDropdownOptions(filteredData);
         } else {
           setDropdownOptions([]);
         }
@@ -209,6 +220,8 @@ export const ProjectsList = () => {
     }
     setBreadcrumbList(breadcrumbItems);
   }, [projectsList]);
+  let deliveryHeadName = [];
+  projectsList?.account_owner?.map((each) => deliveryHeadName.push(each.name));
   const columns = [
     {
       title: i18n.t("addProjects.project"),
@@ -219,6 +232,19 @@ export const ProjectsList = () => {
       title: i18n.t("addProjects.projectOwner"),
       dataIndex: "projectOwner",
       key: "projectOwner",
+      render: () => (
+        <p className="client-name" title={deliveryHeadName}>
+          {projectsList?.account_owner?.length > 0 &&
+            (projectsList?.account_owner?.length === 1
+              ? projectsList?.account_owner[0]?.name
+              : `${projectsList?.account_owner[0]?.name}`)}
+          {projectsList?.account_owner?.length > 1 && (
+            <Avatar className="delivery-head-length">
+              +{projectsList?.account_owner?.length - 1}
+            </Avatar>
+          )}
+        </p>
+      ),
     },
     {
       title: i18n.t("addProjects.members"),
@@ -255,16 +281,12 @@ export const ProjectsList = () => {
   ];
   const data = [];
   projectsList?.account_projects?.map((project, index) => {
-    const prjManager = project?.Users?.filter(
-      (user) => user.role === "projectManager",
-    );
     const teamMembers = project?.Users?.filter(
       (user) => user.role === "member",
     );
     data.push({
       key: index + 1,
       name: project?.name,
-      projectOwner: prjManager[0]?.name,
       members: `${teamMembers?.length} Member(s)`,
       ID: project?.ID,
       Users: project?.Users,
@@ -315,9 +337,6 @@ export const ProjectsList = () => {
         <Row gutter={[20, 20]} className="project-list-wrapper">
           {projectsList?.account_projects?.length > 0 ? (
             projectsList?.account_projects?.map((project) => {
-              const prjManager = project?.Users?.filter(
-                (user) => user.role === "projectManager",
-              );
               const teamMembers = project?.Users?.filter(
                 (user) => user.role === "member",
               );
@@ -336,7 +355,17 @@ export const ProjectsList = () => {
                           <h4 className="project-name" title={project.name}>
                             {project.name}
                           </h4>
-                          <p className="client-name">{prjManager[0]?.name}</p>
+                          <p className="client-name" title={deliveryHeadName}>
+                            {projectsList?.account_owner?.length > 0 &&
+                              (projectsList?.account_owner?.length === 1
+                                ? projectsList?.account_owner[0]?.name
+                                : `${projectsList?.account_owner[0]?.name}`)}
+                            {projectsList?.account_owner?.length > 1 && (
+                              <Avatar className="delivery-head-length">
+                                +{projectsList?.account_owner?.length - 1}
+                              </Avatar>
+                            )}
+                          </p>
                         </div>
                       </div>
                       <div className="day-left-container">
