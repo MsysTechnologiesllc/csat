@@ -3,7 +3,6 @@
 const webpack = require("webpack");
 const path = require("path");
 const getCacheIdentifier = require("react-dev-utils/getCacheIdentifier");
-const Dotenv = require("dotenv-webpack");
 
 module.exports = function override(config) {
   const fallback = config.resolve.fallback || {};
@@ -20,13 +19,6 @@ module.exports = function override(config) {
   config.plugins.push(
     new webpack.NormalModuleReplacementPlugin(/^node:/, (resource) => {
       resource.request = resource.request.replace(/^node:/, "");
-    }),
-  );
-  config.plugins.push(
-    new Dotenv({
-      path: "./.env", // Path to your .env file
-      safe: true, // If true, load .env.example (defaults to "false" which does not use dotenv-safe)
-      systemvars: true, // If true, load system environment variables (defaults to "false" which does not use dotenv-safe)
     }),
   );
   config.ignoreWarnings = [/Failed to parse source map/];
