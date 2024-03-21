@@ -132,16 +132,17 @@ const FormatList = ({}) => {
   function createSurvey() {
     // TODO
   }
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
+  const [isModalOpen, setIsModalOpen] = useState("");
+  const showModal = (role) => {
+    setIsModalOpen(role);
+    console.log(role);
     // TODO
   };
   const handleOk = () => {
-    setIsModalOpen(false);
+    setIsModalOpen("");
   };
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalOpen("");
   };
   let datas = [
     {
@@ -232,7 +233,7 @@ const FormatList = ({}) => {
                 <Button
                   type="text"
                   className="add-btn"
-                  onClick={(role) => showModal(role)}
+                  onClick={() => showModal("stakeholders")}
                 >
                   {i18n.t("prjOverview.add")}
                 </Button>
@@ -268,7 +269,7 @@ const FormatList = ({}) => {
                 <Button
                   type="text"
                   className="add-btn"
-                  onClick={(role) => showModal(role)}
+                  onClick={() => showModal("projectMembers")}
                 >
                   {i18n.t("prjOverview.add")}
                 </Button>
@@ -278,8 +279,13 @@ const FormatList = ({}) => {
                 onOk={handleOk}
                 onCancel={handleCancel}
                 footer={null}
+                className="project-member-stakeholder-modal"
+                width={800}
               >
-                <AddProjectMembersAndStakeholders />
+                <AddProjectMembersAndStakeholders
+                  isModalOpen={isModalOpen}
+                  setIsModalOpen={setIsModalOpen}
+                />
               </Modal>
             </div>
           </Col>
