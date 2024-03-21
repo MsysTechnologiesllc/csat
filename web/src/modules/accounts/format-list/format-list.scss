@@ -5,6 +5,36 @@
   background-color: $smoked_bg;
   height: auto;
 
+  .crete-survey-btn {
+    @include font-style($white, 1.6rem, 2.4rem, 400);
+    border-radius: 0.4rem;
+    padding: 1rem 2.2rem;
+    @include justify-content-center;
+    @include align-items-center;
+    margin-left: 1rem;
+    min-height: 3.5rem;
+    background-color: $indigo;
+    color: $white;
+
+    &:hover {
+      background-color: $indigo;
+      box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
+    }
+
+    @include media("<md") {
+      font-size: 1.4rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  .add-btn {
+    @include font-style($indigo, 1.4rem, 2.2rem, 700);
+
+    &:hover {
+      background-color: none;
+    }
+  }
+
   .ant-breadcrumb,
   .ant-breadcrumb a {
     @include font-style($dark-black, 1.6rem, 2.4rem, 400);
@@ -47,27 +77,7 @@
       }
     }
 
-    .crete-survey-btn {
-      @include font-style($white, 1.6rem, 2.4rem, 400);
-      border-radius: 0.4rem;
-      padding: 1rem 2.2rem;
-      @include justify-content-center;
-      @include align-items-center;
-      margin-left: 1rem;
-      min-height: 3.5rem;
-      background-color: $indigo;
-      color: $white;
 
-      &:hover {
-        background-color: $indigo;
-        box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
-      }
-
-      @include media("<md") {
-        font-size: 1.4rem;
-        padding: 0.5rem 1rem;
-      }
-    }
   }
 
   .prj-overview-top-section {
@@ -86,6 +96,53 @@
         min-height: 32vh;
         max-height: 32vh;
         background-color: $white;
+        padding: 1rem;
+
+        .accounts-avatar-container {
+          @include justify-content-between;
+          @include align-items-center;
+          margin-bottom: 1rem;
+
+          .acc-name {
+            @include font-style($black, 1.6rem, 2.4rem, 400);
+            margin: 0;
+          }
+        }
+
+        .accounts-details-container {
+          text-align: start;
+
+          .acc-owner-container {
+            margin-bottom: 1rem;
+
+            .acc-owner-label {
+              @include font-style($black, 1.6rem, 2.4rem, 500);
+              margin: 0;
+            }
+
+            .detail {
+              @include font-style($black , 1.4rem, 2.2rem, 400);
+            }
+          }
+        }
+      }
+
+      .stackholders {
+        @include flex-column;
+        @include justify-content-between;
+
+        .stackholders-container {
+          @include justify-content-between;
+
+          .label-avatar-container {
+            text-align: start;
+
+            .label {
+              @include font-style($black, 1.6rem, 2.4rem, 700);
+              margin: 0;
+            }
+          }
+        }
       }
 
       .rating-and-surveys {
@@ -94,6 +151,7 @@
         @include justify-content-between;
         @include align-items-center;
         gap: 1rem;
+        padding: 0;
 
         @include media(">md", "<=lg") {
           gap: 1.1rem;
@@ -103,6 +161,7 @@
         max-height: 32vh;
 
         .overview-rows {
+          padding: 1rem;
           border-radius: 0.4rem;
           min-height: 14.5vh;
           max-height: 14.5vh;
@@ -164,7 +223,6 @@
     }
 
     .custom-scrollbar-table-format {
-      // padding: 1.6rem;
       min-height: 75vh;
       max-height: 75vh;
       border: 0.1rem solid $light-grey;
