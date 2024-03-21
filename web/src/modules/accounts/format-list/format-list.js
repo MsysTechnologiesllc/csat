@@ -8,6 +8,8 @@ import {
   Tooltip,
   Modal,
   Avatar,
+  Rate,
+  Divider,
 } from "antd";
 import { TableShimmer } from "../../../components/table-shimmer/table-shimmer";
 import i18n from "../../../locales/i18next";
@@ -180,7 +182,7 @@ const FormatList = ({}) => {
 
       <div className="prj-overview-top-section">
         <Row className="main-row">
-          <Col span={24} md={4}>
+          <Col span={24} md={8} xl={4}>
             <div className="overview-sections">
               <div className="accounts-avatar-container">
                 <Avatar></Avatar>
@@ -188,22 +190,27 @@ const FormatList = ({}) => {
               </div>
               <div className="accounts-details-container">
                 <div className="acc-owner-container">
-                  <h5 className="acc-owner-label">Account owner</h5>
+                  <h5 className="acc-owner-label">
+                    {i18n.t("addAccount.accOwner")}
+                  </h5>
                   <p className="detail">Anand jain</p>
                 </div>
                 <div className="acc-owner-container">
-                  <h5 className="acc-owner-label">SOW Start Date</h5>
+                  <h5 className="acc-owner-label">
+                    {i18n.t("prjOverview.sow")}
+                  </h5>
                   <p className="detail">17/03/2021</p>
                 </div>
               </div>
             </div>
           </Col>
-
-          <Col span={24} md={6}>
+          <Col span={24} md={8} xl={6}>
             <div className="overview-sections stackholders">
               <div className="stackholders-container">
                 <div className="label-avatar-container">
-                  <h5 className="label">Stakeholders</h5>
+                  <h5 className="label">
+                    {i18n.t("prjOverview.stakeholders")}
+                  </h5>
                   <Avatar.Group
                     className="avatar-group"
                     maxCount={5}
@@ -241,7 +248,7 @@ const FormatList = ({}) => {
 
               <div className="stackholders-container">
                 <div className="label-avatar-container">
-                  <h5 className="label">Project Members</h5>
+                  <h5 className="label">{i18n.t("prjOverview.prjMembers")}</h5>
                   <Avatar.Group
                     className="avatar-group"
                     maxCount={5}
@@ -282,19 +289,72 @@ const FormatList = ({}) => {
               </Modal>
             </div>
           </Col>
-          <Col span={24} md={4}>
-            <div className="overview-sections">TODO</div>
+          <Col span={24} md={7} xl={5}>
+            <div className="overview-sections">
+              <div className="last-sent bottom-space">
+                <h5 className="label-text">{i18n.t("prjOverview.lastSent")}</h5>
+                <p className="last-sent-text">
+                  VA launchpad
+                  <span className="last-sent-date"> | 02 FEB 2024</span>
+                </p>
+              </div>
+              <div className="last-sent">
+                <h5 className="label-text">{i18n.t("prjOverview.upComing")}</h5>
+                <p className="last-sent-text">
+                  VA launchpad
+                  <span className="last-sent-date"> | 02 FEB 2024</span>
+                </p>
+                <p className="last-sent-text">
+                  VA launchpad
+                  <span className="last-sent-date"> | 02 FEB 2024</span>
+                </p>
+                <p className="last-sent-text">
+                  VA launchpad
+                  <span className="last-sent-date"> | 02 FEB 2024</span>
+                </p>
+              </div>
+            </div>
           </Col>
           <Col
             span={24}
-            md={9}
+            md={24}
+            xl={8}
             className="overview-sections rating-and-surveys"
           >
-            <Row span={24} className="overview-rows">
-              TODO
+            <Row className="overview-rows rating">
+              <Col span={24} md={10} xl={24}>
+                <h5 className="rating-label">
+                  {i18n.t("prjOverview.allRating")}
+                </h5>
+                <h5 className="rating-count">4.3</h5>
+              </Col>
+              <Col span={24} md={10} xl={24}>
+                <Rate allowHalf defaultValue={2.5} disabled={true} />
+              </Col>
             </Row>
-            <Row span={24} className="overview-rows">
-              TODO
+
+            <Row
+              span={24}
+              md={10}
+              lg={24}
+              className="overview-rows all-surveys"
+            >
+              <div className="divider-containers">
+                <h5 className="label">{i18n.t("prjOverview.totalSurveys")}</h5>
+                <h5 className="count">56</h5>
+              </div>
+              <Divider type="vertical" />
+              <div className="divider-containers">
+                <h5 className="label">{i18n.t("prjOverview.sentSurveys")}</h5>
+                <h5 className="count">34</h5>
+              </div>
+              <Divider type="vertical" />
+              <div className="divider-containers">
+                <h5 className="label">
+                  {i18n.t("prjOverview.pendingSurveys")}
+                </h5>
+                <h5 className="count">22</h5>
+              </div>
             </Row>
           </Col>
         </Row>
