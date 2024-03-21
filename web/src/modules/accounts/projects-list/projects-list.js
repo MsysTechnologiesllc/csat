@@ -188,6 +188,7 @@ export const ProjectsList = () => {
     }
   };
   const handleView = (project) => {
+    console.log("onclick on view");
     navigate(
       `/accounts/${state?.accountId}/projects/${project?.ID}/formatlist`,
       {

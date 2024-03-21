@@ -268,4 +268,9 @@ export const translationEN = {
     updateSuccess: "{{prjName}} updated successfully",
     addSuccess: "{{prjName}} has been created",
   },
+  prjOverview: {
+    prjOverview: "Project Overview",
+    createSurvey: "+ Create Survey",
+    add: "+ Add",
+  },
 };
