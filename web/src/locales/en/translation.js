@@ -281,5 +281,8 @@ export const translationEN = {
     totalSurveys: "Total Surveys",
     sentSurveys: "Sent Surveys",
     pendingSurveys: "Pending Surveys",
+    recentSurveys: "Recent Surveys",
+    createdDate: "Created Date",
+    resDeadline: "Response Deadline",
   },
 };

@@ -239,140 +239,248 @@
   }
 
   .survey-list-container {
-    border: 0.1rem solid $very-light-gray;
-    border-radius: 0.4rem;
-    margin-top: 0.5rem;
+    background-color: $white;
+    padding: 1rem;
 
-    .action-svg {
-      min-height: 3rem;
-      @include align-items-center;
+    // @include media("<=md") {
+    overflow-x: auto;
+    white-space: nowrap;
+    // }
 
-      .action-avatar {
-        margin: auto;
-
-        &:hover {
-          cursor: pointer;
-        }
-      }
-
-      .blur {
-        opacity: 0.5;
-      }
+    .tabel-heading {
+      text-align: start;
     }
 
-    .custom-scrollbar-table-format .ant-table-body {
-      min-height: 34rem;
-      max-height: 34rem;
-      overflow-y: auto;
-    }
+    .ant-table-wrapper {
+      .ant-table-header {
+        background-color: $white;
 
-    .custom-scrollbar-table-format .ant-table-body::-webkit-scrollbar {
-      width: 0.5rem;
-      height: 0.5rem;
-    }
-
-    .custom-scrollbar-table-format .ant-table-body::-webkit-scrollbar-thumb {
-      background-color: $white;
-      border-radius: 0.4rem;
-    }
-
-    .custom-scrollbar-table-format .ant-table-body::-webkit-scrollbar-track {
-      background-color: transparent;
-    }
-
-    .custom-scrollbar-table-format .ant-table-body:hover::-webkit-scrollbar-thumb {
-      background-color: $dark-grey;
-    }
-
-    .even-row {
-      background-color: $very-light-gray;
-    }
-
-    .custom-scrollbar-table-format {
-      min-height: 75vh;
-      max-height: 75vh;
-      border: 0.1rem solid $light-grey;
-      border-radius: 0.4rem;
-
-      @include media(">=lg") {
-        min-height: 82vh;
-        max-height: 82vh;
-      }
-
-      .ant-spin-container {
-        min-height: 70vh;
-        max-height: 70vh;
-
-        @include media(">=lg") {
-          min-height: 79vh;
-          max-height: 79vh;
-        }
-      }
-
-      .ant-table {
-        .ant-table-body {
-          min-height: 52vh;
-          max-height: 52vh;
-
-          @include media(">=lg") {
-            min-height: 65vh;
-            max-height: 65vh;
-          }
-        }
-
-        .ant-table-thead>tr>th {
-          @include font-style($indigo, 1.6rem, 2.4rem, 500);
+        .ant-table-cell {
           background-color: $white;
-          border-bottom: none;
-          padding-bottom: 1.3rem;
-          white-space: nowrap;
-          text-align: start;
         }
-
-        .ant-table-tbody>tr>td {
-          white-space: nowrap;
-          padding: 1.2rem 0;
-          @include font-style($black, 1.4rem, 2rem, 400);
-          min-width: 13rem;
-          max-width: 13rem;
-          @include text-ellipsis;
-          padding-right: 1rem;
-          text-align: start;
-          text-transform: capitalize;
-
-          @include media("<=md") {
-            padding: 0;
-          }
-        }
-
-        .ant-table-tbody>tr>td:nth-child(1) {
-          @include text-ellipsis;
-          padding-right: 2rem;
-        }
-
-        .ant-table-thead>tr>th:nth-child(5) {
-          text-align: center;
-        }
-
-        .ant-table-tbody>tr>td:nth-child(3) {
-          min-width: 15rem;
-          max-width: 15rem;
-        }
-
-        .ant-table-row.ant-table-row-level-0 {
-          .ant-table-cell:nth-child(1) {
-            padding-left: 1rem;
-          }
-        }
-      }
-
-      .ant-pagination {
-        margin-top: 1rem;
       }
     }
 
-    .ant-select-single.ant-select-sm .ant-select-selector {
-      border: none;
+    .ant-table-tbody {
+
+      >tr>td:nth-child(1),
+      >tr>td:nth-child(2),
+      >tr>td:nth-child(3),
+      >tr>td:nth-child(4),
+      >tr>td:nth-child(5) {
+        min-width: 15rem;
+        max-width: 15rem;
+        padding-left: 1rem;
+      }
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// .action-svg {
+//   min-height: 3rem;
+//   @include align-items-center;
+
+//   .action-avatar {
+//     margin: auto;
+
+//     &:hover {
+//       cursor: pointer;
+//     }
+//   }
+
+//   .blur {
+//     opacity: 0.5;
+//   }
+// }
+
+// .custom-scrollbar-table-format .ant-table-body {
+//   min-height: 34rem;
+//   max-height: 34rem;
+//   overflow-y: auto;
+// }
+
+// .custom-scrollbar-table-format .ant-table-body::-webkit-scrollbar {
+//   width: 0.5rem;
+//   height: 0.5rem;
+// }
+
+// .custom-scrollbar-table-format .ant-table-body::-webkit-scrollbar-thumb {
+//   background-color: $white;
+//   border-radius: 0.4rem;
+// }
+
+// .custom-scrollbar-table-format .ant-table-body::-webkit-scrollbar-track {
+//   background-color: transparent;
+// }
+
+// .custom-scrollbar-table-format .ant-table-body:hover::-webkit-scrollbar-thumb {
+//   background-color: $dark-grey;
+// }
+
+// .even-row {
+//   background-color: $very-light-gray;
+// }
+
+// .custom-scrollbar-table-format {
+//   min-height: 75vh;
+//   max-height: 75vh;
+//   border: 0.1rem solid $light-grey;
+//   border-radius: 0.4rem;
+
+//   @include media(">=lg") {
+//     min-height: 82vh;
+//     max-height: 82vh;
+//   }
+
+//   .ant-spin-container {
+//     min-height: 70vh;
+//     max-height: 70vh;
+
+//     @include media(">=lg") {
+//       min-height: 79vh;
+//       max-height: 79vh;
+//     }
+//   }
+
+//   .ant-table {
+//     .ant-table-body {
+//       min-height: 52vh;
+//       max-height: 52vh;
+
+//       @include media(">=lg") {
+//         min-height: 65vh;
+//         max-height: 65vh;
+//       }
+//     }
+
+//     .ant-table-thead>tr>th {
+//       @include font-style($indigo, 1.6rem, 2.4rem, 500);
+//       background-color: $white;
+//       border-bottom: none;
+//       padding-bottom: 1.3rem;
+//       white-space: nowrap;
+//       text-align: start;
+//     }
+
+//     .ant-table-tbody>tr>td {
+//       white-space: nowrap;
+//       padding: 1.2rem 0;
+//       @include font-style($black, 1.4rem, 2rem, 400);
+//       min-width: 13rem;
+//       max-width: 13rem;
+//       @include text-ellipsis;
+//       padding-right: 1rem;
+//       text-align: start;
+//       text-transform: capitalize;
+
+//       @include media("<=md") {
+//         padding: 0;
+//       }
+//     }
+
+//     .ant-table-tbody>tr>td:nth-child(1) {
+//       @include text-ellipsis;
+//       padding-right: 2rem;
+//     }
+
+//     .ant-table-thead>tr>th:nth-child(5) {
+//       text-align: center;
+//     }
+
+//     .ant-table-tbody>tr>td:nth-child(3) {
+//       min-width: 15rem;
+//       max-width: 15rem;
+//     }
+
+//     .ant-table-row.ant-table-row-level-0 {
+//       .ant-table-cell:nth-child(1) {
+//         padding-left: 1rem;
+//       }
+//     }
+//   }
+
+//   .ant-pagination {
+//     margin-top: 1rem;
+//   }
+// }
+
+// .ant-select-single.ant-select-sm .ant-select-selector {
+//   border: none;
+// }

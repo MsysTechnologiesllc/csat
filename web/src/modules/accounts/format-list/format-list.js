@@ -15,6 +15,7 @@ import { TableShimmer } from "../../../components/table-shimmer/table-shimmer";
 import i18n from "../../../locales/i18next";
 import "./format-list.scss";
 import { GetService } from "../../../services/get";
+import moment from "moment";
 import { useLocation, useNavigate } from "react-router";
 
 const FormatList = ({}) => {
@@ -65,21 +66,26 @@ const FormatList = ({}) => {
       ellipsis: true,
     },
     {
-      title: i18n.t("greetings.projectManager"),
-      dataIndex: "PM_name",
-      key: "PM_name",
+      title: i18n.t("prjOverview.createdDate"),
+      dataIndex: "CreatedAt",
+      key: "CreatedAt",
       ellipsis: true,
+      render: (text, record) =>
+        moment(record.CreatedAt).format("DD MMM YYYY, HH:mm"),
     },
     {
-      title: i18n.t("greetings.deliveryHeadName"),
-      dataIndex: "DH_name",
-      key: "DH_name",
+      title: i18n.t("prjOverview.resDeadline"),
+      dataIndex: "surveys.dead_line",
+      key: "surveys.dead_line",
       ellipsis: true,
+      render: (text, record) =>
+        moment(record.surveys[0].dead_line).format("DD MMM YYYY, HH:mm"),
     },
     {
-      title: i18n.t("greetings.frequency"),
-      dataIndex: "survey_frequency_days",
-      key: "survey_frequency_days",
+      title: i18n.t("surveyList.status"),
+      dataIndex: "surveys.status",
+      key: "surveys.status",
+      render: (text, record) => record.surveys[0].status,
     },
     {
       title: i18n.t("surveyList.action"),
@@ -170,6 +176,7 @@ const FormatList = ({}) => {
       name: "Sandep",
     },
   ];
+  console.log(modifiedTableData);
   return (
     <div className="survey-home-container">
       <Breadcrumb items={breadcrumbList} />
@@ -361,6 +368,7 @@ const FormatList = ({}) => {
       </div>
 
       <div className="survey-list-container">
+        <h5 className="tabel-heading">{i18n.t("prjOverview.recentSurveys")}</h5>
         <Table
           locale={isDataLoaded && data?.length > 0 ? null : customLocale}
           loading={isDataLoaded === false && <TableShimmer row={5} col={5} />}
@@ -374,7 +382,6 @@ const FormatList = ({}) => {
           rowKey="key"
           scroll={{ y: 300, x: true }}
           rowClassName={getRowClassName}
-          className="custom-scrollbar-table-format"
         />
       </div>
     </div>
