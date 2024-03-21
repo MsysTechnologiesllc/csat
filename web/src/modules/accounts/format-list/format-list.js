@@ -14,6 +14,7 @@ import i18n from "../../../locales/i18next";
 import "./format-list.scss";
 import { GetService } from "../../../services/get";
 import { useLocation, useNavigate } from "react-router";
+import { AddProjectMembersAndStakeholders } from "./add-stakeholders-project-members";
 
 const FormatList = ({}) => {
   const navigate = useNavigate();
@@ -198,7 +199,6 @@ const FormatList = ({}) => {
               </div>
             </div>
           </Col>
-
           <Col span={24} md={6}>
             <div className="overview-sections stackholders">
               <div className="stackholders-container">
@@ -229,7 +229,6 @@ const FormatList = ({}) => {
                     ))}
                   </Avatar.Group>
                 </div>
-
                 <Button
                   type="text"
                   className="add-btn"
@@ -238,7 +237,6 @@ const FormatList = ({}) => {
                   {i18n.t("prjOverview.add")}
                 </Button>
               </div>
-
               <div className="stackholders-container">
                 <div className="label-avatar-container">
                   <h5 className="label">Project Members</h5>
@@ -267,7 +265,6 @@ const FormatList = ({}) => {
                     ))}
                   </Avatar.Group>
                 </div>
-
                 <Button
                   type="text"
                   className="add-btn"
@@ -276,9 +273,13 @@ const FormatList = ({}) => {
                   {i18n.t("prjOverview.add")}
                 </Button>
               </div>
-
-              <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <div>TODO</div>
+              <Modal
+                open={isModalOpen}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                footer={null}
+              >
+                <AddProjectMembersAndStakeholders />
               </Modal>
             </div>
           </Col>
