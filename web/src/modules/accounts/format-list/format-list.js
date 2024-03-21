@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Breadcrumb, Table, Tooltip } from "antd";
+import {
+  Breadcrumb,
+  Button,
+  Col,
+  Row,
+  Table,
+  Tooltip,
+  Modal,
+  Avatar,
+} from "antd";
 import { TableShimmer } from "../../../components/table-shimmer/table-shimmer";
 import i18n from "../../../locales/i18next";
 import "./format-list.scss";
@@ -119,11 +128,178 @@ const FormatList = ({}) => {
       },
     );
   };
-
+  function createSurvey() {
+    // TODO
+  }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+    // TODO
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  let datas = [
+    {
+      name: "Sandep",
+    },
+    {
+      name: "Sandep",
+    },
+    {
+      name: "Sandep",
+    },
+    {
+      name: "Sandep",
+    },
+    {
+      name: "Sandep",
+    },
+    {
+      name: "Sandep",
+    },
+    {
+      name: "Sandep",
+    },
+    {
+      name: "Sandep",
+    },
+  ];
   return (
     <div className="survey-home-container">
       <Breadcrumb items={breadcrumbList} />
-      <h3 className="survey-heading">{i18n.t("accounts.surveyFormats")}</h3>
+      <div className="survey-header-container">
+        <h3 className="survey-heading">{i18n.t("prjOverview.prjOverview")}</h3>
+        <Button onClick={createSurvey} className="crete-survey-btn">
+          {i18n.t("prjOverview.createSurvey")}
+        </Button>
+      </div>
+
+      <div className="prj-overview-top-section">
+        <Row className="main-row">
+          <Col span={24} md={4}>
+            <div className="overview-sections">
+              <div className="accounts-avatar-container">
+                <Avatar></Avatar>
+                <h5 className="acc-name">VA Launch pad</h5>
+              </div>
+              <div className="accounts-details-container">
+                <div className="acc-owner-container">
+                  <h5 className="acc-owner-label">Account owner</h5>
+                  <p className="detail">Anand jain</p>
+                </div>
+                <div className="acc-owner-container">
+                  <h5 className="acc-owner-label">SOW Start Date</h5>
+                  <p className="detail">17/03/2021</p>
+                </div>
+              </div>
+            </div>
+          </Col>
+
+          <Col span={24} md={6}>
+            <div className="overview-sections stackholders">
+              <div className="stackholders-container">
+                <div className="label-avatar-container">
+                  <h5 className="label">Stakeholders</h5>
+                  <Avatar.Group
+                    className="avatar-group"
+                    maxCount={5}
+                    maxPopoverTrigger="click"
+                    maxStyle={{
+                      color: "#f56a00",
+                      backgroundColor: "#fde3cf",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {datas.map(({ name }) => (
+                      <Tooltip title={name} placement="top" key={name}>
+                        <Avatar
+                          style={{
+                            color: "#f56a00",
+                            backgroundColor: "#fde3cf",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {name && name.charAt(0)}
+                        </Avatar>
+                      </Tooltip>
+                    ))}
+                  </Avatar.Group>
+                </div>
+
+                <Button
+                  type="text"
+                  className="add-btn"
+                  onClick={(role) => showModal(role)}
+                >
+                  {i18n.t("prjOverview.add")}
+                </Button>
+              </div>
+
+              <div className="stackholders-container">
+                <div className="label-avatar-container">
+                  <h5 className="label">Project Members</h5>
+                  <Avatar.Group
+                    className="avatar-group"
+                    maxCount={5}
+                    maxPopoverTrigger="click"
+                    maxStyle={{
+                      color: "#f56a00",
+                      backgroundColor: "#fde3cf",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {datas.map(({ name }) => (
+                      <Tooltip title={name} placement="top" key={name}>
+                        <Avatar
+                          style={{
+                            color: "#f56a00",
+                            backgroundColor: "#fde3cf",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {name && name.charAt(0)}
+                        </Avatar>
+                      </Tooltip>
+                    ))}
+                  </Avatar.Group>
+                </div>
+
+                <Button
+                  type="text"
+                  className="add-btn"
+                  onClick={(role) => showModal(role)}
+                >
+                  {i18n.t("prjOverview.add")}
+                </Button>
+              </div>
+
+              <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                <div>TODO</div>
+              </Modal>
+            </div>
+          </Col>
+          <Col span={24} md={4}>
+            <div className="overview-sections">TODO</div>
+          </Col>
+          <Col
+            span={24}
+            md={9}
+            className="overview-sections rating-and-surveys"
+          >
+            <Row span={24} className="overview-rows">
+              TODO
+            </Row>
+            <Row span={24} className="overview-rows">
+              TODO
+            </Row>
+          </Col>
+        </Row>
+      </div>
+
       <div className="survey-list-container">
         <Table
           locale={isDataLoaded && data?.length > 0 ? null : customLocale}
