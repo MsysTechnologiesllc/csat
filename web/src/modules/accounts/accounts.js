@@ -92,8 +92,10 @@ export const Accounts = () => {
     }
   };
   const handleView = (account) => {
+    console.log("account: ", account, account.account_owner[0].name);
     navigate(`/accounts/${account.ID}/projects`, {
       state: {
+        accOwner: account.account_owner[0].name,
         accountId: account.ID,
         tenantId: tenantId,
       },
@@ -221,6 +223,7 @@ export const Accounts = () => {
     if (tenantId) {
       new GetService().getAccountsList(tenantId, (result) => {
         if (result?.status === 200) {
+          console.log(result);
           setAccountsList(result?.data?.data?.tenant?.tenant_accounts);
           setIsLoading(false);
         }

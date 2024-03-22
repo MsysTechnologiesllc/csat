@@ -114,6 +114,13 @@
           .acc-name {
             @include font-style($black, 1.6rem, 2.4rem, 400);
             margin: 0;
+            text-transform: capitalize;
+
+          }
+
+          .prj-logo {
+            background-color: $indigo;
+            color: $white;
           }
         }
 

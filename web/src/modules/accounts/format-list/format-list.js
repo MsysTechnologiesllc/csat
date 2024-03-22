@@ -26,6 +26,7 @@ const FormatList = ({}) => {
   const handleAccounts = () => {
     navigate("/accounts");
   };
+  console.log(state);
   const handleProjectsList = () => {
     navigate(`/accounts/${state?.accountId}/projects`, {
       state: {
@@ -33,6 +34,7 @@ const FormatList = ({}) => {
         projectsList: state?.projectsList,
         accountId: state?.accountId,
         tenantId: state?.tenantId,
+        prjId: state?.prjId,
       },
     });
   };
@@ -40,6 +42,7 @@ const FormatList = ({}) => {
     new GetService().getSurveyFormatList(state?.accountId, (result) => {
       if (result) {
         setData(result?.data?.data);
+        console.log(result?.data?.data);
       }
     });
     let breadcrumbItems = [
@@ -150,33 +153,32 @@ const FormatList = ({}) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  let datas = [
-    {
-      name: "Sandep",
-    },
-    {
-      name: "Sandep",
-    },
-    {
-      name: "Sandep",
-    },
-    {
-      name: "Sandep",
-    },
-    {
-      name: "Sandep",
-    },
-    {
-      name: "Sandep",
-    },
-    {
-      name: "Sandep",
-    },
-    {
-      name: "Sandep",
-    },
+  const [clientsData, setClientsData] = useState([]);
+  const [usersData, setUsersData] = useState([]);
+
+  useEffect(() => {
+    new GetService().getTeamList(state?.prjId, (result) => {
+      if (result) {
+        setClientsData(result.data.data.clients);
+        setUsersData(result.data.data.users);
+      }
+    });
+  }, []);
+  const randomColors = [
+    { bg_color: "#FAAD14", text_color: "#FFFFFF" },
+    { bg_color: "#08979C", text_color: "#FFFFFF" },
+    { bg_color: "#E9EBF7", text_color: "#3A49AC" },
+    { bg_color: "#E6F7FF", text_color: "#3A49AC" },
+    { bg_color: "#722ED1", text_color: "#FFFFFF" },
+    { bg_color: "#E9EBF7", text_color: "#3A49AC" },
+    { bg_color: "#FFF1F0", text_color: "#f5222d" },
+    { bg_color: "#5B8C00", text_color: "#FFFFFF" },
+    { bg_color: "#5B6ABF", text_color: "#FFFFFF" },
   ];
-  console.log(modifiedTableData);
+  function generateRandomColor() {
+    return randomColors[Math.floor(Math.random() * randomColors.length)];
+  }
+  console.log(state?.accOwner);
   return (
     <div className="survey-home-container">
       <Breadcrumb items={breadcrumbList} />
@@ -192,21 +194,26 @@ const FormatList = ({}) => {
           <Col span={24} md={8} xl={4}>
             <div className="overview-sections">
               <div className="accounts-avatar-container">
-                <Avatar></Avatar>
-                <h5 className="acc-name">VA Launch pad</h5>
+                <Avatar src={state?.prjLogo || null} className="prj-logo">
+                  {!state?.prjLogo &&
+                    state?.projectName.charAt(0).toUpperCase()}
+                </Avatar>
+                <h5 className="acc-name">{state?.projectName}</h5>
               </div>
               <div className="accounts-details-container">
                 <div className="acc-owner-container">
                   <h5 className="acc-owner-label">
                     {i18n.t("addAccount.accOwner")}
                   </h5>
-                  <p className="detail">Anand jain</p>
+                  <p className="detail">{state?.accOwner}</p>
                 </div>
                 <div className="acc-owner-container">
                   <h5 className="acc-owner-label">
                     {i18n.t("prjOverview.sow")}
                   </h5>
-                  <p className="detail">17/03/2021</p>
+                  <p className="detail">
+                    {moment(state?.prjCreatedDate).format("DD/MM/YYYY")}
+                  </p>
                 </div>
               </div>
             </div>
@@ -221,26 +228,30 @@ const FormatList = ({}) => {
                   <Avatar.Group
                     className="avatar-group"
                     maxCount={5}
-                    maxPopoverTrigger="click"
+                    maxPopoverTrigger="hover"
                     maxStyle={{
                       color: "#f56a00",
-                      backgroundColor: "#fde3cf",
+                      backgroundColor: "#E9EBF7",
                       cursor: "pointer",
                     }}
                   >
-                    {datas.map(({ name }) => (
-                      <Tooltip title={name} placement="top" key={name}>
-                        <Avatar
-                          style={{
-                            color: "#f56a00",
-                            backgroundColor: "#fde3cf",
-                            cursor: "pointer",
-                          }}
-                        >
-                          {name && name.charAt(0)}
-                        </Avatar>
-                      </Tooltip>
-                    ))}
+                    {clientsData?.map(({ name, email }) => {
+                      const randomColor = generateRandomColor();
+                      return (
+                        <Tooltip title={name} placement="top" key={email}>
+                          <Avatar
+                            maxPopoverTrigger="hover"
+                            style={{
+                              color: randomColor.text_color,
+                              backgroundColor: randomColor.bg_color,
+                              cursor: "pointer",
+                            }}
+                          >
+                            {name && name.charAt(0).toUpperCase()}
+                          </Avatar>
+                        </Tooltip>
+                      );
+                    })}
                   </Avatar.Group>
                 </div>
 
@@ -259,26 +270,30 @@ const FormatList = ({}) => {
                   <Avatar.Group
                     className="avatar-group"
                     maxCount={5}
-                    maxPopoverTrigger="click"
+                    maxPopoverTrigger="hover"
                     maxStyle={{
                       color: "#f56a00",
-                      backgroundColor: "#fde3cf",
+                      backgroundColor: "#E9EBF7",
                       cursor: "pointer",
                     }}
                   >
-                    {datas.map(({ name }) => (
-                      <Tooltip title={name} placement="top" key={name}>
-                        <Avatar
-                          style={{
-                            color: "#f56a00",
-                            backgroundColor: "#fde3cf",
-                            cursor: "pointer",
-                          }}
-                        >
-                          {name && name.charAt(0)}
-                        </Avatar>
-                      </Tooltip>
-                    ))}
+                    {usersData?.map(({ name, email }) => {
+                      const randomColor = generateRandomColor();
+                      return (
+                        <Tooltip title={name} placement="top" key={email}>
+                          <Avatar
+                            maxPopoverTrigger="hover"
+                            style={{
+                              color: randomColor.text_color,
+                              backgroundColor: randomColor.bg_color,
+                              cursor: "pointer",
+                            }}
+                          >
+                            {name && name.charAt(0)}
+                          </Avatar>
+                        </Tooltip>
+                      );
+                    })}
                   </Avatar.Group>
                 </div>
 
