@@ -29,9 +29,12 @@ const FormatList = ({}) => {
   const [usersData, setUsersData] = useState([]);
   const [breadcrumbList, setBreadcrumbList] = useState([]);
   const [updatedData, setUpdatedData] = useState([]);
-  // const [surveysCount, setSurveysCount] = useState([
-  //   { total: 0, sent: 0, pending: 0 },
-  // ]);
+  const [surveysCount, setSurveysCount] = useState({
+    total: 0,
+    sent: 0,
+    pending: 0,
+    overdue: 0,
+  });
   let user_id = localStorage.getItem("userId");
   useEffect(() => {
     new GetService().getSurveyFormatList(state?.accountId, (result) => {
@@ -69,15 +72,18 @@ const FormatList = ({}) => {
         setUsersData(result.data.data.users);
       }
     });
-  }, []);
-  useEffect(() => {
+
     new GetService().getSurveyListForProjectOverview(
       state?.tenantId,
       user_id,
       (result) => {
         if (result?.data?.data.Surveys) {
-          console.log(result);
-          console.log(result?.data?.data.Surveys);
+          setSurveysCount({
+            total: result?.data?.data.TotalCount ?? 0,
+            sent: result?.data?.data.CompletedCount ?? 0,
+            pending: result?.data?.data.PendingCount ?? 0,
+            overdue: result?.data?.data.OverdueCount ?? 0,
+          });
         }
       },
     );
@@ -186,7 +192,6 @@ const FormatList = ({}) => {
   function createSurvey() {
     // TODO
   }
-  // const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
     // TODO
@@ -426,19 +431,19 @@ const FormatList = ({}) => {
             >
               <div className="divider-containers">
                 <h5 className="label">{i18n.t("prjOverview.totalSurveys")}</h5>
-                <h5 className="count">0</h5>
+                <h5 className="count">{surveysCount.total}</h5>
               </div>
               <Divider type="vertical" />
               <div className="divider-containers">
                 <h5 className="label">{i18n.t("prjOverview.sentSurveys")}</h5>
-                <h5 className="count">0</h5>
+                <h5 className="count">{surveysCount.sent}</h5>
               </div>
               <Divider type="vertical" />
               <div className="divider-containers">
                 <h5 className="label">
                   {i18n.t("prjOverview.pendingSurveys")}
                 </h5>
-                <h5 className="count">0</h5>
+                <h5 className="count">{surveysCount.pending}</h5>
               </div>
             </Row>
           </Col>
