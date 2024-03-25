@@ -21,7 +21,7 @@ type Token struct {
 	UserId   uint
 	Email    string
 	TenantId uint
-	Grade     uint
+	Grade    uint
 	jwt.StandardClaims
 }
 
@@ -305,8 +305,11 @@ func UpdateUserFeedbackInDB(id uint, updatedFeedback *schema.UserFeedback) (*sch
 }
 
 type SurveyPage struct {
-	Surveys    []schema.Survey
-	TotalCount int
+	Surveys        []schema.Survey
+	TotalCount     int
+	CompletedCount int
+	PendingCount   int
+	OverdueCount   int
 }
 
 // @Summary All surveys
@@ -326,7 +329,7 @@ type SurveyPage struct {
 // @Failure 404 {object} map[string]interface{} "No user found"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/surveys [get]
-func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter []string, userID uint64, surveyFormatIDFilter uint) (SurveyPage, error) {
+func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter []string, userID uint64, surveyFormatIDFilter uint, surveyNameFilter string) (SurveyPage, error) {
 	var result SurveyPage
 
 	query := db.
@@ -353,6 +356,10 @@ func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter strin
 		}
 	}
 
+	if surveyNameFilter != "" {
+		query = query.Where("surveys.name IN (?)", surveyNameFilter)
+	}
+
 	if len(accountNameFilter) > 0 {
 		query = query.Where("projects.name IN (?)", accountNameFilter)
 	}
@@ -363,7 +370,25 @@ func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter strin
 
 	// Get the count with applied filters
 	filteredCount := 0
+	pendingCount := 0
+	overdueCount := 0
+	publishedCount := 0
 	if err := query.Model(&schema.Survey{}).Count(&filteredCount).Error; err != nil {
+		return result, err
+	}
+
+	// Count pending surveys
+	if err := db.Model(&schema.Survey{}).Where("surveys.status = 'pending' AND surveys.dead_line >= NOW()").Count(&pendingCount).Error; err != nil {
+		return result, err
+	}
+
+	// Count overdue surveys
+	if err := db.Model(&schema.Survey{}).Where("surveys.status = 'pending' AND surveys.dead_line < NOW()").Count(&overdueCount).Error; err != nil {
+		return result, err
+	}
+
+	// Count published surveys
+	if err := db.Model(&schema.Survey{}).Where("surveys.status = 'publish'").Count(&publishedCount).Error; err != nil {
 		return result, err
 	}
 
@@ -379,6 +404,9 @@ func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter strin
 
 	// Set the total count in the result struct
 	result.TotalCount = filteredCount
+	result.PendingCount = pendingCount
+	result.OverdueCount = overdueCount
+	result.CompletedCount = publishedCount
 
 	return result, nil
 }
