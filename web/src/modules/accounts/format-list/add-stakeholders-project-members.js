@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, Table } from "antd";
+import { Button, Form, Input, Select, Table } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -10,10 +10,12 @@ import PropTypes from "prop-types";
 import { GetService } from "../../../services/get";
 
 export const AddProjectMembersAndStakeholders = ({
-  setIsModalOpen,
+  // setIsModalOpen,
   isModalOpen,
+  setUserSearch,
+  userSearch,
 }) => {
-  console.log(setIsModalOpen);
+  // console.log(setIsModalOpen);
   const [form] = Form.useForm();
   const [disable, setDisable] = useState(false);
   const [editingKey, setEditingKey] = useState("");
@@ -28,6 +30,7 @@ export const AddProjectMembersAndStakeholders = ({
       }
     });
   }, []);
+  console.log(projectMembersData);
   const cancel = (record) => {
     if (!record?.name && !record?.email) {
       const filteredData = data.filter((item) => item?.key !== record?.key);
@@ -100,7 +103,10 @@ export const AddProjectMembersAndStakeholders = ({
   const deleteProjectMember = (record) => {
     console.log(record);
   };
-  const EditableCell = ({
+  const handleSearch = (value) => {
+    setUserSearch(value);
+  };
+  const ProjectMemberEditableCell = ({
     editing,
     dataIndex,
     title,
@@ -122,7 +128,29 @@ export const AddProjectMembersAndStakeholders = ({
               },
             ]}
           >
-            <Input />
+            <Select
+              showSearch
+              suffixIcon=""
+              onSearch={handleSearch}
+              dropdownMatchSelectWidth={false}
+              optionLabelProp="label"
+              autoClearSearchValue={false}
+              defaultOpen
+              options={[
+                {
+                  value: "jack",
+                  label: "Jack",
+                },
+                {
+                  value: "lucy",
+                  label: "Lucy",
+                },
+                {
+                  value: "tom",
+                  label: "Tom",
+                },
+              ]}
+            />
           </Form.Item>
         ) : (
           children
@@ -205,36 +233,36 @@ export const AddProjectMembersAndStakeholders = ({
   const deleteStakeholder = (record) => {
     console.log(record);
   };
-  // const EditableCell = ({
-  //   editing,
-  //   dataIndex,
-  //   title,
-  //   children,
-  //   ...restProps
-  // }) => {
-  //   return (
-  //     <td {...restProps}>
-  //       {editing ? (
-  //         <Form.Item
-  //           name={dataIndex}
-  //           style={{
-  //             margin: 0,
-  //           }}
-  //           rules={[
-  //             {
-  //               required: true,
-  //               message: `Please Input ${title}!`,
-  //             },
-  //           ]}
-  //         >
-  //           <Input />
-  //         </Form.Item>
-  //       ) : (
-  //         children
-  //       )}
-  //     </td>
-  //   );
-  // };
+  const EditableCell = ({
+    editing,
+    dataIndex,
+    title,
+    children,
+    ...restProps
+  }) => {
+    return (
+      <td {...restProps}>
+        {editing ? (
+          <Form.Item
+            name={dataIndex}
+            style={{
+              margin: 0,
+            }}
+            rules={[
+              {
+                required: true,
+                message: `Please Input ${title}!`,
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        ) : (
+          children
+        )}
+      </td>
+    );
+  };
 
   const columns = [
     {
@@ -301,7 +329,7 @@ export const AddProjectMembersAndStakeholders = ({
       setDisable(true);
     } else {
       const newUser = {
-        key: modifiedProjectMembersData.length + 1,
+        key: modifiedProjectMembersData.length + 10,
         name: "",
         email: "",
         role: "",
@@ -315,13 +343,18 @@ export const AddProjectMembersAndStakeholders = ({
   return (
     <>
       <Button onClick={handleAdd} type="primary" disabled={disable}>
-        Add stakeholder
+        {isModalOpen === "stakeholders"
+          ? "Add stakeholder"
+          : "Add Project Member"}
       </Button>
       <Form form={form} component={false}>
         <Table
           components={{
             body: {
-              cell: EditableCell,
+              cell:
+                isModalOpen === "stakeholders"
+                  ? EditableCell
+                  : ProjectMemberEditableCell,
             },
           }}
           bordered
@@ -349,5 +382,7 @@ AddProjectMembersAndStakeholders.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   isModalOpen: PropTypes.string.isRequired,
-  setIsModalOpen: PropTypes.string.isRequired,
+  setUserSearch: PropTypes.string.isRequired,
+  userSearch: PropTypes.string.isRequired,
+  // setIsModalOpen: PropTypes.string.isRequired,
 };

@@ -21,6 +21,8 @@ const FormatList = ({}) => {
   const { state } = useLocation();
   const [data, setData] = useState([]);
   const [breadcrumbList, setBreadcrumbList] = useState([]);
+  const [userSearch, setUserSearch] = useState("");
+  console.log(userSearch);
   const handleAccounts = () => {
     navigate("/accounts");
   };
@@ -285,6 +287,8 @@ const FormatList = ({}) => {
                 <AddProjectMembersAndStakeholders
                   isModalOpen={isModalOpen}
                   setIsModalOpen={setIsModalOpen}
+                  setUserSearch={setUserSearch}
+                  userSearch={userSearch}
                 />
               </Modal>
             </div>
