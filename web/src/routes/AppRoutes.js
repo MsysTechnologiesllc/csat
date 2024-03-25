@@ -1,0 +1,113 @@
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
+import GreetingsPage from "../components/greetings/greeting";
+import { FeedBackSurvey } from "../components/feedback-survey/feedback-survey";
+import { TeamMembersFeedBack } from "../components/team-members-feedback/team-members-feedback";
+import { Successfull } from "../components/successfull/successfull";
+import { MainLayout } from "../layout/main-layout";
+import { Dashboard } from "../modules/dashboard/dashboard";
+import { CustomerSurveyLayout } from "../layout/customer-survey-layout/customer-survey-layout";
+import { Accounts } from "../modules/accounts/accounts";
+import { Notifications } from "../modules/notifications/notifications";
+import { SurveyDetails } from "../components/survey-details/survey-details";
+import SurveyHome from "../modules/surveys-folder/survey-home/Survey-home";
+import { PreviewSurvey } from "../modules/accounts/preview-survey/preview-survey";
+import { ProjectsList } from "../modules/accounts/projects-list/projects-list";
+import FormatList from "../modules/accounts/format-list/format-list";
+import { SSOIntegration } from "../components/sso-integration/sso-integration";
+import Error from "../components/error/error";
+import ResetPassword from "../components/sso-integration/reset-password";
+
+const AppRoutes = () => {
+  const routes = [
+    { path: "/survey/submitted" },
+    { path: "/teamFeedback/submitted" },
+  ];
+
+  return (
+    <Router>
+      <Routes>
+        <Route element={<CustomerSurveyLayout />} exact>
+          <Route path="/" element={<Navigate to={`/login`} replace />} />
+          <Route path={`/customer-survey`} element={<GreetingsPage />} exact />
+          <Route path="/survey" element={<FeedBackSurvey />} exact />
+          <Route path="/teamFeedBack" element={<TeamMembersFeedBack />} exact />
+          <Route key="/404" path="/404" element={<Error />} exact />
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={<Successfull />}
+              exact
+            />
+          ))}
+        </Route>
+        <Route path="/login" element={<SSOIntegration />} exact />
+        <Route
+          key="/reset-password"
+          path="/reset-password"
+          element={<ResetPassword />}
+          exact
+        />
+        <Route element={<MainLayout />} exact>
+          <Route
+            key="/dashboard"
+            path="/dashboard"
+            element={<Dashboard />}
+            exact
+          />
+          <Route
+            key="/accounts"
+            path="/accounts"
+            element={<Accounts />}
+            exact
+          />
+          <Route
+            key="/accounts/:accountId/projects"
+            path="/accounts/:accountId/projects"
+            element={<ProjectsList />}
+            exact
+          />
+          <Route
+            key="/accounts/:accountId/projects/:projectId/formatlist"
+            path="/accounts/:accountId/projects/:projectId/formatlist"
+            element={<FormatList />}
+            exact
+          />
+          <Route
+            key="/accounts/:accountId/projects/:projectId/formatlist/previewSurvey"
+            path="/accounts/:accountId/projects/:projectId/formatlist/previewSurvey"
+            element={<PreviewSurvey />}
+            exact
+          />
+          <Route
+            key="/surveys"
+            path="/surveys"
+            element={<SurveyHome />}
+            exact
+          />
+          <Route
+            key="/surveys"
+            path="/surveys/surveyDetails"
+            element={<SurveyDetails />}
+            exact
+          />
+          <Route
+            key="notifications"
+            path="notifications"
+            element={<Notifications />}
+            exact
+          />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
+};
+
+export default AppRoutes;

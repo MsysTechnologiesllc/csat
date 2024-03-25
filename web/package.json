@@ -3,18 +3,42 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/preset-env": "^7.23.7",
+    "@react-oauth/google": "^0.12.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "antd": "^5.14.0",
+    "axios": "^1.6.7",
+    "buffer": "^6.0.3",
+    "dotenv": "^16.4.4",
+    "dotenv-webpack": "^8.0.1",
+    "i18next": "^23.7.11",
+    "i18next-browser-languagedetector": "^7.2.0",
+    "i18next-http-backend": "^2.4.2",
+    "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
+    "jwt-encode": "^1.0.1",
+    "lodash": "^4.17.21",
+    "moment": "^2.30.1",
+    "pl-lib": "github:MsysTechnologiesllc/pl-lib#develop",
     "react": "^18.2.0",
+    "react-dev-utils": "^12.0.1",
     "react-dom": "^18.2.0",
+    "react-i18next": "^14.0.0",
+    "react-icons": "^4.12.0",
+    "react-router": "^6.21.1",
+    "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",
+    "react-shimmer-effects": "^1.0.3",
+    "sass": "^1.69.5",
+    "scss": "^0.2.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start .env",
+    "build": "react-app-rewired build .env",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -34,5 +58,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.2.5",
+    "react-app-rewired": "^2.2.1"
   }
 }

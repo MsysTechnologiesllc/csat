@@ -1,25 +1,15 @@
-import logo from './logo.svg';
-import './App.css';
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import React from "react";
+import "./App.scss";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <GoogleOAuthProvider clientId="286646243612-d82l0mk8l1mcgnsu75n8vdbhmrop18ic.apps.googleusercontent.com">
+        <AppRoutes />
+      </GoogleOAuthProvider>
     </div>
   );
 }
-
 export default App;

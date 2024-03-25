@@ -1,0 +1,68 @@
+@use "../../assets/style" as *;
+
+.expire-message {
+    @include flex-column;
+    @include align-items-center;
+    height: 100vh;
+    padding: 7%;
+
+    .create-message {
+        @include font-style($indigo, 3.4rem, 2.4rem, 500);
+        margin-bottom: 3rem;
+
+        @include media("<sm") {
+            font-size: 2.4rem;
+        }
+    }
+
+    .tick-image {
+        width: 10rem;
+        margin-bottom: 7rem;
+
+        @include media("<sm") {
+            margin-bottom: 3rem;
+        }
+    }
+
+    .req-password {
+        @include font-style($indigo, 2.4rem, 2.4rem, 500);
+        margin-bottom: 4rem;
+
+        @include media("<sm") {
+            margin-bottom: 3rem
+        }
+    }
+
+    .sent {
+        width: 100%;
+        @include font-style($slate-blue, 1.4rem, 2.4rem, 500);
+
+        span {
+            color: $indigo;
+        }
+    }
+
+    .expire-button {
+        @include justify-content-center;
+        @include align-items-center;
+        text-transform: uppercase;
+        background-color: $indigo;
+        @include font-style($white, 1.5rem, 2.6rem, 500);
+        border-radius: 0.4rem;
+        min-height: 4rem;
+        max-height: 4rem;
+        padding: 1rem 2.2rem;
+
+        &:hover {
+            background-color: $indigo;
+        }
+    }
+}
+
+
+.ok-message {
+    @include flex-column;
+    text-align: center;
+    @include align-items-center;
+    @include justify-content-center;
+}

@@ -1,0 +1,279 @@
+@use "../../assets/style/" as *;
+
+.report-loading-spinner {
+  width: 100%;
+  @include align-items-center;
+  @include justify-content-center;
+  height: 100vh;
+  .loading {
+    width: 4rem;
+    height: 4rem;
+    margin: auto;
+    span {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+}
+.loading {
+  width: 80px;
+  display: flex;
+  flex-wrap: wrap;
+  animation: rotate 3s linear infinite;
+  margin: calc(50vh - 4rem) auto;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading span {
+  width: 32px;
+  height: 32px;
+  background-color: red;
+  margin: 4px;
+  animation: scale 1.5s linear infinite;
+}
+
+@keyframes scale {
+  50% {
+    transform: scale(1.5);
+  }
+}
+
+.loading span:nth-child(1) {
+  border-radius: 50% 50% 0 50%;
+  background-color: #00b2b9;
+  transform-origin: bottom right;
+}
+
+.loading span:nth-child(2) {
+  border-radius: 50% 50% 50% 0;
+  background-color: #009ebb;
+  transform-origin: bottom left;
+  animation-delay: 0.5s;
+}
+
+.loading span:nth-child(3) {
+  border-radius: 50% 0 50% 50%;
+  background-color: #0086be;
+  transform-origin: top right;
+  animation-delay: 1.5s;
+}
+
+.loading span:nth-child(4) {
+  border-radius: 0 50% 50% 50%;
+  background-color: #0076bf;
+  transform-origin: top left;
+  animation-delay: 1s;
+}
+.greetings-container {
+  padding-top: 6rem;
+  min-height: calc(100vh - 6rem);
+  @include flex-column;
+  @include justify-content-end;
+  .greetings-main-container {
+    padding: 3rem 1.6rem;
+
+    @include media(">=md", "<=xl") {
+      padding: 4.5rem 6.5rem;
+    }
+
+    @include media(">=xl") {
+      padding: 3rem 6rem;
+      @include justify-content-between;
+      @include align-items-end;
+      min-height: 49vh;
+      max-height: 49vh;
+    }
+
+    .greetings-image-container {
+      width: 100%;
+      max-height: 20%;
+
+      .greetings-image {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      @include media(">=md", "<=xl") {
+        width: 100%;
+        max-height: 29.8rem;
+      }
+
+      @include media(">=lg") {
+        @include flex-column;
+        align-self: center;
+      }
+
+      @include media(">=xl") {
+        max-height: 100%;
+        max-width: 45%;
+
+        .greetings-image {
+          max-width: 95%;
+          max-height: 100%;
+        }
+      }
+    }
+
+    .greetings-description {
+      text-align: left;
+
+      @include media(">=lg") {
+        min-width: 48%;
+        max-width: 48%;
+        min-height: 20rem;
+        @include flex-column;
+        align-self: center;
+        @include justify-content-center;
+      }
+
+      .greetings-title {
+        @include font-style($black, 2rem, 120%, 400);
+        margin: 1.6rem 0;
+
+        @include media(">=md") {
+          font-size: 2.8rem;
+          margin: 2rem 0 0 0;
+        }
+      }
+
+      .greetings-desc {
+        @include font-style($metal-black, 1.4rem, 2.2rem, 400);
+
+        @include media(">=md") {
+          @include font-style($metal-black, 1.6rem, 175%, 400);
+          margin: 2rem 0;
+        }
+
+        @include media(">=xl") {
+          line-height: 2.5rem;
+        }
+      }
+    }
+  }
+
+  .details-container {
+    @include horizontal-line(auto, 25vh, $white);
+    padding: 3rem 1.6rem;
+    height: inherit;
+
+    @include media(">=md") {
+      padding: 4rem;
+      bottom: 0;
+    }
+
+    @include media(">=xl") {
+      height: 20vh;
+      padding: 3rem;
+      @include justify-content-between;
+      @include align-items-center;
+    }
+
+    @include media(">=xxl") {
+      height: 25vh;
+    }
+
+    .project-details-container {
+      @include justify-content-between;
+      flex-wrap: wrap;
+      gap: 2.4rem;
+
+      @include media(">=xl") {
+        width: 50%;
+      }
+
+      .details {
+        width: 45%;
+        text-align: start;
+
+        @include media(">=md", "<=xl") {
+          width: 30%;
+        }
+
+        @include media(">=xl") {
+          width: 20%;
+        }
+
+        .title {
+          @include font-style($steel-grey, 1.4rem, normal, 400);
+          margin-bottom: 1rem;
+        }
+
+        .desc {
+          @include font-style($royal-blue, 1.6rem, normal, 500);
+        }
+      }
+    }
+
+    .active-button {
+      @include custom-btn($indigo, 0.5rem, 1);
+      @include font-style($white, 1.4rem, 1.7rem, 700);
+      width: 20rem;
+      height: 4rem;
+      margin-top: 2rem;
+      margin-left: auto;
+      @include media("<=md") {
+        margin-bottom: 2rem;
+      }
+
+      @include media(">=xl") {
+        margin-bottom: 2rem;
+      }
+
+      &:hover {
+        background-color: $indigo;
+        color: $white;
+      }
+    }
+  }
+}
+.passcode-modal {
+  .ant-modal .ant-modal-content {
+    position: relative;
+    background-color: #ffffff;
+    background-clip: padding-box;
+    border: 0;
+    border-radius: 8px;
+    box-shadow:
+      0 6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 3px 6px -4px rgba(0, 0, 0, 0.12),
+      0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    pointer-events: auto;
+    padding: 20px 24px;
+    height: 50vh;
+  }
+  .passcode-form {
+    min-height: 20vh;
+    @include flex-column;
+    @include justify-content-between;
+  }
+  .ant-row {
+    @include flex-column;
+    @include justify-content-start;
+    @include align-items-start;
+  }
+  .ant-form-horizontal .ant-form-item-control {
+    min-width: 100%;
+  }
+  .submit-button {
+    background-color: $indigo;
+    color: $white;
+    @include font-style($white, 1.5rem, 2.6rem, 500);
+    border-radius: 0.4rem;
+    padding: 0.8rem 2.2rem;
+    @include align-items-center;
+    margin-left: auto;
+    &:hover {
+      background-color: $indigo !important;
+      color: $white !important;
+      border: 0;
+    }
+  }
+}
+.no-data-container {
+  height: 100vh;
+}

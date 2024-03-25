@@ -1,0 +1,5 @@
+{
+  "rootFontSize": 10,
+  "fixedDigits": 3,
+  "cssrem.autoRemovePrefixZero": true
+}
