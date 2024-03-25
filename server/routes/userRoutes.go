@@ -2,7 +2,7 @@
 package routes
 
 import (
-	// "csat/app"
+	"csat/app"
 	"csat/controllers"
 
 	"github.com/gorilla/mux"
@@ -33,5 +33,5 @@ func SetupRoutes(router *mux.Router) {
 
 
 
-	// apiRouter.Use(app.JwtAuthentication) //attach JWT auth middleware
+	apiRouter.Use(app.JwtAuthentication) //attach JWT auth middleware
 }

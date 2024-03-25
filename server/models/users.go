@@ -21,6 +21,7 @@ type Token struct {
 	UserId   uint
 	Email    string
 	TenantId uint
+	Grade     uint
 	jwt.StandardClaims
 }
 
@@ -103,7 +104,7 @@ type LoginRequest struct {
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/user/login [post]
 func Login(email, password string) map[string]interface{} {
-    user := &User{}
+	user := &User{}
 	err := GetDB().Table("users").Where("email = ?", email).Preload("Account").First(user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -120,8 +121,23 @@ func Login(email, password string) map[string]interface{} {
 	//Worked! Logged In
 	user.Password = ""
 
+	// Based on the user role assign rank
+	var grade uint
+	switch user.Role {
+	case "deliveryHead":
+		grade = 7
+	case "accountOwner":
+		grade = 4
+	case "manager":
+		grade = 3
+	case "lead":
+		grade = 1
+	default:
+		grade = 0
+	}
+
 	//Create JWT token
-	tk := &Token{UserId: user.ID, Email: user.Email, TenantId: user.Account.TenantID}
+	tk := &Token{UserId: user.ID, Email: user.Email, TenantId: user.Account.TenantID, Grade: grade}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
 	user.Token = tokenString //Store the token in the response

@@ -22,5 +22,6 @@ type Token struct {
 	UserId   uint
 	Email    string
 	TenantId uint
+	Grade     uint
 	jwt.StandardClaims
 }
