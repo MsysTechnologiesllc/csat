@@ -307,6 +307,7 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 		} else {
 			// User exists, update the role
 			user.Role = member.Role
+			user.Name = member.Name
 			if err := db.Save(&user).Error; err != nil {
 				// Handle database error
 				http.Error(w, "Failed to update user", http.StatusInternalServerError)
