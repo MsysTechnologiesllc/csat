@@ -186,6 +186,7 @@ const FormatList = ({}) => {
   function createSurvey() {
     // TODO
   }
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
     // TODO
