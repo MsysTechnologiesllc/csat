@@ -326,7 +326,7 @@ type SurveyPage struct {
 // @Failure 404 {object} map[string]interface{} "No user found"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/surveys [get]
-func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter []string, userID uint64, surveyFormatIDFilter uint) (SurveyPage, error) {
+func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter []string, userID uint64, surveyFormatIDFilter uint, surveyNameFilter string) (SurveyPage, error) {
 	var result SurveyPage
 
 	query := db.
@@ -351,6 +351,10 @@ func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter strin
 		} else {
 			query = query.Where("surveys.status = ?", statusFilter)
 		}
+	}
+
+	if surveyNameFilter != "" {
+		query = query.Where("surveys.name IN (?)", surveyNameFilter)
 	}
 
 	if len(accountNameFilter) > 0 {
