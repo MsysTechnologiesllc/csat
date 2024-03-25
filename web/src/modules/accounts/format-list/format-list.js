@@ -9,6 +9,7 @@ import {
   Modal,
   Avatar,
   Rate,
+  Input,
   Divider,
 } from "antd";
 import { TableShimmer } from "../../../components/table-shimmer/table-shimmer";
@@ -17,39 +18,41 @@ import "./format-list.scss";
 import { GetService } from "../../../services/get";
 import moment from "moment";
 import { useLocation, useNavigate } from "react-router";
-import Search from "antd/es/input/Search";
 
 const FormatList = ({}) => {
   let isDataLoaded = true;
   const navigate = useNavigate();
   const { state } = useLocation();
   const [data, setData] = useState([]);
+  const [tableData, setTableData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clientsData, setClientsData] = useState([]);
   const [usersData, setUsersData] = useState([]);
   const [breadcrumbList, setBreadcrumbList] = useState([]);
   const [updatedData, setUpdatedData] = useState([]);
+  const [search, setSearch] = useState("");
+  let user_id = localStorage.getItem("userId");
+  const [avatarColors, setAvatarColors] = useState([]);
   const [surveysCount, setSurveysCount] = useState({
     total: 0,
     sent: 0,
     pending: 0,
     overdue: 0,
   });
-  let user_id = localStorage.getItem("userId");
+
   useEffect(() => {
     new GetService().getSurveyFormatList(state?.accountId, (result) => {
       if (result) {
         const surveys = result.data?.data?.flatMap((element) =>
           element.surveys.length > 1 ? element.surveys : element.surveys[0],
         );
-        console.log("surveys : ", surveys);
         setData(surveys);
+        setTableData(surveys);
 
         const mostRecentSurveys = [...surveys].sort((a, b) => {
           return new Date(b.UpdatedAt) - new Date(a.UpdatedAt);
         });
 
-        console.log("The most recent surveys are:", mostRecentSurveys);
         setUpdatedData(mostRecentSurveys);
       }
     });
@@ -65,6 +68,26 @@ const FormatList = ({}) => {
     });
     setBreadcrumbList(breadcrumbItems);
   }, []);
+
+  useEffect(() => {
+    if (search?.length > 0) {
+      const filteredData = tableData.filter((item) => {
+        return (
+          item.name.toLowerCase().includes(search.toLowerCase()) ||
+          item.status.toLowerCase().includes(search.toLowerCase())
+        );
+      });
+      setTableData(filteredData);
+    } else {
+      setTableData(data);
+    }
+  }, [search, tableData]);
+
+  useEffect(() => {
+    const colors = Array.from({ length: 10 }, () => generateRandomColor());
+    setAvatarColors(colors);
+  }, []);
+
   useEffect(() => {
     new GetService().getTeamList(state?.prjId, (result) => {
       if (result) {
@@ -88,6 +111,7 @@ const FormatList = ({}) => {
       },
     );
   }, []);
+
   const handleAccounts = () => {
     navigate("/accounts");
   };
@@ -169,7 +193,7 @@ const FormatList = ({}) => {
       </div>
     ),
   };
-  const modifiedTableData = data?.map((item) => ({
+  const modifiedTableData = tableData?.map((item) => ({
     ...item,
     key: item.ID,
   }));
@@ -216,7 +240,6 @@ const FormatList = ({}) => {
   function generateRandomColor() {
     return randomColors[Math.floor(Math.random() * randomColors.length)];
   }
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
   return (
     <div className="survey-home-container">
       <Breadcrumb items={breadcrumbList} />
@@ -267,19 +290,20 @@ const FormatList = ({}) => {
                     <Avatar.Group
                       className="avatar-group"
                       maxCount={5}
-                      maxPopoverTrigger="hover"
+                      maxpopovertrigger="hover"
                       maxStyle={{
                         color: "#f56a00",
                         backgroundColor: "#E9EBF7",
                         cursor: "pointer",
                       }}
                     >
-                      {clientsData?.map(({ name }) => {
-                        const randomColor = generateRandomColor();
+                      {clientsData?.map(({ name }, index) => {
+                        const randomColor =
+                          avatarColors[index % avatarColors.length];
                         return (
                           <Tooltip title={name} placement="top" key={name}>
                             <Avatar
-                              maxPopoverTrigger="hover"
+                              maxpopovertrigger="hover"
                               style={{
                                 color: randomColor.text_color,
                                 backgroundColor: randomColor.bg_color,
@@ -315,19 +339,20 @@ const FormatList = ({}) => {
                     <Avatar.Group
                       className="avatar-group"
                       maxCount={5}
-                      maxPopoverTrigger="hover"
+                      maxpopovertrigger="hover"
                       maxStyle={{
                         color: "#f56a00",
                         backgroundColor: "#E9EBF7",
                         cursor: "pointer",
                       }}
                     >
-                      {usersData?.map(({ name }) => {
-                        const randomColor = generateRandomColor();
+                      {usersData?.map(({ name }, index) => {
+                        const randomColor =
+                          avatarColors[index % avatarColors.length];
                         return (
                           <Tooltip title={name} placement="top" key={name}>
                             <Avatar
-                              maxPopoverTrigger="hover"
+                              maxpopovertrigger="hover"
                               style={{
                                 color: randomColor.text_color,
                                 backgroundColor: randomColor.bg_color,
@@ -455,9 +480,9 @@ const FormatList = ({}) => {
           <h5 className="tabel-heading">
             {i18n.t("prjOverview.recentSurveys")}
           </h5>
-          <Search
+          <Input
             placeholder={i18n.t("prjOverview.search")}
-            onSearch={onSearch}
+            onChange={(e) => setSearch(e.target.value)}
             className="search-bar"
           />
         </div>
