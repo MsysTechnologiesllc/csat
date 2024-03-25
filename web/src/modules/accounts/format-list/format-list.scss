@@ -87,6 +87,11 @@
       width: 100%;
       gap: 1.3rem;
 
+      .disabled-text {
+        color: $suva-gray;
+        margin-top: 0.4rem;
+      }
+
       @include media(">md", "<=lg") {
         gap: 1rem;
       }
@@ -96,14 +101,20 @@
         background-color: $white;
         padding: 1rem;
 
+        .ant-btn {
+          &:hover {
+            color: $indigo;
+            background-color: $white;
+            box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
+          }
+        }
+
         @include media(">=md", "<=lg") {
           min-height: 35vh;
-          max-height: 35vh;
         }
 
         @include media(">=xl") {
           min-height: 32vh;
-          max-height: 32vh;
         }
 
         .accounts-avatar-container {
@@ -148,14 +159,26 @@
             @include font-style($black, 1.6rem, 2.2rem, 500);
           }
 
-          .last-sent-text {
-            @include font-style($indigo, 1.4rem, 2.2rem, 500);
+          .label-inner {
+            @include d-flex;
+            @include align-items-center;
+
+            .last-sent-text {
+              @include font-style($indigo, 1.4rem, 2.2rem, 500);
+              @include text-ellipsis;
+              width: 40%;
+              cursor: pointer;
+            }
+
+            .ant-divider {
+              border: 0.1rem solid $suva-gray;
+            }
 
             .last-sent-date {
-              color: $suva-gray;
-              font-weight: 400;
+              @include font-style($suva-gray, 1.4rem, 2.2rem, 400);
             }
           }
+
         }
 
         .bottom-space {
@@ -237,26 +260,55 @@
             }
 
             .count {
+              // margin: 0;
               @include font-style($black, 2.4rem, 2.8rem, 400);
             }
           }
         }
       }
     }
+
+    .main-row {
+      @include d-flex;
+    }
+
+    .overview-sections-container {
+      @include flex-column;
+      flex: 1;
+    }
+
+    .overview-sections {
+      height: 100%;
+    }
+
+    .rating-and-surveys {
+      @include flex-column;
+    }
+
+    .rating-and-surveys .overview-sections {
+      flex: 1;
+    }
+
   }
 
   .survey-list-container {
     background-color: $white;
     padding: 1rem;
-
-    // @include media("<=md") {
     overflow-x: auto;
     white-space: nowrap;
-    // }
 
-    .tabel-heading {
-      text-align: start;
+    .survey-list-header {
+      @include justify-content-between;
+
+      .tabel-heading {
+        text-align: start;
+      }
+
+      .search-bar {
+        max-width: 28rem;
+      }
     }
+
 
     .ant-table-wrapper {
       .ant-table-header {
@@ -279,6 +331,12 @@
         max-width: 15rem;
         padding-left: 1rem;
       }
+    }
+
+    .ant-table-tbody>tr>td:nth-child(6) {
+      min-width: 9rem;
+      max-width: 9rem;
+      padding-left: 1rem;
     }
   }
 }

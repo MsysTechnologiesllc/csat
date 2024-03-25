@@ -275,7 +275,7 @@ export const translationEN = {
     sow: "SOW Start Date",
     stakeholders: "Stakeholders",
     prjMembers: "Project members",
-    lastSent: "Lase sent survey",
+    lastSent: "Last sent survey",
     upComing: "Upcoming survey",
     allRating: "Overall rating",
     totalSurveys: "Total Surveys",
@@ -284,5 +284,9 @@ export const translationEN = {
     recentSurveys: "Recent Surveys",
     createdDate: "Created Date",
     resDeadline: "Response Deadline",
+    surveyTemplate: "Survey template",
+    search: "Search by name, template, status",
+    noStacks: "No Stackholders Found",
+    noPrjMembers: "No Members Found",
   },
 };

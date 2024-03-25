@@ -188,7 +188,6 @@ export const ProjectsList = () => {
     }
   };
   const handleView = (project) => {
-    console.log("prj handle view", project);
     let acc_Owner = state?.accOwner;
     navigate(
       `/accounts/${state?.accountId}/projects/${project?.ID}/formatlist`,

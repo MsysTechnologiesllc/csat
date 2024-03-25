@@ -17,32 +17,34 @@ import "./format-list.scss";
 import { GetService } from "../../../services/get";
 import moment from "moment";
 import { useLocation, useNavigate } from "react-router";
+import Search from "antd/es/input/Search";
 
 const FormatList = ({}) => {
+  let isDataLoaded = true;
   const navigate = useNavigate();
   const { state } = useLocation();
   const [data, setData] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [clientsData, setClientsData] = useState([]);
+  const [usersData, setUsersData] = useState([]);
   const [breadcrumbList, setBreadcrumbList] = useState([]);
-  const handleAccounts = () => {
-    navigate("/accounts");
-  };
-  console.log(state);
-  const handleProjectsList = () => {
-    navigate(`/accounts/${state?.accountId}/projects`, {
-      state: {
-        accountName: state?.accountName,
-        projectsList: state?.projectsList,
-        accountId: state?.accountId,
-        tenantId: state?.tenantId,
-        prjId: state?.prjId,
-      },
-    });
-  };
+  const [updatedData, setUpdatedData] = useState([]);
+  // let user_id = localStorage.getItem("userId");
   useEffect(() => {
     new GetService().getSurveyFormatList(state?.accountId, (result) => {
       if (result) {
-        setData(result?.data?.data);
-        console.log(result?.data?.data);
+        const surveys = result.data?.data?.flatMap((element) =>
+          element.surveys.length > 1 ? element.surveys : element.surveys[0],
+        );
+        console.log("surveys : ", surveys);
+        setData(surveys);
+
+        const mostRecentSurveys = [...surveys].sort((a, b) => {
+          return new Date(b.UpdatedAt) - new Date(a.UpdatedAt);
+        });
+
+        console.log("The most recent surveys are:", mostRecentSurveys);
+        setUpdatedData(mostRecentSurveys);
       }
     });
     let breadcrumbItems = [
@@ -57,15 +59,57 @@ const FormatList = ({}) => {
     });
     setBreadcrumbList(breadcrumbItems);
   }, []);
-  let isDataLoaded = true;
+  useEffect(() => {
+    new GetService().getTeamList(state?.prjId, (result) => {
+      if (result) {
+        setClientsData(result.data.data.clients);
+        setUsersData(result.data.data.users);
+      }
+    });
+  }, []);
+  // useEffect(() => {
+  //   new GetService().getSurveyList(
+  //     state?.tenantId,
+  //     1,
+  //     0,
+  //     "",
+  //     "",
+  //     user_id,
+  //     (result) => {
+  //       if (result?.data?.data.Surveys) {
+  //         console.log(result?.data?.data.Surveys);
+  //       }
+  //     },
+  //   );
+  // }, []);
+  const handleAccounts = () => {
+    navigate("/accounts");
+  };
+  const handleProjectsList = () => {
+    navigate(`/accounts/${state?.accountId}/projects`, {
+      state: {
+        accountName: state?.accountName,
+        projectsList: state?.projectsList,
+        accountId: state?.accountId,
+        tenantId: state?.tenantId,
+        prjId: state?.prjId,
+      },
+    });
+  };
   const getRowClassName = (index) => {
     return index % 2 === 0 ? "even-row" : "odd-row";
   };
   const columnsData = [
     {
       title: i18n.t("surveyDetails.name"),
-      dataIndex: "title",
-      key: "title",
+      dataIndex: "name",
+      key: "name",
+      ellipsis: true,
+    },
+    {
+      title: i18n.t("prjOverview.surveyTemplate"),
+      dataIndex: "",
+      key: "",
       ellipsis: true,
     },
     {
@@ -82,13 +126,13 @@ const FormatList = ({}) => {
       key: "surveys.dead_line",
       ellipsis: true,
       render: (text, record) =>
-        moment(record.surveys[0].dead_line).format("DD MMM YYYY, HH:mm"),
+        moment(record.dead_line).format("DD MMM YYYY, HH:mm"),
     },
     {
       title: i18n.t("surveyList.status"),
       dataIndex: "surveys.status",
       key: "surveys.status",
-      render: (text, record) => record.surveys[0].status,
+      render: (text, record) => record.status,
     },
     {
       title: i18n.t("surveyList.action"),
@@ -125,7 +169,7 @@ const FormatList = ({}) => {
   }));
   const handleRowClick = (record) => {
     navigate(
-      `/accounts/${record?.account_id}/projects/${state?.prjId}/formatlist/previewSurvey`,
+      `/accounts/${record.ID}/projects/${state?.prjId}/formatlist/previewSurvey`,
       {
         state: {
           accountName: state?.accountName,
@@ -134,7 +178,7 @@ const FormatList = ({}) => {
           projectName: state?.projectName,
           status: state?.status,
           prjId: state?.prjId,
-          surveyDetails: { Survey: record.surveys[0] },
+          surveyDetails: { Survey: record },
         },
       },
     );
@@ -142,7 +186,6 @@ const FormatList = ({}) => {
   function createSurvey() {
     // TODO
   }
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
     // TODO
@@ -153,17 +196,6 @@ const FormatList = ({}) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const [clientsData, setClientsData] = useState([]);
-  const [usersData, setUsersData] = useState([]);
-
-  useEffect(() => {
-    new GetService().getTeamList(state?.prjId, (result) => {
-      if (result) {
-        setClientsData(result.data.data.clients);
-        setUsersData(result.data.data.users);
-      }
-    });
-  }, []);
   const randomColors = [
     { bg_color: "#FAAD14", text_color: "#FFFFFF" },
     { bg_color: "#08979C", text_color: "#FFFFFF" },
@@ -178,7 +210,7 @@ const FormatList = ({}) => {
   function generateRandomColor() {
     return randomColors[Math.floor(Math.random() * randomColors.length)];
   }
-  console.log(state?.accOwner);
+  const onSearch = (value, _e, info) => console.log(info?.source, value);
   return (
     <div className="survey-home-container">
       <Breadcrumb items={breadcrumbList} />
@@ -225,34 +257,40 @@ const FormatList = ({}) => {
                   <h5 className="label">
                     {i18n.t("prjOverview.stakeholders")}
                   </h5>
-                  <Avatar.Group
-                    className="avatar-group"
-                    maxCount={5}
-                    maxPopoverTrigger="hover"
-                    maxStyle={{
-                      color: "#f56a00",
-                      backgroundColor: "#E9EBF7",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {clientsData?.map(({ name, email }) => {
-                      const randomColor = generateRandomColor();
-                      return (
-                        <Tooltip title={name} placement="top" key={email}>
-                          <Avatar
-                            maxPopoverTrigger="hover"
-                            style={{
-                              color: randomColor.text_color,
-                              backgroundColor: randomColor.bg_color,
-                              cursor: "pointer",
-                            }}
-                          >
-                            {name && name.charAt(0).toUpperCase()}
-                          </Avatar>
-                        </Tooltip>
-                      );
-                    })}
-                  </Avatar.Group>
+                  {clientsData?.length > 0 ? (
+                    <Avatar.Group
+                      className="avatar-group"
+                      maxCount={5}
+                      maxPopoverTrigger="hover"
+                      maxStyle={{
+                        color: "#f56a00",
+                        backgroundColor: "#E9EBF7",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {clientsData?.map(({ name }) => {
+                        const randomColor = generateRandomColor();
+                        return (
+                          <Tooltip title={name} placement="top" key={name}>
+                            <Avatar
+                              maxPopoverTrigger="hover"
+                              style={{
+                                color: randomColor.text_color,
+                                backgroundColor: randomColor.bg_color,
+                                cursor: "pointer",
+                              }}
+                            >
+                              {name && name.charAt(0).toUpperCase()}
+                            </Avatar>
+                          </Tooltip>
+                        );
+                      })}
+                    </Avatar.Group>
+                  ) : (
+                    <p className="disabled-text">
+                      {i18n.t("prjOverview.noStacks")}
+                    </p>
+                  )}
                 </div>
 
                 <Button
@@ -267,34 +305,40 @@ const FormatList = ({}) => {
               <div className="stackholders-container">
                 <div className="label-avatar-container">
                   <h5 className="label">{i18n.t("prjOverview.prjMembers")}</h5>
-                  <Avatar.Group
-                    className="avatar-group"
-                    maxCount={5}
-                    maxPopoverTrigger="hover"
-                    maxStyle={{
-                      color: "#f56a00",
-                      backgroundColor: "#E9EBF7",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {usersData?.map(({ name, email }) => {
-                      const randomColor = generateRandomColor();
-                      return (
-                        <Tooltip title={name} placement="top" key={email}>
-                          <Avatar
-                            maxPopoverTrigger="hover"
-                            style={{
-                              color: randomColor.text_color,
-                              backgroundColor: randomColor.bg_color,
-                              cursor: "pointer",
-                            }}
-                          >
-                            {name && name.charAt(0)}
-                          </Avatar>
-                        </Tooltip>
-                      );
-                    })}
-                  </Avatar.Group>
+                  {usersData?.length > 0 ? (
+                    <Avatar.Group
+                      className="avatar-group"
+                      maxCount={5}
+                      maxPopoverTrigger="hover"
+                      maxStyle={{
+                        color: "#f56a00",
+                        backgroundColor: "#E9EBF7",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {usersData?.map(({ name }) => {
+                        const randomColor = generateRandomColor();
+                        return (
+                          <Tooltip title={name} placement="top" key={name}>
+                            <Avatar
+                              maxPopoverTrigger="hover"
+                              style={{
+                                color: randomColor.text_color,
+                                backgroundColor: randomColor.bg_color,
+                                cursor: "pointer",
+                              }}
+                            >
+                              {name && name.charAt(0).toUpperCase()}
+                            </Avatar>
+                          </Tooltip>
+                        );
+                      })}
+                    </Avatar.Group>
+                  ) : (
+                    <p className="disabled-text">
+                      {i18n.t("prjOverview.noPrjMembers")}
+                    </p>
+                  )}
                 </div>
 
                 <Button
@@ -315,25 +359,43 @@ const FormatList = ({}) => {
             <div className="overview-sections">
               <div className="last-sent bottom-space">
                 <h5 className="label-text">{i18n.t("prjOverview.lastSent")}</h5>
-                <p className="last-sent-text">
-                  VA launchpad
-                  <span className="last-sent-date"> | 02 FEB 2024</span>
-                </p>
+                {updatedData[0] ? (
+                  <div className="label-inner">
+                    <p className="last-sent-text">
+                      <Tooltip title={updatedData[0]?.name} ellipsis={true}>
+                        {updatedData[0]?.name}
+                      </Tooltip>
+                    </p>
+                    <Divider type="vertical" />
+                    <p className="last-sent-date">
+                      {moment(updatedData[0]?.UpdatedAt).format("DD MMM YYYY")}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="disabled-text">No surveys available</p>
+                )}
               </div>
               <div className="last-sent">
                 <h5 className="label-text">{i18n.t("prjOverview.upComing")}</h5>
-                <p className="last-sent-text">
-                  VA launchpad
-                  <span className="last-sent-date"> | 02 FEB 2024</span>
-                </p>
-                <p className="last-sent-text">
-                  VA launchpad
-                  <span className="last-sent-date"> | 02 FEB 2024</span>
-                </p>
-                <p className="last-sent-text">
-                  VA launchpad
-                  <span className="last-sent-date"> | 02 FEB 2024</span>
-                </p>
+                {updatedData.length > 1 ? (
+                  updatedData?.slice(1).map((item) => {
+                    return (
+                      <div className="label-inner" key={item.id}>
+                        <p className="last-sent-text">
+                          <Tooltip title={item.name} ellipsis={true}>
+                            {item.name}
+                          </Tooltip>
+                        </p>
+                        <Divider type="vertical" />
+                        <p className="last-sent-date">
+                          {moment(item.UpdatedAt).format("DD MMM YYYY")}
+                        </p>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="disabled-text">No surveys available</p>
+                )}
               </div>
             </div>
           </Col>
@@ -363,19 +425,19 @@ const FormatList = ({}) => {
             >
               <div className="divider-containers">
                 <h5 className="label">{i18n.t("prjOverview.totalSurveys")}</h5>
-                <h5 className="count">56</h5>
+                <h5 className="count">0</h5>
               </div>
               <Divider type="vertical" />
               <div className="divider-containers">
                 <h5 className="label">{i18n.t("prjOverview.sentSurveys")}</h5>
-                <h5 className="count">34</h5>
+                <h5 className="count">0</h5>
               </div>
               <Divider type="vertical" />
               <div className="divider-containers">
                 <h5 className="label">
                   {i18n.t("prjOverview.pendingSurveys")}
                 </h5>
-                <h5 className="count">22</h5>
+                <h5 className="count">0</h5>
               </div>
             </Row>
           </Col>
@@ -383,7 +445,16 @@ const FormatList = ({}) => {
       </div>
 
       <div className="survey-list-container">
-        <h5 className="tabel-heading">{i18n.t("prjOverview.recentSurveys")}</h5>
+        <div className="survey-list-header">
+          <h5 className="tabel-heading">
+            {i18n.t("prjOverview.recentSurveys")}
+          </h5>
+          <Search
+            placeholder={i18n.t("prjOverview.search")}
+            onSearch={onSearch}
+            className="search-bar"
+          />
+        </div>
         <Table
           locale={isDataLoaded && data?.length > 0 ? null : customLocale}
           loading={isDataLoaded === false && <TableShimmer row={5} col={5} />}
