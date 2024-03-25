@@ -3,7 +3,12 @@
 .survey-home-container {
   padding: 1.6rem;
   background-color: $smoked_bg;
+  @include flex-column;
   height: auto;
+
+  @include media(">=lg") {
+    height: 100vh;
+  }
 
   .crete-survey-btn {
     @include font-style($white, 1.6rem, 2.4rem, 400);
@@ -109,14 +114,6 @@
           }
         }
 
-        @include media(">=md", "<=lg") {
-          min-height: 35vh;
-        }
-
-        @include media(">=xl") {
-          min-height: 32vh;
-        }
-
         .accounts-avatar-container {
           @include justify-content-between;
           @include align-items-center;
@@ -198,7 +195,7 @@
 
             .label {
               @include font-style($black, 1.6rem, 2.4rem, 700);
-              margin: 0;
+              margin-bottom: 1rem;
             }
           }
         }
@@ -290,14 +287,34 @@
 
   }
 
+  .survey-list-container::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  .survey-list-container::-webkit-scrollbar-thumb {
+    background-color: $white;
+    border-radius: 0.4rem;
+  }
+
+  .survey-list-container::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .survey-list-container:hover::-webkit-scrollbar-thumb {
+    background-color: $dark-grey;
+  }
+
   .survey-list-container {
     background-color: $white;
     padding: 1rem;
     overflow-x: auto;
     white-space: nowrap;
+    flex: 1;
 
     .survey-list-header {
       @include justify-content-between;
+      margin-bottom: 0.7rem;
 
       .tabel-heading {
         text-align: start;
@@ -308,8 +325,27 @@
       }
     }
 
+    .ant-table-body::-webkit-scrollbar {
+      width: 0.5rem;
+      height: 0.5rem;
+    }
+
+    .ant-table-body::-webkit-scrollbar-thumb {
+      background-color: $white;
+      border-radius: 0.4rem;
+    }
+
+    .ant-table-body::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    .ant-table-body:hover::-webkit-scrollbar-thumb {
+      background-color: $dark-grey;
+    }
 
     .ant-table-wrapper {
+      min-height: 20vh;
+
       .ant-table-header {
         background-color: $white;
 
@@ -330,6 +366,10 @@
         max-width: 15rem;
         padding-left: 1rem;
       }
+    }
+
+    .ant-table-wrapper .ant-table.ant-table-small .ant-table-expanded-row-fixed {
+      height: 100%;
     }
 
     .ant-table-tbody>tr>td:nth-child(6) {
@@ -440,23 +480,7 @@
 //   overflow-y: auto;
 // }
 
-// .custom-scrollbar-table-format .ant-table-body::-webkit-scrollbar {
-//   width: 0.5rem;
-//   height: 0.5rem;
-// }
 
-// .custom-scrollbar-table-format .ant-table-body::-webkit-scrollbar-thumb {
-//   background-color: $white;
-//   border-radius: 0.4rem;
-// }
-
-// .custom-scrollbar-table-format .ant-table-body::-webkit-scrollbar-track {
-//   background-color: transparent;
-// }
-
-// .custom-scrollbar-table-format .ant-table-body:hover::-webkit-scrollbar-thumb {
-//   background-color: $dark-grey;
-// }
 
 // .even-row {
 //   background-color: $very-light-gray;

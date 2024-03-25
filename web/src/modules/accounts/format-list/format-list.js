@@ -29,7 +29,10 @@ const FormatList = ({}) => {
   const [usersData, setUsersData] = useState([]);
   const [breadcrumbList, setBreadcrumbList] = useState([]);
   const [updatedData, setUpdatedData] = useState([]);
-  // let user_id = localStorage.getItem("userId");
+  // const [surveysCount, setSurveysCount] = useState([
+  //   { total: 0, sent: 0, pending: 0 },
+  // ]);
+  let user_id = localStorage.getItem("userId");
   useEffect(() => {
     new GetService().getSurveyFormatList(state?.accountId, (result) => {
       if (result) {
@@ -67,21 +70,18 @@ const FormatList = ({}) => {
       }
     });
   }, []);
-  // useEffect(() => {
-  //   new GetService().getSurveyList(
-  //     state?.tenantId,
-  //     1,
-  //     0,
-  //     "",
-  //     "",
-  //     user_id,
-  //     (result) => {
-  //       if (result?.data?.data.Surveys) {
-  //         console.log(result?.data?.data.Surveys);
-  //       }
-  //     },
-  //   );
-  // }, []);
+  useEffect(() => {
+    new GetService().getSurveyListForProjectOverview(
+      state?.tenantId,
+      user_id,
+      (result) => {
+        if (result?.data?.data.Surveys) {
+          console.log(result);
+          console.log(result?.data?.data.Surveys);
+        }
+      },
+    );
+  }, []);
   const handleAccounts = () => {
     navigate("/accounts");
   };
