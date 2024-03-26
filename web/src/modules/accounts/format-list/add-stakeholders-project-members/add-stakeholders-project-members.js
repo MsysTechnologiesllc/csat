@@ -9,6 +9,7 @@ import {
 import PropTypes from "prop-types";
 import { GetService } from "../../../../services/get";
 import { PutService } from "../../../../services/put";
+import NotifyStatus from "../../../../components/notify-status/notify-status";
 import "./add-stakeholders-project-members.scss";
 import i18n from "../../../../locales/i18next";
 
@@ -32,6 +33,8 @@ export const AddProjectMembersAndStakeholders = ({
     [],
   );
   const { Search } = Input;
+  const [notify, setNotify] = useState("");
+  const [message, setMessage] = useState("");
   const { Option } = Select;
   const limit = 5;
   useEffect(() => {
@@ -66,7 +69,6 @@ export const AddProjectMembersAndStakeholders = ({
             ...(result?.data?.data?.db_users || []),
             ...(result?.data?.data?.gsuit_users || []),
           ];
-          console.log(data);
           const filteredData = data.filter((item) => {
             return (
               (item.name && item.name.toLowerCase().includes(value)) ||
@@ -86,13 +88,14 @@ export const AddProjectMembersAndStakeholders = ({
         const payload = {
           team_member: [{ name: row.name, email: row.email, role: "client" }],
         };
-        console.log(payload, "payload");
         new PutService().addUpdateProject(
           prj_id,
           account_id,
           payload,
           (result) => {
             if (result?.status === 200) {
+              setNotify("success");
+              setMessage("Client added successfully");
               setDisable(false);
               setEditingKey("");
               setCalled(true);
@@ -111,7 +114,6 @@ export const AddProjectMembersAndStakeholders = ({
         const payload = {
           team_member: [{ name: row.name, email: row.email, role: row.role }],
         };
-        console.log(payload, "payload");
         new PutService().addUpdateProject(
           prj_id,
           account_id,
@@ -147,11 +149,7 @@ export const AddProjectMembersAndStakeholders = ({
     });
     setEditingKey(record.key);
   };
-  const deleteProjectMember = (record) => {
-    console.log(record);
-  };
   const handleChange = (value, options) => {
-    console.log(options);
     form.setFieldsValue({
       email: options.value,
     });
@@ -250,7 +248,6 @@ export const AddProjectMembersAndStakeholders = ({
                 validator: title === "Email" && validateEmail,
               },
             ]}
-            // key={title}
           >
             <Input />
           </Form.Item>
@@ -298,7 +295,7 @@ export const AddProjectMembersAndStakeholders = ({
             />
             <DeleteOutlined
               className="delete"
-              onClick={() => deleteProjectMember(record)}
+              onClick={() => deleteUser(record)}
             />
           </div>
         );
@@ -337,8 +334,18 @@ export const AddProjectMembersAndStakeholders = ({
     });
     setEditingKey(record.key);
   };
-  const deleteStakeholder = (record) => {
-    console.log(record);
+  const deleteUser = (record) => {
+    new PutService().deleteClient(prj_id, record?.ID, null, (result) => {
+      if (result?.status === 200) {
+        setNotify("success");
+        setMessage("Client deleted successfully");
+        setEditingKey("");
+        setCalled(true);
+        setTimeout(() => {
+          setCalled(false);
+        }, 1000);
+      }
+    });
   };
 
   const columns = [
@@ -373,7 +380,7 @@ export const AddProjectMembersAndStakeholders = ({
             />
             <DeleteOutlined
               className="delete"
-              onClick={() => deleteStakeholder(record)}
+              onClick={() => deleteUser(record)}
             />
           </div>
         );
@@ -490,6 +497,7 @@ export const AddProjectMembersAndStakeholders = ({
           />
         )}
       </Form>
+      {notify && <NotifyStatus status={notify} message={message} />}
     </>
   );
 };
@@ -500,7 +508,6 @@ AddProjectMembersAndStakeholders.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   isModalOpen: PropTypes.string.isRequired,
-  record: PropTypes.object.isRequired,
   setIsModalOpen: PropTypes.string.isRequired,
   account_id: PropTypes.number.isRequired,
   prj_id: PropTypes.number.isRequired,

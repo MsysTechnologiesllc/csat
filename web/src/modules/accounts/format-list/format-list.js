@@ -281,6 +281,7 @@ const FormatList = ({}) => {
                 footer={null}
                 className="project-member-stakeholder-modal"
                 width={800}
+                closable={false}
               >
                 <AddProjectMembersAndStakeholders
                   isModalOpen={isModalOpen}
