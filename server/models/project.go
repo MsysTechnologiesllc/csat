@@ -162,7 +162,7 @@ func GetProjectUsers(projectID uint) ([]schema.User, error) {
 	if err := db.Model(&User{}).
 		Joins("JOIN user_projects ON users.id = user_projects.user_id").
 		Joins("JOIN projects ON user_projects.project_id = projects.id").
-		Where("user_projects.project_id = ?", projectID).
+		Where("user_projects.project_id = ? AND user_projects.is_active = ?", projectID, true).
 		Find(&users).Error; err != nil {
 		return nil, err
 	}
