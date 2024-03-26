@@ -32,6 +32,9 @@
       }
     }
   }
+  .remove-gap {
+    margin-left: 0
+  }
 
   .prj-name {
     @include font-style($black, 1.6rem, normal, 400);
