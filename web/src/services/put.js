@@ -46,4 +46,12 @@ export class PutService extends BaseService {
       callback,
     );
   }
+  deleteClient(projectId, userId, payload = null, callback) {
+    return this.put(
+      process.env.REACT_APP_GO_SERVICE_URL +
+        `/csat/rest/api/user/remove?projectID=${projectId}&userID=${userId}`,
+      payload,
+      callback,
+    );
+  }
 }

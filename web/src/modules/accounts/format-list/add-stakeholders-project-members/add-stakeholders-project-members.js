@@ -79,7 +79,6 @@ export const AddProjectMembersAndStakeholders = ({
         const payload = {
           team_member: [{ name: row.name, email: row.email, role: "client" }],
         };
-        console.log(payload, "payload");
         new PutService().addUpdateProject(
           prj_id,
           account_id,
@@ -243,7 +242,6 @@ export const AddProjectMembersAndStakeholders = ({
                 validator: title === "Email" && validateEmail,
               },
             ]}
-            // key={title}
           >
             <Input />
           </Form.Item>
@@ -332,6 +330,16 @@ export const AddProjectMembersAndStakeholders = ({
   };
   const deleteStakeholder = (record) => {
     console.log(record);
+    new PutService().deleteClient(prj_id, record?.ID, null, (result) => {
+      if (result?.status === 200) {
+        console.log("deleted");
+        setEditingKey("");
+        setCalled(true);
+        setTimeout(() => {
+          setCalled(false);
+        }, 1000);
+      }
+    });
   };
 
   const columns = [
@@ -414,16 +422,22 @@ export const AddProjectMembersAndStakeholders = ({
 
   return (
     <>
-      <Button
-        onClick={handleAdd}
-        type="primary"
-        disabled={disable}
-        className="add-button"
-      >
-        {isModalOpen === "stakeholders"
-          ? "Add stakeholder"
-          : "Add Project Member"}
-      </Button>
+      <div>
+        <p>
+          {isModalOpen === "stakeholders" ? "Stakeholder" : "Project Member"}
+        </p>
+        <Button
+          onClick={handleAdd}
+          type="primary"
+          disabled={disable}
+          className="add-button"
+        >
+          {isModalOpen === "stakeholders"
+            ? "Add stakeholder"
+            : "Add Project Member"}
+        </Button>
+      </div>
+
       <Form form={form} component={false}>
         <Table
           components={{
@@ -460,7 +474,6 @@ AddProjectMembersAndStakeholders.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   isModalOpen: PropTypes.string.isRequired,
-  record: PropTypes.object.isRequired,
   setIsModalOpen: PropTypes.string.isRequired,
   account_id: PropTypes.number.isRequired,
   prj_id: PropTypes.number.isRequired,
