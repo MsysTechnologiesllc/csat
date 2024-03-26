@@ -440,7 +440,7 @@ export const ProjectsList = () => {
                         type="text"
                         onClick={() => handleView(project)}
                       >
-                        {i18n.t("accounts.view")}
+                        {i18n.t("addProjects.view")}
                       </Button>
                     </div>
                   </Card>

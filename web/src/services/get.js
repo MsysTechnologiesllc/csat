@@ -65,7 +65,6 @@ export class GetService extends BaseService {
         `/csat/rest/api/account?tenant_id=${tenant_id}`,
       callback,
       headers(),
-      headers(),
     );
   }
   getSurveyProjectsFilter(userid, callback) {

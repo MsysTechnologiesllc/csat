@@ -43,6 +43,7 @@
   .ant-breadcrumb,
   .ant-breadcrumb a {
     @include font-style($dark-black, 1.6rem, 2.4rem, 400);
+    text-transform: capitalize;
 
     @include media("<md") {
       font-size: 1.2rem;
@@ -59,7 +60,7 @@
   }
 
   .ant-breadcrumb li:last-child {
-    @include font-style($wild-red, 1.6rem, 2.4rem, 400);
+    @include font-style($black, 1.6rem, 2.4rem, 400);
 
     @include media("<md") {
       font-size: 1.2rem;

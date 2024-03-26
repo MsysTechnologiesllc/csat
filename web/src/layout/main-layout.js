@@ -60,13 +60,13 @@ export const MainLayout = () => {
     <>
       <Layout className="header-layout">
         <AntdHeader>
-          <Header prjTitle="" displayPrjTitle={true} />
           <div
             className={`header-arrow ${showSidebar === false ? "show-right-arrow" : "hide-right-arrow"}`}
             onClick={() => setShowSidebar(true)}
           >
             <RxHamburgerMenu className="arrow-icon" />
           </div>
+          <Header prjTitle="" displayPrjTitle={true} />
         </AntdHeader>
       </Layout>
       <Layout hasSider className="main-layout-content-container">
