@@ -9,6 +9,7 @@ import {
 import PropTypes from "prop-types";
 import { GetService } from "../../../../services/get";
 import { PutService } from "../../../../services/put";
+import NotifyStatus from "../../../../components/notify-status/notify-status";
 import "./add-stakeholders-project-members.scss";
 
 export const AddProjectMembersAndStakeholders = ({
@@ -26,6 +27,8 @@ export const AddProjectMembersAndStakeholders = ({
   const [called, setCalled] = useState(false);
   const [dropDownData, setDropDownData] = useState([]);
   const [roleData, setRoleData] = useState([]);
+  const [notify, setNotify] = useState("");
+  const [message, setMessage] = useState("");
   const { Option } = Select;
   useEffect(() => {
     new GetService().getTeamList(prj_id, (result) => {
@@ -59,7 +62,6 @@ export const AddProjectMembersAndStakeholders = ({
             ...(result?.data?.data?.db_users || []),
             ...(result?.data?.data?.gsuit_users || []),
           ];
-          console.log(data);
           const filteredData = data.filter((item) => {
             return (
               (item.name && item.name.toLowerCase().includes(value)) ||
@@ -85,6 +87,8 @@ export const AddProjectMembersAndStakeholders = ({
           payload,
           (result) => {
             if (result?.status === 200) {
+              setNotify("success");
+              setMessage("Client added successfully");
               setDisable(false);
               setEditingKey("");
               setCalled(true);
@@ -103,7 +107,6 @@ export const AddProjectMembersAndStakeholders = ({
         const payload = {
           team_member: [{ name: row.name, email: row.email, role: row.role }],
         };
-        console.log(payload, "payload");
         new PutService().addUpdateProject(
           prj_id,
           account_id,
@@ -139,11 +142,7 @@ export const AddProjectMembersAndStakeholders = ({
     });
     setEditingKey(record.key);
   };
-  const deleteProjectMember = (record) => {
-    console.log(record);
-  };
   const handleChange = (value, options) => {
-    console.log(options);
     form.setFieldsValue({
       email: options.value,
     });
@@ -289,7 +288,7 @@ export const AddProjectMembersAndStakeholders = ({
             />
             <DeleteOutlined
               className="delete"
-              onClick={() => deleteProjectMember(record)}
+              onClick={() => deleteUser(record)}
             />
           </div>
         );
@@ -328,11 +327,11 @@ export const AddProjectMembersAndStakeholders = ({
     });
     setEditingKey(record.key);
   };
-  const deleteStakeholder = (record) => {
-    console.log(record);
+  const deleteUser = (record) => {
     new PutService().deleteClient(prj_id, record?.ID, null, (result) => {
       if (result?.status === 200) {
-        console.log("deleted");
+        setNotify("success");
+        setMessage("Client deleted successfully");
         setEditingKey("");
         setCalled(true);
         setTimeout(() => {
@@ -374,7 +373,7 @@ export const AddProjectMembersAndStakeholders = ({
             />
             <DeleteOutlined
               className="delete"
-              onClick={() => deleteStakeholder(record)}
+              onClick={() => deleteUser(record)}
             />
           </div>
         );
@@ -422,22 +421,16 @@ export const AddProjectMembersAndStakeholders = ({
 
   return (
     <>
-      <div>
-        <p>
-          {isModalOpen === "stakeholders" ? "Stakeholder" : "Project Member"}
-        </p>
-        <Button
-          onClick={handleAdd}
-          type="primary"
-          disabled={disable}
-          className="add-button"
-        >
-          {isModalOpen === "stakeholders"
-            ? "Add stakeholder"
-            : "Add Project Member"}
-        </Button>
-      </div>
-
+      <Button
+        onClick={handleAdd}
+        type="primary"
+        disabled={disable}
+        className="add-button"
+      >
+        {isModalOpen === "stakeholders"
+          ? "Add stakeholder"
+          : "Add Project Member"}
+      </Button>
       <Form form={form} component={false}>
         <Table
           components={{
@@ -464,6 +457,7 @@ export const AddProjectMembersAndStakeholders = ({
           pagination={false}
         />
       </Form>
+      {notify && <NotifyStatus status={notify} message={message} />}
     </>
   );
 };
