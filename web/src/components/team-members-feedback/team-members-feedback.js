@@ -244,9 +244,9 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
           onChange={handleSearch}
         />
         <div className="cards-container">
-          {usersList.map(
+          {usersList?.map(
             (member) =>
-              member.user.role === "member" && (
+              member?.user?.role === "member" && (
                 <Card
                   key={member?.user?.ID}
                   onClick={() => handleMember(member)}
@@ -257,7 +257,9 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
                   }
                 >
                   <div className="text-image-container">
-                    {member?.user?.name}
+                    <p className="user-name" title={member?.user?.name}>
+                      {member?.user?.name}
+                    </p>
                     {member?.positives !== "" &&
                       member?.negatives !== "" &&
                       member?.rating !== 0 && (

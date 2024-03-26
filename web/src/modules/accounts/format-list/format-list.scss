@@ -65,7 +65,7 @@
   .survey-header-container {
     @include justify-content-between;
     @include align-items-center;
-    margin: 1.2rem 0;
+    margin: 0;
 
     .survey-heading {
       @include font-style($black, 1.6rem, 1.6rem, 400);

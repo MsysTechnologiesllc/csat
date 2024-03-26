@@ -38,6 +38,7 @@ export const SSOIntegration = () => {
         if (result?.status === 200) {
           if (result?.data?.data) {
             Cookies.set("jwt", result?.data?.data?.token);
+            localStorage.setItem("userName", result?.data?.data?.name);
             navigate("/accounts");
           }
         }
@@ -88,6 +89,7 @@ export const SSOIntegration = () => {
     new PostService().postLoginDetails(payload, (result) => {
       if (result?.status === 200) {
         localStorage.setItem("userId", result?.data?.user?.ID);
+        localStorage.setItem("userName", result?.data?.user?.name);
         Cookies.set("jwt", result?.data?.user?.token);
         navigate("/accounts");
       }
