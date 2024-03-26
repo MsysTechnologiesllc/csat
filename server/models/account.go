@@ -5,7 +5,6 @@ import (
 	"csat/logger"
 	"csat/schema"
 	u "csat/utils"
-
 	"github.com/jinzhu/gorm"
 )
 
@@ -70,4 +69,36 @@ func GetAccountByID(projectId uint) (*schema.Account, error) {
 		return nil, err
 	}
 	return &projectDetails, nil
+}
+
+func FilterAccountProjects(data map[string]interface{}, userID uint) map[string]interface{} {
+    tenantData, ok := data["tenant"].(schema.Tenant)
+    if !ok {
+        logger.Log.Println("Failed to convert 'tenantData' to models.Tenant")
+        return data
+    }
+
+    filteredAccounts := make([]schema.Account, 0)
+    for _, account := range tenantData.Accounts {
+        filteredProjects := make([]schema.Project, 0)
+        for _, project := range account.Projects {
+            userFound := false
+            for _, user := range project.Users {
+                if user.ID == userID {
+                    userFound = true
+                    break
+                }
+            }
+            if userFound {
+                filteredProjects = append(filteredProjects, project)
+            }
+        }
+        if len(filteredProjects) > 0 {
+            account.Projects = filteredProjects
+            filteredAccounts = append(filteredAccounts, account)
+        }
+    }
+    tenantData.Accounts = filteredAccounts
+    data["tenant"] = tenantData
+    return data
 }

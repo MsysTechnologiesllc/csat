@@ -2,7 +2,7 @@
 package routes
 
 import (
-	// "csat/app"
+	"csat/app"
 	"csat/controllers"
 
 	"github.com/gorilla/mux"
@@ -30,8 +30,9 @@ func SetupRoutes(router *mux.Router) {
 	apiRouter.HandleFunc("/api/survey-format/list", controllers.GetSurveyFormatList).Methods("GET")
 	apiRouter.HandleFunc("/api/manager/survey-details", controllers.GetManagerSurveyDetails).Methods("GET")
 	apiRouter.HandleFunc("/api/user/new", controllers.UpdateAccount).Methods("PUT")
+	apiRouter.HandleFunc("/api/user/remove", controllers.RemoveUser).Methods("PUT")
 
 
 
-	// apiRouter.Use(app.JwtAuthentication) //attach JWT auth middleware
+	apiRouter.Use(app.JwtAuthentication) //attach JWT auth middleware
 }

@@ -209,3 +209,29 @@ var UpdateAccount = func(w http.ResponseWriter, r *http.Request) {
 	resp["data"] = updatedUserPtr
 	u.Respond(w, resp)
 }
+
+var RemoveUser = func(w http.ResponseWriter, r *http.Request) {
+
+	userIDStr := r.URL.Query().Get("userID")
+	projectIDStr := r.URL.Query().Get("projectID")
+	var userID uint
+	var projectID uint
+	_, err1 := fmt.Sscanf(userIDStr, "%d", &userID)
+	_, err2 := fmt.Sscanf(projectIDStr, "%d", &projectID)
+	if err1 != nil || err2 != nil {
+		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		return
+	}
+
+	err := models.UpdateUserProjectIsActive(userID, projectID, false)
+	if err != nil {
+		resp := u.Message(false, constants.FAILED)
+		w.WriteHeader(http.StatusInternalServerError)
+		u.Respond(w, resp)
+		return
+	}
+
+	resp := u.Message(true, constants.SUCCESS)
+	resp["data"] = "User removed from project successfully"
+	u.Respond(w, resp)
+}
