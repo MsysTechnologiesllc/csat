@@ -272,6 +272,7 @@
 
             .client-name {
               @include font-style($steel-grey, 1.4rem, 2rem, 400);
+
               .delivery-head-length {
                 cursor: pointer;
                 font-weight: 600;
@@ -351,7 +352,7 @@
   .ant-table-wrapper {
     overflow-x: auto;
     white-space: nowrap;
-    border: 1px solid $light-grey;
+    border: 0.1rem solid $light-grey;
     border-radius: 0.4rem;
 
     @include media("<sm") {
@@ -412,32 +413,28 @@
     }
   }
 
+  .edit,
+  .delete,
+  .view {
+    @include media("<md") {
+      font-size: 1.6rem;
+    }
+  }
+
   .edit {
     margin-right: 2rem;
     color: $indigo;
     font-size: 2rem;
-
-    @include media("<md") {
-      font-size: 1.6rem;
-    }
   }
 
   .delete {
     color: $wild-red;
     font-size: 2rem;
-
-    @include media("<md") {
-      font-size: 1.6rem;
-    }
   }
 
   .view {
     color: $indigo;
     font-size: 2.5rem;
-
-    @include media("<md") {
-      font-size: 1.6rem;
-    }
   }
 
   .pagination {
