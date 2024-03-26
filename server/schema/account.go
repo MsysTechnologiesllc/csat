@@ -8,7 +8,7 @@ import (
 type Account struct {
 	gorm.Model
 	TenantID     uint      `gorm:"null" json:"tenant_id"`
-	Name         string    `gorm:"null" json:"name"`
+	Name         string    `gorm:"unique" json:"name"`
 	Description  string    `gorm:"null" json:"description"`
 	Logo         []byte    `gorm:"type:BLOB" json:"logo"`
 	Location     string    `gorm:"null" json:"location"`
