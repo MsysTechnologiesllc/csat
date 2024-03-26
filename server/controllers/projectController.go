@@ -95,9 +95,19 @@ var CreateAccountData = func(w http.ResponseWriter, r *http.Request) {
 		newAccount.Logo = decodedData
 	}
 
-	if name, ok := requestBody["account_name"].(string); ok && name != "" {
-		newAccount.Name = name
-	}
+	accountName, nameExists := requestBody["account_name"].(string)
+    if nameExists && accountName != "" {
+        // Perform a check if the account name already exists
+        db := models.GetDB()
+        var existingAccount schema.Account
+        if err := db.Where("name = ?", accountName).First(&existingAccount).Error; err == nil {
+            // Account with the same name already exists
+            http.Error(w, "Account name already exists", http.StatusBadRequest)
+            return
+        }
+        newAccount.Name = accountName
+    }
+
 	if tenantID, ok := requestBody["tenant_id"].(float64); ok && tenantID != 0 {
 		newAccount.TenantID = uint(tenantID)
 	}
@@ -146,6 +156,19 @@ var CreateAccountData = func(w http.ResponseWriter, r *http.Request) {
 		}
 		accountData = updatedAccountPtr
 	} else {
+
+		accountName, nameExists := requestBody["account_name"].(string)
+    if nameExists && accountName != "" {
+        // Perform a check if the account name already exists
+        db := models.GetDB()
+        var existingAccount schema.Account
+        if err := db.Where("name = ?", accountName).First(&existingAccount).Error; err == nil {
+            // Account with the same name already exists
+            http.Error(w, "Account name already exists", http.StatusBadRequest)
+            return
+        }
+	}
+
 		newAccount.IsActive = true
 		accountDetails, err := models.CreateAccountData(&newAccount)
 		if err != nil {
@@ -254,7 +277,14 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 		}
 		// Update project name and start date
 
-		if payload.Name != "" {
+		if payload.Name != "" && payload.Name != project.Name {
+			// Check if the updated name already exists
+			var existingProject schema.Project
+			if err := db.Where("name = ?", payload.Name).First(&existingProject).Error; err == nil {
+				// Project with the same name already exists
+				http.Error(w, "Project name already exists", http.StatusBadRequest)
+				return
+			}
 			project.Name = payload.Name
 		}
 		if payload.StartDate != nil {
@@ -286,6 +316,18 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 			Logo:      logoData,
 			MediaType: mediaType,
 		}
+
+		if payload.Name == "" {
+			http.Error(w, "Project name cannot be empty", http.StatusBadRequest)
+			return
+		}
+		if err := db.Where("name = ?", payload.Name).First(&project).Error; err == nil {
+			// Project with the same name already exists
+			http.Error(w, "Project name already exists", http.StatusBadRequest)
+			return
+		}
+
+
 		if err := db.Create(&project).Error; err != nil {
 			// Handle database error
 			http.Error(w, "Failed to create project", http.StatusInternalServerError)
