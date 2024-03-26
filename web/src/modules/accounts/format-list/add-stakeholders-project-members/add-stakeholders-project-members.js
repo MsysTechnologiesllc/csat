@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, Select, Table } from "antd";
+import { Button, Form, Input, Table, Select } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -7,45 +7,42 @@ import {
   CloseOutlined,
 } from "@ant-design/icons";
 import PropTypes from "prop-types";
-import { GetService } from "../../../services/get";
-import { PutService } from "../../../services/put";
+import { GetService } from "../../../../services/get";
+import { PutService } from "../../../../services/put";
+import "./add-stakeholders-project-members.scss";
 
 export const AddProjectMembersAndStakeholders = ({
   setIsModalOpen,
   isModalOpen,
-  prj_id,
   account_id,
+  prj_id,
 }) => {
   const [form] = Form.useForm();
   const [disable, setDisable] = useState(false);
   const [editingKey, setEditingKey] = useState("");
   const [data, setData] = useState([]);
+  const [modifiedData, setModifiedData] = useState([]);
   const [projectMembersData, setProjetcMembersData] = useState([]);
-  const [dropDownData, setDropDownData] = useState([]);
-  const [inputEmail, SetInputEmail] = useState("");
-  const [roleData, setRoleData] = useState([]);
   const [called, setCalled] = useState(false);
+  const [dropDownData, setDropDownData] = useState([]);
+  const [roleData, setRoleData] = useState([]);
   const { Option } = Select;
-
   useEffect(() => {
-    new GetService().getTeamList(1, (result) => {
+    new GetService().getTeamList(prj_id, (result) => {
       if (result?.status === 200) {
         let roleOptions = [];
-        console.log(result?.data?.data);
         setData(result?.data?.data?.clients);
         setProjetcMembersData(result?.data?.data?.users);
         result?.data?.data?.users?.map((role) => {
           roleOptions.push(role.role);
         });
-
         setRoleData([...new Set(roleOptions)]);
       }
     });
   }, [called]);
-  console.log(roleData);
   const cancel = (record) => {
     if (!record?.name && !record?.email) {
-      const filteredData = data.filter((item) => item?.key !== record?.key);
+      const filteredData = data.filter((item) => item?.ID !== record?.key);
       setData(filteredData);
     }
     setEditingKey("");
@@ -75,34 +72,35 @@ export const AddProjectMembersAndStakeholders = ({
       });
     }
   };
-  console.log(dropDownData);
-  const save = async (key) => {
+  const save = async () => {
     if (isModalOpen === "stakeholders") {
       try {
         const row = await form.validateFields();
-        const newData = [...data];
-        const index = newData.findIndex((item) => key === item.key);
-        if (index > -1) {
-          const item = newData[index];
-          newData.splice(index, 1, {
-            ...item,
-            ...row,
-          });
-          setData(newData);
-          setDisable(false);
-          setEditingKey("");
-        } else {
-          newData.push(row);
-          setData(newData);
-          setEditingKey("");
-        }
+        const payload = {
+          team_member: [{ name: row.name, email: row.email, role: "client" }],
+        };
+        console.log(payload, "payload");
+        new PutService().addUpdateProject(
+          prj_id,
+          account_id,
+          payload,
+          (result) => {
+            if (result?.status === 200) {
+              setDisable(false);
+              setEditingKey("");
+              setCalled(true);
+              setTimeout(() => {
+                setCalled(false);
+              }, 500);
+            }
+          },
+        );
       } catch (errInfo) {
         console.log("Validate Failed:", errInfo);
       }
     } else {
       try {
         const row = await form.validateFields();
-        console.log(row);
         const payload = {
           team_member: [{ name: row.name, email: row.email, role: row.role }],
         };
@@ -150,9 +148,7 @@ export const AddProjectMembersAndStakeholders = ({
     form.setFieldsValue({
       email: options.value,
     });
-    SetInputEmail(options.value);
   };
-  console.log(inputEmail);
   const ProjectMemberEditableCell = ({
     editing,
     dataIndex,
@@ -213,17 +209,61 @@ export const AddProjectMembersAndStakeholders = ({
       </td>
     );
   };
+
+  const EditableCell = ({
+    editing,
+    dataIndex,
+    title,
+    children,
+    // record,
+    ...restProps
+  }) => {
+    const validateEmail = (_, value) => {
+      const allowedDomains = ["gmail.com", "msystechnologies.com"];
+      const [, domain] = value.split("@"); // Extract domain part from email
+      if (!value || allowedDomains.includes(domain)) {
+        return Promise.resolve();
+      }
+      return Promise.reject("Please enter a valid email address");
+    };
+    return (
+      <td {...restProps}>
+        {editing ? (
+          <Form.Item
+            name={dataIndex}
+            style={{
+              margin: 0,
+            }}
+            rules={[
+              {
+                required: true,
+                message: `Please Input ${title}!`,
+              },
+              {
+                validator: title === "Email" && validateEmail,
+              },
+            ]}
+            // key={title}
+          >
+            <Input />
+          </Form.Item>
+        ) : (
+          children
+        )}
+      </td>
+    );
+  };
   const projectMemberColumns = [
     {
       title: "Name",
       dataIndex: "name",
-      width: "35%",
+      width: "30%",
       editable: true,
     },
     {
       title: "Email",
       dataIndex: "email",
-      width: "45%",
+      width: "40%",
       editable: true,
     },
     {
@@ -266,16 +306,21 @@ export const AddProjectMembersAndStakeholders = ({
       ...col,
       onCell: (record) => ({
         record,
+        editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isUserEditing(record),
       }),
     };
   });
-  const modifiedData = data?.map((item) => ({
-    ...item,
-    key: item.ID,
-  }));
+  useEffect(() => {
+    const modified = data?.map((item) => ({
+      ...item,
+      key: item.ID,
+    }));
+    setModifiedData(modified);
+  }, [data]);
+
   const isEditing = (record) => record.key === editingKey;
   const editStakeholder = (record) => {
     form.setFieldsValue({
@@ -287,36 +332,6 @@ export const AddProjectMembersAndStakeholders = ({
   };
   const deleteStakeholder = (record) => {
     console.log(record);
-  };
-  const EditableCell = ({
-    editing,
-    dataIndex,
-    title,
-    children,
-    ...restProps
-  }) => {
-    return (
-      <td {...restProps}>
-        {editing ? (
-          <Form.Item
-            name={dataIndex}
-            style={{
-              margin: 0,
-            }}
-            rules={[
-              {
-                required: true,
-                message: `Please Input ${title}!`,
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-        ) : (
-          children
-        )}
-      </td>
-    );
   };
 
   const columns = [
@@ -339,8 +354,8 @@ export const AddProjectMembersAndStakeholders = ({
         const editable = isEditing(record);
         return editable ? (
           <span>
-            <CheckOutlined onClick={() => save(record.key)} />
-            <CloseOutlined onClick={() => cancel(record)} />
+            <CheckOutlined className="save" onClick={() => save(record.key)} />
+            <CloseOutlined className="cancel" onClick={() => cancel(record)} />
           </span>
         ) : (
           <div>
@@ -366,9 +381,11 @@ export const AddProjectMembersAndStakeholders = ({
       ...col,
       onCell: (record) => ({
         record,
+        editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        editing: isEditing(record),
+        editing: col.editable ? isEditing(record) : false,
+        save: save,
       }),
     };
   });
@@ -379,12 +396,12 @@ export const AddProjectMembersAndStakeholders = ({
         name: "",
         email: "",
       };
-      setEditingKey(newData.key);
+      setEditingKey(modifiedData.length + 1);
       setData([...data, newData]);
       setDisable(true);
     } else {
       const newUser = {
-        key: modifiedProjectMembersData.length + 10,
+        key: modifiedProjectMembersData.length + 1,
         name: "",
         email: "",
         role: "",
@@ -397,7 +414,12 @@ export const AddProjectMembersAndStakeholders = ({
 
   return (
     <>
-      <Button onClick={handleAdd} type="primary" disabled={disable}>
+      <Button
+        onClick={handleAdd}
+        type="primary"
+        disabled={disable}
+        className="add-button"
+      >
         {isModalOpen === "stakeholders"
           ? "Add stakeholder"
           : "Add Project Member"}
@@ -412,6 +434,7 @@ export const AddProjectMembersAndStakeholders = ({
                   : ProjectMemberEditableCell,
             },
           }}
+          rowKey="key"
           bordered
           dataSource={
             isModalOpen === "stakeholders"
@@ -437,7 +460,8 @@ AddProjectMembersAndStakeholders.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   isModalOpen: PropTypes.string.isRequired,
+  record: PropTypes.object.isRequired,
+  setIsModalOpen: PropTypes.string.isRequired,
   account_id: PropTypes.number.isRequired,
   prj_id: PropTypes.number.isRequired,
-  setIsModalOpen: PropTypes.string.isRequired,
 };

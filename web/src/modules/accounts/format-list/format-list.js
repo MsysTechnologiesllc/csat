@@ -14,7 +14,7 @@ import i18n from "../../../locales/i18next";
 import "./format-list.scss";
 import { GetService } from "../../../services/get";
 import { useLocation, useNavigate } from "react-router";
-import { AddProjectMembersAndStakeholders } from "./add-stakeholders-project-members";
+import { AddProjectMembersAndStakeholders } from "./add-stakeholders-project-members/add-stakeholders-project-members";
 
 const FormatList = ({}) => {
   const navigate = useNavigate();
