@@ -19,7 +19,11 @@ export const SidebarFooter = () => {
           <IoMdPerson className="footer-icon" />
           <p className="sidebar-footer-text">{i18n.t("sidebar.manager")}</p>
         </div>
-        <RxExit className="footer-icon" onClick={handleLogout} />
+        <RxExit
+          className="footer-icon"
+          onClick={handleLogout}
+          title={i18n.t("common.logout")}
+        />
       </div>
       <p className="footer-copyright-text">{i18n.t("sidebar.footerText")}</p>
     </div>
