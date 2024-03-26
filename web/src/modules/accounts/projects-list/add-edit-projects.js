@@ -133,12 +133,27 @@ export const AddEditProjects = ({
         >
           <Input placeholder={i18n.t("addProjects.project")} />
         </Form.Item>
-        <Form.Item name="startDate" label={i18n.t("addProjects.startDate")}>
+        <Form.Item
+          name="startDate"
+          label={i18n.t("addProjects.startDate")}
+          rules={[
+            {
+              required: true,
+              message: i18n.t("addProjects.startDateMessage"),
+            },
+          ]}
+        >
           <DatePicker />
         </Form.Item>
         <Form.Item
           name="pointOfContact"
           label={i18n.t("addProjects.pointOfContact")}
+          rules={[
+            {
+              required: true,
+              message: i18n.t("addProjects.pointOfContactMessage"),
+            },
+          ]}
         >
           <Select
             mode="multiple"
@@ -164,7 +179,17 @@ export const AddEditProjects = ({
         </Form.Item>
         <h5 className="team-members">{i18n.t("addProjects.teamMembers")}</h5>
         {formItemData.map(({ name, label }) => (
-          <Form.Item key={name} name={name} label={label}>
+          <Form.Item
+            key={name}
+            name={name}
+            label={label}
+            rules={[
+              {
+                required: true,
+                message: i18n.t("addProjects.pmoMessage"),
+              },
+            ]}
+          >
             <Select
               mode="multiple"
               onDeselect={handleOwnersDeselect}
