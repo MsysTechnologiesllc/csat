@@ -8,29 +8,41 @@ import {
 } from "@ant-design/icons";
 import PropTypes from "prop-types";
 import { GetService } from "../../../services/get";
+import { PutService } from "../../../services/put";
 
 export const AddProjectMembersAndStakeholders = ({
-  // setIsModalOpen,
+  setIsModalOpen,
   isModalOpen,
-  setUserSearch,
-  userSearch,
+  prj_id,
+  account_id,
 }) => {
-  // console.log(setIsModalOpen);
   const [form] = Form.useForm();
   const [disable, setDisable] = useState(false);
   const [editingKey, setEditingKey] = useState("");
   const [data, setData] = useState([]);
   const [projectMembersData, setProjetcMembersData] = useState([]);
+  const [dropDownData, setDropDownData] = useState([]);
+  const [inputEmail, SetInputEmail] = useState("");
+  const [roleData, setRoleData] = useState([]);
+  const [called, setCalled] = useState(false);
+  const { Option } = Select;
+
   useEffect(() => {
     new GetService().getTeamList(1, (result) => {
       if (result?.status === 200) {
+        let roleOptions = [];
         console.log(result?.data?.data);
         setData(result?.data?.data?.clients);
         setProjetcMembersData(result?.data?.data?.users);
+        result?.data?.data?.users?.map((role) => {
+          roleOptions.push(role.role);
+        });
+
+        setRoleData([...new Set(roleOptions)]);
       }
     });
-  }, []);
-  console.log(projectMembersData);
+  }, [called]);
+  console.log(roleData);
   const cancel = (record) => {
     if (!record?.name && !record?.email) {
       const filteredData = data.filter((item) => item?.key !== record?.key);
@@ -39,6 +51,31 @@ export const AddProjectMembersAndStakeholders = ({
     setEditingKey("");
     setDisable(false);
   };
+  const dropDown = (data) => {
+    setDropDownData(data);
+  };
+  const handleSearch = (value) => {
+    if (value.length >= 3) {
+      new GetService().getAccountOwners(value, (result) => {
+        if (result?.status === 200) {
+          const data = [
+            ...(result?.data?.data?.db_users || []),
+            ...(result?.data?.data?.gsuit_users || []),
+          ];
+          console.log(data);
+          const filteredData = data.filter((item) => {
+            return (
+              (item.name && item.name.toLowerCase().includes(value)) ||
+              (item.email && item.email.toLowerCase().includes(value))
+            );
+          });
+          dropDown(filteredData);
+          // setDropDownData(filteredData);
+        }
+      });
+    }
+  };
+  console.log(dropDownData);
   const save = async (key) => {
     if (isModalOpen === "stakeholders") {
       try {
@@ -65,22 +102,27 @@ export const AddProjectMembersAndStakeholders = ({
     } else {
       try {
         const row = await form.validateFields();
-        const newData = [...projectMembersData];
-        const index = newData.findIndex((item) => key === item.key);
-        if (index > -1) {
-          const item = newData[index];
-          newData.splice(index, 1, {
-            ...item,
-            ...row,
-          });
-          setProjetcMembersData(newData);
-          setDisable(false);
-          setEditingKey("");
-        } else {
-          projectMembersData.push(row);
-          setProjetcMembersData(newData);
-          setEditingKey("");
-        }
+        console.log(row);
+        const payload = {
+          team_member: [{ name: row.name, email: row.email, role: row.role }],
+        };
+        console.log(payload, "payload");
+        new PutService().addUpdateProject(
+          prj_id,
+          account_id,
+          payload,
+          (result) => {
+            if (result?.status === 200) {
+              setDisable(false);
+              setEditingKey("");
+              setCalled(true);
+              setTimeout(() => {
+                setCalled(false);
+                setIsModalOpen("");
+              }, 1000);
+            }
+          },
+        );
       } catch (errInfo) {
         console.log("Validate Failed:", errInfo);
       }
@@ -103,9 +145,14 @@ export const AddProjectMembersAndStakeholders = ({
   const deleteProjectMember = (record) => {
     console.log(record);
   };
-  const handleSearch = (value) => {
-    setUserSearch(value);
+  const handleChange = (value, options) => {
+    console.log(options);
+    form.setFieldsValue({
+      email: options.value,
+    });
+    SetInputEmail(options.value);
   };
+  console.log(inputEmail);
   const ProjectMemberEditableCell = ({
     editing,
     dataIndex,
@@ -128,29 +175,37 @@ export const AddProjectMembersAndStakeholders = ({
               },
             ]}
           >
-            <Select
-              showSearch
-              suffixIcon=""
-              onSearch={handleSearch}
-              dropdownMatchSelectWidth={false}
-              optionLabelProp="label"
-              autoClearSearchValue={false}
-              defaultOpen
-              options={[
-                {
-                  value: "jack",
-                  label: "Jack",
-                },
-                {
-                  value: "lucy",
-                  label: "Lucy",
-                },
-                {
-                  value: "tom",
-                  label: "Tom",
-                },
-              ]}
-            />
+            {title === "Name" && (
+              <Select
+                showSearch
+                suffixIcon=""
+                onSearch={(value) => handleSearch(value)}
+                onChange={handleChange}
+                optionLabelProp="label"
+              >
+                {dropDownData?.map((option, index) => (
+                  <Option key={index} value={option.email} label={option.name}>
+                    <p>{option.name}</p>
+                    <p>{option.email}</p>
+                  </Option>
+                ))}
+              </Select>
+            )}
+            {title === "Email" && <Input />}
+            {title === "Role" && (
+              <Select
+                showSearch
+                suffixIcon=""
+                onSearch={(value) => handleSearch(value)}
+                optionLabelProp="label"
+              >
+                {roleData?.map((option) => (
+                  <Option key={option} value={option} label={option}>
+                    <p>{option}</p>
+                  </Option>
+                ))}
+              </Select>
+            )}
           </Form.Item>
         ) : (
           children
@@ -382,7 +437,7 @@ AddProjectMembersAndStakeholders.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   isModalOpen: PropTypes.string.isRequired,
-  setUserSearch: PropTypes.string.isRequired,
-  userSearch: PropTypes.string.isRequired,
-  // setIsModalOpen: PropTypes.string.isRequired,
+  account_id: PropTypes.number.isRequired,
+  prj_id: PropTypes.number.isRequired,
+  setIsModalOpen: PropTypes.string.isRequired,
 };
