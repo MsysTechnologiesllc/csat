@@ -1,5 +1,14 @@
+import Cookies from "js-cookie";
 import { BaseService } from ".";
-
+const headers = () => {
+  return {
+    headers: {
+      Authorization: `Bearer ${Cookies.get("jwt")}`,
+      // "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json",
+    },
+  };
+};
 export class PutService extends BaseService {
   updateFeedback(payload = null, callback) {
     return this.put(
@@ -52,6 +61,7 @@ export class PutService extends BaseService {
         `/csat/rest/api/user/remove?projectID=${projectId}&userID=${userId}`,
       payload,
       callback,
+      headers(),
     );
   }
 }
