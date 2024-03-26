@@ -30,6 +30,7 @@ func SetupRoutes(router *mux.Router) {
 	apiRouter.HandleFunc("/api/survey-format/list", controllers.GetSurveyFormatList).Methods("GET")
 	apiRouter.HandleFunc("/api/manager/survey-details", controllers.GetManagerSurveyDetails).Methods("GET")
 	apiRouter.HandleFunc("/api/user/new", controllers.UpdateAccount).Methods("PUT")
+	apiRouter.HandleFunc("/api/user/remove", controllers.RemoveUser).Methods("PUT")
 
 
 
