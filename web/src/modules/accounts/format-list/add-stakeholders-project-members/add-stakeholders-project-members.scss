@@ -12,3 +12,10 @@
   color: $wild-red;
   font-size: 2rem;
 }
+.add-projectmember-header{
+  @include justify-content-between;
+  @include align-items-center;
+  .search-add-member-wrapper{
+    @include d-flex;
+  }
+}

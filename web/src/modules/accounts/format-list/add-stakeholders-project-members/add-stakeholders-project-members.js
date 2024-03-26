@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, Table, Select } from "antd";
+import { Button, Form, Input, Table, Select, Pagination } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import { GetService } from "../../../../services/get";
 import { PutService } from "../../../../services/put";
 import "./add-stakeholders-project-members.scss";
+import i18n from "../../../../locales/i18next";
 
 export const AddProjectMembersAndStakeholders = ({
   setIsModalOpen,
@@ -26,7 +27,13 @@ export const AddProjectMembersAndStakeholders = ({
   const [called, setCalled] = useState(false);
   const [dropDownData, setDropDownData] = useState([]);
   const [roleData, setRoleData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filteredProjectMembersData, setFilterProjectsMembersData] = useState(
+    [],
+  );
+  const { Search } = Input;
   const { Option } = Select;
+  const limit = 5;
   useEffect(() => {
     new GetService().getTeamList(prj_id, (result) => {
       if (result?.status === 200) {
@@ -412,18 +419,41 @@ export const AddProjectMembersAndStakeholders = ({
     }
   };
 
+  useEffect(() => {
+    const pageNumber = (currentPage - 1) * limit;
+    const filterArray = modifiedProjectMembersData?.slice(
+      pageNumber,
+      pageNumber + limit,
+    );
+    setFilterProjectsMembersData(filterArray);
+  }, [modifiedProjectMembersData, currentPage]);
+
   return (
     <>
-      <Button
-        onClick={handleAdd}
-        type="primary"
-        disabled={disable}
-        className="add-button"
-      >
-        {isModalOpen === "stakeholders"
-          ? "Add stakeholder"
-          : "Add Project Member"}
-      </Button>
+      <div className="add-projectmember-header">
+        <h3>
+          {isModalOpen === "stakeholders"
+            ? i18n.t("projectMembers.stakeholderTitle", {
+                count: modifiedData.length,
+              })
+            : i18n.t("projectMembers.projectTitle", {
+                count: modifiedProjectMembersData.length,
+              })}
+        </h3>
+        <div className="search-add-member-wrapper">
+          <Search />
+          <Button
+            onClick={handleAdd}
+            type="primary"
+            disabled={disable}
+            className="add-button"
+          >
+            {isModalOpen === "stakeholders"
+              ? i18n.t("projectMembers.addStakeholder")
+              : i18n.t("projectMembers.addNewMember")}
+          </Button>
+        </div>
+      </div>
       <Form form={form} component={false}>
         <Table
           components={{
@@ -439,7 +469,7 @@ export const AddProjectMembersAndStakeholders = ({
           dataSource={
             isModalOpen === "stakeholders"
               ? modifiedData
-              : modifiedProjectMembersData
+              : filteredProjectMembersData
           }
           columns={
             isModalOpen === "stakeholders"
@@ -449,6 +479,16 @@ export const AddProjectMembersAndStakeholders = ({
           rowClassName="editable-row"
           pagination={false}
         />
+        {isModalOpen === "projectMembers" && (
+          <Pagination
+            current={currentPage}
+            total={modifiedProjectMembersData?.length}
+            pageSize={limit}
+            onChange={(page) => setCurrentPage(page)}
+            className="project-members-pagination"
+            showSizeChanger={false}
+          />
+        )}
       </Form>
     </>
   );

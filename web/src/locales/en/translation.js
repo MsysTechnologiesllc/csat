@@ -273,4 +273,10 @@ export const translationEN = {
     createSurvey: "+ Create Survey",
     add: "+ Add",
   },
+  projectMembers: {
+    stakeholderTitle: "Project members ({{count}})",
+    projectTitle: "Project members ({{count}})",
+    addStakeholder: "Add stakeholder",
+    addNewMember: "Add new member",
+  },
 };
