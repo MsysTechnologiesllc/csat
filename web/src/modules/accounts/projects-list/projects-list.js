@@ -22,7 +22,7 @@ import {
   DeleteOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useOutletContext } from "react-router";
 import {
   AiOutlineEdit,
   AiOutlineDelete,
@@ -39,6 +39,7 @@ import "./projects-list.scss";
 
 export const ProjectsList = () => {
   const { NoData } = plLibComponents.components;
+  const [tenantId] = useOutletContext();
   const navigate = useNavigate();
   const { state } = useLocation();
   const [form] = Form.useForm();
@@ -76,7 +77,7 @@ export const ProjectsList = () => {
     }
   }, [search]);
   const projectsApi = () => {
-    new GetService().getAccountsList(state?.tenantId, (result) => {
+    new GetService().getAccountsList(tenantId, (result) => {
       if (result?.status === 200) {
         const filteredAccount =
           result?.data?.data?.tenant?.tenant_accounts.filter(
@@ -87,10 +88,10 @@ export const ProjectsList = () => {
     });
   };
   useEffect(() => {
-    if (state?.tenantId) {
+    if (tenantId) {
       projectsApi();
     }
-  }, [state?.tenantId, addProject]);
+  }, [tenantId, addProject]);
   const onClose = () => {
     setAddProject("");
     form.resetFields();
@@ -188,12 +189,11 @@ export const ProjectsList = () => {
     }
   };
   const handleView = (project) => {
-    let acc_Owner = state?.accOwner;
     navigate(
       `/accounts/${state?.accountId}/projects/${project?.ID}/formatlist`,
       {
         state: {
-          accOwner: acc_Owner,
+          accOwner: state?.accOwner,
           prjCreatedDate: project?.CreatedAt,
           prjLogo: project?.logo,
           prjId: project?.ID,
@@ -202,7 +202,7 @@ export const ProjectsList = () => {
           projectsList: projectsList?.account_projects,
           projectName: project?.name,
           status: true,
-          tenantId: state?.tenantId,
+          tenantId: tenantId,
         },
       },
     );

@@ -17,10 +17,11 @@ import i18n from "../../../locales/i18next";
 import "./format-list.scss";
 import { GetService } from "../../../services/get";
 import moment from "moment";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useOutletContext } from "react-router";
 
 const FormatList = ({}) => {
   let isDataLoaded = true;
+  const [tenantId] = useOutletContext();
   const navigate = useNavigate();
   const { state } = useLocation();
   const [data, setData] = useState([]);
@@ -39,7 +40,6 @@ const FormatList = ({}) => {
     pending: 0,
     overdue: 0,
   });
-
   useEffect(() => {
     new GetService().getSurveyFormatList(state?.accountId, (result) => {
       if (result) {
@@ -49,7 +49,7 @@ const FormatList = ({}) => {
         setData(surveys);
         setTableData(surveys);
 
-        const mostRecentSurveys = [...surveys].sort((a, b) => {
+        const mostRecentSurveys = [...surveys]?.sort((a, b) => {
           return new Date(b.UpdatedAt) - new Date(a.UpdatedAt);
         });
 
@@ -97,7 +97,7 @@ const FormatList = ({}) => {
     });
 
     new GetService().getSurveyListForProjectOverview(
-      state?.tenantId,
+      tenantId,
       user_id,
       (result) => {
         if (result?.data?.data.Surveys) {
@@ -121,7 +121,7 @@ const FormatList = ({}) => {
         accountName: state?.accountName,
         projectsList: state?.projectsList,
         accountId: state?.accountId,
-        tenantId: state?.tenantId,
+        tenantId: tenantId,
         prjId: state?.prjId,
       },
     });
@@ -198,12 +198,16 @@ const FormatList = ({}) => {
     key: item.ID,
   }));
   const handleRowClick = (record) => {
+    let accountId = state?.accountId;
     navigate(
       `/accounts/${record.ID}/projects/${state?.prjId}/formatlist/previewSurvey`,
       {
         state: {
+          tenantId: tenantId,
+          accountId: accountId,
           accountName: state?.accountName,
-          account_id: record?.account_id,
+          accOwner: state?.accOwner,
+          survey_id: record?.ID,
           projectsList: state?.projectsList,
           projectName: state?.projectName,
           status: state?.status,
@@ -403,7 +407,9 @@ const FormatList = ({}) => {
                     </p>
                   </div>
                 ) : (
-                  <p className="disabled-text">No surveys available</p>
+                  <p className="disabled-text">
+                    {i18n.t("prjOverview.noSurveys")}
+                  </p>
                 )}
               </div>
               <div className="last-sent">
@@ -425,7 +431,9 @@ const FormatList = ({}) => {
                     );
                   })
                 ) : (
-                  <p className="disabled-text">No surveys available</p>
+                  <p className="disabled-text">
+                    {i18n.t("prjOverview.noSurveys")}
+                  </p>
                 )}
               </div>
             </div>
@@ -469,6 +477,13 @@ const FormatList = ({}) => {
                   {i18n.t("prjOverview.pendingSurveys")}
                 </h5>
                 <h5 className="count">{surveysCount.pending}</h5>
+              </div>
+              <Divider type="vertical" />
+              <div className="divider-containers">
+                <h5 className="label">
+                  {i18n.t("prjOverview.overdueSurveys")}
+                </h5>
+                <h5 className="count">{surveysCount.overdue}</h5>
               </div>
             </Row>
           </Col>

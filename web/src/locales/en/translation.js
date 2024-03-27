@@ -283,8 +283,9 @@ export const translationEN = {
     upComing: "Upcoming survey",
     allRating: "Overall rating",
     totalSurveys: "Total Surveys",
-    sentSurveys: "Sent Surveys",
-    pendingSurveys: "Pending Surveys",
+    sentSurveys: "Sent",
+    pendingSurveys: "Pending",
+    overdueSurveys: "Overdue",
     recentSurveys: "Recent Surveys",
     createdDate: "Created Date",
     resDeadline: "Response Deadline",
@@ -292,5 +293,6 @@ export const translationEN = {
     search: "Search by name, template, status",
     noStacks: "No Stackholders Found",
     noPrjMembers: "No Members Found",
+    noSurveys: "No surveys available",
   },
 };
