@@ -110,16 +110,16 @@ const SurveyList = ({
   };
   const pageSizeOptions = [
     {
-      value: 5,
-      label: "5",
-    },
-    {
       value: 10,
       label: "10",
     },
     {
-      value: 15,
-      label: "15",
+      value: 30,
+      label: "30",
+    },
+    {
+      value: 50,
+      label: "50",
     },
   ];
   const handleChange = (value) => {
@@ -158,7 +158,7 @@ const SurveyList = ({
           current={current}
           total={totalData}
           pageSizeOptions={pageSizeOptions?.map((size) => `${size.value}`)}
-          showTotal={(total, range) => `${range[0]}-${range[1]} of ${total}`}
+          showTotal={(total, range) => ` ${range[0]}-${range[1]} of ${total}`}
           simple={true}
           showLessItems={true}
           onChange={(page) => {

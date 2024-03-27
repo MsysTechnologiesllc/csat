@@ -1,8 +1,13 @@
 import axios from "axios";
 export class BaseService {
-  async post(url, data, callback) {
+  async post(url, data, callback, headers) {
+    let header = headers
+      ? headers
+      : {
+          "Content-Type": "application/json",
+        };
     return await axios
-      .post(url, data)
+      .post(url, data, header)
       .then(async (res) => {
         callback(res);
       })

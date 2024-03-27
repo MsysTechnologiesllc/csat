@@ -1,5 +1,12 @@
+import Cookies from "js-cookie";
 import { BaseService } from ".";
-
+const headers = () => {
+  return {
+    headers: {
+      Authorization: `Bearer ${Cookies.get("jwt")}`,
+    },
+  };
+};
 export class PostService extends BaseService {
   createSurvey(payload = null, callback) {
     return this.post(
@@ -13,6 +20,7 @@ export class PostService extends BaseService {
       process.env.REACT_APP_GO_SERVICE_URL + "/csat/rest/api/client",
       payload,
       callback,
+      headers(),
     );
   }
   postCredentials(payload = null, callback) {

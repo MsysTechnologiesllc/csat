@@ -42,8 +42,8 @@ export const AddEditProjects = ({
       });
     setSelectedItems(
       eachProject?.Users?.map((user) => ({
-        name: user.name,
-        email: user.email,
+        name: user?.name,
+        email: user?.email,
       })),
     );
   }, [addProject]);
@@ -51,28 +51,28 @@ export const AddEditProjects = ({
     if (addProject === "add") {
       let option = [];
       options.map((item) => {
-        option.push({ name: item.label, email: item.value });
+        option.push({ name: item?.label, email: item?.value });
       });
       setSelectedItems((prevData) => [...prevData, ...option]);
     }
     if (addProject === "edit") {
       let option = [];
-      options.map((item) => {
-        if (item.label !== undefined && item.value !== undefined) {
-          option.push({ name: item.label, email: item.value });
+      options?.map((item) => {
+        if (item?.label !== undefined && item?.value !== undefined) {
+          option.push({ name: item?.label, email: item?.value });
         }
       });
       setSelectedItems((prevData) => [...prevData, ...option]);
     }
   };
   const handleOwnersDeselect = (value) => {
-    let deletedItems = selectedItems.filter((item) => item.email === value);
+    let deletedItems = selectedItems?.filter((item) => item?.email === value);
     if (deletedItems) {
       setRemovedItems((prevData) => [...prevData, ...deletedItems]);
     }
     setSelectedItems(
       selectedItems.filter(
-        (item) => item.name !== value && item.email !== value,
+        (item) => item?.name !== value && item?.email !== value,
       ),
     );
   };
@@ -151,7 +151,7 @@ export const AddEditProjects = ({
             {dropdownOptions?.map((option) => (
               <Option
                 key={option.email}
-                value={option.email}
+                value={option.name}
                 label={option.name}
               >
                 <>

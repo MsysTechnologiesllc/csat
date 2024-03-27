@@ -17,7 +17,9 @@ export const SidebarFooter = () => {
       <div className="sidebar-footer-container">
         <div className="side0bar-footer-text-container">
           <IoMdPerson className="footer-icon" />
-          <p className="sidebar-footer-text">{i18n.t("sidebar.manager")}</p>
+          <p className="sidebar-footer-text">
+            {localStorage.getItem("userName")}
+          </p>
         </div>
         <RxExit
           className="footer-icon"

@@ -49,7 +49,7 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
   };
   const handleMember = (member) => {
     setSelectedMember(member);
-    const user = usersFeedback.filter(
+    const user = usersFeedback?.filter(
       (user) =>
         user?.name === selectedMember?.user?.name ||
         user?.name === feedback?.name,
@@ -62,7 +62,7 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
       setUsersList(surveyDetails?.Survey?.user_feedbacks);
       if (surveyDetails?.Survey?.user_feedbacks?.length > 0) {
         const users = surveyDetails?.Survey?.user_feedbacks?.filter(
-          (user) => user.user.role === "member",
+          (user) => user?.user?.role === "member",
         );
         setSelectedMember(users[0]);
       }
@@ -257,7 +257,9 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
                   }
                 >
                   <div className="text-image-container">
-                    {member?.user?.name}
+                    <p className="user-name" title={member?.user?.name}>
+                      {member?.user?.name}
+                    </p>
                     {member?.positives !== "" &&
                       member?.negatives !== "" &&
                       member?.rating !== 0 && (
