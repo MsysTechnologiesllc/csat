@@ -94,8 +94,8 @@ export const Accounts = () => {
   const handleView = (account) => {
     navigate(`/accounts/${account.ID}/projects`, {
       state: {
-        accOwner: account.account_owner[0].name,
-        accountId: account.ID,
+        accOwner: account?.account_owner[0]?.name,
+        accountId: account?.ID,
         tenantId: tenantId,
       },
     });
@@ -188,14 +188,18 @@ export const Accounts = () => {
       key: "actions",
       render: (text, record) => (
         <div>
-          <EditOutlined
-            className="edit"
-            onClick={() => handleOnClickMore("Edit", record.account)}
-          />
-          <DeleteOutlined
-            className="delete"
-            onClick={() => handleOnClickMore("Delete", record.account)}
-          />
+          <Tooltip title={i18n.t("common.edit")}>
+            <EditOutlined
+              className="edit"
+              onClick={() => handleOnClickMore("Edit", record.account)}
+            />
+          </Tooltip>
+          <Tooltip title={i18n.t("common.delete")}>
+            <DeleteOutlined
+              className="delete"
+              onClick={() => handleOnClickMore("Delete", record.account)}
+            />
+          </Tooltip>
         </div>
       ),
     },
@@ -204,15 +208,17 @@ export const Accounts = () => {
       dataIndex: "view",
       key: "view",
       render: (text, record) => (
-        <EyeOutlined
-          className="view"
-          onClick={() => handleView(record.account)}
-        />
+        <Tooltip title={i18n.t("addProjects.view")}>
+          <EyeOutlined
+            className="view"
+            onClick={() => handleView(record.account)}
+          />
+        </Tooltip>
       ),
     },
   ];
   const data = [];
-  accountsList.map((account) => {
+  accountsList?.map((account) => {
     selectedSegment === "List" &&
       data.push({
         account: account,

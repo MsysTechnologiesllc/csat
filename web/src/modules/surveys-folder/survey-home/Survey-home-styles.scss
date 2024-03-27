@@ -88,12 +88,12 @@
 
   .survey-header-container {
     .survey-heading {
-      @include font-style($black, 2rem, 2.5rem, 400);
+      @include font-style($black, 1.6rem, 1.6rem, 500);
       text-align: start;
       margin: 0;
 
       @include media(">=md") {
-        @include font-style($black, 3.4rem, 4rem, 400);
+        @include font-style($black, 2rem, 2.8rem, 500);
       }
     }
 
@@ -171,8 +171,8 @@
       }
 
       @include media(">=lg") {
-        min-height: 72vh;
-        max-height: 72vh;
+        min-height: 65vh;
+        max-height: 65vh;
       }
 
       .ant-spin-container {
@@ -257,6 +257,7 @@
       white-space: nowrap;
       padding: 1rem;
       position: sticky;
+
       @include media("<=md") {
         padding-bottom: 3rem;
       }
@@ -275,9 +276,10 @@
 
         .ant-select-selector {
           border: none;
-          margin:0 0.7rem;
-          height: 2.4rem;
+          margin: 0 0.7rem;
+          height: 3rem;
           width: 5rem;
+          padding-left: 0;
         }
 
         .ant-select-selection-item {
@@ -296,6 +298,11 @@
       .ant-pagination-prev,
       .ant-pagination-total-text {
         margin: 0;
+        padding-top: 0.1rem;
+      }
+
+      .ant-pagination-next {
+        padding-top: 0.1rem;
       }
     }
 

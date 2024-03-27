@@ -22,10 +22,12 @@
 
     .ant-drawer-close {
       margin: 0;
+      padding-left: 0
     }
 
     .ant-drawer-title {
       @include font-style($black, 1.6rem, 2.4rem, 500);
+      margin-left: 0.7rem;
       max-width: 10rem;
 
       @include media("<md") {
@@ -47,6 +49,7 @@
       .cancle-btn {
         @include font-style($black, 1.6rem, 2.4rem, 400);
         border: 0.1rem solid $dark-black;
+        border-radius: 0.4rem;
 
         @include media("<md") {
           font-size: 1.4rem;
@@ -98,6 +101,21 @@
   .team-members {
     @include font-style($black, 1.6rem, 2.4rem, 500);
     margin-bottom: 1.5rem;
+  }
+
+  .logo-recommendations {
+    margin-left: 1rem;
+  }
+
+  .ant-input,
+  .ant-picker .ant-picker-input>input,
+  .ant-select-selector {
+    font-size: 1.2rem;
+    height: 3.2rem;
+  }
+
+  .ant-picker {
+    height: 3.2rem;
   }
 }
 

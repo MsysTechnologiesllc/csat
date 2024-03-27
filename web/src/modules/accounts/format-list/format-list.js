@@ -195,7 +195,7 @@ const FormatList = ({}) => {
   };
   const modifiedTableData = tableData?.map((item) => ({
     ...item,
-    key: item.ID,
+    key: item?.ID,
   }));
   const handleRowClick = (record) => {
     let accountId = state?.accountId;
@@ -248,7 +248,7 @@ const FormatList = ({}) => {
     <div className="survey-home-container">
       <Breadcrumb items={breadcrumbList} />
       <div className="survey-header-container">
-        <h3 className="survey-heading">{i18n.t("prjOverview.prjOverview")}</h3>
+        <h3 className="heading">{i18n.t("prjOverview.prjOverview")}</h3>
         <Button onClick={createSurvey} className="create-survey-btn">
           {i18n.t("prjOverview.createSurvey")}
         </Button>
@@ -468,7 +468,7 @@ const FormatList = ({}) => {
               </div>
               <Divider type="vertical" />
               <div className="divider-containers">
-                <h5 className="label">{i18n.t("prjOverview.sentSurveys")}</h5>
+                <h5 className="label">{i18n.t("surveyList.completed")}</h5>
                 <h5 className="count">{surveysCount.sent}</h5>
               </div>
               <Divider type="vertical" />

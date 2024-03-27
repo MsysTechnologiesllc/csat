@@ -32,7 +32,7 @@ const SurveyHeader = ({
   const radioOptions = [
     { label: i18n.t("surveyList.all"), value: "all" },
     { label: i18n.t("surveyList.toFollow"), value: "pending" },
-    { label: i18n.t("surveyList.publish"), value: "publish" },
+    { label: i18n.t("surveyList.completed"), value: "publish" },
     { label: i18n.t("surveyList.overdue"), value: "overdue" },
   ];
   const checkboxOptions = prjData?.map((item) => {
