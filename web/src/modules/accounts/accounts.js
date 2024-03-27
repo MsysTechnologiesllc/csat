@@ -287,7 +287,9 @@ export const Accounts = () => {
                 <Card className="project-wrapper">
                   <div className="project-client-context-day-container">
                     <div className="avatar-project-client-context-container">
-                      {account.logo ? (
+                      {account.logo !== undefined &&
+                      account.logo !== null &&
+                      !(account.logo.length < 5) ? (
                         <Avatar src={`${account.media_type},${account.logo}`} />
                       ) : (
                         <p className="avatar">
