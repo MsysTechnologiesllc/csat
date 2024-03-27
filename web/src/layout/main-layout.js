@@ -10,6 +10,7 @@ import "./main-layout.scss";
 import { Header } from "../components/header/header";
 import i18n from "../locales/i18next";
 import TokenUtil from "../utils/tokenUtils";
+import Cookies from "js-cookie";
 
 const menuItems = [
   {
@@ -39,9 +40,17 @@ export const MainLayout = () => {
   const navigate = useNavigate();
   const [tenantId, setTenantId] = useState(0);
   useEffect(() => {
-    let jwtDetails = TokenUtil.getTokenDetails();
-    if (jwtDetails?.Email) {
-      setTenantId(jwtDetails?.TenantId);
+    let jwt = Cookies.get("jwt");
+    if (!jwt) {
+      navigate("/login");
+    } else {
+      let jwtDetails = TokenUtil.getTokenDetails();
+      if (jwtDetails?.Email) {
+        setTenantId(jwtDetails?.TenantId);
+      } else {
+        Cookies.remove("jwt");
+        navigate("/login");
+      }
     }
   }, []);
   const handlesidebar = (evt) => {

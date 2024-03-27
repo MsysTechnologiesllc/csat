@@ -30,83 +30,93 @@ const AppRoutes = () => {
   ];
 
   return (
-    <Router>
-      <Routes>
-        <Route element={<CustomerSurveyLayout />} exact>
-          <Route path="/" element={<Navigate to={`/login`} replace />} />
-          <Route path={`/customer-survey`} element={<GreetingsPage />} exact />
-          <Route path="/survey" element={<FeedBackSurvey />} exact />
-          <Route path="/teamFeedBack" element={<TeamMembersFeedBack />} exact />
-          <Route key="/404" path="/404" element={<Error />} exact />
-          {routes.map((route, index) => (
+    <>
+      <Router>
+        <Routes>
+          <Route element={<CustomerSurveyLayout />} exact>
+            <Route path="/" element={<Navigate to={`/login`} replace />} />
             <Route
-              key={index}
-              path={route.path}
-              element={<Successfull />}
+              path={`/customer-survey`}
+              element={<GreetingsPage />}
               exact
             />
-          ))}
-        </Route>
-        <Route path="/login" element={<SSOIntegration />} exact />
-        <Route
-          key="/reset-password"
-          path="/reset-password"
-          element={<ResetPassword />}
-          exact
-        />
-        <Route element={<MainLayout />} exact>
+            <Route path="/survey" element={<FeedBackSurvey />} exact />
+            <Route
+              path="/teamFeedBack"
+              element={<TeamMembersFeedBack />}
+              exact
+            />
+            <Route key="/404" path="/404" element={<Error />} exact />
+            {routes.map((route, index) => (
+              <Route
+                key={index}
+                path={route.path}
+                element={<Successfull />}
+                exact
+              />
+            ))}
+          </Route>
+          <Route path="/login" element={<SSOIntegration />} exact />
           <Route
-            key="/dashboard"
-            path="/dashboard"
-            element={<Dashboard />}
+            key="/reset-password"
+            path="/reset-password"
+            element={<ResetPassword />}
             exact
           />
-          <Route
-            key="/accounts"
-            path="/accounts"
-            element={<Accounts />}
-            exact
-          />
-          <Route
-            key="/accounts/:accountId/projects"
-            path="/accounts/:accountId/projects"
-            element={<ProjectsList />}
-            exact
-          />
-          <Route
-            key="/accounts/:accountId/projects/:projectId/formatlist"
-            path="/accounts/:accountId/projects/:projectId/formatlist"
-            element={<FormatList />}
-            exact
-          />
-          <Route
-            key="/accounts/:accountId/projects/:projectId/formatlist/previewSurvey"
-            path="/accounts/:accountId/projects/:projectId/formatlist/previewSurvey"
-            element={<PreviewSurvey />}
-            exact
-          />
-          <Route
-            key="/surveys"
-            path="/surveys"
-            element={<SurveyHome />}
-            exact
-          />
-          <Route
-            key="/surveys"
-            path="/surveys/surveyDetails"
-            element={<SurveyDetails />}
-            exact
-          />
-          <Route
-            key="notifications"
-            path="notifications"
-            element={<Notifications />}
-            exact
-          />
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Route>
-      </Routes>
-    </Router>
+          <Route element={<MainLayout />} exact>
+            <Route
+              key="/dashboard"
+              path="/dashboard"
+              element={<Dashboard />}
+              exact
+            />
+            <Route
+              key="/accounts"
+              path="/accounts"
+              element={<Accounts />}
+              exact
+            />
+            <Route
+              key="/accounts/:accountId/projects"
+              path="/accounts/:accountId/projects"
+              element={<ProjectsList />}
+              exact
+            />
+            <Route
+              key="/accounts/:accountId/projects/:projectId/formatlist"
+              path="/accounts/:accountId/projects/:projectId/formatlist"
+              element={<FormatList />}
+              exact
+            />
+            <Route
+              key="/accounts/:accountId/projects/:projectId/formatlist/previewSurvey"
+              path="/accounts/:accountId/projects/:projectId/formatlist/previewSurvey"
+              element={<PreviewSurvey />}
+              exact
+            />
+            <Route
+              key="/surveys"
+              path="/surveys"
+              element={<SurveyHome />}
+              exact
+            />
+            <Route
+              key="/surveys"
+              path="/surveys/surveyDetails"
+              element={<SurveyDetails />}
+              exact
+            />
+            <Route
+              key="notifications"
+              path="notifications"
+              element={<Notifications />}
+              exact
+            />
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Route>
+        </Routes>
+      </Router>
+    </>
   );
 };
 
