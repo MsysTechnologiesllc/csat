@@ -243,6 +243,8 @@
   }
 
   .project-list-wrapper {
+    margin-top: 1rem;
+
     .no-data-container {
       width: 100%;
       height: auto;
@@ -251,6 +253,7 @@
     .project-wrapper {
       min-height: 13rem;
       max-height: 13rem;
+      width: 100%;
       background-color: $white;
 
       .project-client-context-day-container {
@@ -288,6 +291,8 @@
 
             .client-name {
               @include font-style($steel-grey, 1.4rem, 2rem, 400);
+              @include text-ellipsis;
+              width: 80%;
 
               .delivery-head-length {
                 cursor: pointer;
@@ -304,6 +309,7 @@
         }
 
         .day-left-container {
+          margin-right: 0.7rem;
           @include align-items-start;
           gap: 0.5rem;
 
@@ -362,7 +368,7 @@
   }
 
   @include media(">xl") {
-    min-height: 78vh;
+    min-height: 83vh;
   }
 
   .ant-table-wrapper {
@@ -388,6 +394,8 @@
       min-width: 15rem;
       max-width: 15rem;
       text-transform: capitalize;
+      padding-right: 2rem;
+      text-overflow: ellipsis;
     }
 
     >tr>td:nth-child(4) {
@@ -408,7 +416,6 @@
       cursor: pointer !important;
     }
   }
-
 
   .ant-table-wrapper .ant-table-thead>tr>th {
     padding-left: 1.2rem;

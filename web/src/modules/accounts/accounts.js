@@ -115,16 +115,21 @@ export const Accounts = () => {
       title: "Account",
       dataIndex: "account.name",
       key: "name",
+      ellipsis: true,
       render: (text, record) => record.account.name,
     },
     {
       title: "Account Owner",
       dataIndex: "account.account_owner.length",
       key: "accountOwner",
+      ellipsis: true,
       render: (text, record) => (
         <>
           {record?.account?.account_owner?.length === 1 ? (
-            <p className="avatar-name">
+            <p
+              className="avatar-name"
+              title={record?.account?.account_owner[0]?.name}
+            >
               {record?.account?.account_owner[0]?.name}
             </p>
           ) : (
@@ -167,6 +172,7 @@ export const Accounts = () => {
       title: "Projects",
       dataIndex: "account.account_projects.length",
       key: "projects",
+      ellipsis: true,
       render: (text, record) => (
         <>
           <span>
