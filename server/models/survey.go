@@ -303,7 +303,9 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 func (surveyDetails *SurveyDetails) GetAllQuestionAndUserIDs() (questionIDs, userIDs []uint) {
 	// Iterate through UserFeedbacks
 	for _, feedback := range surveyDetails.Survey.UserFeedback {
-		userIDs = append(userIDs, feedback.User.ID)
+		if feedback.User != nil {
+			userIDs = append(userIDs, feedback.User.ID)
+		}
 	}
 
 	// Iterate through SurveyAnswers
