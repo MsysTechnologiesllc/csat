@@ -12,10 +12,114 @@
   color: $wild-red;
   font-size: 2rem;
 }
-.add-projectmember-header{
+.add-projectmember-header {
   @include justify-content-between;
   @include align-items-center;
-  .search-add-member-wrapper{
+  .search-add-member-wrapper {
     @include d-flex;
+    gap: 2rem;
+    .ant-input {
+      border-radius: 0.4rem;
+      &:hover {
+        border-color: $light-grey;
+      }
+    }
+    .ant-input-search
+      > .ant-input-group
+      > .ant-input-group-addon:last-child
+      .ant-input-search-button {
+      border-start-end-radius: 0.4rem;
+      border-end-end-radius: 0.4rem;
+      &:hover {
+        border-color: $light-grey;
+      }
+    }
+    .ant-input-group > .ant-input:first-child {
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+    }
+    .ant-input-search
+      > .ant-input-group
+      > .ant-input-group-addon:last-child
+      .ant-input-search-button:not(.ant-btn-primary):hover {
+      color: rgba(0, 0, 0, 0.45);
+    }
+    .anticon {
+      &:hover {
+        color: rgba(0, 0, 0, 0.45);
+      }
+    }
   }
+}
+
+  .ant-table-wrapper
+    .ant-table-thead
+    > tr
+    > th:not(:last-child):not(.ant-table-selection-column):not(
+      .ant-table-row-expand-icon-cell
+    ):not([colspan])::before {
+    display: none;
+  }
+  .ant-table-wrapper .ant-table.ant-table-small .ant-table-tbody > tr > td {
+    padding: 1.5rem 1rem;
+  }
+
+  .ant-table {
+    thead {
+      tr:first-of-type th:first-of-type {
+        border-radius: 0;
+      }
+      tr:first-of-type th:last-of-type {
+        border-radius: 0;
+      }
+      > tr > th {
+        @include font-style($black, 1.4rem, normal, 600);
+        background-color: $hawkes-blue;
+        text-align: start;
+        border: none;
+        max-width: 8rem;
+        @include text-ellipsis;
+      }
+      > tr > th:not(:first-child, :nth-child(2)) {
+        text-align: center;
+      }
+    }
+    tbody {
+      > tr > td {
+        @include font-style($grey, 1.4rem, normal, 500);
+        max-width: 8.5rem;
+        @include text-ellipsis;
+        text-align: start;
+        .ant-table-cell {
+          padding: 2rem 1.6rem;
+        }
+      }
+      > tr > td:not(:first-child, :nth-child(2)) {
+        text-align: center;
+      }
+    }
+    .ant-table-wrapper
+      .ant-table-thead
+      > tr
+      > th:not(:last-child):not(.ant-table-selection-column):not(
+        .ant-table-row-expand-icon-cell
+      ):not([colspan])::before {
+      background-color: transparent;
+    }
+    .ant-table-thead > tr > th {
+      &:nth-child(1) {
+        .ant-checkbox-wrapper {
+          .ant-checkbox-indeterminate .ant-checkbox-inner:after {
+            max-width: 0.8rem;
+            max-height: 0.2rem;
+            background-color: $white;
+          }
+        }
+      }
+    }
+  }
+
+.project-members-pagination {
+  @include justify-content-end;
+  margin-top: 2rem;
 }

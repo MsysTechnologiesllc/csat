@@ -27,7 +27,6 @@ export const AddProjectMembersAndStakeholders = ({
   const [projectMembersData, setProjetcMembersData] = useState([]);
   const [called, setCalled] = useState(false);
   const [dropDownData, setDropDownData] = useState([]);
-  const [roleData, setRoleData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredProjectMembersData, setFilterProjectsMembersData] = useState(
     [],
@@ -35,21 +34,31 @@ export const AddProjectMembersAndStakeholders = ({
   const { Search } = Input;
   const [notify, setNotify] = useState("");
   const [message, setMessage] = useState("");
+  const [memberSearch, setMemberSearch] = useState("");
+  const [disableUser, setDisableUser] = useState(false);
   const { Option } = Select;
   const limit = 5;
+  const roleOptions = ["lead", "member", "manager"];
   useEffect(() => {
     new GetService().getTeamList(prj_id, (result) => {
       if (result?.status === 200) {
-        let roleOptions = [];
-        setData(result?.data?.data?.clients);
-        setProjetcMembersData(result?.data?.data?.users);
-        result?.data?.data?.users?.map((role) => {
-          roleOptions.push(role.role);
-        });
-        setRoleData([...new Set(roleOptions)]);
+        if (memberSearch) {
+          const filteredSearchData = result?.data?.data?.users?.filter(
+            (user) =>
+              user.name.toLowerCase().includes(memberSearch) ||
+              user.email.toLowerCase().includes(memberSearch),
+          );
+          setProjetcMembersData(filteredSearchData.sort((a, b) => a.ID - b.ID));
+        } else {
+          setData(result?.data?.data?.clients);
+          setProjetcMembersData(
+            result?.data?.data?.users.sort((a, b) => a.ID - b.ID),
+          );
+        }
       }
     });
-  }, [called]);
+  }, [memberSearch, called]);
+  console.log(projectMembersData);
   const cancel = (record) => {
     if (!record?.name && !record?.email) {
       const filteredData = data.filter((item) => item?.ID !== record?.key);
@@ -139,8 +148,13 @@ export const AddProjectMembersAndStakeholders = ({
     ...item,
     key: item.ID,
   }));
-  const isUserEditing = (record) => record.key === editingKey;
   const editProjectMember = (record) => {
+    console.log(record);
+    if (record.name !== "" && record.email !== "") {
+      setDisableUser(true);
+    } else {
+      setDisableUser(false);
+    }
     form.setFieldsValue({
       name: "",
       email: "",
@@ -149,8 +163,12 @@ export const AddProjectMembersAndStakeholders = ({
     });
     setEditingKey(record.key);
   };
+  const isUserEditing = (record) => record.key === editingKey;
+  console.log(editingKey);
+  console.log(projectMembersData);
   const handleChange = (value, options) => {
     form.setFieldsValue({
+      name: options.label,
       email: options.value,
     });
   };
@@ -183,6 +201,7 @@ export const AddProjectMembersAndStakeholders = ({
                 onSearch={(value) => handleSearch(value)}
                 onChange={handleChange}
                 optionLabelProp="label"
+                disabled={disableUser}
               >
                 {dropDownData?.map((option, index) => (
                   <Option key={index} value={option.email} label={option.name}>
@@ -192,7 +211,7 @@ export const AddProjectMembersAndStakeholders = ({
                 ))}
               </Select>
             )}
-            {title === "Email" && <Input />}
+            {title === "Email" && <Input disabled={disableUser} />}
             {title === "Role" && (
               <Select
                 showSearch
@@ -200,7 +219,7 @@ export const AddProjectMembersAndStakeholders = ({
                 onSearch={(value) => handleSearch(value)}
                 optionLabelProp="label"
               >
-                {roleData?.map((option) => (
+                {roleOptions?.map((option) => (
                   <Option key={option} value={option} label={option}>
                     <p>{option}</p>
                   </Option>
@@ -261,26 +280,38 @@ export const AddProjectMembersAndStakeholders = ({
     {
       title: "Name",
       dataIndex: "name",
-      width: "30%",
+      width: "20%",
       editable: true,
+      render: (text) => {
+        return <p title={text}>{text}</p>;
+      },
     },
     {
       title: "Email",
       dataIndex: "email",
       width: "40%",
       editable: true,
+      render: (text) => {
+        return <p title={text}>{text}</p>;
+      },
     },
     {
       title: "Role",
       dataIndex: "role",
-      width: "45%",
+      width: "20%",
       editable: true,
+      render: (text) => {
+        return <p title={text}>{text}</p>;
+      },
     },
     {
       title: "Action",
       dataIndex: "action",
+      width: "30%",
       render: (_, record) => {
         const editable = isUserEditing(record);
+        record.key = record.key === false && -1;
+        console.log(record);
         return editable ? (
           <span>
             <CheckOutlined onClick={() => save(record.key)} />
@@ -415,7 +446,7 @@ export const AddProjectMembersAndStakeholders = ({
       setDisable(true);
     } else {
       const newUser = {
-        key: modifiedProjectMembersData.length + 1,
+        key: 0,
         name: "",
         email: "",
         role: "",
@@ -426,6 +457,10 @@ export const AddProjectMembersAndStakeholders = ({
     }
   };
 
+  const handleMemberSearch = (value) => {
+    setMemberSearch(value);
+  };
+
   useEffect(() => {
     const pageNumber = (currentPage - 1) * limit;
     const filterArray = modifiedProjectMembersData?.slice(
@@ -433,7 +468,9 @@ export const AddProjectMembersAndStakeholders = ({
       pageNumber + limit,
     );
     setFilterProjectsMembersData(filterArray);
-  }, [modifiedProjectMembersData, currentPage]);
+  }, [projectMembersData, currentPage]);
+
+  console.log(memberSearch);
 
   return (
     <>
@@ -441,14 +478,16 @@ export const AddProjectMembersAndStakeholders = ({
         <h3>
           {isModalOpen === "stakeholders"
             ? i18n.t("projectMembers.stakeholderTitle", {
-                count: modifiedData.length,
+                count: modifiedData?.length,
               })
             : i18n.t("projectMembers.projectTitle", {
-                count: modifiedProjectMembersData.length,
+                count: modifiedProjectMembersData?.length,
               })}
         </h3>
         <div className="search-add-member-wrapper">
-          <Search />
+          <Search
+            onChange={(event) => handleMemberSearch(event.target.value)}
+          />
           <Button
             onClick={handleAdd}
             type="primary"
@@ -461,7 +500,7 @@ export const AddProjectMembersAndStakeholders = ({
           </Button>
         </div>
       </div>
-      <Form form={form} component={false}>
+      <Form form={form} component={false} className="table-form">
         <Table
           components={{
             body: {
