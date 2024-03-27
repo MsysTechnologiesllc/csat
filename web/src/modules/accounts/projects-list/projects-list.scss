@@ -174,7 +174,6 @@
   .account-header-container {
     @include align-items-center;
     @include justify-content-between;
-    margin-top: 1.4rem;
 
     .actions-container {
       @include justify-content-between;
@@ -244,8 +243,6 @@
   }
 
   .project-list-wrapper {
-    margin-top: 1.2rem;
-
     .no-data-container {
       width: 100%;
       height: auto;

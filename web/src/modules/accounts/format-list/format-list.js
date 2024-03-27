@@ -245,9 +245,9 @@ const FormatList = ({}) => {
     return randomColors[Math.floor(Math.random() * randomColors.length)];
   }
   return (
-    <div className="survey-home-container">
+    <div className="format-home-container">
       <Breadcrumb items={breadcrumbList} />
-      <div className="survey-header-container">
+      <div className="format-header-container">
         <h3 className="heading">{i18n.t("prjOverview.prjOverview")}</h3>
         <Button onClick={createSurvey} className="create-survey-btn">
           {i18n.t("prjOverview.createSurvey")}

@@ -1,6 +1,6 @@
 @use "../../../assets/style/" as *;
 
-.survey-home-container {
+.format-home-container {
   padding: 3rem 2rem 2rem;
   background-color: $smoked_bg;
   @include flex-column;
@@ -68,7 +68,7 @@
     }
   }
 
-  .survey-header-container {
+  .format-header-container {
     @include justify-content-between;
     @include align-items-center;
     margin-bottom: 1rem;
