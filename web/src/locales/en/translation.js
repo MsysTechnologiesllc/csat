@@ -17,6 +17,7 @@ export const translationEN = {
     delete: "Delete",
     moreOptions: "More Options",
     upload: "Upload",
+    logout: "Logout",
   },
   header: {
     title: "CSAT",

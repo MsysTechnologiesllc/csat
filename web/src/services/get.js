@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { BaseService } from ".";
 import Cookies from "js-cookie";
 
