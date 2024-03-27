@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 import { BaseService } from ".";
+
 const headers = () => {
   return {
     headers: {
@@ -102,6 +103,14 @@ export class GetService extends BaseService {
     return this.get(
       process.env.REACT_APP_GO_SERVICE_URL +
         `/csat/rest/api/project-details?projectId=${projectId}`,
+      callback,
+      headers(),
+    );
+  }
+  getSurveyListForProjectOverview(tenant_id, user_id, callback) {
+    return this.get(
+      process.env.REACT_APP_GO_SERVICE_URL +
+        `/csat/rest/api/surveys?page=1&tenant_id=${tenant_id}&limit=10&user_id=${user_id}`,
       callback,
       headers(),
     );

@@ -14,6 +14,7 @@
   }
   .header-container {
     z-index: 1;
+    padding-left: 2rem;
   }
   .header-arrow {
     display: none;
@@ -34,9 +35,7 @@
   }
   .show-right-arrow {
     @include media("<=lg") {
-      right: 2rem;
-      top: 1.5rem;
-      z-index: 50;
+      margin-left: 1rem;
     }
   }
   .hide-right-arrow {

@@ -1,18 +1,23 @@
 @use "../../../assets/style/" as *;
 
 .survey-home-container {
-  padding: 1.6rem;
+  padding: 3rem 2rem 2rem;
   background-color: $smoked_bg;
+  @include flex-column;
   height: auto;
 
-  .crete-survey-btn {
+  @include media(">=xl") {
+    height: 100vh;
+  }
+
+  .create-survey-btn {
     @include font-style($white, 1.6rem, 2.4rem, 400);
     border-radius: 0.4rem;
     padding: 1rem 2.2rem;
     @include justify-content-center;
     @include align-items-center;
     margin-left: 1rem;
-    min-height: 3.5rem;
+    min-height: 4rem;
     background-color: $indigo;
     color: $white;
 
@@ -38,6 +43,7 @@
   .ant-breadcrumb,
   .ant-breadcrumb a {
     @include font-style($dark-black, 1.6rem, 2.4rem, 400);
+    text-transform: capitalize;
 
     @include media("<md") {
       font-size: 1.2rem;
@@ -54,7 +60,7 @@
   }
 
   .ant-breadcrumb li:last-child {
-    @include font-style($wild-red, 1.6rem, 2.4rem, 400);
+    @include font-style($black, 1.6rem, 2.4rem, 400);
 
     @include media("<md") {
       font-size: 1.2rem;
@@ -65,7 +71,11 @@
   .survey-header-container {
     @include justify-content-between;
     @include align-items-center;
-    margin: 0;
+    margin-bottom: 1rem;
+
+    @include media ("<md") {
+      margin-top: 1rem;
+    }
 
     .survey-heading {
       @include font-style($black, 1.6rem, 1.6rem, 400);
@@ -76,16 +86,19 @@
         @include font-style($black, 2rem, 2.8rem, 400);
       }
     }
-
-
   }
 
   .prj-overview-top-section {
-    margin-bottom: 1.3rem;
+    margin-bottom: 1.2rem;
 
     .main-row {
       width: 100%;
-      gap: 1rem;
+      gap: 1.4rem;
+
+      .disabled-text {
+        color: $suva-gray;
+        margin-top: 0.4rem;
+      }
 
       @include media(">md", "<=lg") {
         gap: 1rem;
@@ -93,10 +106,16 @@
 
       .overview-sections {
         border-radius: 0.4rem;
-        min-height: 32vh;
-        max-height: 32vh;
         background-color: $white;
         padding: 1rem;
+
+        .ant-btn {
+          &:hover {
+            color: $indigo;
+            background-color: $white;
+            box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
+          }
+        }
 
         .accounts-avatar-container {
           @include justify-content-between;
@@ -106,6 +125,13 @@
           .acc-name {
             @include font-style($black, 1.6rem, 2.4rem, 400);
             margin: 0;
+            text-transform: capitalize;
+
+          }
+
+          .prj-logo {
+            background-color: $indigo;
+            color: $white;
           }
         }
 
@@ -122,24 +148,58 @@
 
             .detail {
               @include font-style($black , 1.4rem, 2.2rem, 400);
+              margin-bottom: 1.5rem;
             }
           }
+        }
+
+        .last-sent {
+          text-align: start;
+
+          .label-text {
+            @include font-style($black, 1.6rem, 2.2rem, 500);
+          }
+
+          .label-inner {
+            @include d-flex;
+            @include align-items-center;
+
+            .last-sent-text {
+              @include font-style($indigo, 1.4rem, 2.2rem, 500);
+              @include text-ellipsis;
+              width: 40%;
+              cursor: pointer;
+            }
+
+            .ant-divider {
+              border: 0.1rem solid $suva-gray;
+            }
+
+            .last-sent-date {
+              @include font-style($suva-gray, 1.4rem, 2.2rem, 400);
+            }
+          }
+
+        }
+
+        .bottom-space {
+          margin-bottom: 2rem;
         }
       }
 
       .stackholders {
         @include flex-column;
-        @include justify-content-between;
 
         .stackholders-container {
           @include justify-content-between;
 
           .label-avatar-container {
             text-align: start;
+            margin-bottom: 2rem;
 
             .label {
               @include font-style($black, 1.6rem, 2.4rem, 700);
-              margin: 0;
+              margin-bottom: 1rem;
             }
           }
         }
@@ -155,158 +215,187 @@
 
         @include media(">md", "<=lg") {
           gap: 1.1rem;
+          width: 50%;
+          @include d-flex;
         }
 
-        min-height: 32vh;
-        max-height: 32vh;
+        @include media (">=md") {
+          min-height: auto;
+        }
 
         .overview-rows {
           padding: 1rem;
           border-radius: 0.4rem;
-          min-height: 14.5vh;
-          max-height: 14.5vh;
           background-color: $white;
           width: 100%;
         }
+
+        .rating {
+          text-align: start;
+          min-height: 10rem;
+
+          @include media(">=md", "<=lg") {
+            min-height: 7rem;
+            @include align-items-center;
+          }
+
+          .rating-label {
+            @include font-style($suva-gray, 1.4rem, 2.2rem, 400);
+          }
+
+          .rating-count {
+            @include font-style($black, 2.4rem, 2.8rem, 400);
+            margin: 0;
+          }
+        }
+
+        .all-surveys {
+          @include flex-row-wrap;
+          @include justify-content-between;
+
+          .divider-containers {
+            @include flex-column;
+            @include align-items-center;
+
+            .label {
+              @include font-style($suva-gray, 1.4rem, 2.2rem, 400);
+            }
+
+            .count {
+              @include font-style($black, 2.4rem, 2.8rem, 400);
+            }
+          }
+
+          .ant-divider {
+            border: 0.1rem solid $silver-grey;
+            min-height: 6rem;
+          }
+        }
       }
     }
+
+    .main-row {
+      @include d-flex;
+    }
+
+    .overview-sections-container {
+      @include flex-column;
+      flex: 1;
+    }
+
+    .overview-sections {
+      height: 100%;
+    }
+
+    .rating-and-surveys {
+      @include flex-column;
+    }
+
+    .rating-and-surveys .overview-sections {
+      flex: 1;
+    }
+
+  }
+
+  .survey-list-container::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  .survey-list-container::-webkit-scrollbar-thumb {
+    background-color: $white;
+    border-radius: 0.4rem;
+  }
+
+  .survey-list-container::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .survey-list-container:hover::-webkit-scrollbar-thumb {
+    background-color: $dark-grey;
   }
 
   .survey-list-container {
-    border: 0.1rem solid $very-light-gray;
-    border-radius: 0.4rem;
-    margin-top: 0.5rem;
+    background-color: $white;
+    padding: 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    flex: 1;
 
-    .action-svg {
-      min-height: 3rem;
+    .survey-list-header {
+      @include justify-content-between;
       @include align-items-center;
+      margin-bottom: 0.7rem;
 
-      .action-avatar {
-        margin: auto;
+      .tabel-heading {
+        @include font-style($black, 2rem, 2.8rem, 500);
+        text-align: start;
 
-        &:hover {
-          cursor: pointer;
+        @include media("<md") {
+          font-size: 1.6rem;
         }
       }
 
-      .blur {
-        opacity: 0.5;
+      .search-bar {
+        max-width: 28rem;
+
+        @include media("<sm") {
+          max-width: 13rem;
+        }
       }
     }
 
-    .custom-scrollbar-table-format .ant-table-body {
-      min-height: 34rem;
-      max-height: 34rem;
-      overflow-y: auto;
-    }
-
-    .custom-scrollbar-table-format .ant-table-body::-webkit-scrollbar {
+    .ant-table-body::-webkit-scrollbar {
       width: 0.5rem;
       height: 0.5rem;
     }
 
-    .custom-scrollbar-table-format .ant-table-body::-webkit-scrollbar-thumb {
+    .ant-table-body::-webkit-scrollbar-thumb {
       background-color: $white;
       border-radius: 0.4rem;
     }
 
-    .custom-scrollbar-table-format .ant-table-body::-webkit-scrollbar-track {
+    .ant-table-body::-webkit-scrollbar-track {
       background-color: transparent;
     }
 
-    .custom-scrollbar-table-format .ant-table-body:hover::-webkit-scrollbar-thumb {
+    .ant-table-body:hover::-webkit-scrollbar-thumb {
       background-color: $dark-grey;
     }
 
-    .even-row {
-      background-color: $very-light-gray;
-    }
+    .ant-table-wrapper {
+      min-height: 20vh;
 
-    .custom-scrollbar-table-format {
-      min-height: 75vh;
-      max-height: 75vh;
-      border: 0.1rem solid $light-grey;
-      border-radius: 0.4rem;
+      .ant-table-header {
+        background-color: $white;
 
-      @include media(">=lg") {
-        min-height: 82vh;
-        max-height: 82vh;
-      }
-
-      .ant-spin-container {
-        min-height: 70vh;
-        max-height: 70vh;
-
-        @include media(">=lg") {
-          min-height: 79vh;
-          max-height: 79vh;
-        }
-      }
-
-      .ant-table {
-        .ant-table-body {
-          min-height: 52vh;
-          max-height: 52vh;
-
-          @include media(">=lg") {
-            min-height: 65vh;
-            max-height: 65vh;
-          }
-        }
-
-        .ant-table-thead>tr>th {
-          @include font-style($indigo, 1.6rem, 2.4rem, 500);
+        .ant-table-cell {
           background-color: $white;
-          border-bottom: none;
-          padding-bottom: 1.3rem;
-          white-space: nowrap;
-          text-align: start;
         }
-
-        .ant-table-tbody>tr>td {
-          white-space: nowrap;
-          padding: 1.2rem 0;
-          @include font-style($black, 1.4rem, 2rem, 400);
-          min-width: 13rem;
-          max-width: 13rem;
-          @include text-ellipsis;
-          padding-right: 1rem;
-          text-align: start;
-          text-transform: capitalize;
-
-          @include media("<=md") {
-            padding: 0;
-          }
-        }
-
-        .ant-table-tbody>tr>td:nth-child(1) {
-          @include text-ellipsis;
-          padding-right: 2rem;
-        }
-
-        .ant-table-thead>tr>th:nth-child(5) {
-          text-align: center;
-        }
-
-        .ant-table-tbody>tr>td:nth-child(3) {
-          min-width: 15rem;
-          max-width: 15rem;
-        }
-
-        .ant-table-row.ant-table-row-level-0 {
-          .ant-table-cell:nth-child(1) {
-            padding-left: 1rem;
-          }
-        }
-      }
-
-      .ant-pagination {
-        margin-top: 1rem;
       }
     }
 
-    .ant-select-single.ant-select-sm .ant-select-selector {
-      border: none;
+    .ant-table-tbody {
+
+      >tr>td:nth-child(1),
+      >tr>td:nth-child(2),
+      >tr>td:nth-child(3),
+      >tr>td:nth-child(4),
+      >tr>td:nth-child(5) {
+        min-width: 15rem;
+        max-width: 15rem;
+        padding-left: 1rem;
+      }
+    }
+
+    .ant-table-wrapper .ant-table.ant-table-small .ant-table-expanded-row-fixed {
+      height: 100%;
+    }
+
+    .ant-table-tbody>tr>td:nth-child(6) {
+      min-width: 9rem;
+      max-width: 9rem;
+      padding-left: 1rem;
     }
   }
 }

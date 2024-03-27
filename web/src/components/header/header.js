@@ -4,10 +4,14 @@ import PropTypes from "prop-types";
 import "./header.scss";
 import i18n from "../../locales/i18next";
 
-export const Header = ({ prjTitle, displayPrjTitle }) => {
+export const Header = ({ prjTitle, displayPrjTitle, showSidebar }) => {
   return (
     <Row className="header-container">
-      <div className="logo-container">
+      <div
+        className={
+          showSidebar === true ? "logo-container remove-gap" : "logo-container"
+        }
+      >
         <img src="/images/msys-group.svg" alt={i18n.t("common.logo")} />
         <p className="csat">{i18n.t("header.title")}</p>
       </div>
@@ -23,4 +27,5 @@ export const Header = ({ prjTitle, displayPrjTitle }) => {
 Header.propTypes = {
   prjTitle: PropTypes.string.isRequired,
   displayPrjTitle: PropTypes.bool.isRequired,
+  showSidebar: PropTypes.bool.isRequired,
 };

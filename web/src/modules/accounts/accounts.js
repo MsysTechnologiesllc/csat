@@ -94,6 +94,7 @@ export const Accounts = () => {
   const handleView = (account) => {
     navigate(`/accounts/${account.ID}/projects`, {
       state: {
+        accOwner: account.account_owner[0].name,
         accountId: account.ID,
         tenantId: tenantId,
       },
@@ -354,7 +355,7 @@ export const Accounts = () => {
                       type="text"
                       onClick={() => handleView(account)}
                     >
-                      {i18n.t("accounts.view")}
+                      {i18n.t("addProjects.view")}
                     </Button>
                   </div>
                 </Card>
@@ -374,7 +375,6 @@ export const Accounts = () => {
           />
         </div>
       )}
-      {/* {isId && ( */}
       <Modal
         open={deleteModal}
         closable={false}
@@ -392,7 +392,6 @@ export const Accounts = () => {
           </div>
         </div>
       </Modal>
-      {/* )} */}
       {notify && <NotifyStatus status={notify} message={message} />}
     </div>
   );
