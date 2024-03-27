@@ -15,9 +15,9 @@ const ns = ["translation"];
 const supportedLngs = ["en", "fr", "ar"];
 
 i18n
-  .use(initReactI18next)
-  .use(LanguageDetector)
   .use(Backend)
+  .use(LanguageDetector)
+  .use(initReactI18next)
   .init({
     debug: true,
     lng: "en",

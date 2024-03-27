@@ -177,7 +177,7 @@ func GetUsersList(name, projectID string) map[string]interface{} {
 	if projectID != "" {
 		db := GetDB().Joins("JOIN user_projects ON users.id = user_projects.user_id").
 			Joins("JOIN projects ON projects.id = user_projects.project_id").
-			Where("projects.id = ?", projectID)
+			Where("projects.id = ? AND is_active = ?", projectID, true)
 
 		if name != "" {
 			db = db.Where("users.name = ?", name)

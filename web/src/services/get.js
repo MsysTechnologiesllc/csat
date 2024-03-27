@@ -1,11 +1,9 @@
-import { BaseService } from ".";
 import Cookies from "js-cookie";
-
+import { BaseService } from ".";
 const headers = () => {
   return {
     headers: {
       Authorization: `Bearer ${Cookies.get("jwt")}`,
-      // "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
     },
   };
