@@ -82,8 +82,6 @@
         @include font-style($black, 2rem, 2.8rem, 400);
       }
     }
-
-
   }
 
   .prj-overview-top-section {
@@ -249,10 +247,11 @@
 
         .all-surveys {
           @include flex-row-wrap;
-          @include justify-content-between;
+          @include justify-content-around;
 
           .divider-containers {
-            text-align: start;
+            @include flex-column;
+            @include align-items-center;
 
             .label {
               @include font-style($suva-gray, 1.4rem, 2.2rem, 400);
@@ -261,6 +260,11 @@
             .count {
               @include font-style($black, 2.4rem, 2.8rem, 400);
             }
+          }
+
+          .ant-divider {
+            border: 0.1rem solid $silver-grey;
+            min-height: 6rem;
           }
         }
       }
