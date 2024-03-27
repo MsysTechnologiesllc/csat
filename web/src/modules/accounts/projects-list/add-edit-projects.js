@@ -170,7 +170,7 @@ export const AddEditProjects = ({
             {dropdownOptions?.map((option) => (
               <Option
                 key={option.email}
-                value={option.name}
+                value={`${option.email}-${option.name}`}
                 label={option.name}
               >
                 <>
@@ -206,7 +206,7 @@ export const AddEditProjects = ({
               {dropdownOptions?.map((option) => (
                 <Option
                   key={option.email}
-                  value={option.name}
+                  value={`${option.email}-${option.name}`}
                   label={option.name}
                 >
                   <>
