@@ -91,8 +91,8 @@ const FormatList = ({}) => {
   useEffect(() => {
     new GetService().getTeamList(state?.prjId, (result) => {
       if (result) {
-        setClientsData(result.data.data.clients);
-        setUsersData(result.data.data.users);
+        setClientsData(result?.data?.data?.clients);
+        setUsersData(result?.data?.data?.users);
       }
     });
 
@@ -100,12 +100,12 @@ const FormatList = ({}) => {
       tenantId,
       user_id,
       (result) => {
-        if (result?.data?.data.Surveys) {
+        if (result?.data?.data?.Surveys) {
           setSurveysCount({
-            total: result?.data?.data.TotalCount ?? 0,
-            sent: result?.data?.data.CompletedCount ?? 0,
-            pending: result?.data?.data.PendingCount ?? 0,
-            overdue: result?.data?.data.OverdueCount ?? 0,
+            total: result?.data?.data?.TotalCount ?? 0,
+            sent: result?.data?.data?.CompletedCount ?? 0,
+            pending: result?.data?.data?.PendingCount ?? 0,
+            overdue: result?.data?.data?.OverdueCount ?? 0,
           });
         }
       },
@@ -195,7 +195,7 @@ const FormatList = ({}) => {
   };
   const modifiedTableData = tableData?.map((item) => ({
     ...item,
-    key: item.ID,
+    key: item?.ID,
   }));
   const handleRowClick = (record) => {
     let accountId = state?.accountId;
