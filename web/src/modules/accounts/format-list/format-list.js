@@ -249,7 +249,7 @@ const FormatList = ({}) => {
       <Breadcrumb items={breadcrumbList} />
       <div className="survey-header-container">
         <h3 className="survey-heading">{i18n.t("prjOverview.prjOverview")}</h3>
-        <Button onClick={createSurvey} className="crete-survey-btn">
+        <Button onClick={createSurvey} className="create-survey-btn">
           {i18n.t("prjOverview.createSurvey")}
         </Button>
       </div>

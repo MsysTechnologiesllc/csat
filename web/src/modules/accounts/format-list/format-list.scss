@@ -1,7 +1,7 @@
 @use "../../../assets/style/" as *;
 
 .survey-home-container {
-  padding: 1.6rem;
+  padding: 3rem 2rem 2rem;
   background-color: $smoked_bg;
   @include flex-column;
   height: auto;
@@ -10,14 +10,14 @@
     height: 100vh;
   }
 
-  .crete-survey-btn {
+  .create-survey-btn {
     @include font-style($white, 1.6rem, 2.4rem, 400);
     border-radius: 0.4rem;
     padding: 1rem 2.2rem;
     @include justify-content-center;
     @include align-items-center;
     margin-left: 1rem;
-    min-height: 3.5rem;
+    min-height: 4rem;
     background-color: $indigo;
     color: $white;
 
@@ -71,7 +71,11 @@
   .survey-header-container {
     @include justify-content-between;
     @include align-items-center;
-    margin: 0;
+    margin-bottom: 1rem;
+
+    @include media ("<md") {
+      margin-top: 1rem;
+    }
 
     .survey-heading {
       @include font-style($black, 1.6rem, 1.6rem, 400);
@@ -85,11 +89,11 @@
   }
 
   .prj-overview-top-section {
-    margin-bottom: 1.3rem;
+    margin-bottom: 1.2rem;
 
     .main-row {
       width: 100%;
-      gap: 1.3rem;
+      gap: 1.4rem;
 
       .disabled-text {
         color: $suva-gray;
@@ -247,7 +251,7 @@
 
         .all-surveys {
           @include flex-row-wrap;
-          @include justify-content-around;
+          @include justify-content-between;
 
           .divider-containers {
             @include flex-column;
@@ -320,14 +324,24 @@
 
     .survey-list-header {
       @include justify-content-between;
+      @include align-items-center;
       margin-bottom: 0.7rem;
 
       .tabel-heading {
+        @include font-style($black, 2rem, 2.8rem, 500);
         text-align: start;
+
+        @include media("<md") {
+          font-size: 1.6rem;
+        }
       }
 
       .search-bar {
         max-width: 28rem;
+
+        @include media("<sm") {
+          max-width: 13rem;
+        }
       }
     }
 
