@@ -22,7 +22,7 @@ import {
   DeleteOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useOutletContext } from "react-router";
 import {
   AiOutlineEdit,
   AiOutlineDelete,
@@ -39,9 +39,11 @@ import "./projects-list.scss";
 
 export const ProjectsList = () => {
   const { NoData } = plLibComponents.components;
+  const [tenantId] = useOutletContext();
   const navigate = useNavigate();
   const { state } = useLocation();
   const [form] = Form.useForm();
+  const [selectedItems, setSelectedItems] = useState([]);
   const [breadcrumbList, setBreadcrumbList] = useState([]);
   const [selectedSegment, setSelectedSegment] = useState("Grid");
   const [deleteModal, setDeleteModal] = useState(false);
@@ -52,9 +54,9 @@ export const ProjectsList = () => {
   const [addProject, setAddProject] = useState("");
   const [dropdownOptions, setDropdownOptions] = useState([]);
   const [search, setSearch] = useState("");
-  const [selectedItems, setSelectedItems] = useState([]);
   const [removedItems, setRemovedItems] = useState([]);
   useEffect(() => {
+    setSelectedItems([]);
     if (search?.length >= 3) {
       new GetService().getAccountOwners(search, (result) => {
         if (result?.status === 200) {
@@ -62,12 +64,10 @@ export const ProjectsList = () => {
             ...(result?.data?.data?.db_users || []),
             ...(result?.data?.data?.gsuit_users || []),
           ];
-          const filteredData = data.filter((item) => {
-            return (
-              (item.name && item.name.toLowerCase().includes(search)) ||
-              (item.email && item.email.toLowerCase().includes(search))
-            );
-          });
+          const filteredData = data.filter(
+            (item, index, self) =>
+              index === self.findIndex((obj) => obj["email"] === item["email"]),
+          );
           setDropdownOptions(filteredData);
         } else {
           setDropdownOptions([]);
@@ -76,7 +76,7 @@ export const ProjectsList = () => {
     }
   }, [search]);
   const projectsApi = () => {
-    new GetService().getAccountsList(state?.tenantId, (result) => {
+    new GetService().getAccountsList(tenantId, (result) => {
       if (result?.status === 200) {
         const filteredAccount =
           result?.data?.data?.tenant?.tenant_accounts.filter(
@@ -87,10 +87,10 @@ export const ProjectsList = () => {
     });
   };
   useEffect(() => {
-    if (state?.tenantId) {
+    if (tenantId) {
       projectsApi();
     }
-  }, [state?.tenantId, addProject]);
+  }, [tenantId, addProject]);
   const onClose = () => {
     setAddProject("");
     form.resetFields();
@@ -140,11 +140,11 @@ export const ProjectsList = () => {
     Array.isArray(selectedValues)
       ? selectedValues
           .map((value) => {
-            const node = treeData.find(
-              (node) => node.name === value || node.email === value,
+            const node = treeData?.find(
+              (node) => node?.name === value || node?.email === value,
             );
             return node
-              ? { email: node.email, name: node.name, role: role }
+              ? { email: node?.email, name: node?.name, role: role }
               : null;
           })
           .filter(Boolean)
@@ -160,11 +160,11 @@ export const ProjectsList = () => {
       active: false,
     };
     new PutService().updateProject(
-      project.ID,
-      projectsList.ID,
+      project?.ID,
+      projectsList?.ID,
       payload,
       (result) => {
-        if (result.status === 200) {
+        if (result?.status === 200) {
           projectsApi();
           setNotify("success");
           setMessage(i18n.t("addProjects.deletedMessage"));
@@ -192,13 +192,16 @@ export const ProjectsList = () => {
       `/accounts/${state?.accountId}/projects/${project?.ID}/formatlist`,
       {
         state: {
+          accOwner: state?.accOwner,
+          prjCreatedDate: project?.CreatedAt,
+          prjLogo: project?.logo,
           prjId: project?.ID,
           accountName: projectsList?.name,
           accountId: projectsList.ID,
           projectsList: projectsList?.account_projects,
           projectName: project?.name,
           status: true,
-          tenantId: state?.tenantId,
+          tenantId: tenantId,
         },
       },
     );
@@ -282,7 +285,7 @@ export const ProjectsList = () => {
   const data = [];
   projectsList?.account_projects?.map((project, index) => {
     const teamMembers = project?.Users?.filter(
-      (user) => user.role === "member",
+      (user) => user?.role === "member",
     );
     data.push({
       key: index + 1,
@@ -338,7 +341,7 @@ export const ProjectsList = () => {
           {projectsList?.account_projects?.length > 0 ? (
             projectsList?.account_projects?.map((project) => {
               const teamMembers = project?.Users?.filter(
-                (user) => user.role === "member",
+                (user) => user?.role === "member",
               );
               return (
                 <Col xs={24} md={12} lg={8} xxl={6} key={project.ID}>
@@ -346,14 +349,14 @@ export const ProjectsList = () => {
                     <div className="project-client-context-day-container">
                       <div className="avatar-project-client-context-container">
                         <p className="avatar">
-                          {`${project.name
+                          {`${project?.name
                             .split(" ")
                             .map((word) => word.charAt(0).toUpperCase())
                             .join("")}`}
                         </p>
                         <div className="project-client-container">
-                          <h4 className="project-name" title={project.name}>
-                            {project.name}
+                          <h4 className="project-name" title={project?.name}>
+                            {project?.name}
                           </h4>
                           <p className="client-name" title={deliveryHeadName}>
                             {projectsList?.account_owner?.length > 0 &&
@@ -436,7 +439,7 @@ export const ProjectsList = () => {
                         type="text"
                         onClick={() => handleView(project)}
                       >
-                        {i18n.t("accounts.view")}
+                        {i18n.t("addProjects.view")}
                       </Button>
                     </div>
                   </Card>

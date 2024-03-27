@@ -255,14 +255,15 @@
       min-height: 7rem;
       max-height: 7rem;
       white-space: nowrap;
-      padding: 0 1rem;
-
+      padding: 1rem;
+      position: sticky;
       @include media("<=md") {
         padding-bottom: 3rem;
       }
 
       @include media(">=md") {
         @include justify-content-end;
+        padding-top: 3rem;
       }
 
       .selector-text {
@@ -274,7 +275,7 @@
 
         .ant-select-selector {
           border: none;
-          margin-right: 0.7rem;
+          margin:0 0.7rem;
           height: 2.4rem;
           width: 5rem;
         }

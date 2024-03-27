@@ -8,7 +8,7 @@
   .ant-breadcrumb a {
     @include font-style($dark-black, 1.6rem, 2.4rem, 400);
   }
-  .ant-breadcrumb li:first-child {
+  .ant-breadcrumb li {
     cursor: pointer;
   }
   .ant-breadcrumb li:last-child {

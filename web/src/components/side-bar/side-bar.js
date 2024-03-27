@@ -19,7 +19,7 @@ export const SideBar = ({
   return (
     <Sider width={220} className="sidebar-container">
       <div>
-        <Header prjTitle="" displayPrjTitle={true} />
+        <Header prjTitle="" displayPrjTitle={true} showSidebar={showSidebar} />
         <div
           className={`nav-arrow ${showSidebar ? "show-arrow" : "hide-arrow"}`}
           onClick={() => setShowSidebar(false)}
