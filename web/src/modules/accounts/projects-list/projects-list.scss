@@ -44,11 +44,11 @@
       .submit-btn {
         min-height: 3.5rem;
         max-height: 3.5rem;
+        border: 0.1rem solid $light-grey;
       }
 
       .cancle-btn {
         @include font-style($black, 1.6rem, 2.4rem, 400);
-        border: 0.1rem solid $dark-black;
         border-radius: 0.4rem;
 
         @include media("<md") {
@@ -75,6 +75,7 @@
       .submit-btn {
         background-color: $indigo;
         color: $white;
+        border: none;
 
         &:hover {
           background-color: $indigo;

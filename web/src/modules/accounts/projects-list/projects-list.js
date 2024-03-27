@@ -66,7 +66,10 @@ export const ProjectsList = () => {
           ];
           const filteredData = data.filter(
             (item, index, self) =>
-              index === self.findIndex((obj) => obj["email"] === item["email"]),
+              index ===
+              self.findIndex(
+                (obj) => obj.email === item.email && obj.name === item.name,
+              ),
           );
           setDropdownOptions(filteredData);
         } else {

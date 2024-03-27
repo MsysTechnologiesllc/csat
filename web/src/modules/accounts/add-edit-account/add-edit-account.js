@@ -136,7 +136,7 @@ const AddEditAccount = ({
     }
   };
   const handleOwnerSearch = (search) => {
-    if (search?.length > 2) {
+    if (search?.length >= 3) {
       setOptionsLoader(true);
       new GetService().getAccountOwners(search, (result) => {
         if (result.status === 200) {
@@ -144,7 +144,14 @@ const AddEditAccount = ({
             ...(result?.data?.data?.db_users || []),
             ...(result?.data?.data?.gsuit_users || []),
           ];
-          setDropdownOptions(data);
+          const filteredData = data.filter(
+            (item, index, self) =>
+              index ===
+              self.findIndex(
+                (obj) => obj.email === item.email && obj.name === item.name,
+              ),
+          );
+          setDropdownOptions(filteredData);
         } else {
           setDropdownOptions([]);
         }
@@ -361,7 +368,7 @@ const AddEditAccount = ({
                 {dropdownOptions?.map((option) => (
                   <Option
                     key={option.email}
-                    value={option.name}
+                    value={`${option.email}-${option.name}`}
                     label={option.name}
                   >
                     <>
