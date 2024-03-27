@@ -13,6 +13,7 @@ export class PostService extends BaseService {
       process.env.REACT_APP_GO_SERVICE_URL + "/csat/rest/api/survey-clone",
       payload,
       callback,
+      headers(),
     );
   }
   createClient(payload = null, callback) {
@@ -28,6 +29,7 @@ export class PostService extends BaseService {
       process.env.REACT_APP_GO_SERVICE_URL + "/csat/rest/auth/customer-login",
       payload,
       callback,
+      headers(),
     );
   }
   postSSOApi(response, callback) {
@@ -35,6 +37,7 @@ export class PostService extends BaseService {
       process.env.REACT_APP_GO_SERVICE_URL + `/csat/rest/auth/google/update`,
       response,
       callback,
+      headers(),
     );
   }
   postLoginDetails(payload, callback) {
@@ -42,6 +45,7 @@ export class PostService extends BaseService {
       process.env.REACT_APP_GO_SERVICE_URL + "/csat/rest/api/user/login",
       payload,
       callback,
+      headers(),
     );
   }
   createAccount(payload, callback) {
@@ -49,6 +53,7 @@ export class PostService extends BaseService {
       process.env.REACT_APP_GO_SERVICE_URL + "/csat/rest/api/account",
       payload,
       callback,
+      headers(),
     );
   }
   updateAccount(accountID, payload, callback) {
@@ -57,6 +62,7 @@ export class PostService extends BaseService {
         `/csat/rest/api/account?accountId=${accountID}`,
       payload,
       callback,
+      headers(),
     );
   }
 }

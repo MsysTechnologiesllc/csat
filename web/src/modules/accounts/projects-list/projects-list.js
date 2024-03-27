@@ -22,7 +22,7 @@ import {
   DeleteOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useOutletContext } from "react-router";
 import {
   AiOutlineEdit,
   AiOutlineDelete,
@@ -39,6 +39,7 @@ import "./projects-list.scss";
 
 export const ProjectsList = () => {
   const { NoData } = plLibComponents.components;
+  const [tenantId] = useOutletContext();
   const navigate = useNavigate();
   const { state } = useLocation();
   const [form] = Form.useForm();
@@ -75,7 +76,7 @@ export const ProjectsList = () => {
     }
   }, [search]);
   const projectsApi = () => {
-    new GetService().getAccountsList(state?.tenantId, (result) => {
+    new GetService().getAccountsList(tenantId, (result) => {
       if (result?.status === 200) {
         const filteredAccount =
           result?.data?.data?.tenant?.tenant_accounts.filter(
@@ -86,10 +87,10 @@ export const ProjectsList = () => {
     });
   };
   useEffect(() => {
-    if (state?.tenantId) {
+    if (tenantId) {
       projectsApi();
     }
-  }, [state?.tenantId, addProject]);
+  }, [tenantId, addProject]);
   const onClose = () => {
     setAddProject("");
     form.resetFields();
@@ -191,13 +192,16 @@ export const ProjectsList = () => {
       `/accounts/${state?.accountId}/projects/${project?.ID}/formatlist`,
       {
         state: {
+          accOwner: state?.accOwner,
+          prjCreatedDate: project?.CreatedAt,
+          prjLogo: project?.logo,
           prjId: project?.ID,
           accountName: projectsList?.name,
           accountId: projectsList.ID,
           projectsList: projectsList?.account_projects,
           projectName: project?.name,
           status: true,
-          tenantId: state?.tenantId,
+          tenantId: tenantId,
         },
       },
     );
@@ -435,7 +439,7 @@ export const ProjectsList = () => {
                         type="text"
                         onClick={() => handleView(project)}
                       >
-                        {i18n.t("accounts.view")}
+                        {i18n.t("addProjects.view")}
                       </Button>
                     </div>
                   </Card>
