@@ -23,6 +23,8 @@
     }
 
     .login-image {
+      width: 100%;
+      height: 30rem;
       @include media("<lg") {
         width: 40rem;
       }
@@ -100,6 +102,13 @@
       }
     }
 
+    .forget-password {
+      color: $indigo;
+      &:hover {
+        color: $indigo;
+      }
+    }
+
     .login-button,
     .update-button {
       text-transform: uppercase;
@@ -118,15 +127,19 @@
         box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
       }
     }
+    .divider {
+      color: rgba(0, 0, 0, 0.06);
+      @include align-items-center;
+    }
 
     .google-button {
       @extend .login-button;
       @include font-style($black, 1.5rem, 2.6rem, 500);
       background-color: $white;
       text-transform: capitalize;
-      border: 0.1rem solid $black;
+      border: 0.1rem solid $light-grey;
       margin-top: 0.8rem;
-
+      border-radius: 0.4rem;
       &:hover {
         background-color: $white !important;
         color: $black !important;
@@ -141,7 +154,6 @@
 
     .sso-description {
       @include font-style($steel-grey, 1.5rem, 2.6rem, 400);
-      margin-top: 1rem;
       text-align: left;
     }
 
@@ -163,7 +175,7 @@
       }
     }
 
-    .ant-tabs-top>.ant-tabs-nav .ant-tabs-ink-bar {
+    .ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar {
       background-color: $indigo;
     }
 
@@ -263,7 +275,7 @@
 
     .signIn-btn {
       text-align: center;
-      
+
       .ant-btn-link {
         padding-inline: 0;
         font-weight: 500;

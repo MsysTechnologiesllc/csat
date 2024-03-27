@@ -244,9 +244,9 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
           onChange={handleSearch}
         />
         <div className="cards-container">
-          {usersList.map(
+          {usersList?.map(
             (member) =>
-              member.user.role === "member" && (
+              member?.user?.role === "member" && (
                 <Card
                   key={member?.user?.ID}
                   onClick={() => handleMember(member)}
