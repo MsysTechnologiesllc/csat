@@ -1,6 +1,5 @@
 import Cookies from "js-cookie";
 import { BaseService } from ".";
-
 const headers = () => {
   return {
     headers: {
