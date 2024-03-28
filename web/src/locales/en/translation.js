@@ -226,6 +226,7 @@ export const translationEN = {
   },
   addAccount: {
     noPrj: "No Projects Found",
+    noAccounts: "No Accounts Found",
     projects: " Projects",
     example: "example",
     addBtn: "+ Add Account",
@@ -269,9 +270,9 @@ export const translationEN = {
     startDateMessage: "Please enter start date",
     pointOfContactMessage: "Please enter contact details",
     pmoMessage: "Please enter required details",
-    deletedMessage: "Project Deleted Successfully",
-    updateSuccess: "{{prjName}} updated successfully",
-    addSuccess: "{{prjName}} has been created",
+    deletedMessage: "{{prjName}} project deleted successfully",
+    updateSuccess: "{{prjName}} project updated successfully",
+    addSuccess: "{{prjName}} project has been created",
   },
   prjOverview: {
     prjOverview: "Project Overview",

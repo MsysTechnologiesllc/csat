@@ -93,6 +93,17 @@ var CreateAccountData = func(w http.ResponseWriter, r *http.Request) {
 		}
 		newAccount.MediaType = mediaType
 		newAccount.Logo = decodedData
+	} else {
+		// Logo is not provided , so remove the logo
+		db := models.GetDB()
+		fmt.Println("hii")
+		newAccount.Logo = nil
+		newAccount.MediaType = "" 
+		if err := db.Model(&newAccount).Update("Logo", nil).Error; err != nil {
+			// Handle error
+			http.Error(w, "Failed to update logo in the database", http.StatusInternalServerError)
+			return
+		}
 	}
 
 	if name, ok := requestBody["account_name"].(string); ok && name != "" {
@@ -306,10 +317,10 @@ var UpdateProject = func(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			// User exists, update the role
-			user.Role = member.Role
+			newRole := models.CheckHierarchy(user.Role, member.Role)
+			user.Role = newRole
 			user.Name = member.Name
 			if err := db.Save(&user).Error; err != nil {
-				// Handle database error
 				http.Error(w, "Failed to update user", http.StatusInternalServerError)
 				return
 			}
