@@ -112,6 +112,10 @@ const AddEditAccount = ({
           form.resetFields();
           onClose();
           accountsApi();
+          setTimeout(() => {
+            setNotify("");
+            setStatusMessage("");
+          }, 2000);
         } else {
           setLoading(false);
         }
@@ -129,6 +133,10 @@ const AddEditAccount = ({
           form.resetFields();
           onClose();
           accountsApi();
+          setTimeout(() => {
+            setNotify("");
+            setStatusMessage("");
+          }, 2000);
         } else {
           setLoading(false);
         }

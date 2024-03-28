@@ -292,7 +292,6 @@
             .client-name {
               @include font-style($steel-grey, 1.4rem, 2rem, 400);
               @include text-ellipsis;
-              width: 80%;
 
               .delivery-head-length {
                 cursor: pointer;
