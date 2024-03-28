@@ -50,8 +50,8 @@ const SurveyList = ({
       dataIndex: "name",
       key: "name",
       ellipsis: true,
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.name - b.name,
+      defaultSortOrder: "ascend",
+      sorter: (a, b) => a?.name?.localeCompare(b?.name),
     },
     {
       title: i18n.t("surveyList.prjName"),
@@ -61,8 +61,8 @@ const SurveyList = ({
       render: (_, record) => {
         return <p>{record?.project?.name}</p>;
       },
-      defaultSortOrder: "descend",
-      sorter: (a, b) => a.prjName - b.prjName,
+      defaultSortOrder: "ascend",
+      sorter: (a, b) => a?.prjName?.localeCompare(b?.prjName),
     },
     {
       title: i18n.t("surveyList.deadline"),
@@ -72,12 +72,19 @@ const SurveyList = ({
       render: (_, record) => {
         return <p>{dateFormatter(record?.dead_line)}</p>;
       },
+      sorter: (a, b) => {
+        const dateA = new Date(a?.dead_line);
+        const dateB = new Date(b?.dead_line);
+        return dateA - dateB;
+      },
     },
     {
       title: i18n.t("surveyList.status"),
       dataIndex: "status",
       key: "status",
       render: (status) => <>{capitalizeFirstLetter(status)}</>,
+      defaultSortOrder: "ascend",
+      sorter: (a, b) => a?.status?.localeCompare(b?.status),
     },
     {
       title: i18n.t("surveyList.action"),
