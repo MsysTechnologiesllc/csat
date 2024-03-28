@@ -124,14 +124,13 @@ export const ProjectsList = () => {
       payload,
       (result) => {
         if (result?.status === 200) {
-          console.log(eachProject?.name);
           form.resetFields();
           setSelectedItems([]);
           setNotify("success");
           addProject === "add"
             ? setMessage(
                 i18n.t("addProjects.addSuccess", {
-                  prjName: eachProject?.name,
+                  prjName: values?.projectName,
                 }),
               )
             : setMessage(
@@ -179,7 +178,11 @@ export const ProjectsList = () => {
         if (result?.status === 200) {
           projectsApi();
           setNotify("success");
-          setMessage(i18n.t("addProjects.deletedMessage"));
+          setMessage(
+            i18n.t("addProjects.deletedMessage", {
+              prjName: project?.name,
+            }),
+          );
           setDeleteModal(false);
           setEachProject({});
           setSelectedItems([]);

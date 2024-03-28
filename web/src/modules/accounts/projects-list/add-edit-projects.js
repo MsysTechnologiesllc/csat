@@ -170,7 +170,6 @@ export const AddEditProjects = ({
             onChange={handleChangeInOwners}
             optionLabelProp="label"
             onFocus={handleEnter}
-            maxTagCount={1}
           >
             {dropdownOptions?.map((option) => (
               <Option
@@ -207,7 +206,6 @@ export const AddEditProjects = ({
               onChange={handleChangeInOwners}
               onFocus={handleEnter}
               optionLabelProp="label"
-              maxTagCount={1}
             >
               {dropdownOptions?.map((option) => (
                 <Option
