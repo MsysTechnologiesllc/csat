@@ -36,11 +36,15 @@ import { AddEditProjects } from "./add-edit-projects";
 import moment from "moment";
 import { plLibComponents } from "../../../context-provider/component-provider";
 import "./projects-list.scss";
+import { ShimmerSimpleGallery } from "react-shimmer-effects";
+import { useDetectMobileOrDesktop } from "../../../hooks/useDetectMobileOrDesktop";
 
 export const ProjectsList = () => {
+  const { isMobile, isTablet } = useDetectMobileOrDesktop();
   const { NoData } = plLibComponents.components;
   const [tenantId] = useOutletContext();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   const { state } = useLocation();
   const [form] = Form.useForm();
   const [selectedItems, setSelectedItems] = useState([]);
@@ -56,6 +60,9 @@ export const ProjectsList = () => {
   const [search, setSearch] = useState("");
   const [removedItems, setRemovedItems] = useState([]);
   useEffect(() => {
+    setSelectedItems([]);
+  }, []);
+  useEffect(() => {
     if (search?.length >= 3) {
       new GetService().getAccountOwners(search, (result) => {
         if (result?.status === 200) {
@@ -65,24 +72,21 @@ export const ProjectsList = () => {
           ];
           const filteredData = data.filter(
             (item, index, self) =>
-              index ===
-              self.findIndex(
-                (obj) => obj.email === item.email && obj.name === item.name,
-              ),
+              index === self.findIndex((obj) => obj.email === item.email),
           );
           setDropdownOptions(filteredData);
         } else {
           setDropdownOptions([]);
         }
       });
+    } else {
+      setDropdownOptions([]);
     }
   }, [search]);
-  useEffect(() => {
-    setSelectedItems([]);
-  }, []);
   const projectsApi = () => {
     new GetService().getAccountsList(tenantId, (result) => {
       if (result?.status === 200) {
+        setIsLoading(false);
         const filteredAccount =
           result?.data?.data?.tenant?.tenant_accounts.filter(
             (account) => account?.ID === state?.accountId,
@@ -92,6 +96,7 @@ export const ProjectsList = () => {
     });
   };
   useEffect(() => {
+    setIsLoading(true);
     if (tenantId) {
       projectsApi();
     }
@@ -102,6 +107,22 @@ export const ProjectsList = () => {
     setSelectedItems([]);
   };
   const handleFinish = (values) => {
+    const pointOfContactSelectedEmails = values?.pointOfContact?.map((name) => {
+      const parts = name.split("-");
+      return parts[0];
+    });
+    const pmoSelectedEmails = values?.pmo?.map((name) => {
+      const parts = name.split("-");
+      return parts[0];
+    });
+    const leadSelectedEmails = values?.lead?.map((name) => {
+      const parts = name.split("-");
+      return parts[0];
+    });
+    const scrumTeamSelectedEmails = values?.scrumTeam?.map((name) => {
+      const parts = name.split("-");
+      return parts[0];
+    });
     const formattedDate = moment(values?.startDate).format(
       "YYYY-MM-DDTHH:mm:ss.SSSZ",
     );
@@ -109,13 +130,18 @@ export const ProjectsList = () => {
       Project_name: values?.projectName,
       Start_Date: formattedDate,
       team_member: [
-        ...formatTreeData(values?.pointOfContact, selectedItems, "client"),
-        ...formatTreeData(values?.pmo, selectedItems, "manager"),
-        ...formatTreeData(values?.lead, selectedItems, "lead"),
-        ...formatTreeData(values?.scrumTeam, selectedItems, "member"),
+        ...formatTreeData(
+          pointOfContactSelectedEmails,
+          selectedItems,
+          "client",
+        ),
+        ...formatTreeData(pmoSelectedEmails, selectedItems, "manager"),
+        ...formatTreeData(leadSelectedEmails, selectedItems, "lead"),
+        ...formatTreeData(scrumTeamSelectedEmails, selectedItems, "member"),
       ],
       removed_user: removedItems,
     };
+    console.log(payload);
     new PutService().addUpdateProject(
       addProject === "add" ? 0 : eachProject?.ID,
       state?.accountId,
@@ -128,7 +154,7 @@ export const ProjectsList = () => {
           addProject === "add"
             ? setMessage(
                 i18n.t("addProjects.addSuccess", {
-                  prjName: eachProject?.name,
+                  prjName: values?.projectName,
                 }),
               )
             : setMessage(
@@ -137,6 +163,10 @@ export const ProjectsList = () => {
                 }),
               );
           setAddProject("");
+          setTimeout(() => {
+            setNotify("");
+            setTimeout("");
+          }, 1000);
         }
       },
     );
@@ -172,7 +202,11 @@ export const ProjectsList = () => {
         if (result?.status === 200) {
           projectsApi();
           setNotify("success");
-          setMessage(i18n.t("addProjects.deletedMessage"));
+          setMessage(
+            i18n.t("addProjects.deletedMessage", {
+              prjName: project?.name,
+            }),
+          );
           setDeleteModal(false);
           setEachProject({});
           setSelectedItems([]);
@@ -341,7 +375,15 @@ export const ProjectsList = () => {
           />
         </div>
       </div>
-      {selectedSegment === "Grid" ? (
+      {isLoading ? (
+        isMobile ? (
+          <ShimmerSimpleGallery col={1} card imageHeight={150} />
+        ) : isTablet ? (
+          <ShimmerSimpleGallery col={2} card imageHeight={150} />
+        ) : (
+          <ShimmerSimpleGallery card imageHeight={150} />
+        )
+      ) : selectedSegment === "Grid" ? (
         <Row gutter={[20, 20]} className="project-list-wrapper">
           {projectsList?.account_projects?.length > 0 ? (
             projectsList?.account_projects?.map((project) => {

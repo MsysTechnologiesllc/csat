@@ -164,6 +164,7 @@
           cursor: pointer;
           width: 10rem;
           @include text-ellipsis;
+          width: 10rem;
         }
       }
       .footer-icon {

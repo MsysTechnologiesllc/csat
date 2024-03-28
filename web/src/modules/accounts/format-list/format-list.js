@@ -423,18 +423,18 @@ const FormatList = ({}) => {
               </div>
               <div className="last-sent">
                 <h5 className="label-text">{i18n.t("prjOverview.upComing")}</h5>
-                {updatedData.length > 1 ? (
+                {updatedData?.length > 1 ? (
                   updatedData?.slice(1).map((item) => {
                     return (
-                      <div className="label-inner" key={item.id}>
+                      <div className="label-inner" key={item?.id}>
                         <p className="last-sent-text">
-                          <Tooltip title={item.name} ellipsis={true}>
-                            {item.name}
+                          <Tooltip title={item?.name} ellipsis={true}>
+                            {item?.name}
                           </Tooltip>
                         </p>
                         <Divider type="vertical" />
                         <p className="last-sent-date">
-                          {moment(item.UpdatedAt).format("DD MMM YYYY")}
+                          {moment(item?.UpdatedAt).format("DD MMM YYYY")}
                         </p>
                       </div>
                     );

@@ -387,17 +387,27 @@ var GetSurveyFormatList = func(w http.ResponseWriter, r *http.Request) {
 	logger.Log.Println("Logging from Controller")
 
 	accountIDStr := r.URL.Query().Get("account_id")
-	if accountIDStr == "" {
-		http.Error(w, "Project ID is required", http.StatusBadRequest)
-		return
-	}
-	accountID, err := strconv.ParseUint(accountIDStr, 10, 64)
-	if err != nil {
-		http.Error(w, "Invalid Project ID", http.StatusBadRequest)
-		return
-	}
+	surveyFormatIDStr := r.URL.Query().Get("survey_format_id")
+	var accountID, surveyFormatID uint64
+    var err error
 
-	data, _ := models.GetSurveyFormatListFromDB(uint(accountID))
+    if accountIDStr != "" {
+        accountID, err = strconv.ParseUint(accountIDStr, 10, 64)
+        if err != nil {
+            http.Error(w, "Invalid Account ID", http.StatusBadRequest)
+            return
+        }
+    }
+
+    if surveyFormatIDStr != "" {
+        surveyFormatID, err = strconv.ParseUint(surveyFormatIDStr, 10, 64)
+        if err != nil {
+            http.Error(w, "Invalid Survey Format ID", http.StatusBadRequest)
+            return
+        }
+    }
+
+	data, _ := models.GetSurveyFormatListFromDB(uint(accountID), uint(surveyFormatID))
 	resp := u.Message(true, constants.SUCCESS)
 	resp[constants.DATA] = data
 	u.Respond(w, resp)

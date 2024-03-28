@@ -2,7 +2,7 @@ package app
 
 import (
 	"context"
-	"csat/helpers"
+	constants "csat/helpers"
 	"csat/models"
 	u "csat/utils"
 	"net/http"
@@ -16,7 +16,7 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		notAuth := []string{"/csat/rest/api/user/new", "/csat/rest/api/user/login", "/csat/rest/api/survey-details", "/csat/rest/api/manager/survey-details", "/swagger/"}
+		notAuth := []string{"/csat/rest/api/user/new", "/csat/rest/api/user/login", "/csat/rest/api/survey-details", "/csat/rest/api/manager/survey-details", "/csat/rest/api/survey-answers" , "/csat/rest/api/userFeedback", "/swagger/"}
 		requestPath := r.URL.Path
 
 		// Check if the request is made from Swagger UI
