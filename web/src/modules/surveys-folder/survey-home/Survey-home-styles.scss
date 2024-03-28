@@ -85,10 +85,8 @@
   height: 100vh;
   overflow: hidden;
   @include flex-column;
-  // height: auto;
 
   .survey-header-container {
-    // flex: 1;
     @include justify-content-between;
     @include align-items-center;
 
