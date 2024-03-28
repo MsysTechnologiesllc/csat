@@ -171,7 +171,6 @@ export const AddEditProjects = ({
             onChange={handleChangeInOwners}
             optionLabelProp="label"
             onFocus={handleEnter}
-            // onSelect={(value, option) => console.log(value, option)}
           >
             {dropdownOptions?.map((option) => (
               <Option
