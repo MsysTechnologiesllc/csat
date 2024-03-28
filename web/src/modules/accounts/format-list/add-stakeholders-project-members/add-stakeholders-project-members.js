@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Form, Input, Table, Select, Pagination } from "antd";
 import {
   EditOutlined,
@@ -36,26 +36,28 @@ export const AddProjectMembersAndStakeholders = ({
   const [message, setMessage] = useState("");
   const [memberSearch, setMemberSearch] = useState("");
   const [disableUser, setDisableUser] = useState(false);
+  const [modifiedProjectMembers, setModifiedProjectMembers] = useState([]);
   const { Option } = Select;
   const limit = 5;
   const roleOptions = ["lead", "member", "manager"];
   useEffect(() => {
     new GetService().getTeamList(prj_id, (result) => {
       if (result?.status === 200) {
-        if (memberSearch) {
+        if (memberSearch.length) {
           const filteredSearchData = result?.data?.data?.users?.filter(
-            (item, index, self) =>
-              index ===
-              self.findIndex(
-                (obj) => obj.email === item.email && obj.name === item.name,
-              ),
+            (user) =>
+              user.name.toLowerCase().includes(memberSearch) ||
+              user.email.toLowerCase().includes(memberSearch),
           );
           setProjetcMembersData(filteredSearchData.sort((a, b) => a.ID - b.ID));
         } else {
-          setData(result?.data?.data?.clients);
-          setProjetcMembersData(
-            result?.data?.data?.users.sort((a, b) => a.ID - b.ID),
-          );
+          if (isModalOpen === "stakeholders") {
+            setData(result?.data?.data?.clients);
+          } else {
+            setProjetcMembersData(
+              result?.data?.data?.users.sort((a, b) => a.ID - b.ID),
+            );
+          }
         }
       }
     });
@@ -69,9 +71,25 @@ export const AddProjectMembersAndStakeholders = ({
     setEditingKey("");
     setDisable(false);
   };
-  const dropDown = (data) => {
-    setDropDownData(data);
-  };
+  const [dropDownOpen, setDropDownOpen] = useState(false);
+  const containerRef = useRef(null); // Ref for the container element
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Close dropdown if clicked outside the container
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setDropDownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const handleSearch = (value) => {
     if (value.length >= 3) {
       new GetService().getAccountOwners(value, (result) => {
@@ -80,14 +98,14 @@ export const AddProjectMembersAndStakeholders = ({
             ...(result?.data?.data?.db_users || []),
             ...(result?.data?.data?.gsuit_users || []),
           ];
-          const filteredData = data.filter((item) => {
-            return (
-              (item.name && item.name.toLowerCase().includes(value)) ||
-              (item.email && item.email.toLowerCase().includes(value))
-            );
-          });
-          dropDown(filteredData);
-          // setDropDownData(filteredData);
+          const filteredData = data.filter(
+            (item, index, self) =>
+              index ===
+              self.findIndex(
+                (obj) => obj.email === item.email && obj.name === item.name,
+              ),
+          );
+          setDropDownData(filteredData);
         }
       });
     }
@@ -146,12 +164,15 @@ export const AddProjectMembersAndStakeholders = ({
       }
     }
   };
-  const modifiedProjectMembersData = projectMembersData?.map((item) => ({
-    ...item,
-    key: item.ID,
-  }));
+  useEffect(() => {
+    const modifiedProjectMembersData = projectMembersData?.map((item) => ({
+      ...item,
+      key: item.ID,
+    }));
+    setModifiedProjectMembers(modifiedProjectMembersData);
+  }, [projectMembersData]);
+  const isUserEditing = (record) => record.key === editingKey;
   const editProjectMember = (record) => {
-    console.log(record);
     if (record.name !== "" && record.email !== "") {
       setDisableUser(true);
     } else {
@@ -165,7 +186,6 @@ export const AddProjectMembersAndStakeholders = ({
     });
     setEditingKey(record.key);
   };
-  const isUserEditing = (record) => record.key === editingKey;
   console.log(editingKey);
   console.log(projectMembersData);
   const handleChange = (value, options) => {
@@ -173,6 +193,7 @@ export const AddProjectMembersAndStakeholders = ({
       name: options.label,
       email: options.value,
     });
+    setDropDownOpen(false);
   };
   const ProjectMemberEditableCell = ({
     editing,
@@ -204,24 +225,21 @@ export const AddProjectMembersAndStakeholders = ({
                 onChange={handleChange}
                 optionLabelProp="label"
                 disabled={disableUser}
+                open={dropDownOpen} // Use state to control dropdown open/close
+                ref={containerRef} // Assign ref to the container
+                onBlur={() => setDropDownOpen(false)}
               >
-                {dropDownData?.map((option, index) => (
-                  <Option
-                    key={index}
-                    value={`${option.email}-${option.name}`}
-                    label={option.name}
-                  />
+                {dropDownData.map((option, index) => (
+                  <Option key={index} value={option.email} label={option.name}>
+                    <p>{option.name}</p>
+                    <p>{option.email}</p>
+                  </Option>
                 ))}
               </Select>
             )}
             {title === "Email" && <Input disabled={disableUser} />}
             {title === "Role" && (
-              <Select
-                showSearch
-                suffixIcon=""
-                onSearch={(value) => handleSearch(value)}
-                optionLabelProp="label"
-              >
+              <Select showSearch suffixIcon="" optionLabelProp="label">
                 {roleOptions?.map((option) => (
                   <Option key={option} value={option} label={option}>
                     <p>{option}</p>
@@ -242,7 +260,6 @@ export const AddProjectMembersAndStakeholders = ({
     dataIndex,
     title,
     children,
-    // record,
     ...restProps
   }) => {
     const validateEmail = (_, value) => {
@@ -313,7 +330,9 @@ export const AddProjectMembersAndStakeholders = ({
       width: "30%",
       render: (_, record) => {
         const editable = isUserEditing(record);
-        record.key = record.key === false && -1;
+        if (record?.key === undefined) {
+          record.key = 1;
+        }
         console.log(record);
         return editable ? (
           <span>
@@ -454,7 +473,7 @@ export const AddProjectMembersAndStakeholders = ({
         email: "",
         role: "",
       };
-      setEditingKey(newUser.key);
+      setEditingKey(0);
       setProjetcMembersData([...projectMembersData, newUser]);
       setDisable(true);
     }
@@ -466,14 +485,16 @@ export const AddProjectMembersAndStakeholders = ({
 
   useEffect(() => {
     const pageNumber = (currentPage - 1) * limit;
-    const filterArray = modifiedProjectMembersData?.slice(
+    const filterArray = modifiedProjectMembers?.slice(
       pageNumber,
       pageNumber + limit,
     );
     setFilterProjectsMembersData(filterArray);
-  }, [projectMembersData, currentPage]);
+  }, [modifiedProjectMembers, currentPage]);
 
-  console.log(memberSearch);
+  console.log(limit, filteredProjectMembersData);
+  console.log(projectMembersData);
+  console.log(isModalOpen);
 
   return (
     <>
@@ -484,7 +505,7 @@ export const AddProjectMembersAndStakeholders = ({
                 count: modifiedData?.length,
               })
             : i18n.t("projectMembers.projectTitle", {
-                count: modifiedProjectMembersData?.length,
+                count: projectMembersData?.length,
               })}
         </h3>
         <div className="search-add-member-wrapper">
@@ -531,7 +552,7 @@ export const AddProjectMembersAndStakeholders = ({
         {isModalOpen === "projectMembers" && (
           <Pagination
             current={currentPage}
-            total={modifiedProjectMembersData?.length}
+            total={projectMembersData?.length}
             pageSize={limit}
             onChange={(page) => setCurrentPage(page)}
             className="project-members-pagination"
@@ -550,7 +571,7 @@ AddProjectMembersAndStakeholders.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   isModalOpen: PropTypes.string.isRequired,
-  setIsModalOpen: PropTypes.string.isRequired,
+  setIsModalOpen: PropTypes.func.isRequired,
   account_id: PropTypes.number.isRequired,
   prj_id: PropTypes.number.isRequired,
 };
