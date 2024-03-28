@@ -163,6 +163,7 @@
           text-align: left;
           cursor: pointer;
           @include text-ellipsis;
+          width: 10rem;
         }
       }
       .footer-icon {

@@ -56,6 +56,9 @@ export const ProjectsList = () => {
   const [search, setSearch] = useState("");
   const [removedItems, setRemovedItems] = useState([]);
   useEffect(() => {
+    setSelectedItems([]);
+  }, []);
+  useEffect(() => {
     if (search?.length >= 3) {
       new GetService().getAccountOwners(search, (result) => {
         if (result?.status === 200) {
@@ -75,11 +78,10 @@ export const ProjectsList = () => {
           setDropdownOptions([]);
         }
       });
+    } else {
+      setDropdownOptions([]);
     }
   }, [search]);
-  useEffect(() => {
-    setSelectedItems([]);
-  }, []);
   const projectsApi = () => {
     new GetService().getAccountsList(tenantId, (result) => {
       if (result?.status === 200) {
@@ -122,6 +124,7 @@ export const ProjectsList = () => {
       payload,
       (result) => {
         if (result?.status === 200) {
+          console.log(eachProject?.name);
           form.resetFields();
           setSelectedItems([]);
           setNotify("success");
@@ -137,6 +140,10 @@ export const ProjectsList = () => {
                 }),
               );
           setAddProject("");
+          setTimeout(() => {
+            setNotify("");
+            setTimeout("");
+          }, 1000);
         }
       },
     );

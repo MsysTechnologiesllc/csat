@@ -15,8 +15,8 @@ export const AddEditProjects = ({
   setDropdownOptions,
   eachProject,
   form,
-  selectedItems,
-  setSelectedItems,
+  selectedItems = [],
+  setSelectedItems = [],
   setRemovedItems,
 }) => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
@@ -54,7 +54,11 @@ export const AddEditProjects = ({
       options.map((item) => {
         option.push({ name: item?.label, email: item?.value });
       });
-      setSelectedItems((prevData) => [...prevData, ...option]);
+      if (selectedItems.length > 0) {
+        setSelectedItems((prevData) => [...prevData, ...option]);
+      } else {
+        setSelectedItems(option);
+      }
     }
     if (addProject === "edit") {
       let option = [];
@@ -165,7 +169,8 @@ export const AddEditProjects = ({
             onSearch={(value) => setSearch(value)}
             onChange={handleChangeInOwners}
             optionLabelProp="label"
-            onMouseEnter={handleEnter}
+            onFocus={handleEnter}
+            maxTagCount={1}
           >
             {dropdownOptions?.map((option) => (
               <Option
@@ -200,8 +205,9 @@ export const AddEditProjects = ({
               placeholder={i18n.t("addProjects.placeholder")}
               onSearch={(value) => setSearch(value)}
               onChange={handleChangeInOwners}
-              onMouseEnter={handleEnter}
+              onFocus={handleEnter}
               optionLabelProp="label"
+              maxTagCount={1}
             >
               {dropdownOptions?.map((option) => (
                 <Option
