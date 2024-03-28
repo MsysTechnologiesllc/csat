@@ -170,27 +170,27 @@ func GetProjectUsers(projectID uint) ([]schema.User, error) {
 }
 
 func CreateUsersAccountMap(userID uint, accountID uint, role string) error {
-    // Define a new account owner instance
-    accountOwner := &schema.AccountOwner{
-        UserID:    userID,
-        AccountID: accountID,
-        Role:      role,
-        IsActive:  true,
-    }
+	// Define a new account owner instance
+	accountOwner := &schema.AccountOwner{
+		UserID:    userID,
+		AccountID: accountID,
+		Role:      role,
+		IsActive:  true,
+	}
 
-    // Check if the record already exists
-    var existingOwner schema.AccountOwner
-    if err := db.Where("user_id = ? AND account_id = ?", userID, accountID).First(&existingOwner).Error; err != nil {
-        if err != gorm.ErrRecordNotFound {
-            return err
-        }
-        if err := db.Create(accountOwner).Error; err != nil {
-            return err
-        }
-    } else {
-        logger.Log.Println("Record already exists")
-    }
-    return nil
+	// Check if the record already exists
+	var existingOwner schema.AccountOwner
+	if err := db.Where("user_id = ? AND account_id = ?", userID, accountID).First(&existingOwner).Error; err != nil {
+		if err != gorm.ErrRecordNotFound {
+			return err
+		}
+		if err := db.Create(accountOwner).Error; err != nil {
+			return err
+		}
+	} else {
+		logger.Log.Println("Record already exists")
+	}
+	return nil
 }
 
 func HandleRemoveOwners(accountOwnersData []interface{}, accountID uint) error {
@@ -234,18 +234,37 @@ func UpdateUsersAccountMap(updatedAccount *schema.AccountOwner) error {
 }
 
 func UpdateUserProjectIsActive(userID, projectID uint, isActive bool) error {
-    var userProject schema.UserProject
-    if err := db.Where("user_id = ? AND project_id = ?", userID, projectID).First(&userProject).Error; err != nil {
-        fmt.Println("Failed to fetch UserProject:", err)
-        return err
-    }
+	var userProject schema.UserProject
+	if err := db.Where("user_id = ? AND project_id = ?", userID, projectID).First(&userProject).Error; err != nil {
+		fmt.Println("Failed to fetch UserProject:", err)
+		return err
+	}
 
-    userProject.IsActive = isActive
+	userProject.IsActive = isActive
 
-    if err := db.Save(&userProject).Error; err != nil {
-        fmt.Println("Failed to update UserProject is_active:", err)
-        return err
-    }
+	if err := db.Save(&userProject).Error; err != nil {
+		fmt.Println("Failed to update UserProject is_active:", err)
+		return err
+	}
 
-    return nil
+	return nil
+}
+
+func CheckHierarchy(role1, role2 string) string {
+	// Define the hierarchy
+	hierarchy := map[string]int{
+		"deliveryHead": 7,
+		"accountOwner": 4,
+		"manager":      3,
+		"lead":         1,
+		"member":       0,
+		"client":       0,
+	}
+
+	// Compare the hierarchy values
+	if hierarchy[role1] >= hierarchy[role2] {
+		return role1
+	} else {
+		return role2
+	}
 }
