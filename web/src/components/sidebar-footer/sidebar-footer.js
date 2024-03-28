@@ -15,7 +15,10 @@ export const SidebarFooter = () => {
   return (
     <div>
       <div className="sidebar-footer-container">
-        <div className="side0bar-footer-text-container">
+        <div
+          className="side0bar-footer-text-container"
+          title={localStorage.getItem("userName")}
+        >
           <IoMdPerson className="footer-icon" />
           <p className="sidebar-footer-text">
             {localStorage.getItem("userName")}

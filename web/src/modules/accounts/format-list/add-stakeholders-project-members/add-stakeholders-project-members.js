@@ -44,9 +44,11 @@ export const AddProjectMembersAndStakeholders = ({
       if (result?.status === 200) {
         if (memberSearch) {
           const filteredSearchData = result?.data?.data?.users?.filter(
-            (user) =>
-              user.name.toLowerCase().includes(memberSearch) ||
-              user.email.toLowerCase().includes(memberSearch),
+            (item, index, self) =>
+              index ===
+              self.findIndex(
+                (obj) => obj.email === item.email && obj.name === item.name,
+              ),
           );
           setProjetcMembersData(filteredSearchData.sort((a, b) => a.ID - b.ID));
         } else {
@@ -204,10 +206,11 @@ export const AddProjectMembersAndStakeholders = ({
                 disabled={disableUser}
               >
                 {dropDownData?.map((option, index) => (
-                  <Option key={index} value={option.email} label={option.name}>
-                    <p>{option.name}</p>
-                    <p>{option.email}</p>
-                  </Option>
+                  <Option
+                    key={index}
+                    value={`${option.email}-${option.name}`}
+                    label={option.name}
+                  />
                 ))}
               </Select>
             )}
