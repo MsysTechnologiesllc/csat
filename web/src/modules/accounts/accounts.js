@@ -96,7 +96,7 @@ export const Accounts = () => {
     }
   };
   const handleView = (account) => {
-    navigate(`/accounts/${account.ID}/projects`, {
+    navigate(`/accounts/${account?.ID}/projects`, {
       state: {
         accOwner: account?.account_owner[0]?.name,
         accountId: account?.ID,

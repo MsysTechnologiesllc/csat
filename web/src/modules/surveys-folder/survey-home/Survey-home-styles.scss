@@ -39,8 +39,7 @@
     }
 
     .filter-type-heading {
-      @include font-style($mid-grey, 1.4rem, 4.8rem, 500);
-      margin-left: 0.7rem;
+      @include font-style($mid-grey, 1.8rem, 4.8rem, 500);
     }
 
     .radio-text,

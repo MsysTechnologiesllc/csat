@@ -50,6 +50,8 @@ const SurveyList = ({
       dataIndex: "name",
       key: "name",
       ellipsis: true,
+      defaultSortOrder: "descend",
+      sorter: (a, b) => a.name - b.name,
     },
     {
       title: i18n.t("surveyList.prjName"),
@@ -59,6 +61,8 @@ const SurveyList = ({
       render: (_, record) => {
         return <p>{record?.project?.name}</p>;
       },
+      defaultSortOrder: "descend",
+      sorter: (a, b) => a.prjName - b.prjName,
     },
     {
       title: i18n.t("surveyList.deadline"),

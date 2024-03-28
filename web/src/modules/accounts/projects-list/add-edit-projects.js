@@ -12,6 +12,7 @@ export const AddEditProjects = ({
   onClose,
   setSearch,
   dropdownOptions,
+  setDropdownOptions,
   eachProject,
   form,
   selectedItems,
@@ -81,7 +82,9 @@ export const AddEditProjects = ({
     { name: "lead", label: i18n.t("addProjects.lead") },
     { name: "scrumTeam", label: i18n.t("addProjects.scrumTeam") },
   ];
-
+  const handleEnter = () => {
+    setDropdownOptions([]);
+  };
   return (
     <Drawer
       title={
@@ -162,6 +165,7 @@ export const AddEditProjects = ({
             onSearch={(value) => setSearch(value)}
             onChange={handleChangeInOwners}
             optionLabelProp="label"
+            onMouseEnter={handleEnter}
           >
             {dropdownOptions?.map((option) => (
               <Option
@@ -196,6 +200,7 @@ export const AddEditProjects = ({
               placeholder={i18n.t("addProjects.placeholder")}
               onSearch={(value) => setSearch(value)}
               onChange={handleChangeInOwners}
+              onMouseEnter={handleEnter}
               optionLabelProp="label"
             >
               {dropdownOptions?.map((option) => (
@@ -223,6 +228,7 @@ AddEditProjects.propTypes = {
   onClose: PropTypes.func.isRequired,
   setSearch: PropTypes.string.isRequired,
   dropdownOptions: PropTypes.array.isRequired,
+  setDropdownOptions: PropTypes.array.isRequired,
   selectedItems: PropTypes.array.isRequired,
   setSelectedItems: PropTypes.array.isRequired,
   setRemovedItems: PropTypes.array.isRequired,
