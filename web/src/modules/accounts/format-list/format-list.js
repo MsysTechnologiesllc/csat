@@ -417,10 +417,10 @@ const FormatList = ({}) => {
                 {updatedData.length > 1 ? (
                   updatedData?.slice(1).map((item) => {
                     return (
-                      <div className="label-inner" key={item.id}>
+                      <div className="label-inner" key={item?.id}>
                         <p className="last-sent-text">
-                          <Tooltip title={item.name} ellipsis={true}>
-                            {item.name}
+                          <Tooltip title={item?.name} ellipsis={true}>
+                            {item?.name}
                           </Tooltip>
                         </p>
                         <Divider type="vertical" />
