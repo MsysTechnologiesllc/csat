@@ -101,7 +101,12 @@ export const PreviewSurvey = () => {
   ];
   return (
     <div className="preview-container">
-      <Breadcrumb items={breadcrumbList} />
+      {state?.accountName ? (
+        <Breadcrumb items={breadcrumbList} />
+      ) : (
+        <h3 className="preview-survey">{i18n.t("surveyList.previewSurvey")}</h3>
+      )}
+
       <NavTabs tabItems={items} />
     </div>
   );

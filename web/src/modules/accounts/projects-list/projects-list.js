@@ -141,7 +141,6 @@ export const ProjectsList = () => {
       ],
       removed_user: removedItems,
     };
-    console.log(payload);
     new PutService().addUpdateProject(
       addProject === "add" ? 0 : eachProject?.ID,
       state?.accountId,

@@ -120,6 +120,8 @@ export const translationEN = {
     noData: "No Data Available",
     rowsPerPage: "Rows per page : ",
     viewSurvey: "View Survey",
+    previewSurvey: "Preview Survey",
+    sendSurvey: "Send Survey",
   },
   sidebar: {
     dashboard: "Dashboard",
@@ -156,6 +158,7 @@ export const translationEN = {
     desc1: "Oops nothing here",
     desc2: "The content your are looking for can't be found",
     noData: "No survey found",
+    noTeam: "No Team Members",
   },
   login: {
     admin: "Admin",

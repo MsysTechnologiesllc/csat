@@ -14,11 +14,22 @@
   .ant-breadcrumb li:last-child {
     @include font-style($wild-red, 1.6rem, 2.4rem, 400);
   }
-  .survey-details-title {
-    @include font-style($black, 3.4rem, 4.12rem, 400);
-    text-align: left;
+  .survey-details-wrapper{
+    @include justify-content-between;
+    @include align-items-center;
+    .survey-details-title {
+      @include font-style($black, 3.4rem, 4.12rem, 400);
+      text-align: left;
+    }
+    .send-survey{
+      background-color: $indigo;
+      @include font-style($white,1.4rem,2.2rem,400);
+      &:hover{
+        background-color: $indigo;
+        color: $white;
+      }
+    }
   }
-
   .details-progress-avg-container {
     gap: 1.8rem;
     @include media(">sm", "<md") {
