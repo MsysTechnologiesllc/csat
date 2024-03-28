@@ -56,7 +56,6 @@ export const ProjectsList = () => {
   const [search, setSearch] = useState("");
   const [removedItems, setRemovedItems] = useState([]);
   useEffect(() => {
-    setSelectedItems([]);
     if (search?.length >= 3) {
       new GetService().getAccountOwners(search, (result) => {
         if (result?.status === 200) {
@@ -66,7 +65,10 @@ export const ProjectsList = () => {
           ];
           const filteredData = data.filter(
             (item, index, self) =>
-              index === self.findIndex((obj) => obj["email"] === item["email"]),
+              index ===
+              self.findIndex(
+                (obj) => obj.email === item.email && obj.name === item.name,
+              ),
           );
           setDropdownOptions(filteredData);
         } else {
@@ -75,12 +77,15 @@ export const ProjectsList = () => {
       });
     }
   }, [search]);
+  useEffect(() => {
+    setSelectedItems([]);
+  }, []);
   const projectsApi = () => {
     new GetService().getAccountsList(tenantId, (result) => {
       if (result?.status === 200) {
         const filteredAccount =
           result?.data?.data?.tenant?.tenant_accounts.filter(
-            (account) => account.ID === state?.accountId,
+            (account) => account?.ID === state?.accountId,
           );
         setProjectsList(...filteredAccount);
       }
