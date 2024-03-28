@@ -10,7 +10,7 @@ import (
 // Struct to rep Project
 type Project struct {
 	gorm.Model
-	Name      string         `gorm:"null" json:"name"`
+	Name      string         `gorm:"unique" json:"name"`
 	AccountID uint           `gorm:"null" json:"account_id"`
 	TechStack pq.StringArray `gorm:"type:varchar(255)[]" json:"tech_stack"`
 	StartDate *time.Time     `gorm:"type:timestamptz" json:"start_date"`
