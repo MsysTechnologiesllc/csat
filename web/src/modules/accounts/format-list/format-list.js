@@ -92,8 +92,8 @@ const FormatList = ({}) => {
   useEffect(() => {
     new GetService().getTeamList(state?.prjId, (result) => {
       if (result) {
-        setClientsData(result.data.data.clients);
-        setUsersData(result.data.data.users);
+        setClientsData(result?.data?.data?.clients);
+        setUsersData(result?.data?.data?.users);
       }
     });
 
@@ -101,12 +101,12 @@ const FormatList = ({}) => {
       tenantId,
       user_id,
       (result) => {
-        if (result?.data?.data.Surveys) {
+        if (result?.data?.data?.Surveys) {
           setSurveysCount({
-            total: result?.data?.data.TotalCount ?? 0,
-            sent: result?.data?.data.CompletedCount ?? 0,
-            pending: result?.data?.data.PendingCount ?? 0,
-            overdue: result?.data?.data.OverdueCount ?? 0,
+            total: result?.data?.data?.TotalCount ?? 0,
+            sent: result?.data?.data?.CompletedCount ?? 0,
+            pending: result?.data?.data?.PendingCount ?? 0,
+            overdue: result?.data?.data?.OverdueCount ?? 0,
           });
         }
       },
@@ -196,7 +196,7 @@ const FormatList = ({}) => {
   };
   const modifiedTableData = tableData?.map((item) => ({
     ...item,
-    key: item.ID,
+    key: item?.ID,
   }));
   const handleRowClick = (record) => {
     let accountId = state?.accountId;
@@ -245,10 +245,10 @@ const FormatList = ({}) => {
     return randomColors[Math.floor(Math.random() * randomColors.length)];
   }
   return (
-    <div className="survey-home-container">
+    <div className="format-home-container">
       <Breadcrumb items={breadcrumbList} />
-      <div className="survey-header-container">
-        <h3 className="survey-heading">{i18n.t("prjOverview.prjOverview")}</h3>
+      <div className="format-header-container">
+        <h3 className="heading">{i18n.t("prjOverview.prjOverview")}</h3>
         <Button onClick={createSurvey} className="create-survey-btn">
           {i18n.t("prjOverview.createSurvey")}
         </Button>
@@ -477,7 +477,7 @@ const FormatList = ({}) => {
               </div>
               <Divider type="vertical" />
               <div className="divider-containers">
-                <h5 className="label">{i18n.t("prjOverview.sentSurveys")}</h5>
+                <h5 className="label">{i18n.t("surveyList.completed")}</h5>
                 <h5 className="count">{surveysCount.sent}</h5>
               </div>
               <Divider type="vertical" />

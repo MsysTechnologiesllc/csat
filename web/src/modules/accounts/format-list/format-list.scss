@@ -1,6 +1,6 @@
 @use "../../../assets/style/" as *;
 
-.survey-home-container {
+.format-home-container {
   padding: 3rem 2rem 2rem;
   background-color: $smoked_bg;
   @include flex-column;
@@ -68,7 +68,7 @@
     }
   }
 
-  .survey-header-container {
+  .format-header-container {
     @include justify-content-between;
     @include align-items-center;
     margin-bottom: 1rem;
@@ -77,13 +77,13 @@
       margin-top: 1rem;
     }
 
-    .survey-heading {
-      @include font-style($black, 1.6rem, 1.6rem, 400);
+    .heading {
+      @include font-style($black, 1.6rem, 1.6rem, 500);
       text-align: start;
 
       @include media(">=md") {
         margin: 1.2rem 0;
-        @include font-style($black, 2rem, 2.8rem, 400);
+        @include font-style($black, 2rem, 2.8rem, 500);
       }
     }
   }
