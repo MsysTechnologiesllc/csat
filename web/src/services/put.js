@@ -1,6 +1,5 @@
-import { BaseService } from ".";
 import Cookies from "js-cookie";
-
+import { BaseService } from ".";
 const headers = () => {
   return {
     headers: {
@@ -56,6 +55,15 @@ export class PutService extends BaseService {
     return this.put(
       process.env.REACT_APP_GO_SERVICE_URL +
         `/csat/rest/api/project?projectId=${projectId}&accountId=${accountId}`,
+      payload,
+      callback,
+      headers(),
+    );
+  }
+  deleteClient(projectId, userId, payload = null, callback) {
+    return this.put(
+      process.env.REACT_APP_GO_SERVICE_URL +
+        `/csat/rest/api/user/remove?projectID=${projectId}&userID=${userId}`,
       payload,
       callback,
       headers(),

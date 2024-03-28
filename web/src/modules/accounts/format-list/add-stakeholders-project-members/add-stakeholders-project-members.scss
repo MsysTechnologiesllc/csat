@@ -1,0 +1,21 @@
+@use "../../../../assets/style/" as *;
+
+.edit,
+.save {
+  margin-right: 2rem;
+  color: $indigo;
+  font-size: 2rem;
+}
+
+.delete,
+.cancel {
+  color: $wild-red;
+  font-size: 2rem;
+}
+.add-projectmember-header{
+  @include justify-content-between;
+  @include align-items-center;
+  .search-add-member-wrapper{
+    @include d-flex;
+  }
+}

@@ -115,4 +115,12 @@ export class GetService extends BaseService {
       headers(),
     );
   }
+  getSurveyFormat(survey_id, callback) {
+    return this.get(
+      process.env.REACT_APP_GO_SERVICE_URL +
+        `/csat/rest/api/survey-format/list?survey_format_id=${survey_id}`,
+      callback,
+      headers(),
+    );
+  }
 }

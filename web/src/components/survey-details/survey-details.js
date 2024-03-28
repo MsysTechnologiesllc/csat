@@ -54,12 +54,31 @@ export const SurveyDetails = () => {
   const handleBreadCrumb = () => {
     navigate("/surveys");
   };
+  const handleSurvey = () => {
+    new GetService().getSurveyFormat(survey_id, (result) => {
+      if (result.status === 200) {
+        navigate(
+          `/accounts/${result?.data?.data[0]?.account_id}/projects/${result?.data?.data[0]?.project_id}/formatlist/previewSurvey`,
+          {
+            state: {
+              surveyDetails: { Survey: result?.data?.data[0]?.surveys[0] },
+            },
+          },
+        );
+      }
+    });
+  };
   return (
     <div className="survey-details-container">
       <Breadcrumb items={list} onClick={handleBreadCrumb} />
-      <h1 className="survey-details-title">
-        {i18n.t("surveyDetails.surveyDetails")}
-      </h1>
+      <div className="survey-details-wrapper">
+        <h1 className="survey-details-title">
+          {i18n.t("surveyDetails.surveyDetails")}
+        </h1>
+        <Button type="text" className="send-survey" onClick={handleSurvey}>
+          {i18n.t("surveyList.sendSurvey")}
+        </Button>
+      </div>
       <Row className="details-progress-avg-container">
         <Col sm={24} className="details-container">
           <div className="details">

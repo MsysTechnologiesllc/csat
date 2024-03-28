@@ -13,7 +13,7 @@ import "./team-members-feedback.scss";
 
 export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
   const { TextArea } = Input;
-  const { InputField } = plLibComponents.components;
+  const { InputField, NoData } = plLibComponents.components;
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [usersList, setUsersList] = useState([]);
@@ -59,7 +59,11 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
 
   useEffect(() => {
     if (surveyDetails) {
-      setUsersList(surveyDetails?.Survey?.user_feedbacks);
+      setUsersList(
+        surveyDetails?.Survey?.user_feedbacks.filter(
+          (user) => user.role === "member",
+        ),
+      );
       if (surveyDetails?.Survey?.user_feedbacks?.length > 0) {
         const users = surveyDetails?.Survey?.user_feedbacks?.filter(
           (user) => user?.user?.role === "member",
@@ -73,7 +77,11 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
         // state?.surveyDetails?.Survey?.passcode,
         (result) => {
           if (result?.data?.data) {
-            setUsersList(result?.data?.data?.Survey?.user_feedbacks);
+            setUsersList(
+              result?.data?.data?.Survey?.user_feedbacks.filter(
+                (user) => user.role === "member",
+              ),
+            );
             setPublicStatus(
               result?.data?.data?.Survey?.status === "publish" && true,
             );
@@ -233,7 +241,13 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
   ));
   const [draftLoader, setDraftLoader] = useState(false);
   const [submitLoader, setSubmitLoader] = useState(false);
-  return (
+  return usersList.length === 0 ? (
+    <NoData
+      heading={i18n.t("error.noData")}
+      descriptionLine1=""
+      descriptionLine2=""
+    />
+  ) : (
     <Row className="feedback-container">
       <Col xs={24} md={7} xl={7} className="card-search-container">
         <InputField
@@ -244,35 +258,32 @@ export const TeamMembersFeedBack = ({ surveyId, surveyDetails, status }) => {
           onChange={handleSearch}
         />
         <div className="cards-container">
-          {usersList?.map(
-            (member) =>
-              member?.user?.role === "member" && (
-                <Card
-                  key={member?.user?.ID}
-                  onClick={() => handleMember(member)}
-                  className={
-                    selectedMember?.user?.name === member?.user?.name
-                      ? "member-card bg"
-                      : "member-card"
-                  }
-                >
-                  <div className="text-image-container">
-                    <p className="user-name" title={member?.user?.name}>
-                      {member?.user?.name}
-                    </p>
-                    {member?.positives !== "" &&
-                      member?.negatives !== "" &&
-                      member?.rating !== 0 && (
-                        <img
-                          src="/images/feedback_updated.svg"
-                          alt={i18n.t("imageAlt.gauge")}
-                          className="feedback-updated-image"
-                        />
-                      )}
-                  </div>
-                </Card>
-              ),
-          )}
+          {usersList?.map((member) => (
+            <Card
+              key={member?.user?.ID}
+              onClick={() => handleMember(member)}
+              className={
+                selectedMember?.user?.name === member?.user?.name
+                  ? "member-card bg"
+                  : "member-card"
+              }
+            >
+              <div className="text-image-container">
+                <p className="user-name" title={member?.user?.name}>
+                  {member?.user?.name}
+                </p>
+                {member?.positives !== "" &&
+                  member?.negatives !== "" &&
+                  member?.rating !== 0 && (
+                    <img
+                      src="/images/feedback_updated.svg"
+                      alt={i18n.t("imageAlt.gauge")}
+                      className="feedback-updated-image"
+                    />
+                  )}
+              </div>
+            </Card>
+          ))}
         </div>
       </Col>
       <Col xs={24} md={16} xl={16}>

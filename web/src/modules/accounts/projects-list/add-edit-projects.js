@@ -71,7 +71,6 @@ export const AddEditProjects = ({
     }
   };
   const handleOwnersDeselect = (value) => {
-    // console.log(value.split("-")[0]);
     let deletedItems = selectedItems?.filter(
       (item) => item?.email === value.split("-")[0],
     );

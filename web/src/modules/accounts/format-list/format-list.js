@@ -16,8 +16,9 @@ import { TableShimmer } from "../../../components/table-shimmer/table-shimmer";
 import i18n from "../../../locales/i18next";
 import "./format-list.scss";
 import { GetService } from "../../../services/get";
-import moment from "moment";
 import { useLocation, useNavigate, useOutletContext } from "react-router";
+import { AddProjectMembersAndStakeholders } from "./add-stakeholders-project-members/add-stakeholders-project-members";
+import moment from "moment";
 
 const FormatList = ({}) => {
   let isDataLoaded = true;
@@ -220,15 +221,14 @@ const FormatList = ({}) => {
   function createSurvey() {
     // TODO
   }
-  const showModal = () => {
-    setIsModalOpen(true);
-    // TODO
+  const showModal = (role) => {
+    setIsModalOpen(role);
   };
   const handleOk = () => {
-    setIsModalOpen(false);
+    setIsModalOpen("");
   };
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalOpen("");
   };
   const randomColors = [
     { bg_color: "#FAAD14", text_color: "#FFFFFF" },
@@ -326,16 +326,14 @@ const FormatList = ({}) => {
                     </p>
                   )}
                 </div>
-
                 <Button
                   type="text"
                   className="add-btn"
-                  onClick={(role) => showModal(role)}
+                  onClick={() => showModal("stakeholders")}
                 >
                   {i18n.t("prjOverview.add")}
                 </Button>
               </div>
-
               <div className="stackholders-container">
                 <div className="label-avatar-container">
                   <h5 className="label">{i18n.t("prjOverview.prjMembers")}</h5>
@@ -375,18 +373,29 @@ const FormatList = ({}) => {
                     </p>
                   )}
                 </div>
-
                 <Button
                   type="text"
                   className="add-btn"
-                  onClick={(role) => showModal(role)}
+                  onClick={() => showModal("projectMembers")}
                 >
                   {i18n.t("prjOverview.add")}
                 </Button>
               </div>
-
-              <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <div>TODO</div>
+              <Modal
+                open={isModalOpen}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                footer={null}
+                className="project-member-stakeholder-modal"
+                width={800}
+                closable={false}
+              >
+                <AddProjectMembersAndStakeholders
+                  isModalOpen={isModalOpen}
+                  setIsModalOpen={setIsModalOpen}
+                  account_id={state?.accountId}
+                  prj_id={state?.prjId}
+                />
               </Modal>
             </div>
           </Col>
