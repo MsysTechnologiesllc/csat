@@ -5,6 +5,7 @@ import (
 	"csat/logger"
 	"csat/schema"
 	u "csat/utils"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -48,6 +49,10 @@ func GetAccountDetails(tenantID uint) map[string]interface{} {
 				logger.Log.Println("Error fetching users for project", err)
 				continue
 			}
+			for k := range projectUsers {
+                projectUserRole := getProjectUserRole(projectUsers[k].ID, tenant.Accounts[i].Projects[j].ID)
+                projectUsers[k].Role = projectUserRole
+            }
 
 			// Assign fetched users to the Project struct
 			tenant.Accounts[i].Projects[j].Users = projectUsers
@@ -101,4 +106,13 @@ func FilterAccountProjects(data map[string]interface{}, userID uint) map[string]
     tenantData.Accounts = filteredAccounts
     data["tenant"] = tenantData
     return data
+}
+
+func getProjectUserRole(userID, projectID uint) string {
+    var userProject schema.UserProject
+    if err := GetDB().Where("user_id = ? AND project_id = ?", userID, projectID).First(&userProject).Error; err != nil {
+        logger.Log.Println("Error fetching user project", err)
+        return "" // Return an empty string if the user project is not found
+    }
+    return userProject.Role
 }
