@@ -72,10 +72,7 @@ export const ProjectsList = () => {
           ];
           const filteredData = data.filter(
             (item, index, self) =>
-              index ===
-              self.findIndex(
-                (obj) => obj.email === item.email && obj.name === item.name,
-              ),
+              index === self.findIndex((obj) => obj.email === item.email),
           );
           setDropdownOptions(filteredData);
         } else {
@@ -110,6 +107,22 @@ export const ProjectsList = () => {
     setSelectedItems([]);
   };
   const handleFinish = (values) => {
+    const pointOfContactSelectedEmails = values?.pointOfContact?.map((name) => {
+      const parts = name.split("-");
+      return parts[0];
+    });
+    const pmoSelectedEmails = values?.pmo?.map((name) => {
+      const parts = name.split("-");
+      return parts[0];
+    });
+    const leadSelectedEmails = values?.lead?.map((name) => {
+      const parts = name.split("-");
+      return parts[0];
+    });
+    const scrumTeamSelectedEmails = values?.scrumTeam?.map((name) => {
+      const parts = name.split("-");
+      return parts[0];
+    });
     const formattedDate = moment(values?.startDate).format(
       "YYYY-MM-DDTHH:mm:ss.SSSZ",
     );
@@ -117,13 +130,18 @@ export const ProjectsList = () => {
       Project_name: values?.projectName,
       Start_Date: formattedDate,
       team_member: [
-        ...formatTreeData(values?.pointOfContact, selectedItems, "client"),
-        ...formatTreeData(values?.pmo, selectedItems, "manager"),
-        ...formatTreeData(values?.lead, selectedItems, "lead"),
-        ...formatTreeData(values?.scrumTeam, selectedItems, "member"),
+        ...formatTreeData(
+          pointOfContactSelectedEmails,
+          selectedItems,
+          "client",
+        ),
+        ...formatTreeData(pmoSelectedEmails, selectedItems, "manager"),
+        ...formatTreeData(leadSelectedEmails, selectedItems, "lead"),
+        ...formatTreeData(scrumTeamSelectedEmails, selectedItems, "member"),
       ],
       removed_user: removedItems,
     };
+    console.log(payload);
     new PutService().addUpdateProject(
       addProject === "add" ? 0 : eachProject?.ID,
       state?.accountId,

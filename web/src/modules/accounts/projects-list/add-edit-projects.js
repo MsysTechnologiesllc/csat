@@ -52,7 +52,7 @@ export const AddEditProjects = ({
     if (addProject === "add") {
       let option = [];
       options.map((item) => {
-        option.push({ name: item?.label, email: item?.value });
+        option.push({ name: item?.label, email: item?.key });
       });
       if (selectedItems.length > 0) {
         setSelectedItems((prevData) => [...prevData, ...option]);
@@ -64,21 +64,22 @@ export const AddEditProjects = ({
       let option = [];
       options?.map((item) => {
         if (item?.label !== undefined && item?.value !== undefined) {
-          option.push({ name: item?.label, email: item?.value });
+          option.push({ name: item?.label, email: item?.key });
         }
       });
       setSelectedItems((prevData) => [...prevData, ...option]);
     }
   };
   const handleOwnersDeselect = (value) => {
-    let deletedItems = selectedItems?.filter((item) => item?.email === value);
+    // console.log(value.split("-")[0]);
+    let deletedItems = selectedItems?.filter(
+      (item) => item?.email === value.split("-")[0],
+    );
     if (deletedItems) {
       setRemovedItems((prevData) => [...prevData, ...deletedItems]);
     }
     setSelectedItems(
-      selectedItems.filter(
-        (item) => item?.name !== value && item?.email !== value,
-      ),
+      selectedItems.filter((item) => item?.email !== value.split("-")[0]),
     );
   };
   const formItemData = [
