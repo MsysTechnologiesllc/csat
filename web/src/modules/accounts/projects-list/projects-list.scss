@@ -372,7 +372,7 @@
   }
 
   @include media(">xl") {
-    min-height: 83vh;
+    min-height: 79vh;
   }
 
   .ant-table-wrapper {
@@ -434,7 +434,6 @@
 
   .ant-pagination {
     margin-right: 1.2rem;
-
     .ant-select-selector {
       cursor: pointer !important;
     }
