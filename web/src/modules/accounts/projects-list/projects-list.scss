@@ -22,10 +22,12 @@
 
     .ant-drawer-close {
       margin: 0;
+      padding-left: 0
     }
 
     .ant-drawer-title {
       @include font-style($black, 1.6rem, 2.4rem, 500);
+      margin-left: 0.7rem;
       max-width: 10rem;
 
       @include media("<md") {
@@ -42,11 +44,12 @@
       .submit-btn {
         min-height: 3.5rem;
         max-height: 3.5rem;
+        border: 0.1rem solid $light-grey;
       }
 
       .cancle-btn {
         @include font-style($black, 1.6rem, 2.4rem, 400);
-        border: 0.1rem solid $dark-black;
+        border-radius: 0.4rem;
 
         @include media("<md") {
           font-size: 1.4rem;
@@ -72,6 +75,7 @@
       .submit-btn {
         background-color: $indigo;
         color: $white;
+        border: none;
 
         &:hover {
           background-color: $indigo;
@@ -98,6 +102,21 @@
   .team-members {
     @include font-style($black, 1.6rem, 2.4rem, 500);
     margin-bottom: 1.5rem;
+  }
+
+  .logo-recommendations {
+    margin-left: 1rem;
+  }
+
+  .ant-input,
+  .ant-picker .ant-picker-input>input,
+  .ant-select-selector {
+    font-size: 1.2rem;
+    height: 3.2rem;
+  }
+
+  .ant-picker {
+    height: 3.2rem;
   }
 }
 
@@ -155,7 +174,6 @@
   .account-header-container {
     @include align-items-center;
     @include justify-content-between;
-    margin-top: 1.4rem;
 
     .actions-container {
       @include justify-content-between;
@@ -225,7 +243,7 @@
   }
 
   .project-list-wrapper {
-    margin-top: 1.2rem;
+    margin-top: 1rem;
 
     .no-data-container {
       width: 100%;
@@ -235,6 +253,7 @@
     .project-wrapper {
       min-height: 13rem;
       max-height: 13rem;
+      width: 100%;
       background-color: $white;
 
       .project-client-context-day-container {
@@ -272,6 +291,7 @@
 
             .client-name {
               @include font-style($steel-grey, 1.4rem, 2rem, 400);
+              @include text-ellipsis;
 
               .delivery-head-length {
                 cursor: pointer;
@@ -288,6 +308,7 @@
         }
 
         .day-left-container {
+          margin-right: 0.7rem;
           @include align-items-start;
           gap: 0.5rem;
 
@@ -346,7 +367,7 @@
   }
 
   @include media(">xl") {
-    min-height: 78vh;
+    min-height: 83vh;
   }
 
   .ant-table-wrapper {
@@ -372,6 +393,8 @@
       min-width: 15rem;
       max-width: 15rem;
       text-transform: capitalize;
+      padding-right: 2rem;
+      text-overflow: ellipsis;
     }
 
     >tr>td:nth-child(4) {
@@ -392,7 +415,6 @@
       cursor: pointer !important;
     }
   }
-
 
   .ant-table-wrapper .ant-table-thead>tr>th {
     padding-left: 1.2rem;

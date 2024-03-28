@@ -69,7 +69,11 @@ export const Accounts = () => {
       if (result.status === 200) {
         accountsApi();
         setNotify("deleteAccountSuccess");
-        setMessage(`${account.name} has been removed`);
+        setMessage(
+          i18n.t("addAccount.deleteSuccess", {
+            accName: account.name,
+          }),
+        );
         setDeleteModal(false);
         setIsId("");
         setEachAccount({});
@@ -115,16 +119,21 @@ export const Accounts = () => {
       title: "Account",
       dataIndex: "account.name",
       key: "name",
+      ellipsis: true,
       render: (text, record) => record.account.name,
     },
     {
       title: "Account Owner",
       dataIndex: "account.account_owner.length",
       key: "accountOwner",
+      ellipsis: true,
       render: (text, record) => (
         <>
           {record?.account?.account_owner?.length === 1 ? (
-            <p className="avatar-name">
+            <p
+              className="avatar-name"
+              title={record?.account?.account_owner[0]?.name}
+            >
               {record?.account?.account_owner[0]?.name}
             </p>
           ) : (
@@ -167,6 +176,7 @@ export const Accounts = () => {
       title: "Projects",
       dataIndex: "account.account_projects.length",
       key: "projects",
+      ellipsis: true,
       render: (text, record) => (
         <>
           <span>
@@ -188,14 +198,18 @@ export const Accounts = () => {
       key: "actions",
       render: (text, record) => (
         <div>
-          <EditOutlined
-            className="edit"
-            onClick={() => handleOnClickMore("Edit", record.account)}
-          />
-          <DeleteOutlined
-            className="delete"
-            onClick={() => handleOnClickMore("Delete", record.account)}
-          />
+          <Tooltip title={i18n.t("common.edit")}>
+            <EditOutlined
+              className="edit"
+              onClick={() => handleOnClickMore("Edit", record.account)}
+            />
+          </Tooltip>
+          <Tooltip title={i18n.t("common.delete")}>
+            <DeleteOutlined
+              className="delete"
+              onClick={() => handleOnClickMore("Delete", record.account)}
+            />
+          </Tooltip>
         </div>
       ),
     },
@@ -204,15 +218,17 @@ export const Accounts = () => {
       dataIndex: "view",
       key: "view",
       render: (text, record) => (
-        <EyeOutlined
-          className="view"
-          onClick={() => handleView(record.account)}
-        />
+        <Tooltip title={i18n.t("addProjects.view")}>
+          <EyeOutlined
+            className="view"
+            onClick={() => handleView(record.account)}
+          />
+        </Tooltip>
       ),
     },
   ];
   const data = [];
-  accountsList.map((account) => {
+  accountsList?.map((account) => {
     selectedSegment === "List" &&
       data.push({
         account: account,
@@ -281,7 +297,9 @@ export const Accounts = () => {
                 <Card className="project-wrapper">
                   <div className="project-client-context-day-container">
                     <div className="avatar-project-client-context-container">
-                      {account.logo ? (
+                      {account.logo !== undefined &&
+                      account.logo !== null &&
+                      !(account.logo.length < 5) ? (
                         <Avatar src={`${account.media_type},${account.logo}`} />
                       ) : (
                         <p className="avatar">

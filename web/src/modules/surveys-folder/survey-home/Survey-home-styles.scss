@@ -80,19 +80,25 @@
 }
 
 .survey-home-container {
-  padding: 1.6rem;
+  padding: 3rem 2rem 2rem;
   background-color: $white;
-  height: 99.4vh;
+  height: 100vh;
   overflow: hidden;
+  @include flex-column;
+  // height: auto;
 
   .survey-header-container {
+    // flex: 1;
+    @include justify-content-between;
+    @include align-items-center;
+
     .survey-heading {
-      @include font-style($black, 2rem, 2.5rem, 400);
+      @include font-style($black, 1.6rem, 1.6rem, 500);
       text-align: start;
       margin: 0;
 
       @include media(">=md") {
-        @include font-style($black, 3.4rem, 4rem, 400);
+        @include font-style($black, 2rem, 2.8rem, 500);
       }
     }
 
@@ -101,7 +107,13 @@
 
       .filter-button {
         @include align-items-center;
-        @include font-style($indigo, 1.4rem, 2.4rem, 500);
+        @include font-style($indigo, 1.4rem, 2rem, 500);
+        padding: 0;
+
+        @include media(">md") {
+          font-size: 1.6rem;
+          line-height: 2.4rem;
+        }
 
         &:hover {
           background-color: transparent;
@@ -112,8 +124,14 @@
 
   .survey-list-container {
     border: 0.1rem solid $very-light-gray;
+    flex: 1;
     border-radius: 0.4rem;
     margin-top: 0.5rem;
+    padding: 1.5rem;
+
+    @include media(">md") {
+      margin-top: 1.5rem;
+    }
 
     .action-svg {
       min-height: 3rem;
@@ -130,10 +148,70 @@
       }
     }
 
-    .custom-scrollbar-table .ant-table-body {
-      min-height: 34rem;
-      max-height: 34rem;
-      overflow-y: auto;
+
+
+    .ant-table-wrapper {
+      @include media(">lg") {
+        min-height: 67vh;
+
+        .ant-spin-nested-loading,
+        .ant-spin-container,
+        .ant-table,
+        .ant-table-container,
+        .ant-table-body {
+          min-height: 67vh;
+        }
+      }
+    }
+
+    .ant-table-wrapper {
+
+      .ant-table-thead>tr>th {
+        @include font-style($indigo, 1.6rem, 2.4rem, 500);
+        background-color: $white;
+        border-bottom: none;
+        padding-bottom: 1rem;
+        white-space: nowrap;
+      }
+
+      .ant-table-tbody>tr>td {
+        padding: 0.5rem 0rem 0.5rem 0.7rem;
+        @include font-style($black, 1.4rem, 2rem, 400);
+        min-width: 13rem;
+        max-width: 13rem;
+        text-overflow: ellipsis;
+        text-transform: capitalize;
+
+        @include media(">lg") {
+          padding: 1.5rem 0 1.5rem 0.8rem;
+        }
+      }
+
+      .ant-table-tbody>tr>td:nth-child(1) {
+        @include text-ellipsis;
+        padding-right: 2rem;
+      }
+
+      .ant-table-tbody>tr>td:nth-child(3) {
+        min-width: 23rem;
+        max-width: 23rem;
+
+        @include media(">lg") {
+          padding-left: 1rem;
+        }
+      }
+
+      .ant-table-tbody>tr>td:nth-child(4) {
+        @include media(">lg") {
+          padding-left: 1rem;
+        }
+      }
+
+      .ant-table-row.ant-table-row-level-0 {
+        .ant-table-cell:nth-child(1) {
+          padding-left: 1rem;
+        }
+      }
     }
 
     .custom-scrollbar-table .ant-table-body::-webkit-scrollbar {
@@ -154,115 +232,21 @@
       background-color: $dark-grey;
     }
 
-    .custom-scrollbar-table {
-      padding: 1.6rem;
-      min-height: 75vh;
-      max-height: 75vh;
-      border: 0.1rem solid $light-grey;
-      border-radius: 0.4rem;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      border-bottom: none;
-
-      @include media(">=md") {
-        min-height: 70vh;
-        max-height: 70vh;
-      }
-
-      @include media(">=lg") {
-        min-height: 72vh;
-        max-height: 72vh;
-      }
-
-      .ant-spin-container {
-        min-height: 50vh;
-        max-height: 50vh;
-
-        @include media(">=lg") {
-          min-height: 70vh;
-          max-height: 70vh;
-        }
-      }
-
-      .even-row {
-        background-color: $very-light-gray;
-      }
-
-      .ant-table {
-        .ant-table-body {
-          min-height: 52vh;
-          max-height: 52vh;
-
-          @include media(">=lg") {
-            min-height: 65vh;
-            max-height: 65vh;
-          }
-        }
-
-        .ant-table-thead>tr>th {
-          @include font-style($indigo, 1.6rem, 2.4rem, 500);
-          background-color: $white;
-          border-bottom: none;
-          padding-bottom: 1.3rem;
-          white-space: nowrap;
-        }
-
-        .ant-table-thead>tr>th:nth-child(5) {
-          text-align: center;
-        }
-
-        .ant-table-tbody>tr>td {
-          white-space: nowrap;
-          padding: 1.2rem 0;
-          @include font-style($black, 1.4rem, 2rem, 400);
-          min-width: 13rem;
-          max-width: 13rem;
-          text-overflow: ellipsis;
-          text-transform: capitalize;
-
-          @include media("<=md") {
-            padding: 0;
-          }
-        }
-
-        .ant-table-tbody>tr>td:nth-child(1) {
-          @include text-ellipsis;
-          padding-right: 2rem;
-        }
-
-        .ant-table-tbody>tr>td:nth-child(3) {
-          min-width: 23rem;
-          max-width: 23rem;
-        }
-
-        .ant-table-row.ant-table-row-level-0 {
-          .ant-table-cell:nth-child(1) {
-            padding-left: 1rem;
-          }
-        }
-      }
+    .even-row {
+      background-color: $very-light-gray;
     }
 
     .pagination-container {
       @include justify-content-center;
       @include align-items-center;
-      border: 0.1rem solid $light-grey;
-      border-radius: 0.4rem;
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
-      border-top: none;
-      min-height: 7rem;
-      max-height: 7rem;
+      min-height: 5rem;
+      max-height: 5rem;
       white-space: nowrap;
-      padding: 1rem;
+      padding: 2rem;
       position: sticky;
-      @include media("<=md") {
-        padding-bottom: 3rem;
-      }
 
       @include media(">=md") {
         @include justify-content-end;
-        padding-top: 3rem;
       }
 
       .selector-text {
@@ -274,9 +258,10 @@
 
         .ant-select-selector {
           border: none;
-          margin:0 0.7rem;
-          height: 2.4rem;
+          margin: 0 0.7rem;
+          height: 3rem;
           width: 5rem;
+          padding-left: 0;
         }
 
         .ant-select-selection-item {
@@ -295,6 +280,11 @@
       .ant-pagination-prev,
       .ant-pagination-total-text {
         margin: 0;
+        padding-top: 0.1rem;
+      }
+
+      .ant-pagination-next {
+        padding-top: 0.1rem;
       }
     }
 
