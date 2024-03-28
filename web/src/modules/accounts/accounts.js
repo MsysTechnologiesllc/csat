@@ -69,7 +69,11 @@ export const Accounts = () => {
       if (result.status === 200) {
         accountsApi();
         setNotify("deleteAccountSuccess");
-        setMessage(`${account.name} has been removed`);
+        setMessage(
+          i18n.t("addAccount.deleteSuccess", {
+            accName: account.name,
+          }),
+        );
         setDeleteModal(false);
         setIsId("");
         setEachAccount({});
