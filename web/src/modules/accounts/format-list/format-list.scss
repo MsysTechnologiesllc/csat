@@ -10,28 +10,6 @@
     height: 100vh;
   }
 
-  .create-survey-btn {
-    @include font-style($white, 1.6rem, 2.4rem, 400);
-    border-radius: 0.4rem;
-    padding: 1rem 2.2rem;
-    @include justify-content-center;
-    @include align-items-center;
-    margin-left: 1rem;
-    min-height: 4rem;
-    background-color: $indigo;
-    color: $white;
-
-    &:hover {
-      background-color: $indigo;
-      box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
-    }
-
-    @include media("<md") {
-      font-size: 1.4rem;
-      padding: 0.5rem 1rem;
-    }
-  }
-
   .add-btn {
     @include font-style($indigo, 1.4rem, 2.2rem, 700);
 
@@ -84,6 +62,29 @@
       @include media(">=md") {
         margin: 1.2rem 0;
         @include font-style($black, 2rem, 2.8rem, 500);
+      }
+    }
+
+    .create-survey-btn {
+      @include font-style($white, 1.6rem, 2.4rem, 400);
+      border-radius: 0.4rem;
+      padding: 1rem 2.2rem;
+      @include justify-content-center;
+      @include align-items-center;
+      margin-left: 1rem;
+      min-height: 4rem;
+      background-color: $indigo;
+      color: $white;
+
+      &:hover {
+        color: $white;
+        background-color: $indigo;
+        box-shadow: rgba(100, 100, 111, 0.2) 0 0.7rem 2.9rem 0;
+      }
+
+      @include media("<md") {
+        font-size: 1.4rem;
+        padding: 0.5rem 1rem;
       }
     }
   }
@@ -252,10 +253,16 @@
         .all-surveys {
           @include flex-row-wrap;
           @include justify-content-between;
-
+          @include media(">md", "<lg") {
+            @include justify-content-around;
+          }
           .divider-containers {
             @include flex-column;
             @include align-items-center;
+
+            @include media("<sm") {
+              min-width: 12rem;
+            }
 
             .label {
               @include font-style($suva-gray, 1.4rem, 2.2rem, 400);
@@ -269,6 +276,10 @@
           .ant-divider {
             border: 0.1rem solid $silver-grey;
             min-height: 6rem;
+
+            @include media("<sm") {
+              display: none;
+            }
           }
         }
       }

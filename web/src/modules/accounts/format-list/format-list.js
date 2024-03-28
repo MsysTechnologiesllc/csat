@@ -70,11 +70,11 @@ const FormatList = ({}) => {
   }, []);
 
   useEffect(() => {
-    if (search?.length > 0) {
-      const filteredData = tableData.filter((item) => {
+    if (search?.length > 2) {
+      const filteredData = tableData?.filter((item) => {
         return (
-          item.name.toLowerCase().includes(search.toLowerCase()) ||
-          item.status.toLowerCase().includes(search.toLowerCase())
+          item?.name?.toLowerCase().includes(search.toLowerCase()) ||
+          item?.status?.toLowerCase().includes(search.toLowerCase())
         );
       });
       setTableData(filteredData);
