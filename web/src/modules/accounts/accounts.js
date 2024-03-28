@@ -120,6 +120,7 @@ export const Accounts = () => {
       dataIndex: "account.name",
       key: "name",
       ellipsis: true,
+      width: 240,
       render: (text, record) => record.account.name,
     },
     {
@@ -127,6 +128,7 @@ export const Accounts = () => {
       dataIndex: "account.account_owner.length",
       key: "accountOwner",
       ellipsis: true,
+      width: 240,
       render: (text, record) => (
         <>
           {record?.account?.account_owner?.length === 1 ? (
@@ -177,6 +179,7 @@ export const Accounts = () => {
       dataIndex: "account.account_projects.length",
       key: "projects",
       ellipsis: true,
+      width: 200,
       render: (text, record) => (
         <>
           <span>
@@ -196,6 +199,7 @@ export const Accounts = () => {
       title: "Actions",
       dataIndex: "actions",
       key: "actions",
+      width: 150,
       render: (text, record) => (
         <div>
           <Tooltip title={i18n.t("common.edit")}>
@@ -217,6 +221,7 @@ export const Accounts = () => {
       title: "View",
       dataIndex: "view",
       key: "view",
+      width: 100,
       render: (text, record) => (
         <Tooltip title={i18n.t("addProjects.view")}>
           <EyeOutlined

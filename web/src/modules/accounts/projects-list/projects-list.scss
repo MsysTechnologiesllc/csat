@@ -16,8 +16,8 @@
   .ant-drawer-header {
     width: 100%;
 
-    @include media("<md") {
-      padding-left: 1rem;
+    @include media("<sm") {
+      padding: 1rem 1.2rem;
     }
 
     .ant-drawer-close {
@@ -97,6 +97,10 @@
 
   .ant-drawer-body {
     padding-top: 1rem;
+
+    @include media("<sm") {
+      padding: 1rem 1.2rem;
+    }
   }
 
   .team-members {
@@ -130,7 +134,9 @@
 
   .avatar-name {
     @include font-style($black, 1.4rem, 2.2rem, 400);
-    margin-right: 0.5rem
+    margin-right: 0.5rem;
+    @include text-ellipsis;
+    width: 15rem;
   }
 
   .extra-avatars {
@@ -380,7 +386,26 @@
     }
 
     @include media(">xl") {
-      min-height: 63vh;
+      min-height: 65vh;
+    }
+  }
+
+  .ant-table-wrapper .ant-table-thead>tr>th {
+    padding-left: 1.2rem;
+    @include font-style($indigo, 1.6rem, 2.4rem, 500);
+    background-color: transparent;
+
+    @include media ("<md") {
+      padding: 0.5rem;
+    }
+  }
+
+  .ant-table-wrapper .ant-table-tbody>tr>td {
+    padding-left: 1.2rem;
+    @include font-style("", 1.4rem, 2.2rem, 400);
+
+    @include media ("<md") {
+      padding: 0.5rem;
     }
   }
 
@@ -412,25 +437,6 @@
 
     .ant-select-selector {
       cursor: pointer !important;
-    }
-  }
-
-  .ant-table-wrapper .ant-table-thead>tr>th {
-    padding-left: 1.2rem;
-    @include font-style($indigo, 1.6rem, 2.4rem, 500);
-    background-color: transparent;
-
-    @include media ("<md") {
-      padding: 0.5rem;
-    }
-  }
-
-  .ant-table-wrapper .ant-table-tbody>tr>td {
-    padding-left: 1.2rem;
-    @include font-style("", 1.4rem, 2.2rem, 400);
-
-    @include media ("<md") {
-      padding: 0.5rem;
     }
   }
 
