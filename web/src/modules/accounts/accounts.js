@@ -23,6 +23,7 @@ import {
 import i18n from "../../locales/i18next";
 import { GetService } from "../../services/get";
 import { ShimmerSimpleGallery } from "react-shimmer-effects";
+import { plLibComponents } from "../../context-provider/component-provider";
 import {
   AiOutlineEdit,
   AiOutlineDelete,
@@ -36,6 +37,7 @@ import NotifyStatus from "../../components/notify-status/notify-status";
 
 export const Accounts = () => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
+  const { NoData } = plLibComponents.components;
   const navigate = useNavigate();
   const [tenantId] = useOutletContext();
   const [accountsList, setAccountsList] = useState([]);
@@ -292,99 +294,109 @@ export const Accounts = () => {
         )
       ) : selectedSegment === "Grid" ? (
         <Row gutter={[20, 20]} className="project-list-wrapper">
-          {accountsList?.map((account) => {
-            let deliveryHeadName = [];
-            account?.account_owner?.map((each) =>
-              deliveryHeadName.push(each.name),
-            );
-            return (
-              <Col xs={24} md={12} lg={8} xxl={6} key={account?.ID}>
-                <Card className="project-wrapper">
-                  <div className="project-client-context-day-container">
-                    <div className="avatar-project-client-context-container">
-                      {account.logo !== undefined &&
-                      account.logo !== null &&
-                      !(account.logo.length < 5) ? (
-                        <Avatar src={`${account.media_type},${account.logo}`} />
-                      ) : (
-                        <p className="avatar">
-                          {`${account?.name
-                            .split(" ")
-                            .map((word) => word?.charAt(0)?.toUpperCase())
-                            .join("")}`}
-                        </p>
-                      )}
-                      <div className="project-client-container">
-                        <h4 className="project-name" title={account?.name}>
-                          {account?.name}
-                        </h4>
-                        <p className="client-name" title={deliveryHeadName}>
-                          {account?.account_owner?.length > 0 &&
-                            (account?.account_owner?.length === 1
-                              ? account?.account_owner[0]?.name
-                              : `${account?.account_owner[0]?.name}`)}
-                          {account?.account_owner?.length > 1 && (
-                            <Avatar className="delivery-head-length">
-                              +{account?.account_owner?.length - 1}
-                            </Avatar>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                    <Popover
-                      content={
-                        <div className="more-options">
-                          <span
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              handleOnClickMore("Edit", account);
-                            }}
-                          >
-                            <AiOutlineEdit className="icon" />
-                            {i18n.t("common.edit")}
-                          </span>
-                          <span
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              handleOnClickMore("Delete", account);
-                            }}
-                          >
-                            <AiOutlineDelete className="icon" />
-                            {i18n.t("common.delete")}
-                          </span>
+          {accountsList?.length > 0 ? (
+            accountsList?.map((account) => {
+              let deliveryHeadName = [];
+              account?.account_owner?.map((each) =>
+                deliveryHeadName.push(each.name),
+              );
+              return (
+                <Col xs={24} md={12} lg={8} xxl={6} key={account?.ID}>
+                  <Card className="project-wrapper">
+                    <div className="project-client-context-day-container">
+                      <div className="avatar-project-client-context-container">
+                        {account.logo !== undefined &&
+                        account.logo !== null &&
+                        !(account.logo.length < 5) ? (
+                          <Avatar
+                            src={`${account.media_type},${account.logo}`}
+                          />
+                        ) : (
+                          <p className="avatar">
+                            {`${account?.name
+                              .split(" ")
+                              .map((word) => word?.charAt(0)?.toUpperCase())
+                              .join("")}`}
+                          </p>
+                        )}
+                        <div className="project-client-container">
+                          <h4 className="project-name" title={account?.name}>
+                            {account?.name}
+                          </h4>
+                          <p className="client-name" title={deliveryHeadName}>
+                            {account?.account_owner?.length > 0 &&
+                              (account?.account_owner?.length === 1
+                                ? account?.account_owner[0]?.name
+                                : `${account?.account_owner[0]?.name}`)}
+                            {account?.account_owner?.length > 1 && (
+                              <Avatar className="delivery-head-length">
+                                +{account?.account_owner?.length - 1}
+                              </Avatar>
+                            )}
+                          </p>
                         </div>
-                      }
-                      arrow={false}
-                      placement="bottomRight"
-                      overlayStyle={{ padding: 0 }}
-                    >
-                      <div
-                        onClick={(event) => {
-                          event.stopPropagation();
-                        }}
-                        className="more-option-icon"
-                      >
-                        <img
-                          src="/images/ellipse-vertical.svg"
-                          alt={i18n.t("common.moreOptions")}
-                        />
                       </div>
-                    </Popover>
-                  </div>
-                  <div className="team-view-container">
-                    <p className="team-members-context">{`${account?.account_projects?.length} project(s)`}</p>
-                    <Button
-                      className="view-button"
-                      type="text"
-                      onClick={() => handleView(account)}
-                    >
-                      {i18n.t("addProjects.view")}
-                    </Button>
-                  </div>
-                </Card>
-              </Col>
-            );
-          })}
+                      <Popover
+                        content={
+                          <div className="more-options">
+                            <span
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleOnClickMore("Edit", account);
+                              }}
+                            >
+                              <AiOutlineEdit className="icon" />
+                              {i18n.t("common.edit")}
+                            </span>
+                            <span
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleOnClickMore("Delete", account);
+                              }}
+                            >
+                              <AiOutlineDelete className="icon" />
+                              {i18n.t("common.delete")}
+                            </span>
+                          </div>
+                        }
+                        arrow={false}
+                        placement="bottomRight"
+                        overlayStyle={{ padding: 0 }}
+                      >
+                        <div
+                          onClick={(event) => {
+                            event.stopPropagation();
+                          }}
+                          className="more-option-icon"
+                        >
+                          <img
+                            src="/images/ellipse-vertical.svg"
+                            alt={i18n.t("common.moreOptions")}
+                          />
+                        </div>
+                      </Popover>
+                    </div>
+                    <div className="team-view-container">
+                      <p className="team-members-context">{`${account?.account_projects?.length} project(s)`}</p>
+                      <Button
+                        className="view-button"
+                        type="text"
+                        onClick={() => handleView(account)}
+                      >
+                        {i18n.t("addProjects.view")}
+                      </Button>
+                    </div>
+                  </Card>
+                </Col>
+              );
+            })
+          ) : (
+            <NoData
+              heading={i18n.t("addAccount.noAccounts")}
+              descriptionLine1=""
+              descriptionLine2=""
+            />
+          )}
         </Row>
       ) : (
         <div className="accounts-list-container">

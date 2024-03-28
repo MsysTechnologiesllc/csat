@@ -226,6 +226,7 @@ export const translationEN = {
   },
   addAccount: {
     noPrj: "No Projects Found",
+    noAccounts: "No Accounts Found",
     projects: " Projects",
     example: "example",
     addBtn: "+ Add Account",
