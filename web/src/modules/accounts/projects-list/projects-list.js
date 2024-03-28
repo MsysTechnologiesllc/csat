@@ -72,7 +72,7 @@ export const ProjectsList = () => {
           ];
           const filteredData = data.filter(
             (item, index, self) =>
-              index === self.findIndex((obj) => obj.email === item.email)
+              index === self.findIndex((obj) => obj.email === item.email),
           );
           setDropdownOptions(filteredData);
         } else {
@@ -89,7 +89,7 @@ export const ProjectsList = () => {
         setIsLoading(false);
         const filteredAccount =
           result?.data?.data?.tenant?.tenant_accounts.filter(
-            (account) => account?.ID === state?.accountId
+            (account) => account?.ID === state?.accountId,
           );
         setProjectsList(...filteredAccount);
       }
@@ -124,7 +124,7 @@ export const ProjectsList = () => {
       return parts[0];
     });
     const formattedDate = moment(values?.startDate).format(
-      "YYYY-MM-DDTHH:mm:ss.SSSZ"
+      "YYYY-MM-DDTHH:mm:ss.SSSZ",
     );
     const payload = {
       Project_name: values?.projectName,
@@ -133,7 +133,7 @@ export const ProjectsList = () => {
         ...formatTreeData(
           pointOfContactSelectedEmails,
           selectedItems,
-          "client"
+          "client",
         ),
         ...formatTreeData(pmoSelectedEmails, selectedItems, "manager"),
         ...formatTreeData(leadSelectedEmails, selectedItems, "lead"),
@@ -160,7 +160,7 @@ export const ProjectsList = () => {
             : setMessage(
                 i18n.t("addProjects.updateSuccess", {
                   prjName: eachProject?.name,
-                })
+                }),
               );
           setAddProject("");
           setTimeout(() => {
@@ -168,7 +168,7 @@ export const ProjectsList = () => {
             setTimeout("");
           }, 1000);
         }
-      }
+      },
     );
   };
   const formatTreeData = (selectedValues, treeData, role) =>
@@ -176,7 +176,7 @@ export const ProjectsList = () => {
       ? selectedValues
           .map((value) => {
             const node = treeData?.find(
-              (node) => node?.name === value || node?.email === value
+              (node) => node?.name === value || node?.email === value,
             );
             return node
               ? { email: node?.email, name: node?.name, role: role }
@@ -215,7 +215,7 @@ export const ProjectsList = () => {
             setMessage("");
           }, 2000);
         }
-      }
+      },
     );
   };
   const handleOnClickMore = (option, project) => {
@@ -242,7 +242,7 @@ export const ProjectsList = () => {
           status: true,
           tenantId: tenantId,
         },
-      }
+      },
     );
   };
   const handleBreadCrumb = () => {
@@ -324,7 +324,7 @@ export const ProjectsList = () => {
   const data = [];
   projectsList?.account_projects?.map((project, index) => {
     const teamMembers = project?.Users?.filter(
-      (user) => user?.role === "member"
+      (user) => user?.role === "member",
     );
     data.push({
       key: index + 1,
@@ -388,7 +388,7 @@ export const ProjectsList = () => {
           {projectsList?.account_projects?.length > 0 ? (
             projectsList?.account_projects?.map((project) => {
               const teamMembers = project?.Users?.filter(
-                (user) => user?.role === "member"
+                (user) => user?.role === "member",
               );
               return (
                 <Col xs={24} md={12} lg={8} xxl={6} key={project.ID}>

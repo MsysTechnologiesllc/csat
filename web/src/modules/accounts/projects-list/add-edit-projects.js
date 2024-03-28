@@ -23,14 +23,14 @@ export const AddEditProjects = ({
   const { Option } = Select;
   useEffect(() => {
     const pointOfContactData = eachProject?.Users?.filter(
-      (user) => user.role === "client"
+      (user) => user.role === "client",
     );
     const pmoData = eachProject?.Users?.filter(
-      (user) => user.role === "manager"
+      (user) => user.role === "manager",
     );
     const leadData = eachProject?.Users?.filter((user) => user.role === "lead");
     const scrumTeamData = eachProject?.Users?.filter(
-      (user) => user.role === "member"
+      (user) => user.role === "member",
     );
     addProject === "edit" &&
       form.setFieldsValue({
@@ -45,7 +45,7 @@ export const AddEditProjects = ({
       eachProject?.Users?.map((user) => ({
         name: user?.name,
         email: user?.email,
-      }))
+      })),
     );
   }, [addProject]);
   const handleChangeInOwners = (values, options) => {
@@ -73,13 +73,13 @@ export const AddEditProjects = ({
   const handleOwnersDeselect = (value) => {
     // console.log(value.split("-")[0]);
     let deletedItems = selectedItems?.filter(
-      (item) => item?.email === value.split("-")[0]
+      (item) => item?.email === value.split("-")[0],
     );
     if (deletedItems) {
       setRemovedItems((prevData) => [...prevData, ...deletedItems]);
     }
     setSelectedItems(
-      selectedItems.filter((item) => item?.email !== value.split("-")[0])
+      selectedItems.filter((item) => item?.email !== value.split("-")[0]),
     );
   };
   const formItemData = [
