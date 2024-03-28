@@ -303,7 +303,9 @@ func BulkUpdateSurveyAnswers(requestData map[string]interface{}) ([]SurveyAnswer
 func (surveyDetails *SurveyDetails) GetAllQuestionAndUserIDs() (questionIDs, userIDs []uint) {
 	// Iterate through UserFeedbacks
 	for _, feedback := range surveyDetails.Survey.UserFeedback {
-		userIDs = append(userIDs, feedback.User.ID)
+		if feedback.User != nil {
+			userIDs = append(userIDs, feedback.User.ID)
+		}
 	}
 
 	// Iterate through SurveyAnswers
@@ -376,20 +378,29 @@ func CreateAndStoreSurveyAnswers(questionIDs []uint, surveyID uint) ([]*schema.S
 	return surveyAnswersData, nil
 }
 
-func GetSurveyFormatListFromDB(accountID uint) (*[]schema.SurveyFormat, error) {
-	var surveyFormats []schema.SurveyFormat
+func GetSurveyFormatListFromDB(accountID, surveyFormatID uint) (*[]schema.SurveyFormat, error) {
+    var surveyFormats []schema.SurveyFormat
+    db := GetDB().Preload("Surveys", "Status = ?", "template").
+        Preload("Surveys.UserFeedback").
+        Preload("Surveys.UserFeedback.User").
+        Preload("Surveys.SurveyAnswers").
+        Preload("Surveys.SurveyAnswers.McqQuestions").
+        Preload("McqQuestions")
 
-	if err := GetDB().Preload("Surveys", "Status = ?", "template").Preload("Surveys.UserFeedback").
-		Preload("Surveys.UserFeedback.User").
-		Preload("Surveys.SurveyAnswers").
-		Preload("Surveys.SurveyAnswers.McqQuestions").
-		Preload("McqQuestions").
-		Where("account_id = ?", accountID).Find(&surveyFormats).Error; err != nil {
-		logger.Log.Println("Error fetching survey format list:", err)
-		return nil, err
-	}
+    if accountID > 0 {
+        db = db.Where("account_id = ?", accountID)
+    }
 
-	return &surveyFormats, nil
+    if surveyFormatID > 0 {
+        db = db.Where("ID = ?", surveyFormatID)
+    }
+
+    if err := db.Find(&surveyFormats).Error; err != nil {
+        logger.Log.Println("Error fetching survey format list:", err)
+        return nil, err
+    }
+
+    return &surveyFormats, nil
 }
 
 func GetSurveyForClient(id uint) (*SurveyDetails, error) {

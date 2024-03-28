@@ -11,8 +11,14 @@
   @include justify-content-between;
   @include align-items-center;
   box-shadow: 0 0.4rem 0.4rem 0 $border-black-40;
+
   .logo-container {
     @include align-items-center;
+    margin-left: 3.5rem;
+
+    @include media(">=lg") {
+      margin-left: 0;
+    }
 
     .csat {
       @include font-style($jet-black, 2rem, normal, 600);
@@ -25,6 +31,9 @@
         font-size: 1.7rem;
       }
     }
+  }
+  .remove-gap {
+    margin-left: 0
   }
 
   .prj-name {

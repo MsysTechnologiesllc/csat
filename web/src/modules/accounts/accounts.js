@@ -23,6 +23,7 @@ import {
 import i18n from "../../locales/i18next";
 import { GetService } from "../../services/get";
 import { ShimmerSimpleGallery } from "react-shimmer-effects";
+import { plLibComponents } from "../../context-provider/component-provider";
 import {
   AiOutlineEdit,
   AiOutlineDelete,
@@ -36,6 +37,7 @@ import NotifyStatus from "../../components/notify-status/notify-status";
 
 export const Accounts = () => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
+  const { NoData } = plLibComponents.components;
   const navigate = useNavigate();
   const [tenantId] = useOutletContext();
   const [accountsList, setAccountsList] = useState([]);
@@ -69,7 +71,11 @@ export const Accounts = () => {
       if (result.status === 200) {
         accountsApi();
         setNotify("deleteAccountSuccess");
-        setMessage(`${account.name} has been removed`);
+        setMessage(
+          i18n.t("addAccount.deleteSuccess", {
+            accName: account.name,
+          }),
+        );
         setDeleteModal(false);
         setIsId("");
         setEachAccount({});
@@ -92,9 +98,10 @@ export const Accounts = () => {
     }
   };
   const handleView = (account) => {
-    navigate(`/accounts/${account.ID}/projects`, {
+    navigate(`/accounts/${account?.ID}/projects`, {
       state: {
-        accountId: account.ID,
+        accOwner: account?.account_owner[0]?.name,
+        accountId: account?.ID,
         tenantId: tenantId,
       },
     });
@@ -114,16 +121,23 @@ export const Accounts = () => {
       title: "Account",
       dataIndex: "account.name",
       key: "name",
+      ellipsis: true,
+      width: 240,
       render: (text, record) => record.account.name,
     },
     {
       title: "Account Owner",
       dataIndex: "account.account_owner.length",
       key: "accountOwner",
+      ellipsis: true,
+      width: 240,
       render: (text, record) => (
         <>
           {record?.account?.account_owner?.length === 1 ? (
-            <p className="avatar-name">
+            <p
+              className="avatar-name"
+              title={record?.account?.account_owner[0]?.name}
+            >
               {record?.account?.account_owner[0]?.name}
             </p>
           ) : (
@@ -166,6 +180,8 @@ export const Accounts = () => {
       title: "Projects",
       dataIndex: "account.account_projects.length",
       key: "projects",
+      ellipsis: true,
+      width: 200,
       render: (text, record) => (
         <>
           <span>
@@ -185,16 +201,21 @@ export const Accounts = () => {
       title: "Actions",
       dataIndex: "actions",
       key: "actions",
+      width: 150,
       render: (text, record) => (
         <div>
-          <EditOutlined
-            className="edit"
-            onClick={() => handleOnClickMore("Edit", record.account)}
-          />
-          <DeleteOutlined
-            className="delete"
-            onClick={() => handleOnClickMore("Delete", record.account)}
-          />
+          <Tooltip title={i18n.t("common.edit")}>
+            <EditOutlined
+              className="edit"
+              onClick={() => handleOnClickMore("Edit", record.account)}
+            />
+          </Tooltip>
+          <Tooltip title={i18n.t("common.delete")}>
+            <DeleteOutlined
+              className="delete"
+              onClick={() => handleOnClickMore("Delete", record.account)}
+            />
+          </Tooltip>
         </div>
       ),
     },
@@ -202,16 +223,19 @@ export const Accounts = () => {
       title: "View",
       dataIndex: "view",
       key: "view",
+      width: 100,
       render: (text, record) => (
-        <EyeOutlined
-          className="view"
-          onClick={() => handleView(record.account)}
-        />
+        <Tooltip title={i18n.t("addProjects.view")}>
+          <EyeOutlined
+            className="view"
+            onClick={() => handleView(record.account)}
+          />
+        </Tooltip>
       ),
     },
   ];
   const data = [];
-  accountsList.map((account) => {
+  accountsList?.map((account) => {
     selectedSegment === "List" &&
       data.push({
         account: account,
@@ -270,97 +294,109 @@ export const Accounts = () => {
         )
       ) : selectedSegment === "Grid" ? (
         <Row gutter={[20, 20]} className="project-list-wrapper">
-          {accountsList?.map((account) => {
-            let deliveryHeadName = [];
-            account?.account_owner?.map((each) =>
-              deliveryHeadName.push(each.name),
-            );
-            return (
-              <Col xs={24} md={12} lg={8} xxl={6} key={account?.ID}>
-                <Card className="project-wrapper">
-                  <div className="project-client-context-day-container">
-                    <div className="avatar-project-client-context-container">
-                      {account.logo ? (
-                        <Avatar src={`${account.media_type},${account.logo}`} />
-                      ) : (
-                        <p className="avatar">
-                          {`${account?.name
-                            .split(" ")
-                            .map((word) => word?.charAt(0)?.toUpperCase())
-                            .join("")}`}
-                        </p>
-                      )}
-                      <div className="project-client-container">
-                        <h4 className="project-name" title={account?.name}>
-                          {account?.name}
-                        </h4>
-                        <p className="client-name" title={deliveryHeadName}>
-                          {account?.account_owner?.length > 0 &&
-                            (account?.account_owner?.length === 1
-                              ? account?.account_owner[0]?.name
-                              : `${account?.account_owner[0]?.name}`)}
-                          {account?.account_owner?.length > 1 && (
-                            <Avatar className="delivery-head-length">
-                              +{account?.account_owner?.length - 1}
-                            </Avatar>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                    <Popover
-                      content={
-                        <div className="more-options">
-                          <span
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              handleOnClickMore("Edit", account);
-                            }}
-                          >
-                            <AiOutlineEdit className="icon" />
-                            {i18n.t("common.edit")}
-                          </span>
-                          <span
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              handleOnClickMore("Delete", account);
-                            }}
-                          >
-                            <AiOutlineDelete className="icon" />
-                            {i18n.t("common.delete")}
-                          </span>
+          {accountsList?.length > 0 ? (
+            accountsList?.map((account) => {
+              let deliveryHeadName = [];
+              account?.account_owner?.map((each) =>
+                deliveryHeadName.push(each.name),
+              );
+              return (
+                <Col xs={24} md={12} lg={8} xxl={6} key={account?.ID}>
+                  <Card className="project-wrapper">
+                    <div className="project-client-context-day-container">
+                      <div className="avatar-project-client-context-container">
+                        {account.logo !== undefined &&
+                        account.logo !== null &&
+                        !(account.logo.length < 5) ? (
+                          <Avatar
+                            src={`${account.media_type},${account.logo}`}
+                          />
+                        ) : (
+                          <p className="avatar">
+                            {`${account?.name
+                              .split(" ")
+                              .map((word) => word?.charAt(0)?.toUpperCase())
+                              .join("")}`}
+                          </p>
+                        )}
+                        <div className="project-client-container">
+                          <h4 className="project-name" title={account?.name}>
+                            {account?.name}
+                          </h4>
+                          <p className="client-name" title={deliveryHeadName}>
+                            {account?.account_owner?.length > 0 &&
+                              (account?.account_owner?.length === 1
+                                ? account?.account_owner[0]?.name
+                                : `${account?.account_owner[0]?.name}`)}
+                            {account?.account_owner?.length > 1 && (
+                              <Avatar className="delivery-head-length">
+                                +{account?.account_owner?.length - 1}
+                              </Avatar>
+                            )}
+                          </p>
                         </div>
-                      }
-                      arrow={false}
-                      placement="bottomRight"
-                      overlayStyle={{ padding: 0 }}
-                    >
-                      <div
-                        onClick={(event) => {
-                          event.stopPropagation();
-                        }}
-                        className="more-option-icon"
-                      >
-                        <img
-                          src="/images/ellipse-vertical.svg"
-                          alt={i18n.t("common.moreOptions")}
-                        />
                       </div>
-                    </Popover>
-                  </div>
-                  <div className="team-view-container">
-                    <p className="team-members-context">{`${account?.account_projects?.length} project(s)`}</p>
-                    <Button
-                      className="view-button"
-                      type="text"
-                      onClick={() => handleView(account)}
-                    >
-                      {i18n.t("accounts.view")}
-                    </Button>
-                  </div>
-                </Card>
-              </Col>
-            );
-          })}
+                      <Popover
+                        content={
+                          <div className="more-options">
+                            <span
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleOnClickMore("Edit", account);
+                              }}
+                            >
+                              <AiOutlineEdit className="icon" />
+                              {i18n.t("common.edit")}
+                            </span>
+                            <span
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                handleOnClickMore("Delete", account);
+                              }}
+                            >
+                              <AiOutlineDelete className="icon" />
+                              {i18n.t("common.delete")}
+                            </span>
+                          </div>
+                        }
+                        arrow={false}
+                        placement="bottomRight"
+                        overlayStyle={{ padding: 0 }}
+                      >
+                        <div
+                          onClick={(event) => {
+                            event.stopPropagation();
+                          }}
+                          className="more-option-icon"
+                        >
+                          <img
+                            src="/images/ellipse-vertical.svg"
+                            alt={i18n.t("common.moreOptions")}
+                          />
+                        </div>
+                      </Popover>
+                    </div>
+                    <div className="team-view-container">
+                      <p className="team-members-context">{`${account?.account_projects?.length} project(s)`}</p>
+                      <Button
+                        className="view-button"
+                        type="text"
+                        onClick={() => handleView(account)}
+                      >
+                        {i18n.t("addProjects.view")}
+                      </Button>
+                    </div>
+                  </Card>
+                </Col>
+              );
+            })
+          ) : (
+            <NoData
+              heading={i18n.t("addAccount.noAccounts")}
+              descriptionLine1=""
+              descriptionLine2=""
+            />
+          )}
         </Row>
       ) : (
         <div className="accounts-list-container">
@@ -374,7 +410,6 @@ export const Accounts = () => {
           />
         </div>
       )}
-      {/* {isId && ( */}
       <Modal
         open={deleteModal}
         closable={false}
@@ -392,7 +427,6 @@ export const Accounts = () => {
           </div>
         </div>
       </Modal>
-      {/* )} */}
       {notify && <NotifyStatus status={notify} message={message} />}
     </div>
   );

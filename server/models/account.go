@@ -49,6 +49,10 @@ func GetAccountDetails(tenantID uint) map[string]interface{} {
 				logger.Log.Println("Error fetching users for project", err)
 				continue
 			}
+			for k := range projectUsers {
+                projectUserRole := getProjectUserRole(projectUsers[k].ID, tenant.Accounts[i].Projects[j].ID)
+                projectUsers[k].Role = projectUserRole
+            }
 
 			// Assign fetched users to the Project struct
 			tenant.Accounts[i].Projects[j].Users = projectUsers
@@ -70,4 +74,45 @@ func GetAccountByID(projectId uint) (*schema.Account, error) {
 		return nil, err
 	}
 	return &projectDetails, nil
+}
+
+func FilterAccountProjects(data map[string]interface{}, userID uint) map[string]interface{} {
+    tenantData, ok := data["tenant"].(schema.Tenant)
+    if !ok {
+        logger.Log.Println("Failed to convert 'tenantData' to models.Tenant")
+        return data
+    }
+
+    filteredAccounts := make([]schema.Account, 0)
+    for _, account := range tenantData.Accounts {
+        filteredProjects := make([]schema.Project, 0)
+        for _, project := range account.Projects {
+            userFound := false
+            for _, user := range project.Users {
+                if user.ID == userID {
+                    userFound = true
+                    break
+                }
+            }
+            if userFound {
+                filteredProjects = append(filteredProjects, project)
+            }
+        }
+        if len(filteredProjects) > 0 {
+            account.Projects = filteredProjects
+            filteredAccounts = append(filteredAccounts, account)
+        }
+    }
+    tenantData.Accounts = filteredAccounts
+    data["tenant"] = tenantData
+    return data
+}
+
+func getProjectUserRole(userID, projectID uint) string {
+    var userProject schema.UserProject
+    if err := GetDB().Where("user_id = ? AND project_id = ?", userID, projectID).First(&userProject).Error; err != nil {
+        logger.Log.Println("Error fetching user project", err)
+        return "" // Return an empty string if the user project is not found
+    }
+    return userProject.Role
 }

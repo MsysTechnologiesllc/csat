@@ -44,6 +44,10 @@
 
       .text-image-container {
         @include justify-content-between;
+        .user-name {
+          width: 70%;
+          @include text-ellipsis;
+        }
       }
       .feedback-updated-image {
         min-width: 1.5rem;

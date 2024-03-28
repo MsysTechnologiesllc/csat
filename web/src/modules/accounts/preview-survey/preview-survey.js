@@ -4,11 +4,12 @@ import { SurveyQuestionList } from "../../../components/survey-questions-list/su
 import { TeamMembersFeedBack } from "../../../components/team-members-feedback/team-members-feedback";
 import { PreviewSettings } from "./preview-settings";
 import i18n from "../../../locales/i18next";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useOutletContext } from "react-router";
 import { Breadcrumb } from "antd";
 import "./preview-survey.scss";
 
 export const PreviewSurvey = () => {
+  const [tenantId] = useOutletContext();
   const navigate = useNavigate();
   const { NavTabs } = plLibComponents.components;
   const [breadcrumbList, setBreadcrumbList] = useState([]);
@@ -17,18 +18,23 @@ export const PreviewSurvey = () => {
     navigate("/accounts");
   };
   const handleProjectBreadCrumb = () => {
-    navigate(`/accounts/${state?.account_id}/projects`, {
+    navigate(`/accounts/${state?.accountId}/projects`, {
       state: {
         projectsList: state?.projectsList,
         accountName: state?.accountName,
+        accountId: state?.accountId,
+        tenantId: tenantId,
+        accOwner: state?.accOwner,
+        prjId: state?.prjId,
       },
     });
   };
   const handleSurveyFormat = () => {
     navigate(
-      `/accounts/${state?.account_id}/projects/${state?.prjId}/formatlist`,
+      `/accounts/${state?.accountId}/projects/${state?.prjId}/formatlist`,
       {
         state: {
+          accountId: state?.accountId,
           accountName: state?.accountName,
           projectsList: state?.projectsList,
           projectName: state?.projectName,

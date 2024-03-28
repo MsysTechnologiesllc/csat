@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
-import { Button, Col, Form, Input, Row, Modal } from "antd";
+import { Button, Col, Form, Input, Row, Modal, Divider } from "antd";
 import "./sso-integration.scss";
 import ForgotPassword from "./forgot-password";
 import { PostService } from "../../services/post";
@@ -11,6 +11,7 @@ import SuccessMessage from "./success-message";
 import i18n from "../../locales/i18next";
 import { plLibComponents } from "../../context-provider/component-provider";
 import NotifyStatus from "../notify-status/notify-status";
+import TokenUtil from "../../utils/tokenUtils";
 
 export const SSOIntegration = () => {
   const { NavTabs, InputField } = plLibComponents.components;
@@ -22,6 +23,16 @@ export const SSOIntegration = () => {
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [passcodeLoader, setPasscodeloader] = useState(false);
   const [isEmail, setIsEmail] = useState("");
+
+  useEffect(() => {
+    let user = TokenUtil.getTokenDetails();
+    if (user) {
+      navigate("/accounts");
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
   function handleOk() {
     setIsForgotOpen(true);
   }
@@ -38,6 +49,7 @@ export const SSOIntegration = () => {
         if (result?.status === 200) {
           if (result?.data?.data) {
             Cookies.set("jwt", result?.data?.data?.token);
+            localStorage.setItem("userName", result?.data?.data?.name);
             navigate("/accounts");
           }
         }
@@ -88,6 +100,7 @@ export const SSOIntegration = () => {
     new PostService().postLoginDetails(payload, (result) => {
       if (result?.status === 200) {
         localStorage.setItem("userId", result?.data?.user?.ID);
+        localStorage.setItem("userName", result?.data?.user?.name);
         Cookies.set("jwt", result?.data?.user?.token);
         navigate("/accounts");
       }
@@ -128,7 +141,7 @@ export const SSOIntegration = () => {
               isForm
               formFieldName="password"
             />
-            <Button type="link" onClick={handleOk}>
+            <Button type="link" onClick={handleOk} className="forget-password">
               {i18n.t("login.forgotPwd")}
             </Button>
             <div>
@@ -137,7 +150,9 @@ export const SSOIntegration = () => {
               </Button>
             </div>
           </Form>
-          <p className="sso-description">{i18n.t("login.usingSSO")}</p>
+          <Divider className="divider">
+            <p className="sso-description">{i18n.t("login.usingSSO")}</p>
+          </Divider>
           <Button onClick={googleLogin} type="text" className="google-button">
             <img src="/images/googleLogo.svg" />
             {i18n.t("common.google")}
@@ -232,7 +247,7 @@ export const SSOIntegration = () => {
       <Row className="sso-login-wrapper">
         <Col xs={24} lg={13} className="sso-login-image-container">
           <img
-            src="/images/login-image.svg"
+            src="/images/csat-logo.svg"
             alt={i18n.t("common.logo")}
             className="login-image"
           />

@@ -21,6 +21,7 @@ type Token struct {
 	UserId   uint
 	Email    string
 	TenantId uint
+	Grade    uint
 	jwt.StandardClaims
 }
 
@@ -103,7 +104,7 @@ type LoginRequest struct {
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/user/login [post]
 func Login(email, password string) map[string]interface{} {
-    user := &User{}
+	user := &User{}
 	err := GetDB().Table("users").Where("email = ?", email).Preload("Account").First(user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -120,8 +121,23 @@ func Login(email, password string) map[string]interface{} {
 	//Worked! Logged In
 	user.Password = ""
 
+	// Based on the user role assign rank
+	var grade uint
+	switch user.Role {
+	case "deliveryHead":
+		grade = 7
+	case "accountOwner":
+		grade = 4
+	case "manager":
+		grade = 3
+	case "lead":
+		grade = 1
+	default:
+		grade = 0
+	}
+
 	//Create JWT token
-	tk := &Token{UserId: user.ID, Email: user.Email, TenantId: user.Account.TenantID}
+	tk := &Token{UserId: user.ID, Email: user.Email, TenantId: user.Account.TenantID, Grade: grade}
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 	tokenString, _ := token.SignedString([]byte(os.Getenv("token_password")))
 	user.Token = tokenString //Store the token in the response
@@ -161,7 +177,7 @@ func GetUsersList(name, projectID string) map[string]interface{} {
 	if projectID != "" {
 		db := GetDB().Joins("JOIN user_projects ON users.id = user_projects.user_id").
 			Joins("JOIN projects ON projects.id = user_projects.project_id").
-			Where("projects.id = ?", projectID)
+			Where("projects.id = ? AND is_active = ?", projectID, true)
 
 		if name != "" {
 			db = db.Where("users.name = ?", name)
@@ -289,8 +305,11 @@ func UpdateUserFeedbackInDB(id uint, updatedFeedback *schema.UserFeedback) (*sch
 }
 
 type SurveyPage struct {
-	Surveys    []schema.Survey
-	TotalCount int
+	Surveys        []schema.Survey
+	TotalCount     int
+	CompletedCount int
+	PendingCount   int
+	OverdueCount   int
 }
 
 // @Summary All surveys
@@ -310,7 +329,7 @@ type SurveyPage struct {
 // @Failure 404 {object} map[string]interface{} "No user found"
 // @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/surveys [get]
-func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter []string, userID uint64, surveyFormatIDFilter uint) (SurveyPage, error) {
+func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter string, accountNameFilter []string, userID uint64, surveyFormatIDFilter uint, surveyNameFilter string) (SurveyPage, error) {
 	var result SurveyPage
 
 	query := db.
@@ -337,6 +356,10 @@ func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter strin
 		}
 	}
 
+	if surveyNameFilter != "" {
+		query = query.Where("surveys.name IN (?)", surveyNameFilter)
+	}
+
 	if len(accountNameFilter) > 0 {
 		query = query.Where("projects.name IN (?)", accountNameFilter)
 	}
@@ -347,7 +370,25 @@ func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter strin
 
 	// Get the count with applied filters
 	filteredCount := 0
+	pendingCount := 0
+	overdueCount := 0
+	publishedCount := 0
 	if err := query.Model(&schema.Survey{}).Count(&filteredCount).Error; err != nil {
+		return result, err
+	}
+
+	// Count pending surveys
+	if err := db.Model(&schema.Survey{}).Where("surveys.status = 'pending' AND surveys.dead_line >= NOW()").Count(&pendingCount).Error; err != nil {
+		return result, err
+	}
+
+	// Count overdue surveys
+	if err := db.Model(&schema.Survey{}).Where("surveys.status = 'pending' AND surveys.dead_line < NOW()").Count(&overdueCount).Error; err != nil {
+		return result, err
+	}
+
+	// Count published surveys
+	if err := db.Model(&schema.Survey{}).Where("surveys.status = 'publish'").Count(&publishedCount).Error; err != nil {
 		return result, err
 	}
 
@@ -363,6 +404,9 @@ func GetAllSurveysFromDB(tenantID uint64, page, pageSize int, statusFilter strin
 
 	// Set the total count in the result struct
 	result.TotalCount = filteredCount
+	result.PendingCount = pendingCount
+	result.OverdueCount = overdueCount
+	result.CompletedCount = publishedCount
 
 	return result, nil
 }

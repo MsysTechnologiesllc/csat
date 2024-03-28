@@ -12,10 +12,11 @@ export const AddEditProjects = ({
   onClose,
   setSearch,
   dropdownOptions,
+  setDropdownOptions,
   eachProject,
   form,
-  selectedItems,
-  setSelectedItems,
+  selectedItems = [],
+  setSelectedItems = [],
   setRemovedItems,
 }) => {
   const { isMobile, isTablet } = useDetectMobileOrDesktop();
@@ -42,8 +43,8 @@ export const AddEditProjects = ({
       });
     setSelectedItems(
       eachProject?.Users?.map((user) => ({
-        name: user.name,
-        email: user.email,
+        name: user?.name,
+        email: user?.email,
       })),
     );
   }, [addProject]);
@@ -51,29 +52,34 @@ export const AddEditProjects = ({
     if (addProject === "add") {
       let option = [];
       options.map((item) => {
-        option.push({ name: item.label, email: item.value });
+        option.push({ name: item?.label, email: item?.key });
       });
-      setSelectedItems((prevData) => [...prevData, ...option]);
+      if (selectedItems.length > 0) {
+        setSelectedItems((prevData) => [...prevData, ...option]);
+      } else {
+        setSelectedItems(option);
+      }
     }
     if (addProject === "edit") {
       let option = [];
-      options.map((item) => {
-        if (item.label !== undefined && item.value !== undefined) {
-          option.push({ name: item.label, email: item.value });
+      options?.map((item) => {
+        if (item?.label !== undefined && item?.value !== undefined) {
+          option.push({ name: item?.label, email: item?.key });
         }
       });
       setSelectedItems((prevData) => [...prevData, ...option]);
     }
   };
   const handleOwnersDeselect = (value) => {
-    let deletedItems = selectedItems.filter((item) => item.email === value);
+    // console.log(value.split("-")[0]);
+    let deletedItems = selectedItems?.filter(
+      (item) => item?.email === value.split("-")[0],
+    );
     if (deletedItems) {
       setRemovedItems((prevData) => [...prevData, ...deletedItems]);
     }
     setSelectedItems(
-      selectedItems.filter(
-        (item) => item.name !== value && item.email !== value,
-      ),
+      selectedItems.filter((item) => item?.email !== value.split("-")[0]),
     );
   };
   const formItemData = [
@@ -81,7 +87,9 @@ export const AddEditProjects = ({
     { name: "lead", label: i18n.t("addProjects.lead") },
     { name: "scrumTeam", label: i18n.t("addProjects.scrumTeam") },
   ];
-
+  const handleEnter = () => {
+    setDropdownOptions([]);
+  };
   return (
     <Drawer
       title={
@@ -133,12 +141,27 @@ export const AddEditProjects = ({
         >
           <Input placeholder={i18n.t("addProjects.project")} />
         </Form.Item>
-        <Form.Item name="startDate" label={i18n.t("addProjects.startDate")}>
+        <Form.Item
+          name="startDate"
+          label={i18n.t("addProjects.startDate")}
+          rules={[
+            {
+              required: true,
+              message: i18n.t("addProjects.startDateMessage"),
+            },
+          ]}
+        >
           <DatePicker />
         </Form.Item>
         <Form.Item
           name="pointOfContact"
           label={i18n.t("addProjects.pointOfContact")}
+          rules={[
+            {
+              required: true,
+              message: i18n.t("addProjects.pointOfContactMessage"),
+            },
+          ]}
         >
           <Select
             mode="multiple"
@@ -147,11 +170,12 @@ export const AddEditProjects = ({
             onSearch={(value) => setSearch(value)}
             onChange={handleChangeInOwners}
             optionLabelProp="label"
+            onFocus={handleEnter}
           >
             {dropdownOptions?.map((option) => (
               <Option
                 key={option.email}
-                value={option.email}
+                value={`${option.email}-${option.name}`}
                 label={option.name}
               >
                 <>
@@ -164,19 +188,30 @@ export const AddEditProjects = ({
         </Form.Item>
         <h5 className="team-members">{i18n.t("addProjects.teamMembers")}</h5>
         {formItemData.map(({ name, label }) => (
-          <Form.Item key={name} name={name} label={label}>
+          <Form.Item
+            key={name}
+            name={name}
+            label={label}
+            rules={[
+              {
+                required: true,
+                message: i18n.t("addProjects.pmoMessage"),
+              },
+            ]}
+          >
             <Select
               mode="multiple"
               onDeselect={handleOwnersDeselect}
               placeholder={i18n.t("addProjects.placeholder")}
               onSearch={(value) => setSearch(value)}
               onChange={handleChangeInOwners}
+              onFocus={handleEnter}
               optionLabelProp="label"
             >
               {dropdownOptions?.map((option) => (
                 <Option
                   key={option.email}
-                  value={option.email}
+                  value={`${option.email}-${option.name}`}
                   label={option.name}
                 >
                   <>
@@ -198,6 +233,7 @@ AddEditProjects.propTypes = {
   onClose: PropTypes.func.isRequired,
   setSearch: PropTypes.string.isRequired,
   dropdownOptions: PropTypes.array.isRequired,
+  setDropdownOptions: PropTypes.array.isRequired,
   selectedItems: PropTypes.array.isRequired,
   setSelectedItems: PropTypes.array.isRequired,
   setRemovedItems: PropTypes.array.isRequired,

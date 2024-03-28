@@ -112,6 +112,10 @@ const AddEditAccount = ({
           form.resetFields();
           onClose();
           accountsApi();
+          setTimeout(() => {
+            setNotify("");
+            setStatusMessage("");
+          }, 2000);
         } else {
           setLoading(false);
         }
@@ -129,6 +133,10 @@ const AddEditAccount = ({
           form.resetFields();
           onClose();
           accountsApi();
+          setTimeout(() => {
+            setNotify("");
+            setStatusMessage("");
+          }, 2000);
         } else {
           setLoading(false);
         }
@@ -144,7 +152,11 @@ const AddEditAccount = ({
             ...(result?.data?.data?.db_users || []),
             ...(result?.data?.data?.gsuit_users || []),
           ];
-          setDropdownOptions(data);
+          const filteredData = data.filter(
+            (item, index, self) =>
+              index === self.findIndex((obj) => obj.email === item.email),
+          );
+          setDropdownOptions(filteredData);
         } else {
           setDropdownOptions([]);
         }
@@ -361,7 +373,7 @@ const AddEditAccount = ({
                 {dropdownOptions?.map((option) => (
                   <Option
                     key={option.email}
-                    value={option.name}
+                    value={`${option.email}-${option.name}`}
                     label={option.name}
                   >
                     <>
